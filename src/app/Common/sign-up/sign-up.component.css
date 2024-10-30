@@ -1,0 +1,114 @@
+form {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 4%;
+    background: linear-gradient(90deg, rgba(110, 223, 155, 0.4) 0%, rgba(130, 211, 232, 0.6) 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  h4 {
+    text-align: center;
+    color: #333;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 12px;
+    padding-left: 40px; 
+    margin: 5px 0 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  input:focus {
+    border-color: #66afe9;
+    outline: none;
+  }
+  
+  .input-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  
+  .input-row div {
+    flex: 1;
+  }
+  
+  .input-icon {
+    position: relative;
+  }
+  
+  .input-icon i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .btn {
+    background-color: #d0b371;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: black;
+  }
+  
+  .clearfix {
+    text-align: center;
+  }
+  
+  .links {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .links a {
+    color: #d0b371;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  
+  .links a:hover {
+    color: black;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 600px) {
+    .input-row {
+      flex-direction: column;
+    }
+  
+    .container {
+      padding: 10px;
+    }
+  
+    .btn {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
