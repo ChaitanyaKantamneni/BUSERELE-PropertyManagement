@@ -11,6 +11,9 @@
                         <a class="nav-link" [routerLink]="navItem.navurl" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{navItem.navname}}</a>
                     </li>
                 </ng-container>
+                <li>
+                    <button class="btn" (click)="signinORsignup()">SignIn/SignUp</button>
+                </li>
             </ul>
         </div>
     </div>

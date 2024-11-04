@@ -1,6 +1,6 @@
 import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 interface navlists{
   navname:string,
@@ -15,7 +15,7 @@ interface navlists{
 })
 export class TopNavComponent implements OnInit {
 
-  constructor(public route:RouterModule){}
+  constructor(public route:RouterModule,public routes:Router){}
   ngOnInit(): void {
     
   }
@@ -32,5 +32,9 @@ export class TopNavComponent implements OnInit {
     navname:'Contact',
     navurl:'/contact-us'
   }
-]
+];
+
+signinORsignup(){
+  this.routes.navigate(['/signin'])
+}
 }
