@@ -124,6 +124,14 @@
     color: #d0b371;
   }
   
+  .footer-section a:hover {
+    color: #ff0000;
+  }
+  
+  .footer-section p i:hover {
+    color: #d0b371;
+  }
+  
 @media (max-width: 768px) {
     .contact-info {
         flex-direction: column;
