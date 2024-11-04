@@ -1,42 +1,42 @@
-<form>
-    <div class="container">
-      <h4>Register</h4>
-      <div class="input-row">
-        <div>
-          <div class="input-icon">
-            <i class="fa fa-user"></i> 
-            <input type="text" name="username" placeholder="Enter Username" required>
-          </div>
+<div class="container">
+    <div class="register-form-fields">
+        <div class="user-icon">
+            <i class="fa-solid fa-user"></i>
         </div>
-        <div>
-          <div class="input-icon">
-            <i class="fa fa-envelope"></i> 
-            <input type="email" name="email" placeholder="Enter Email" required>
-          </div>
+        <form (submit)="signup()" [formGroup]="signupform">
+            <div class="name">
+                <i class="fa-solid fa-user h-100"></i>
+                <input type="text" class="form-control" name="name" placeholder="Enter Name" required formControlName="name">
+            </div>
+            <div class="email">
+                <i class="fa-solid fa-envelope h-100"></i>
+                <input type="email" class="form-control" name="email" placeholder="Enter Email" required formControlName="email">
+            </div>
+            <div class="form-group">
+              <div class="phone"  [ngClass]="(submited && form.phone.errors) || (form.phone.touched && form.phone.errors)?'border border-danger':''">
+                <i class="fa-solid fa-phone h-100"></i>
+                <input type="tel" class="form-control" name="phone" placeholder="Mobile Number" required formControlName="phone" minlength="10" maxlength="10" pattern="[0-9]*">
+              </div>
+                <div class="text-danger fw-bold" *ngIf="(submited && form.phone.errors) || (form.phone.touched && form.phone.errors)">Enter Phone Number</div>
+                <div class="text-danger fw-bold" *ngIf="form.phone.errors?.pattern">Enter Phone Number In Correct Format</div>
+            </div>
+            <div class="form-group">
+              <div class="password" [ngClass]="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)?'border border-danger':''">
+                <i class="fa-solid fa-lock h-100"></i>
+                <!-- <input type="password" class="form-control" name="pswd" placeholder="Enter Password" required formControlName="pswd"> -->
+                <input type="password" name="psw" class="form-control" placeholder="enter password" formControlName="pswd" required  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+">
+              </div>
+              <p class="text-danger fw-bold" *ngIf="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)">Enter Password</p>
+              <p class="text-danger fw-bold" *ngIf="form.pswd.errors?.pattern">Enter Password In Correct Format</p>
+            </div>
+            
+            <div class="login-btn">
+                <button type="submit">Sign Up</button>
+            </div>
+        </form>
+        <div class="sign-up text-center mt-4">
+            <span>If you have already registered, </span>
+            <div class="sign-up"><a routerLink="/signin">Sign In</a></div>
         </div>
-      </div>
-      <div class="input-row">
-        <div>
-          <div class="input-icon">
-            <i class="fa fa-lock"></i> 
-            <input type="password" name="psw" placeholder="Enter Password" required>
-          </div>
-        </div>
-        <div>
-          <div class="input-icon">
-            <i class="fa fa-phone"></i> 
-            <input type="tel" name="phone" placeholder="Mobile Number" required>
-          </div>
-        </div>
-      </div>
-      <div class="clearfix">
-        <button type="submit" class="btn">Sign Up</button>
-      </div>
-      <div class="links">
-        <span>If you have already registered please sign in</span>
-        <!-- <a routerLink="/login">LogIn</a> -->
-         <button type="login" routerLink="/login" class="btn">LogIn</button>
-      </div>
     </div>
-</form>
-  
+</div>
