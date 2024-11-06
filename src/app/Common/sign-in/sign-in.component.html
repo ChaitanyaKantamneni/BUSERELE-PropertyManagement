@@ -6,18 +6,28 @@
             <div class="user-icon">
               <i class="fa-solid fa-user"></i>
             </div>
-            <form>
-              <div class="name">
-                <i class="fa-solid fa-user h-100"></i>
-                <input type="text" name="user-name" id="user-name" placeholder="Username" required>
+            <form (submit)="loginform()" [formGroup]="LoginForms">
+              <div class="form-group">
+                <div class="name" [ngClass]="(loginsuccesfull && form.email.errors) || (form.email.touched && form.email.errors) ? 'border border-danger' : ''">
+                  <i class="fa-solid fa-user h-100"></i>
+                  <input type="text" name="user-name" id="user-name" placeholder="Username" required formControlName="email">
+                </div>
+                <div class="text-danger fw-bold" *ngIf="(loginsuccesfull && form.email.errors) || (form.email.touched && form.email.errors)">Enter UserName</div>
               </div>
-              <div class="password">
-                <i class="fa-solid fa-lock h-100"></i>
-                <input type="password" name="password" id="user-password" placeholder="Password" required>
+              
+              <div class="form-group">
+                <div class="password" [ngClass]="(loginsuccesfull && form.password.errors) || (form.password.touched && form.password.errors) ? 'border border-danger' : ''">
+                  <i class="fa-solid fa-lock h-100"></i>
+                  <input type="password" name="password" id="user-password" placeholder="Password" required formControlName="password">
+                </div>
+                <div class="text-danger fw-bold" *ngIf="(loginsuccesfull && form.password.errors) || (form.password.touched && form.password.errors)">Enter Password</div>
               </div>
+              
               <div class="login-btn">
                 <button type="submit">Log In</button>
               </div>
+
+              <p [ngClass]="(LoginStatus)? 'text-danger fw-bold' : ''">{{LoginStatus}}</p>
             </form>
             <div class="forget-password-sign-up-container">
               <div class="forget-password"><a routerLink="#">Forget Password?</a></div>

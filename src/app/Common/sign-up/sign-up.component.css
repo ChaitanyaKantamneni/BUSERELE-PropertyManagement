@@ -153,7 +153,7 @@
     background-color: #444;
   }
   
-  .name,.email,.phone, .password {
+  .name,.email,.phone, .password,.cpassword {
     background-color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -165,11 +165,11 @@
     margin-bottom: 20px;
   }
   
-  .name i,.email i,.phone i,.password i {
+  .name i,.email i,.phone i,.password i,.cpassword i {
     margin-right: 10px;
   }
   
-  .name input,.email input,.phone input,.password input {
+  .name input,.email input,.phone input,.password input,.cpassword input {
     width: 100%;
     border: none;
     outline: none;
