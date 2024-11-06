@@ -38,9 +38,11 @@
     background-color: white;
     padding: 10px 20px;
     border-radius: 5px;
-    margin-bottom: 20px;
     display: flex;
     align-items: center;
+  }
+  .form-group{
+    margin-bottom: 20px;
   }
   
   .name i, .password i {

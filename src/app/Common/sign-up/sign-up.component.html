@@ -4,14 +4,25 @@
             <i class="fa-solid fa-user"></i>
         </div>
         <form (submit)="signup()" [formGroup]="signupform">
-            <div class="name">
+            <div class="form-group">
+              <div class="name" [ngClass]="(submited && form.name.errors) || (form.name.touched && form.name.errors)?'border border-danger':''">
                 <i class="fa-solid fa-user h-100"></i>
-                <input type="text" class="form-control" name="name" placeholder="Enter Name" required formControlName="name">
+                <input type="text" class="form-control" name="name" placeholder="Enter Name" required formControlName="name" pattern="[A-Za-z]+">
+              </div>
+              <div class="text-danger fw-bold" *ngIf="(submited && form.name.errors) || (form.phone.touched && form.name.errors)">Enter Phone Number</div>
+                <div class="text-danger fw-bold" *ngIf="form.name.errors?.pattern">Enter Name In Correct Format</div>
             </div>
-            <div class="email">
+
+            <div class="form-group">
+              <div class="email" [ngClass]="(submited && form.email.errors) || (form.email.touched && form.email.errors)?'border border-danger':''">
                 <i class="fa-solid fa-envelope h-100"></i>
-                <input type="email" class="form-control" name="email" placeholder="Enter Email" required formControlName="email">
+                <input type="email" class="form-control" name="email" placeholder="Enter Email" required formControlName="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+              </div>
+              <div class="text-danger fw-bold" *ngIf="(submited && form.email.errors) || (form.email.touched && form.email.errors)">Enter Phone Number</div>
+              <div class="text-danger fw-bold" *ngIf="form.email.errors?.pattern">Enter Email In Correct Format</div>
             </div>
+            
+            
             <div class="form-group">
               <div class="phone"  [ngClass]="(submited && form.phone.errors) || (form.phone.touched && form.phone.errors)?'border border-danger':''">
                 <i class="fa-solid fa-phone h-100"></i>
@@ -21,18 +32,27 @@
                 <div class="text-danger fw-bold" *ngIf="form.phone.errors?.pattern">Enter Phone Number In Correct Format</div>
             </div>
             <div class="form-group">
-              <div class="password" [ngClass]="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)?'border border-danger':''">
+              <div class="password" [ngClass]="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)  ? 'border border-danger' : ''">
                 <i class="fa-solid fa-lock h-100"></i>
-                <!-- <input type="password" class="form-control" name="pswd" placeholder="Enter Password" required formControlName="pswd"> -->
-                <input type="password" name="psw" class="form-control" placeholder="enter password" formControlName="pswd" required  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+">
+                <input type="password" name="psw" class="form-control" placeholder="enter password" formControlName="pswd" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+" [(ngModel)]="passwordValue">
               </div>
               <p class="text-danger fw-bold" *ngIf="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)">Enter Password</p>
               <p class="text-danger fw-bold" *ngIf="form.pswd.errors?.pattern">Enter Password In Correct Format</p>
             </div>
+            <!-- <div class="form-group">
+              <div class="cpassword" [ngClass]="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors) || (passwordValue !== confirmPasswordValue ? 'border border-danger' : '')">
+                <i class="fa-solid fa-lock h-100"></i>
+                <input type="password" name="cpsw" class="form-control" placeholder="confirm password" required [(ngModel)]="confirmPasswordValue">
+              </div>
+              <p class="text-danger fw-bold" *ngIf="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)">Enter Password</p>
+              <p class="text-danger fw-bold" *ngIf="form.pswd.errors?.pattern">Enter Password In Correct Format</p>
+            </div> -->
             
             <div class="login-btn">
                 <button type="submit">Sign Up</button>
             </div>
+
+            <p [ngClass]="messageColor">{{ registredsuccesfull }}</p>
         </form>
         <div class="sign-up text-center mt-4">
             <span>If you have already registered, </span>
