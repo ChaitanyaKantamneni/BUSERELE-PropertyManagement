@@ -1,3 +1,4 @@
+<app-top-nav></app-top-nav>
 <div class="container p-0">
     <div class="row main m-0">
         <div class="col-md-6 col-12 main-content"> <!-- Added col-12 for small screens -->
@@ -11,28 +12,47 @@
     </div>
     <div class="search-content">
         <div class="row justify-content-center align-items-center h-100 m-0">
-            <div class="col-12 col-md-3"> <!-- Added col-12 for small screens -->
-                <input type="text" class="form-control" placeholder="Search KeyWord">
-            </div>
-            <div class="col-12 col-md-3"> <!-- Added col-12 for small screens -->
-                <select class="form-control" placeholder="dropdown1">
-                    <option value="" disabled selected>Property Type</option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                </select>
-            </div>
-            <div class="col-12 col-md-3"> <!-- Added col-12 for small screens -->
-                <select class="form-control" placeholder="dropdown1">
-                    <option value="" disabled selected>Location</option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                </select>
-            </div>
             <div class="col-12 col-md-3">
-                <button class="btn w-100">Search</button>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search KeyWord"
+                  [(ngModel)]="keyword"
+                  (keyup)="onKeywordChange()"
+                />
+                <div *ngIf="suggestions.length > 0" class="suggestions-dropdown">
+                  <ul>
+                    <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                      {{ suggestion }}
+                    </li>
+                  </ul>
+                </div>
             </div>
+              
+            <div class="col-12 col-md-3">
+                <select class="form-control" [(ngModel)]="selectedPropertyType">
+                  <option value="" disabled hidden>Property Type</option>
+                  <ng-container *ngFor="let property of propertytypes">
+                    <option [value]="property.propertyType">{{ property.name }}</option>
+                  </ng-container>
+                </select>
+            </div>
+              
+              
+              
+            <div class="col-12 col-md-3">
+                <select class="form-control">
+                  <option value="" disabled selected>Location</option>
+                  <option value="option1">Option 1</option>
+                  <option value="option2">Option 2</option>
+                  <option value="option3">Option 3</option>
+                </select>
+            </div>
+              
+            <div class="col-12 col-md-3">
+                <button class="btn w-100" (click)="searchclick()">Search</button>
+            </div>
+              
         </div>
     </div>
     <div class="property-types">
@@ -47,7 +67,7 @@
         <div class="row justify-content-center align-items-center m-0 h-auto">
             <ng-container *ngFor="let property of propertytypes">
                 <div class="col-md-3 col-6 p-2 m-3"> <!-- Added col-6 for small screens -->
-                    <a href="#" class="text-decoration-none">
+                    <a [routerLink]="['/search-properties', property.propertyType]"  routerLinkActive="router-link-active"  class="text-decoration-none">
                         <div class="property-content h-100">
                             <div class="icons mb-3">
                                 <i class="fa {{property.icon}}"></i>
@@ -151,7 +171,7 @@
                 </ng-container>
             </div>
             <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                <button class="btn">Browse More Properties</button>
+                <button class="btn" routerLink="/search-properties">Browse More Properties</button>
             </div>   
         </div>    
     </div>
@@ -195,3 +215,4 @@
         </div> 
     </div>
 </div>
+<app-footer></app-footer>

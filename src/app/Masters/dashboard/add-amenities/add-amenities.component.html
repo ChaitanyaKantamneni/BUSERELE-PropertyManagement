@@ -1,0 +1,14 @@
+<div class="container mt-4">
+    <form (submit)="AminitiesSubmit()" [formGroup]="AminitiesForm">
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                    <label for="txt_Aminity">Aminity</label>
+                    <input type="text" id="txt_Aminity" class="form-control" placeholder="Enter Aminity" formControlName="name">
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="AminitiesSubmit()">Submit</button>
+    </form>
+</div>

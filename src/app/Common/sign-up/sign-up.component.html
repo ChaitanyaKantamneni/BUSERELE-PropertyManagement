@@ -52,7 +52,7 @@
                 <button type="submit">Sign Up</button>
             </div>
 
-            <p [ngClass]="messageColor">{{ registredsuccesfull }}</p>
+            <p [ngStyle]="{'font-weight': 'bold'}" [ngClass]="messageColor">{{registredsuccesfull}}</p>
         </form>
         <div class="sign-up text-center mt-4">
             <span>If you have already registered, </span>

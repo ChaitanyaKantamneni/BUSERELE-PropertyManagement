@@ -1,0 +1,396 @@
+<div class="container mt-4">
+    <form [formGroup]="propertyform" (submit)="insertpropertydetails()">
+        <div class="property-details-container">
+            <h2>Property Details:</h2>
+            <div class="form-container row">
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Property ID</label>
+                        <input type="text" class="form-control" placeholder="Enter Property ID" readonly formControlName="id" [value]="propertyform.get('id').value"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Developed By</label>
+                        <input type="text" class="form-control" placeholder="Please fill Developed By" required formControlName="developedby" />
+                    </div>
+                    <div class="form-group">
+                        <label>Property Title</label>
+                        <input type="text" class="form-control" placeholder="Please fill Property Title" required formControlName="propertyTitle" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="text" class="form-control" placeholder="Please fill Mobile Number" required formControlName="mobileNumber" minlength="10" maxlength="10" pattern="^[0-9]*$" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email ID</label>
+                        <input type="text" class="form-control" placeholder="Please fill Email ID" required formControlName="emailId" />
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="form-control" placeholder="Address of your property" required formControlName="Address" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Land Mark</label>
+                        <input type="text" class="form-control" placeholder="Please fill Near Land Mark" required formControlName="Landmark" />
+                    </div>
+                    <div class="form-group">
+                        <label>Select Country</label>
+                        <select class="form-control" required formControlName="country">
+                            <option value="" disabled selected>Select Country</option>
+                            <option value="1">India</option>
+                            <option value="2">South Africa</option>
+                            <option value="3">America</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select State</label>
+                        <select class="form-control" required formControlName="state">
+                            <option value="" disabled selected>Select State</option>
+                            <option value="1">Andhra Pradesh</option>
+                            <option value="2">Telangana</option>
+                            <option value="3">Tamil Nadu</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" class="form-control" placeholder="City" required formControlName="city" />
+                    </div>
+                    <div class="form-group">
+                        <label>Near By</label>
+                        <input type="text" class="form-control" placeholder="Nearby Landmark" required formControlName="nearBy" />
+                    </div>
+                    <div class="form-group">
+                        <label>Zip/Postal Code</label>
+                        <input type="text" class="form-control" placeholder="Postal Code" required formControlName="zip_postalcode" pattern="^[0-9]*$" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Rera Certificate Number</label>
+                        <input type="text" class="form-control" placeholder="Certificate Number" required formControlName="reraCertificateNumber" />
+                    </div>
+                    <div class="form-group">
+                        <label>Property Approved By</label>
+                        <input type="text" class="form-control" placeholder="Approval Authority" required formControlName="propertyApprovedBy" />
+                    </div>
+                    <div class="form-group">
+                        <label>Select Property Type</label>
+                        <select class="form-control" required formControlName="propertyType">
+                            <option value="" disabled selected>Select Type</option>
+                            <option value="1">Apartments/Flats</option>
+                            <option value="2">Villa</option>
+                            <option value="3">Home</option>
+                            <option value="1">Office Space</option>
+                            <option value="2">Commercial Space</option>
+                            <option value="3">Studio Apartment</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Select Property For</label>
+                        <select class="form-control" required formControlName="propertyFor">
+                            <option value="" disabled selected>Select Purpose</option>
+                            <option value="1">Sell</option>
+                            <option value="2">Lease</option>
+                            <option value="3">Rent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Property Status</label>
+                        <select class="form-control" required formControlName="propertyStatus">
+                            <option value="" disabled selected>Select Status</option>
+                            <option value="1">Completed</option>
+                            <option value="2">InCompleted</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Property Facing</label>
+                        <select class="form-control" required formControlName="propertyFacing">
+                            <option value="" disabled selected>Select Facing</option>
+                            <option value="1">North</option>
+                            <option value="2">East</option>
+                            <option value="3">South</option>
+                            <option value="4">West</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Total Blocks</label>
+                        <input type="text" class="form-control" placeholder="Number of Blocks" required formControlName="totalblocks" />
+                    </div>
+                    <div class="form-group">
+                        <label>Total Floors</label>
+                        <input type="text" class="form-control" placeholder="Number of Floors" required formControlName="totalFloors" />
+                    </div>
+                    <div class="form-group">
+                        <label>Total No. of Flats</label>
+                        <input type="text" class="form-control" placeholder="Number of Flats" required formControlName="totalNoofFlats" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Block Name</label>
+                        <input type="text" class="form-control" placeholder="Block Name" required formControlName="blockName" />
+                    </div>
+                    <div class="form-group">
+                        <label>Property on Which Floor</label>
+                        <input type="text" class="form-control" placeholder="Floor Number" required formControlName="propertyOnWhichFloor" />
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Bedrooms</label>
+                        <input type="text" class="form-control" placeholder="Bedrooms" required formControlName="noOfBedrooms" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Number of Bathrooms</label>
+                        <input type="text" class="form-control" placeholder="Bathrooms" required formControlName="noOfBathrooms" />
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Balconies</label>
+                        <input type="text" class="form-control" placeholder="Balconies" formControlName="noOfBalconies" />
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Parkings</label>
+                        <input type="text" class="form-control" placeholder="Parkings" formControlName="noOfParkings" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Area Type</label>
+                        <select class="form-control" required formControlName="areaType">
+                            <option value="" disabled selected>Select Area Type</option>
+                            <option value="1">Sq/ft</option>
+                            <option value="2">Meters</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Area</label>
+                        <input type="text" class="form-control" placeholder="Please fill total area" required formControlName="totalArea" pattern="^[0-9]*$" />
+                    </div>
+                    <div class="form-group">
+                        <label>Carpet Area</label>
+                        <input type="text" class="form-control" placeholder="Please fill Carpet Area" formControlName="carpetArea" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Price for</label>
+                        <input type="text" class="form-control" placeholder="Price For" required formControlName="priceFor" pattern="^[0-9]*$" />
+                    </div>
+                    <div class="form-group">
+                        <label>Property Total Price</label>
+                        <input type="text" class="form-control" placeholder="Total Price" formControlName="propertyTotalPrice" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label>Amenities Charges</label>
+                        <input type="text" class="form-control" placeholder="Amenities Charges" formControlName="amenitiesCharges" pattern="^[0-9]*$" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="form-group">
+                        <label>Maintenance Charges</label>
+                        <input type="text" class="form-control" placeholder="Maintenance Charges" formControlName="maintenanceCharges" pattern="^[0-9]*$" />
+                    </div>
+                    <div class="form-group">
+                        <label>Corpus Fund</label>
+                        <input type="text" class="form-control" placeholder="Corpus Fund" formControlName="corpusFund" pattern="^[0-9]*$" />
+                    </div>
+                    <div class="form-group">
+                        <label>Build Year</label>
+                        <input type="text" class="form-control" placeholder="Build Year" formControlName="buildYear" />
+                    </div>
+                </div>
+    
+                <div class="form-column col-md-4">
+                    <div class="date-fields">
+                        <div class="form-group">
+                            <label>Possession Date</label>
+                            <input type="date" class="form-control" formControlName="possessionDate" />
+                        </div>
+                        <div class="form-group">
+                            <label>List Date</label>
+                            <input type="date" class="form-control" formControlName="listDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- <div class="form-section mt-4">
+            <div class="form-row">
+                <!-- <div class="form-column upload-container col-md-6">
+                    <h5>Property Gallery:</h5>
+                    <label for="gallery-upload">Upload Property Images</label>
+                    <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file">
+                    <button class="btn btn-primary mt-2">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload</span>
+                    </button>
+                </div> -
+
+                        <div class="form-column upload-container col-md-6">
+                            <h5>Property Gallery:</h5>
+                            <label for="gallery-upload">Upload Property Images</label>
+                            <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file">
+                            <button class="btn btn-primary mt-2" (click)="uploadImages()">
+                                <i class="fas fa-upload"></i>
+                                <span>Upload</span>
+                            </button>
+                        </div>
+                        <!-- New Image Table --
+                        <div class="image-table mt-4">
+                            <h5>Uploaded Images:</h5>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let image of uploadedImages">
+                                        <td>
+                                            <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger" (click)="deleteImage(image)">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Modal for Viewing Images --
+                        <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">View Image</h5>
+                                        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                <div class="form-column upload-container col-md-6">
+                    <h5>Property Floor Plans:</h5>
+                    <label for="floor-plan-upload">Upload Property Floor Images</label>
+                    <input type="file" id="floor-plan-upload" accept="image/*" class="form-control-file">
+                    <button class="btn btn-primary mt-2">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload</span>
+                    </button>
+                </div>
+            </div>
+    
+            <div class="form-row">
+                <div class="form-column upload-container col-md-6">
+                    <h5>Property Documents:</h5>
+                    <label for="documents-upload">Upload Property Documents</label>
+                    <input type="file" id="documents-upload" accept=".pdf,.doc,.docx" class="form-control-file">
+                    <button class="btn btn-primary mt-2">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload</span>
+                    </button>
+                </div>
+    
+                <div class="form-column upload-container col-md-6">
+                    <h5>Video Upload:</h5>
+                    <label for="video-upload">Upload Property Video</label>
+                    <input type="file" id="video-upload" accept="video/*" class="form-control-file">
+                    <button class="btn btn-primary mt-2">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload</span>
+                    </button>
+                </div>
+            </div>
+        </div> -->
+    
+        <div class="social-section mt-4">
+            <h1>Social Networks:</h1>
+            <div class="social-row row">
+                <div class="social-column col-md-6">
+                    <div class="form-group">
+                        <label>Website link (Optional)</label>
+                        <input type="text" class="form-control" placeholder="Website URL" formControlName="websiteLink">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook link (Optional)</label>
+                        <input type="text" class="form-control" placeholder="Facebook URL" formControlName="facebookLink">
+                    </div>
+                </div>
+                <div class="social-column col-md-6">
+                    <div class="form-group">
+                        <label>Pinterest (Optional)</label>
+                        <input type="text" class="form-control" placeholder="Pinterest URL" formControlName="pinterest">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter link (Optional)</label>
+                        <input type="text" class="form-control" placeholder="Twitter URL" formControlName="twitterLink">
+                    </div>     
+                </div>
+            </div>
+            <div class="social-row row">
+                <div class="form-group">
+                    <label>Google Location URL</label>
+                    <input type="text" class="form-control" placeholder="Google URL" formControlName="googlelocationUrl">
+                </div>
+            </div>
+        </div>
+    
+        <div class="availability-container mt-4">
+            <div class="availability-options">
+                <!-- <ul class="list-unstyled" formControlName="availabilityOptions">
+                    <li class="availability-option">
+                      <input type="radio" id="available" name="availability" value="available">
+                      <label for="available">Advertisement Property</label>
+                    </li>
+                    <li class="availability-option">
+                      <input type="radio" id="featured" name="availability" value="not-available">
+                      <label for="featured">Featured Property</label>
+                    </li>
+                    <li class="availability-option">
+                      <input type="radio" id="common" name="availability" value="common">
+                      <label for="common">Common Property</label>
+                    </li>
+                </ul>                            -->
+            </div>
+        </div>
+    
+        <div class="button-container mt-4">
+            <button type="submit" class="btn btn-success" [disabled]="propertyform.invalid">Submit</button>
+        </div>
+    
+    </form>
+    <div class="status">
+        <h5>{{propertyInsStatus}}</h5>
+    </div>
+    <div class="centered-footer mt-4 text-center">
+        <div class="card-body">
+            <span>© 2020 GVR Infosystems. All rights reserved.</span>
+        </div>
+    </div>
+</div>
