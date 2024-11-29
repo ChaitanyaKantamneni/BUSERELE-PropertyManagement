@@ -1,0 +1,91 @@
+<!-- File Upload Section
+<input type="file" (change)="onFileSelect($event)" />
+<input type="text" [(ngModel)]="propID" placeholder="Enter Property ID" />
+<button (click)="uploadImage()">Upload Image</button>
+
+<!-- Button to View Image --
+<button (click)="getImage(1)">View Image</button>  <!-- Pass the imageId you want to fetch -->
+
+<!-- Display the Image when it’s available --
+<div *ngIf="imageUrl">
+  <img [src]="imageUrl" alt="Uploaded Image" width="300" />
+</div> -->
+
+<div>
+    <h5>Uploaded Properties:</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>PropertyID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let property of properties">
+                <td>{{property.propID}}</td>
+                <td>
+                    <button class="btn btn-danger" (click)="editproperty(property.propID)">
+                        <i class="fa fa-edit"></i> Edit
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Image upload and display for a selected property -->
+<div *ngIf="editclicked">
+    <div class="form-column upload-container col-md-6">
+        <h5>Property Gallery:</h5>
+        <label for="gallery-upload">Upload Property Images</label>
+        <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
+        <button class="btn btn-primary mt-2" (click)="uploadImages()">
+            <i class="fas fa-upload"></i> Upload
+        </button>
+    </div>
+    
+    <div class="image-table mt-4">
+        <h5>Uploaded Images:</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>S.no</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let image of uploadedImages1">
+                    <td>
+                        <h5>{{image.id}}</h5>
+                    </td>
+                    <td>
+                        <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" (click)="deleteImage(image)">Delete</button>
+                        <button *ngIf="editclicked" class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for viewing image -->
+    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View Image</h5>
+                    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
