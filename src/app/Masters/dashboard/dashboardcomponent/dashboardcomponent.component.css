@@ -1,0 +1,75 @@
+.container{
+    max-width: 100%;
+}
+
+.properties .col-12{
+    width: 30%;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin: 0 10px;
+    background-color: white;
+}
+
+.propertyspecifications{
+    border-top: 0.5px dotted;
+    padding-top: 10px;
+}
+.propertyspecifications .fa,.propertyprice,.propertyaddress .fa{
+    color: #d0b371;
+    padding-right: 5px;
+}
+
+@media (max-width: 768px) {
+    .w-25{
+        max-width: 100%;
+    }
+    .main{
+        height: auto;
+        padding-bottom: 20px;
+    }
+    .main-content {
+        padding: 20px;
+    }
+
+    .search-content {
+        height: auto;
+        padding: 10px;
+    }
+
+    .property-types {
+        padding: 30px 10px;
+    }
+
+    .property-content {
+        padding: 15px 0;
+    }
+
+    .icons {
+        font-size: large;
+    }
+
+    .propertylist .col-md-6 a {
+        padding: 5px 15px;
+    }
+    .propertylist .properties .col-12,.reviews .col-md-4 {
+        width: 90%;
+        margin: 0 5px;
+    }
+    .browsemorereviews .btn,.browsemoreproperties .btn{
+        width: 100%;
+    }
+    .reviews .p{
+        width:80%;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn {
+        width: 100%;
+    }
+
+    .propertylist .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

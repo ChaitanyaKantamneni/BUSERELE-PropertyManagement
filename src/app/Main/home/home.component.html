@@ -134,9 +134,9 @@
                 </div>
             </div>
             <div class="properties row g-3 justify-content-center align-items-center m-0">
-                <ng-container *ngFor="let propertyitem of propertydetails">
-                    <div class="col-md-4 col-sm-6 col-12 p-0 mb-3">
-                        <a href="#" class="text-decoration-none text-black">
+                <ng-container *ngFor="let propertyitem of propertydetails; let i = index">
+                    <div *ngIf="i < 6" class="col-md-4 col-sm-6 col-12 p-0 mb-3">
+                        <a [routerLink]="['/view-property', propertyitem.propertyID]"  routerLinkActive="router-link-active" class="text-decoration-none text-black">
                             <div class="propertyimage">
                                 <img [src]="propertyitem.propertyimage" class="img-fluid h-100 w-100"> <!-- Changed to img-fluid for responsiveness -->
                             </div>
@@ -169,6 +169,7 @@
                         </a>
                     </div>
                 </ng-container>
+                
             </div>
             <div class="browsemoreproperties row justify-content-center align-items-center m-0">
                 <button class="btn" routerLink="/search-properties">Browse More Properties</button>

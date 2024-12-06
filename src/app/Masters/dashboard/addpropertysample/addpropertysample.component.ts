@@ -2,7 +2,6 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { response } from 'express';
 
 @Component({
   selector: 'app-addpropertysample',
@@ -19,7 +18,6 @@ export class AddpropertysampleComponent implements OnInit {
     this.propertyform.get('TotalArea')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.propertyform.get('PriceFor')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.fetchProperties();
-    //this.totalPages = Math.ceil(this.totalProperties / this.pageSize);
   }
 
   generatePropertyID(){
@@ -38,9 +36,9 @@ export class AddpropertysampleComponent implements OnInit {
 
     if (totalArea && priceFor) {
       const totalPrice = totalArea * priceFor;
-      this.propertyform.get('PropertyTotalPrice')?.setValue(totalPrice, { emitEvent: false }); // Avoid triggering valueChanges again
+      this.propertyform.get('PropertyTotalPrice')?.setValue(totalPrice, { emitEvent: false });
     } else {
-      this.propertyform.get('PropertyTotalPrice')?.setValue('', { emitEvent: false }); // Reset total price if either value is missing
+      this.propertyform.get('PropertyTotalPrice')?.setValue('', { emitEvent: false });
     }
   }
 
@@ -103,8 +101,8 @@ export class AddpropertysampleComponent implements OnInit {
    
 
 
-  selectedFiles: FileList | null = null;  // Store selected files
-  uploadedImages: Array<{ path: string }> = [];  // Store paths of images to display
+  selectedFiles: FileList | null = null;  
+  uploadedImages: Array<{ path: string }> = [];
   uploadedImages1: Array<{ id: number, propID: string, fileName: string, mimeType: string, imageData: Blob, imageUrl: string }> = [];
 
   isModalOpen = false;
@@ -356,7 +354,7 @@ export class AddpropertysampleComponent implements OnInit {
 
         // Create an object URL from the Blob
         const imageUrl = URL.createObjectURL(blob);
-
+        console.log(imageUrl);
         return {
           ...image,
           propID: propID,
@@ -526,84 +524,6 @@ export class AddpropertysampleComponent implements OnInit {
     });
   }
 
-  // currentPage = 1;
-  // pageSize = 10; // Default page size
-  // totalProperties = this.properties.length;
-
-  // get totalPages(): number {
-  //   return Math.ceil(this.totalProperties / this.pageSize);
-  // }
-
-  // getPaginatedProperties() {
-  //   const start = (this.currentPage - 1) * this.pageSize;
-  //   const end = start + this.pageSize;
-  //   return this.properties.slice(start, end);
-  // }
-
-  // // Set the current page
-  // setPage(page: number): void {
-  //   if (page > 0 && page <= this.totalPages) {
-  //     this.currentPage = page;
-  //   }
-  // }
-
-  // // Go to the previous page
-  // previousPage(): void {
-  //   if (this.currentPage > 1) {
-  //     this.currentPage--;
-  //   }
-  // }
-
-  // // Go to the next page
-  // nextPage(): void {
-  //   if (this.currentPage < this.totalPages) {
-  //     this.currentPage++;
-  //   }
-  // }
-
-  // // Handle the page size change
-  // onPageSizeChange(event: any): void {
-  //   this.pageSize = event.target.value;
-  //   this.currentPage = 1; // Reset to the first page whenever page size changes
-  //   this.totalProperties = this.properties.length; // Recalculate total properties if needed
-  // }
-
-  // currentPage = 1;
-  // pageSize = 5; 
-
-  // get totalPages(): number {
-  //   return Math.ceil(this.properties.length / this.pageSize);
-  // }
-
-  // getPaginatedProperties() {
-  //   const start = (this.currentPage - 1) * this.pageSize;
-  //   const end = start + this.pageSize;
-  //   return this.properties.slice(start, end);
-  // }
-
-  // setPage(page: number): void {
-  //   if (page > 0 && page <= this.totalPages) {
-  //     this.currentPage = page;
-  //   }
-  // }
-
-  // previousPage(): void {
-  //   if (this.currentPage > 1) {
-  //     this.currentPage--;
-  //   }
-  // }
-
-  // nextPage(): void {
-  //   if (this.currentPage < this.totalPages) {
-  //     this.currentPage++;
-  //   }
-  // }
-
-  // onPropertiesChange(newProperties: any[]) {
-  //   this.properties = newProperties;
-  // }
-
-
   addNewProperty(){
     this.addnewPropertyclicked=true;
     this.generatePropertyID();
@@ -641,10 +561,9 @@ export class AddpropertysampleComponent implements OnInit {
   getUserProperties(){
     this.apihttp.get(`https://localhost:7190/api/Users/GetAllUsersPropertyDetails?userID=${this.userID}`)  // Adjust the API endpoint accordingly
     .subscribe((response: any) => {
-      // Map the response to extract only the propID, propname, and developedby fields
       this.properties = response.map((property: any) => ({
         propID: property.propID,
-        propname: property.propname,  // Adjust field names if necessary
+        propname: property.propname,
         developedby: property.developedby
       }));
 
@@ -657,10 +576,8 @@ export class AddpropertysampleComponent implements OnInit {
 
   currentPage = 1;
   pageSize = 5; // Fixed page size (5 items per page)
-  //properties: any[] = []; // This will hold your properties data
   searchQuery: string = ''; // Variable to hold the search query
 
-  // Assuming properties are already available or fetched from a service
 
   // Filter properties based on the search query
   get filteredProperties() {

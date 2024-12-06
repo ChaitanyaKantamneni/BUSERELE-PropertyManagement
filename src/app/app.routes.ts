@@ -12,9 +12,14 @@ import { AddAmenitiesComponent } from './Masters/dashboard/add-amenities/add-ame
 import { AddpropertysampleComponent } from './Masters/dashboard/addpropertysample/addpropertysample.component';
 import { ImageuploadComponent } from './Masters/imageupload/imageupload.component';
 import { SearchPropertiesComponent } from './Main/search-properties/search-properties.component';
+import { ViewPropertyComponent } from './Main/view-property/view-property.component';
+import { DashboardcomponentComponent } from './Masters/dashboard/dashboardcomponent/dashboardcomponent.component';
+import { Home1Component } from './Main/home1/home1.component';
+
+
 export const routes: Routes = [
-    {path:'',component:HomeComponent},
-    {path:'home',component:HomeComponent},
+    //{path:'',component:HomeComponent},
+    //{path:'home',component:HomeComponent},
     {path:'contact-us',component:ContactUsComponent},
     {path:'about-us',component:AboutUsComponent},
     {path:'signin',component:SignInComponent},
@@ -22,17 +27,22 @@ export const routes: Routes = [
     {path:'search-properties',component:SearchPropertiesComponent},
     {path:'search-properties/:propertyType',component:SearchPropertiesComponent},
     { path: 'search-properties/:propertyType/:keyword', component: SearchPropertiesComponent},
+    {path:'view-property/:propertyID',component:ViewPropertyComponent},
     {path:'dashboard',component:DashboardComponent,
         children:
         [
-            {path:'',component:AddAmenitiesComponent},
+            {path:'',component:DashboardcomponentComponent},
             {path:'amenities',component:AddAmenitiesComponent},
             {path:'profile',component:ProfileComponent},
-            {path:'add-property',component:AddPropertyComponent},
             {path:'membership-details',component:MembershipDetComponent},
             {path:'addpropertysample',component:AddpropertysampleComponent},
-            {path:'uploadimage',component:ImageuploadComponent}
+            {path:'displayimage',component:ImageuploadComponent},
+            {path:'dashboarddet',component:DashboardcomponentComponent}
         ]
-    }
+    },
+
+
+    {path:'',component:Home1Component},
+    {path:'home',component:Home1Component},
 
 ];

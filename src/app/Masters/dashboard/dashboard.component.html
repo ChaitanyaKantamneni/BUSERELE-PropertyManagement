@@ -10,9 +10,9 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/dashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" routerLink="/membership"><i class="fa fa-user-check"></i> Membership Details</a>
-            </li>
+            </li> -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="propertyDropdown" role="button" data-bs-toggle="dropdown">
                 <i class="fa fa-building"></i> Property Details
@@ -38,13 +38,13 @@
               <img src="" alt="BUSERELE" />
             </div>    
             <ul class="menu">
-              <li><i class="fa fa-tachometer-alt"></i> Dashboard</li>
-              <li routerLink="/dashboard/membership-details"><i class="fa fa-user-check"></i> Membership Details</li>
-              <li routerLink="/dashboard/add-property"><i class="fa fa-plus-circle"></i> Add Property</li>
+              <li routerLink="/dashboard/dashboarddet"><i class="fa fa-tachometer-alt"></i> Dashboard</li>
+              <!-- <li routerLink="/dashboard/membership-details"><i class="fa fa-user-check"></i> Membership Details</li> -->
+              <li routerLink="/dashboard/addpropertysample"><i class="fa fa-plus-circle"></i> Add Property</li>
               <li routerLink="/dashboard/amenities"><i class="fa fa-plus-circle"></i> Add Amenities</li>
               <li routerLink="/dashboard/profile"><i class="fas fa-user"></i> My Profile</li>
-              <li routerLink="/dashboard/addpropertysample"><i class="fas fa-user"></i> add property sample</li>
-              <li routerLink="/dashboard/uploadimage"><i class="fas fa-user"></i> image upload</li>
+              <!-- <li routerLink="/dashboard/addpropertysample"><i class="fas fa-user"></i> add property sample</li> -->
+              <li routerLink="/dashboard/displayimage"><i class="fas fa-user"></i> image upload</li>
               <li (click)="logout()"><i class="fa fa-sign-out-alt"></i> Logout</li>
             </ul>
         </div>

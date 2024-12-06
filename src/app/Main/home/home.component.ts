@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class HomeComponent implements OnInit {
   propertyType: string | null = null;
   keyword: string | null = '';
+  selectedPropertyID: string | null = '';
   suggestions: string[] = [];
   selectedPropertyType: string | null = '';
   constructor( public apiurl:HttpClient,private route: ActivatedRoute,public routes:Router){}
@@ -23,15 +24,13 @@ export class HomeComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.propertyType = params.get('propertyType');
       this.keyword = params.get('keyword');
-  
-      console.log('Selected Property Type:', this.propertyType);
-      console.log('Selected Keyword:', this.keyword);
-  
-      // Set selectedPropertyType if needed for other purposes
+      this.selectedPropertyID=params.get('propID');
       if (this.propertyType) {
         this.selectedPropertyType = this.propertyType;
       }
     });
+
+    this.loadPropertyDetails();
   }
 
   propertytypes:any[]=[{
@@ -71,47 +70,19 @@ export class HomeComponent implements OnInit {
     propertiesCount:''
   }
 ]
-propertydetails:any[]=[{
-    propertyimage:'assets/images/img1.png',
-    propertyprice:'12000',
-    propertyname:'Marvel Grenduer',
-    propertyaddress:'202,pragathi nagar, Hyderabad',
-    propertyarea:'1200',
-    propertybeds:'2',
-    propertybathrooms:'2',
-    propertytype:'apartment'
-},
-{
-  propertyimage:'assets/images/img1.png',
-    propertyprice:'12000',
-    propertyname:'Marvel Grenduer',
-    propertyaddress:'202,pragathi nagar, Hyderabad',
-    propertyarea:'1200',
-    propertybeds:'2',
-    propertybathrooms:'2',
-    propertytype:'villa'
-},
-{
-  propertyimage:'assets/images/img1.png',
-    propertyprice:'12000',
-    propertyname:'Marvel Grenduer',
-    propertyaddress:'202,pragathi nagar, Hyderabad',
-    propertyarea:'1200',
-    propertybeds:'2',
-    propertybathrooms:'2',
-    propertytype:'apartment'
-},
-{
-  propertyimage:'assets/images/img1.png',
-    propertyprice:'12000',
-    propertyname:'Marvel Grenduer',
-    propertyaddress:'202,pragathi nagar, Hyderabad',
-    propertyarea:'1200',
-    propertybeds:'2',
-    propertybathrooms:'2',
-    propertytype:'apartment'
-}
-]
+// propertydetails:any[]=[{
+//     propertyID:'',
+//     propertyimage:'',
+//     propertyprice:'',
+//     propertyname:'',
+//     propertyaddress:'',
+//     propertyarea:'',
+//     propertybeds:'',
+//     propertybathrooms:'',
+//     propertytype:''
+// }]
+
+propertydetails: any[] = [];
 
 userreviews:any[]=[{
   username:'Chaitanya',
@@ -189,12 +160,6 @@ selectSuggestion(suggestion: string) {
 }
 
 searchclick(){
-  // if (this.selectedPropertyType || this.keyword) {
-  //   this.routes.navigate(['/search-properties', this.selectedPropertyType || 'defaultType', this.keyword || 'defaultKeyword']);
-  // } else {
-  //   alert('Please select a property type or enter a keyword.');
-  // }
-
   if (this.selectedPropertyType && this.keyword) {
     // Navigate if both selected property type and keyword are provided
     this.routes.navigate(['/search-properties', this.selectedPropertyType, this.keyword]);
@@ -205,4 +170,80 @@ searchclick(){
     alert('Please select a property type or enter a keyword.');
   }
 }
+
+
+loadPropertyDetails() {
+  this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImages')
+    .subscribe(
+      (response: any[]) => {
+        console.log('API Response:', response);
+
+        // Map the API response to the propertydetails array
+        this.propertydetails = response.map((property: any) => {
+          let propertyImage: string = ''; // Default image if no valid image found
+
+          // Log the whole property object for inspection
+          console.log('Full Property:', property);
+
+          // Check if 'images' exists and is an array
+          if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+            console.log('Property Images:', property.images);
+
+            // Process the first image in the array
+            const firstImage = property.images[0];
+
+            if (firstImage.fileData) {
+              console.log('First Image File Data:', firstImage.fileData);
+
+              try {
+                // Decode the Base64 string into raw binary data
+                const byteCharacters = atob(firstImage.fileData);
+                const byteArray = new Uint8Array(byteCharacters.length);
+
+                // Copy the binary data into the byteArray
+                for (let i = 0; i < byteCharacters.length; i++) {
+                  byteArray[i] = byteCharacters.charCodeAt(i);
+                }
+
+                // Create a Blob from the byteArray
+                const blob = new Blob([byteArray], { type: firstImage.mimeType });
+
+                // Create an object URL from the Blob
+                propertyImage = URL.createObjectURL(blob);
+
+                // Log the URL for verification
+                console.log('Generated Image URL:', propertyImage);
+              } catch (error) {
+                console.error('Error decoding first image data:', error);
+              }
+            } else {
+              propertyImage='assets/images/img1.png';
+            }
+          } else {
+            console.log('images property is missing, not an array, or empty.');
+          }
+
+          // Return the final object for each property
+          return {
+            propertyID: property.propID || 'N/A',  // Default value if undefined
+            propertyname: property.propname || 'Unknown Property',  // Default value if undefined
+            propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
+            propertyaddress: property.address || 'Address not available',  // Default value if undefined
+            propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
+            propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
+            propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
+            propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
+            propertyimage: propertyImage  // Set the first converted Blob URL or default image URL
+          };
+        });
+
+        console.log('Mapped Properties:', this.propertydetails);
+      },
+      (error) => {
+        console.error('Error fetching property details:', error);
+      }
+    );
+}
+  
+
 }
