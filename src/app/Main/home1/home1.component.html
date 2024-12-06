@@ -1,0 +1,466 @@
+<div *ngIf="isLoading" class="preloader">
+    <img src="assets/images/load.gif" alt="Loading...">
+</div>
+<div *ngIf="!isLoading">
+    <app-top-nav-1></app-top-nav-1>
+    <div class="container p-0 m-0">
+        <div class="maincontainer">
+            <div class="overlay"></div>
+            <div class="content-wrapper">
+                <div class="d-flex justify-content-center align-items-center flex-column h-100 w-100">
+                    <div class="content">
+                        <h5 class="bold-text text-white">YOUR DREAM HOME</h5>
+                        <p class="p-text text-white d-flex justify-content-center align-items-center">IS ONE CLICK AWAY</p>
+                    </div>
+                    <div class="search-content w-75">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <ul class="nav nav-pills flex-nowrap">
+                                <li class="nav-item">
+                                    <button class="nav-link" (click)="selectOption('')" [class.active]="propertyFor === ''" [ngClass]="{'bg-white text-primary': propertyFor === '', 'bg-primary text-white': propertyFor !== ''}">ALL UNITS</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" (click)="selectOption('2')" [class.active]="propertyFor === '2'" [ngClass]="{'bg-white text-primary': propertyFor === '2', 'bg-primary text-white': propertyFor !== '2'}">FOR RENT</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" (click)="selectOption('1')" [class.active]="propertyFor === '1'" [ngClass]="{'bg-white text-primary': propertyFor === '1', 'bg-primary text-white': propertyFor !== '1'}">FOR SALE</button>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="row justify-content-center align-items-center h-100 m-0 bg-white rounded">
+                            <div class="col-12 col-md-3">
+                                <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Search KeyWord"
+                                [(ngModel)]="keyword"
+                                (keyup)="onKeywordChange()"
+                                />
+                                <div *ngIf="suggestions.length > 0" class="suggestions-dropdown">
+                                <ul>
+                                    <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                                    {{ suggestion }}
+                                    </li>
+                                </ul>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <select class="form-control" [(ngModel)]="selectedPropertyType">
+                                <option value="" disabled hidden>Property Type</option>
+                                <ng-container *ngFor="let property of propertytypes">
+                                    <option [value]="property.propertyType">{{ property.name }}</option>
+                                </ng-container>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <select class="form-control">
+                                <option value="" disabled selected>Location</option>
+                                <option value="option1">Option 1</option>
+                                <option value="option2">Option 2</option>
+                                <option value="option3">Option 3</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12 col-md-3">
+                                <button class="btn w-100" (click)="searchclick()">Search</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ExploreAdertisingProperties">
+            <div class="container">
+                <div class="headding">
+                    <h5 class="bold-text d-flex justify-content-center align-items-center">Explore Our Properties</h5>
+                    <p class="p-text d-flex justify-content-center align-items-center">Enjoy the variety of 100+ Different properties in the market!</p>
+                </div>
+                <div class="PropertiesList">
+                    <div class="properties row g-3 justify-content-center align-items-center m-0">
+                        <ng-container *ngFor="let propertyitem of propertydetails; let i = index">
+                            <div *ngIf="i < 6" class="col-lg-3 col-md-6 col-sm-12 p-0 mb-3 rounded-2">
+                                <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
+                                    <!-- <div class="propimg rounded-2 position-relative">
+                                        <img [src]="propertyitem.propertyimage" class="img-fluid h-100 w-100" alt="Property Image">
+                                        <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
+                                        <div class="bottom-bar position-absolute bottom-0 start-0 w-100">
+                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0">
+                                                    <i class="fa fa-ruler-combined text-white me-2"></i>
+                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertyarea}} Sqft</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bed text-white me-2"></i>
+                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybeds}}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bathtub text-white me-2"></i>
+                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybathrooms}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="PropertyDet">
+                                        <div class="propertyname d-flex justify-content-between align-items-center mt-2">
+                                            <h5 class="mb-0">{{propertyitem.propertyname}}</h5>
+                                            <p class="mb-0">{{convertToCrores(propertyitem.propertyprice)}}</p>
+                                        </div>
+                                        <div class="propertyaddress d-flex align-items-center mt-1">
+                                            <i class="fa fa-location"></i>
+                                            <p class="mb-0 ms-2">{{propertyitem.propertyaddress}}</p>
+                                        </div>
+                                    </div> -->
+                                    <div class="propertyFulldet d-flex">
+                                        <!-- Property Image Section -->
+                                        <div class="propertyImage position-relative">
+                                            <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
+                                            <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
+                                            <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
+                                                <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
+                                                    <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Property Details Section -->
+                                        <div class="propertyDetails">
+                                            <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
+                                                <i class="fa fa-location"></i>
+                                                <p class="mb-0 ms-2">
+                                                    {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
+                                                </p>
+                                                  
+                                            </div>
+                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-1">
+                                                <div class="col-4 d-flex align-items-center p-0">
+                                                    <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bed text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center">
+                                                <div class="col-4 d-flex align-items-center p-0">
+                                                    <i class="fa fa-home text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{ propertyitem.propertytypeName.length > 07 ? (propertyitem.propertytypeName | slice:0:07) + '...' : propertyitem.propertytypeName }}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-compass text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-car text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="propertyFooter position-relative mt-2">
+                                                <div class="bottom-bar2 d-flex justify-content-end align-items-center">
+                                                    
+                                                    <div class="cost d-flex justify-content-end">
+                                                        <div class="price">
+                                                            <p class="mb-0 text-white m-lg-1">Price: </p>
+                                                        </div>
+                                                        <p class="mb-0 text-white m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </a>
+                            </div>
+                        </ng-container>  
+                    </div>                    
+                    <div class="browsemoreproperties row justify-content-center align-items-center m-0">
+                        <button class="btn" routerLink="/search-properties">Browse More Properties</button>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="ServiceDiv d-flex justify-content-center align-items-center">
+            <div class="overlay"></div>
+            <div class="content-wrapper">
+                <!-- <div class="d-flex justify-content-between align-items-start w-100 h-auto">
+
+                    <div class="contactformcontent d-flex justify-content-center align-items-center">
+                        <div class="content">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="heading mb-3 w-50">
+                                    <h4 class="bold-text text-white">Why Our Service Is The Perfect Choice?</h4>
+                                </div>
+                                <div class="steps w-50">
+                                    <h5 class="bold-text1 text-white">Personalized Service</h5>
+                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="steps w-50">
+                                    <h5 class="bold-text1 text-white">Financing made easy.</h5>
+                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
+                                </div>
+                                <div class="steps w-50">
+                                    <h5 class="bold-text1 text-white">24/7 support</h5>
+                                    <p class="text-white">We are supporting digital marketing also.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contactformdiv">
+                        <div class="contactform">
+                            <p class="p-text">Real Estate Inquiry Form</p>
+                            <form>
+                                <div class="form-group">
+                                    <label for="contactname">Name</label>
+                                    <input type="text" id="contactname" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactEmail">Email</label>
+                                    <input type="email" id="contactEmail" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactphone">Phone (Optional)</label>
+                                    <input type="text" id="contactphone" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactMessage">Message</label>
+                                    <textarea id="contactMessage" class="form-control" rows="4"></textarea>
+                                </div>
+                                <button class="btn w-100">Submit</button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                </div> -->
+                <div class="d-flex flex-wrap justify-content-between align-items-start w-100 h-100">
+                    <div class="contactformcontent d-flex justify-content-center align-items-center m-0 h-100">
+                        <div class="content">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="heading mb-3">
+                                    <h4 class="bold-text text-white">Why Our Service Is The Perfect Choice?</h4>
+                                </div>
+                                <div class="steps">
+                                    <h5 class="bold-text1 text-white">Personalized Service</h5>
+                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
+                                </div>     
+                            </div>
+                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="steps mb-3">
+                                    <h5 class="bold-text1 text-white">Financing made easy.</h5>
+                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
+                                </div>
+                                <div class="steps mb-3">
+                                    <h5 class="bold-text1 text-white">24/7 support</h5>
+                                    <p class="text-white">We are supporting digital marketing also.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contactformdiv">
+                        <div class="contactform">
+                            <p class="p-text">Real Estate Inquiry Form</p>
+                            <form [formGroup]="userEnquiryform">
+                                <div class="form-group">
+                                  <label for="contactname">Name</label>
+                                  <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="contactEmail">Email</label>
+                                  <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="contactphone">Phone (Optional)</label>
+                                  <input type="text" id="contactphone" class="form-control" formControlName="phone" name="phone">
+                                </div>
+                                <div class="form-group">
+                                  <label for="contactMessage">Message</label>
+                                  <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
+                                </div>
+                                <button class="btn w-100" (click)="enquiryformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>                
+            </div>
+        </div>
+        <div class="ExploreFeaturedProperties">
+            <div class="container">
+                <div class="headding">
+                    <h5 class="bold-text d-flex justify-content-center align-items-center">Featured Listings</h5>
+                    <p class="p-text d-flex justify-content-center align-items-center">Browse our wide range of featured properties.</p>
+                </div>
+                <div class="PropertiesList">
+                    <div class="properties row g-3 justify-content-center align-items-center m-0">
+                        <ng-container *ngFor="let propertyitem of FeaturedProperties; let i = index">
+                            <div *ngIf="i < 3" class="col-lg-4 col-md-6 col-sm-12 p-0 mb-3 rounded-2">
+                                <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
+                                    <!-- <div class="propimg rounded-2 position-relative">
+                                        <img [src]="propertyitem.propertyimage" class="img-fluid h-100 w-100" alt="Property Image">
+                                        <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
+                                        <div class="bottom-bar position-absolute bottom-0 start-0 w-100">
+                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0">
+                                                    <i class="fa fa-ruler-combined text-white me-2"></i>
+                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertyarea}} Sqft</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bed text-white me-2"></i>
+                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybeds}}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bathtub text-white me-2"></i>
+                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybathrooms}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="PropertyDet">
+                                        <div class="propertyname d-flex justify-content-between align-items-center mt-2">
+                                            <h5 class="mb-0">{{propertyitem.propertyname}}</h5>
+                                            <p class="mb-0">{{convertToCrores(propertyitem.propertyprice)}}</p>
+                                        </div>
+                                        <div class="propertyaddress d-flex align-items-center mt-1">
+                                            <i class="fa fa-location"></i>
+                                            <p class="mb-0 ms-2">{{propertyitem.propertyaddress}}</p>
+                                        </div>
+                                    </div> -->
+
+                                    <div class="propertyFulldet d-flex">
+                                        <!-- Property Image Section -->
+                                        <div class="propertyImage position-relative">
+                                            <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
+                                            <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
+                                            <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
+                                                <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
+                                                    <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Property Details Section -->
+                                        <div class="propertyDetails">
+                                            <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
+                                                <i class="fa fa-location"></i>
+                                                <p class="mb-0 ms-2">
+                                                    {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
+                                                </p>
+                                            </div>
+                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-1">
+                                                <div class="col-4 d-flex align-items-center p-0">
+                                                    <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bed text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center">
+                                                <div class="col-4 d-flex align-items-center p-0">
+                                                    <i class="fa fa-home text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{ propertyitem.propertytypeName.length > 07 ? (propertyitem.propertytypeName | slice:0:07) + '...' : propertyitem.propertytypeName }}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-compass text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
+                                                </div>
+                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                    <i class="fa fa-car text-dark me-2 small-icon"></i>
+                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="propertyFooter position-relative mt-2">
+                                                <div class="bottom-bar2 d-flex justify-content-end align-items-center">
+                                                    
+                                                    <div class="cost d-flex justify-content-end">
+                                                        <div class="price">
+                                                            <p class="mb-0 text-white m-lg-1">Price: </p>
+                                                        </div>
+                                                        <p class="mb-0 text-white m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                    
+                                </a>
+                            </div>
+                        </ng-container>  
+                    </div>                    
+                    <div class="browsemoreproperties row justify-content-center align-items-center m-0">
+                        <button class="btn" routerLink="/search-properties">Browse More Properties</button>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="Testimonials">
+            <div class="container">
+                <div class="headding">
+                    <h5 class="bold-text d-flex justify-content-center align-items-center">Testimonials</h5>
+                    <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p>
+                </div>
+                <div class="reviewsList d-flex justify-content-center align-items-center flex-column">
+                    <div class="review-container">
+                        <div class="review-content">
+                            <ng-container *ngFor="let reviewitem of reviews">
+                                <div class="review-card d-flex flex-column justify-content-center align-items-center">
+                                    <div class="image">
+                                        <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
+                                    </div>
+                                    <div class="review-text w-100">
+                                        <div class="username w-100 d-flex justify-content-center align-items-center">
+                                            <h5>{{ reviewitem.Username }}</h5>
+                                        </div>
+                                        <div class="date w-100 d-flex justify-content-center align-items-center">
+                                            <p>{{ reviewitem.posteddate }}</p>
+                                        </div>
+                                        <div class="content w-100 d-flex justify-content-center align-items-center">
+                                            <p class="review-text-content">“{{ truncateText(reviewitem.review, 60) }}”</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <!-- Clone the content to create the looping effect -->
+                            <ng-container *ngFor="let reviewitem of reviews">
+                                <div class="review-card d-flex flex-column justify-content-center align-items-center">
+                                    <div class="image">
+                                        <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
+                                    </div>
+                                    <div class="review-text w-100">
+                                        <div class="username w-100 d-flex justify-content-center align-items-center">
+                                            <h5>{{ reviewitem.Username }}</h5>
+                                        </div>
+                                        <div class="date w-100 d-flex justify-content-center align-items-center">
+                                            <p>{{ reviewitem.posteddate }}</p>
+                                        </div>
+                                        <div class="content w-100 d-flex justify-content-center align-items-center">
+                                            <p class="review-text-content">“{{ truncateText(reviewitem.review, 60) }}”</p>
+                                        </div>                                          
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>                        
+                    </div>
+                    <div class="browsemoreproperties row justify-content-center align-items-center mt-5">
+                        <button class="btn" routerLink="/search-properties">Browse More Reviews</button>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-footer></app-footer>
+</div>

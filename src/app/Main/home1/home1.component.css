@@ -1,0 +1,560 @@
+.container{
+    max-width: 100%;
+}
+
+.preloader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+  
+.preloader img {
+    width: 100px; 
+}
+
+.maincontainer,.ServiceDiv {
+    position: relative;
+    background-image: url('../../../../public/assets/images/Home/maincontainer.jpg');
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+.bold-text {
+    font-weight: bold;
+    font-size: xx-large;
+    font-family: 'Rockwell Extra Bold', serif;
+}
+
+.p-text{
+    font-size: x-large;
+    font-family: 'Bodoni MT',serif;
+}
+
+.btn{
+    background-color:#2495FD;
+    color: white;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.Testimonials .browsemoreproperties .btn{
+    background-color: transparent;
+    border: dotted;
+    color: black;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+.Testimonials .browsemoreproperties .btn:hover{
+    background-color: #2495FD;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+.bg-primary {
+    background-color: #2495FD !important; 
+}
+
+.text-white {
+    color: white !important;
+}
+
+.bg-white {
+    background-color: #ffffffa1 !important;
+}
+
+.text-primary {
+    color: blue !important;
+}
+
+.nav-pills .nav-link{
+    border-radius: 10px 10px 0px 0px;
+}
+
+.nav-item {
+    flex: 1; 
+    text-align: center;
+}
+
+.nav-link {
+    white-space: nowrap; 
+}
+
+.suggestions-dropdown {
+    position: relative; 
+    width: 100%;
+    margin-top: 2px; 
+}
+  
+.suggestions-dropdown ul {
+    list-style: none; 
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-top: none;
+    background-color: #fff;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    z-index: 1000;
+}
+  
+.suggestions-dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+  
+.suggestions-dropdown li:hover {
+    background-color: #f8f9fa;
+}
+
+select.form-control option:disabled {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.propimg {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.propimg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px; 
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.ExploreAdertisingProperties{
+    margin: 50px 0px;
+}
+.ExploreFeaturedProperties,.Testimonials{
+    margin: 80px 40px;
+}
+
+.ServiceDiv .bold-text1 {
+    font-weight: bold;
+    font-size: x-large;
+    font-family: 'Arial Rounded MT Bold', serif;
+}
+
+.ServiceDiv .p-text{
+    font-size:larger;
+    font-family: 'Bodoni MT',serif;
+    border-bottom: 1px solid rgb(107, 107, 107);
+}
+
+.ServiceDiv .contactform {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+}
+
+.contactformcontent {
+    height: 100%;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.contactformdiv {
+    max-width: 400px; 
+    margin: auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contactform {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contactform .form-group {
+    margin-bottom: 8px;
+}
+
+.contactform .form-group label {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.contactform .form-control {
+    height: 30px;
+    font-size: 0.85rem;
+}
+
+.contactform textarea.form-control {
+    height: 60px; 
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+.contactform .btn {
+    padding: 8px;
+    font-size: 0.85rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.contactform .btn:hover {
+    background-color: #0056b3;
+}
+
+.content .heading,.content .steps{
+    width: 45%;
+}
+
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.Testimonials .image{
+    height: 100px;
+    width: 50%;
+    border-radius: 50%;
+}
+
+.Testimonials .bold-text {
+    font-weight: bold;
+    font-size: x-large;
+    font-family: 'Arial Rounded MT Bold', serif;
+}
+
+.review-container {
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    width: 100%;
+}
+  
+.review-content {
+    display: inline-flex;
+    animation: scroll 20s linear infinite;
+}
+
+.review-container{
+    width: 75%;
+}
+
+.review-card {
+    display: inline-block;
+    width: 250px;
+    margin-right: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    vertical-align: top;
+    padding: 10px;
+}
+  
+.review-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+
+.review-text {
+        width: 100%; 
+        padding: 10px;
+        text-align: center;
+}
+    
+.review-text-content {
+        display: block;
+        word-wrap: break-word;
+        white-space: normal; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 100px;
+        line-height: 1.5;
+        font-size: 1rem;
+        font-family: 'Arial', sans-serif; 
+        color: #333; 
+        font-style: italic;
+} 
+
+
+.propertyFulldet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 350px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.propertyImage {
+    position: relative;
+    width: 100%;
+    height: 60%;
+}
+
+.propertyDetails {
+    height: 40%;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bottom-bar {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+.bottom-bar1 {
+    background: linear-gradient(to right, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
+    width: 85%; /* Adjust the width as needed */
+    color: white;
+    margin: 0 auto; /* Centers the element */
+    padding: 10px; /* Adds some internal spacing */
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* .propertyFooter {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    height: 100%; /* Adjust based on your design *
+} */
+
+.bottom-bar2 {
+    background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
+    color: white;
+    padding: 0px 10px;
+    text-align: center;
+}
+
+
+
+.propertyaddress i {
+    font-size: 1.2rem; /* Adjust as needed */
+}
+
+.propertyspecifications {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.propertyDetails .price {
+    font-weight: bold;
+}
+
+.propertyDetails .cost {
+    color: #007bff; /* Or use a color that fits your design */
+}
+
+.smaller-text,.small-icon {
+    font-size: 12px; /* Adjust as needed */
+}
+  
+
+@keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+}
+  
+
+@media (min-width: 1200px) {
+    .maincontainer {
+        height: 80vh;
+    }
+    .properties .col-lg-3,.row .col-lg-4{
+        width: 22%;
+        margin: 0 10px;
+    }
+    .browsemoreproperties .btn{
+        width: 25%;
+    }
+    .Testimonials .browsemoreproperties{
+        width: 100%;
+    }
+    .ServiceDiv{
+        padding: 30px;
+    }
+
+    .contactformcontent {
+        width: 65%;
+    }
+
+    .contactformdiv {
+        width: 30%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .maincontainer {
+        height: 70vh;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .maincontainer {
+        height: 80vh;
+    }
+}
+
+@media (max-width: 767px) {
+    .maincontainer {
+        height: 90vh;
+    }
+    .steps h4 {
+        font-size: 1.25rem;
+    }
+    .steps h5 {
+        font-size: 1rem;
+    }
+    .form-control {
+        font-size: 0.9rem;
+    }
+    .btn {
+        padding: 0.5rem;
+    }
+    .ServiceDiv{
+        padding: 10px;
+    }
+
+    .contactformcontent,
+    .contactformdiv {
+        width: 100%; 
+        padding: 15px; 
+    }
+
+    .contactform {
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .contactform .p-text {
+        font-size: 1.2rem; 
+    }
+
+    .form-group label {
+        font-size: 0.9rem; 
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.9rem;
+    }
+
+    .review-container{
+        width: 100%;
+    }
+
+    .ExploreFeaturedProperties,.ExploreAdertisingProperties{
+        margin: 20px 10px;
+    }
+
+    .content .heading,.content .steps{
+        width: 100%;
+    }
+
+    .propertyFulldet {
+        flex-direction: column;
+    }
+
+    .propertyImage {
+        flex: 1;
+    }
+
+    .propertyDetails {
+        flex: 2;
+    }
+
+    .smaller-text,.small-icon {
+        font-size: 16px; /* Adjust as needed */
+    }
+}

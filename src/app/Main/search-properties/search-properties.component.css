@@ -1,203 +1,218 @@
 .container{
     max-width: 100%;
 }
-.main{
-    height: 450px;
+
+.preloader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
 }
+  
+.preloader img {
+    width: 100px; 
+}
+
+.propertyFulldet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 350px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.propertyImage {
+    position: relative;
+    width: 100%;
+    height: 60%;
+}
+
+.propertyDetails {
+    height: 40%;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bottom-bar1 {
+    background: linear-gradient(to right, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
+    width: 85%; /* Adjust the width as needed */
+    color: white;
+    margin: 0 auto; /* Centers the element */
+    padding: 10px; /* Adds some internal spacing */
+    position: relative;
+    overflow: hidden;
+}
+
+.bottom-bar2 {
+    background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
+    color: white;
+    padding: 0px 10px;
+    text-align: center;
+}
+
+.propertyaddress i {
+    font-size: 1.2rem; /* Adjust as needed */
+}
+
+.propertyspecifications {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.propertyDetails .price {
+    font-weight: bold;
+}
+
+.propertyDetails .cost {
+    color: #007bff; /* Or use a color that fits your design */
+}
+
+.smaller-text,.small-icon {
+    font-size: 12px; /* Adjust as needed */
+}
+
+.properties .col-lg-3,.row .col-lg-4{
+    width: 30%;
+    margin: 0 10px;
+}
+
+/* .properties{
+    margin: 30px 0px;
+    width: 75%;
+    overflow: auto;
+} */
+
+.main-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100vh - 60px); /* Adjust for header/footer height */
+    overflow: hidden;
+}
+
+/* Properties container */
+.properties-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    width: 75%;
+    height: calc(100vh - 60px);
+}
+
+/* Mortgage section */
+.Mortgage {
+    position: sticky;
+    height: calc(100vh - 60px);
+    width: 25%; /* Fixed width */
+    background-color: #f7f7f7;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    border-left: 2px solid #ccc; /* Optional border */
+    padding: 1rem;
+    overflow-y: hidden;
+    z-index: 100;
+}
+
+.propertyFulldet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    /* border-radius: 10px; Rounded corners */
+    overflow: hidden;
+}
+
+.properties{
+    margin: 30px 0px;
+}
+
+.Mortgage .d-flex{
+    border: 0.5px solid black;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.Mortgage .d-flex i{
+    border-right: 0.5px solid black;
+    padding: 15px;
+    margin-right: 10px;
+}
+
+.Mortgage .d-flex input{
+    width: 100%;
+    margin-right: 10px;
+    border: none;
+    background-color: transparent;
+    height: 40px;
+    font-size: 14px;
+}
+
+.Mortgage .d-flex input:focus{
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
 .btn{
-    background-color:#d0b371;
+    background-color:#2495FD;
     color: white;
     padding: 10px 25px;
     font-weight: 600;
 }
-.btn:hover{
-    background-color: black;
-    color: white;
-}
-.custom-control {
-    background-color: #d0b371;
-    color: white;
-}
-.main-content{
-    padding: 0px 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
-}
-.search-content{
-    height: 100px;
-    width: 100%;
-    padding: 20px;
-    background-color: #d0b371;
-}
-.property-types{
-    padding: 50px 20px;
-}
-.property-content{
-    background-color: white;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    padding: 20px 0px;
-    margin-bottom: 20px;
-}
-.p-2{
-   background-color: #ecdcb7;
-   height: 50%;
-   border-radius: 10px;
-}
-.icons{
-    font-size: xx-large;
-    border: double;
-    padding: 10px 25px;
-    border-radius: 50%;
-    border-color: #d0b371;
-    color: #d0b371;
-}
-.icount{
-    color: #d0b371;
-}
-.col-md-3 a:hover{
-    .property-content{
-        background-color:#d0b371;
-    }
-    .icons{
-        background-color: white;
-        color: black;
-    }
-    .icount{
-        color: black;
-    }
-}
-.aboutcompanyimage{
-    display: flex;
-    background: linear-gradient(to right, #d0b371 50%, white 50%);
-    padding: 35px;
-}
-.grow-image {
-    transition: transform 0.3s ease;
+
+.btn:hover {
+    background-color: #0056b3;
 }
 
-.aboutcompany .aboutcompanyimage:hover{
-    background: linear-gradient(to left, #d0b371 50%, white 50%);
-    transform: scale(1.1);
-}
-.propertylist{
-    background-image: url(../../../../public/assets/images/bg1.png);
-    background-size: cover;
-    background-position: center;
-}
-.propertylistbg{
-    background: radial-gradient(#ffffff, #ffffffba);
-}
-.propertylist .col-md-6 a{
-    background-color: white;
-    color: black;
-    border: 1px solid;
-    padding: 10px 25px;
-    border-radius: 10px;
-    border-color: #d0b371;
-}
-.propertylist .col-md-6 a:hover{
-    background-color:#d0b371;
-}
-.propertylist .properties .col-12{
-    width: 30%;
-    color: white;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    margin: 0 10px;
-    background-color: white;
-}
-.propertyspecifications{
-    border-top: 0.5px dotted;
-    padding-top: 10px;
-}
-.propertyspecifications .fa,.propertyprice,.propertyaddress .fa{
-    color: #d0b371;
-    padding-right: 5px;
-}
-.userprofilepic{
-    border-radius: 30px;
-    height: 50px;
-    width: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #d0b371;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px;
-    overflow: hidden;
-}
 
-.userprofilepic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
-.reviews .col-md-4{
-    width: 30%;
-    color: white;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    padding: 20px 10px;
-    margin: 0 10px;
-}
-.reviews p,.reviews h5{
-    color: black;
-}
-.reviews .userreview p{
-    width: 100%;
-}
-.reviews .p{
-    width: 50%;
-}
-.browsemorereviews .btn,.browsemoreproperties .btn{
-    width: 25%;
-}
+
+
+
 @media (max-width: 768px) {
-    .w-25{
-        max-width: 100%;
+
+    .propertyFulldet {
+        flex-direction: column;
     }
-    .main{
-        height: auto;
-        padding-bottom: 20px;
+
+    .propertyImage {
+        flex: 1;
     }
+
+    .propertyDetails {
+        flex: 2;
+    }
+
+    .smaller-text,.small-icon {
+        font-size: 16px;
+    }
+
     .main-content {
-        padding: 20px;
+        flex-direction: column;
     }
-
-    .search-content {
-        height: auto;
-        padding: 10px;
-    }
-
-    .property-types {
-        padding: 30px 10px;
-    }
-
-    .property-content {
-        padding: 15px 0;
-    }
-
-    .icons {
-        font-size: large;
-    }
-
-    .propertylist .col-md-6 a {
-        padding: 5px 15px;
-    }
-    .propertylist .properties .col-12,.reviews .col-md-4 {
-        width: 90%;
-        margin: 0 5px;
-    }
-    .browsemorereviews .btn,.browsemoreproperties .btn{
+    .properties-container {
         width: 100%;
     }
-    .reviews .p{
-        width:80%;
+    .Mortgage {
+        width: 100%;
+        position: relative;
+        box-shadow: none;
+        border-left: none;
+    }
+
+    .properties{
+        margin: 10px;
+    }
+
+    .properties .col-lg-3,.row .col-lg-4{
+        width: 100%;
+        margin: 0 10px;
     }
 }
 

@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="properties row g-3 justify-content-center align-items-center m-0">
+        <ng-container *ngFor="let propertyitem of propertydetails">
+            <div class="col-md-4 col-sm-6 col-12 p-0 mb-3">
+                <a [routerLink]="['/view-property', propertyitem.propertyID]"  routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                    <div class="propertyimage">
+                        <img [src]="propertyitem.propertyimage" class="img-fluid property-img" alt="Property Image">
+                    </div>                    
+                    <div class="propertydetails p-3">
+                        <div class="propertyprice">
+                        <h5><b>{{propertyitem.propertyprice}}</b></h5>
+                        </div>
+                        <div class="propertyname">
+                        <h4>{{propertyitem.propertyname}}</h4>
+                        </div>
+                        <div class="propertyaddress d-flex align-items-center mb-2">
+                        <i class="fa fa-location"></i>
+                        <p class="mb-0">{{propertyitem.propertyaddress}}</p>
+                        </div>
+                        <div class="propertyspecifications row m-0 justify-content-center align-items-center">
+                        <div class="col-md-4 col-4 d-flex justify-content-center align-items-center p-0">
+                            <i class="fa fa-ruler-combined"></i>
+                            <p style="font-size: smaller;" class="mb-0"><b>{{propertyitem.propertyarea}}</b> Sqft</p>
+                        </div>
+                        <div class="col-md-4 col-4 d-flex justify-content-center align-items-center p-0" style="border-left: 0.5px dotted;">
+                            <i class="fa fa-bed"></i>
+                            <p style="font-size: smaller;" class="mb-0"><b>{{propertyitem.propertybeds}}</b> Bed</p>
+                        </div>
+                        <div class="col-md-4 col-4 d-flex justify-content-center align-items-center p-0" style="border-left: 0.5px dotted;">
+                            <i class="fa fa-bathtub"></i>
+                            <p style="font-size: smaller;" class="mb-0"><b>{{propertyitem.propertybathrooms}}</b> Baths</p>
+                        </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </ng-container>
+    </div>
+</div>

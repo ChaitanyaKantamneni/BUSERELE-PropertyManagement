@@ -1,82 +1,119 @@
-.property-card {
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    max-width: 1000px;
-    margin: 20px auto;
+.container{
+  max-width: 100%;
+  margin: 20px 0px;
 }
 
-.image-container {
-    flex: 1;
+.aboutusPage{
+  width: 75%;
+}
+.statistics{
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0px;
 }
 
-.image-container img {
+.statistics .stat-item{
+  width: 30%;
+  border: 0.5px solid black;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items: center;
+  padding: 15px;
+}
+
+.cards{
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.content {
-    flex: 1;
+
+.cardsrow {
+  display: flex;
+  flex-wrap: wrap; /* Allows the cards to wrap onto a new line */
+  justify-content: space-around;
+  align-items: stretch; /* Ensures the cards stretch to the same height */
+  gap: 20px; /* Adds space between the cards */
+  width: 75%; /* Adjust to fit the full width */
+  margin: 10px 0px 20px 0px;
+}
+
+.card {
+  flex: 1 1 45%; /* Allows cards to take up 45% of the width */
+  padding: 20px; /* Adjust padding as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Aligns content evenly */
+  border-radius: 10px; /* Optional, adds rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional, adds a shadow */
+}
+
+.card .icon {
+  font-size: 2rem; /* Adjust icon size */
+  margin-bottom: 10px;
+}
+
+.card h2 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  margin: 0; /* Removes default margin */
+}
+
+
+@media (max-width: 767px) {
+  .container{
+    max-width: 100%;
+    margin: 0px;
+    margin-top: 10px;
+  }
+  .aboutusPage{
+    width: 100%;
     padding: 20px;
-}
+  }
 
-.content h2 {
-    margin: 0;
-    font-size: 24px;
-    color: #1e2a39;
-}
-
-.content p {
-    color: #555;
-    margin: 10px 0;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.content ul {
-    list-style: none;
-    padding: 0;
-}
-
-.content ul li {
-    font-size: 14px;
+  .statistics{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .statistics .stat-item{
+    width: 75%;
     margin-bottom: 10px;
-}
+  }
 
-.read-more {
-    background-color: #d0b371;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
+  .card {
+    flex: 1 1 100%; /* Stacks the cards vertically */
+    margin-bottom: 20px; /* Adds space between stacked cards */
+  }
 
-.read-more:hover {
-    background-color: black;
-}
-
-.custom-button {
-    background-color: #d0b371;
-    color: white;
-    border: white;
-}
-
-.custom-button:hover {
-    background-color: black;
+  .card .icon {
+    font-size: 2rem; /* Adjust icon size */
+    margin-bottom: 10px;
+  }
+  
+  .card h2 {
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    margin: 0; /* Removes default margin */
+  }
 }
 
 
 
-
-
-* {
-    margin: 3px;
-    padding: 5px;
+/* * {
     box-sizing: border-box;
     color: #d0b371;
     border-radius: 5px;
@@ -112,7 +149,7 @@
     color: #333;
   }
   .heading p {
-    /* color: #666; */
+    /* color: #666; *
     font-size: 1rem;
     line-height: 1.5;
     color: black;
@@ -151,12 +188,13 @@
   }
   
   
-  .card-grid {
+  
+  /* .card-grid {
     grid-column: span 2;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-  }
+  } *
   
   .card {
     padding: 20px;
@@ -198,5 +236,5 @@
     font-size: 0.9rem;
     line-height: 1.5;
     color: #666;
-  }
+  } */
   

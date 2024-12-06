@@ -1,0 +1,26 @@
+<div class="container" *ngFor="let propertydetailsitem of propertydetails">
+    <div class="image" [ngStyle]="{'background-image': 'url(' + propertydetailsitem.propertyimage + ')','background-size': 'cover','background-repeat': 'no-repeat','background-position': 'center'}">
+    </div>
+
+    <div class="propertyMainDet">
+        <div>
+            <h2>{{propertydetailsitem.propertyname}}</h2>
+        </div>
+        <div>
+            <div>
+                <div>
+                    <h5>{{propertydetailsitem.propertyprice}}</h5>
+                </div>
+                <div>
+                    <p>{{propertydetailsitem.propertyarea}}</p>Total Area
+                    <p>{{propertydetailsitem.propertytype}}</p>Price/sqft
+                </div>
+            </div>
+            <div>
+                <button>Mobile</button>
+                <button>Share</button>
+                <button>wishlist</button>
+            </div>
+        </div>
+    </div>
+</div>
