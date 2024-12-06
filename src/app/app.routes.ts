@@ -6,11 +6,9 @@ import { SignInComponent } from './Common/sign-in/sign-in.component';
 import { SignUpComponent } from './Common/sign-up/sign-up.component';
 import { DashboardComponent } from './Masters/dashboard/dashboard.component';
 import { ProfileComponent } from './Masters/dashboard/profile/profile.component';
-import { AddPropertyComponent } from './Masters/dashboard/add-property/add-property.component';
 import { MembershipDetComponent } from './Masters/dashboard/membership-det/membership-det.component';
 import { AddAmenitiesComponent } from './Masters/dashboard/add-amenities/add-amenities.component';
 import { AddpropertysampleComponent } from './Masters/dashboard/addpropertysample/addpropertysample.component';
-import { ImageuploadComponent } from './Masters/imageupload/imageupload.component';
 import { SearchPropertiesComponent } from './Main/search-properties/search-properties.component';
 import { ViewPropertyComponent } from './Main/view-property/view-property.component';
 import { DashboardcomponentComponent } from './Masters/dashboard/dashboardcomponent/dashboardcomponent.component';
@@ -36,7 +34,6 @@ export const routes: Routes = [
             {path:'profile',component:ProfileComponent},
             {path:'membership-details',component:MembershipDetComponent},
             {path:'addpropertysample',component:AddpropertysampleComponent},
-            {path:'displayimage',component:ImageuploadComponent},
             {path:'dashboarddet',component:DashboardcomponentComponent}
         ]
     },

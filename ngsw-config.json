@@ -1,0 +1,17 @@
+{
+    "index": "/",
+    "assetGroups": [
+      {
+        "name": "app-assets",
+        "installMode": "prefetch",
+        "resources": {
+          "files": [
+            "/favicon.ico",
+            "/assets/**",
+            "/images/**"
+          ]
+        }
+      }
+    ]
+  }
+  
