@@ -1,26 +1,273 @@
-<div class="container" *ngFor="let propertydetailsitem of propertydetails">
-    <div class="image" [ngStyle]="{'background-image': 'url(' + propertydetailsitem.propertyimage + ')','background-size': 'cover','background-repeat': 'no-repeat','background-position': 'center'}">
-    </div>
-
-    <div class="propertyMainDet">
-        <div>
-            <h2>{{propertydetailsitem.propertyname}}</h2>
-        </div>
-        <div>
-            <div>
-                <div>
-                    <h5>{{propertydetailsitem.propertyprice}}</h5>
-                </div>
-                <div>
-                    <p>{{propertydetailsitem.propertyarea}}</p>Total Area
-                    <p>{{propertydetailsitem.propertytype}}</p>Price/sqft
-                </div>
-            </div>
-            <div>
-                <button><i class="fa fa-mobile"></i></button>
-                <button>Share</button>
-                <button>wishlist</button>
-            </div>
-        </div>
-    </div>
+<div *ngIf="isLoading" class="preloader">
+    <img src="assets/images/load.gif" alt="Loading...">
 </div>
+<div *ngIf="!isLoading">
+    <app-top-nav-1></app-top-nav-1>
+    <div class="container">
+        <div class="maincontainer" *ngFor="let propertydetailsitem of propertydetails">
+            <div class="propertyimagecontainer d-flex flex-wrap justify-content-between align-items-start">
+                <!-- <div class="imagecontainer">
+                    <img src="{{propertydetailsitem.propertyimage}}">
+                </div> -->
+
+                <!-- <div class="imagecon">
+                    <div class="imagecontainer">
+                        <img src="{{selectedImage}}">
+                        <ng-template #noImage>
+                            <img *ngIf="propertydetails[0]?.propertyImages?.length > 0; else noImagesAvailable"
+                                [src]="propertydetails[0]?.propertyImages[0]"
+                                [alt]="'Property Image 1'"
+                                class="property-image">
+                        </ng-template>
+                        <ng-template #noImagesAvailable>
+                            <p>No images available.</p>
+                        </ng-template>
+                    </div>
+                    
+                
+                    <!-- Thumbnail container --
+                    <div class="image-list-container mt-3 d-flex flex-wrap">
+                        <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
+                            class="thumbnail"
+                            (click)="selectMainImage(image)">
+                            <img [src]="image"
+                                [alt]="'Thumbnail ' + (i + 1)"
+                                class="thumbnail-image"
+                                [class.selected]="image === selectedImage">
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="imagecon">
+                    <div class="imagecontainer">
+                        <img src="{{selectedImage}}">
+                        <ng-template #noImage>
+                            <img *ngIf="propertydetails[0]?.propertyImages?.length > 0; else noImagesAvailable"
+                                [src]="propertydetails[0]?.propertyImages[0]"
+                                [alt]="'Property Image 1'"
+                                class="property-image">
+                        </ng-template>
+                        <ng-template #noImagesAvailable>
+                            <p>No images available.</p>
+                        </ng-template>
+                    </div>
+                
+                    <!-- Thumbnail container -->
+                    <div class="image-list-container mt-3 d-flex flex-wrap">
+                        <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
+                            class="thumbnail"
+                            (click)="selectMainImage(image)">
+                            <img [src]="image"
+                                [alt]="'Thumbnail ' + (i + 1)"
+                                class="thumbnail-image"
+                                [class.selected]="image === selectedImage">
+                        </div>
+                    </div>
+                </div>
+                
+                
+
+                <div class="enquiryform">
+                    <p class="p-text">Real Estate Inquiry Form</p>
+                    <form [formGroup]="userEnquiryform">
+                        <div class="form-group">
+                        <label for="contactname">Name</label>
+                        <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                        <label for="contactphone">Phone (Optional)</label>
+                        <input type="text" id="contactphone" class="form-control" formControlName="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
+                        </div>
+                        <button class="btn w-100" (click)="enquiryformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="propertydetails">
+                <div class="propertyoverview">
+                    <div class="headings">
+                        <p>Overview</p>
+                    </div>
+                    <div class="body">
+                        <div class="propertytype">
+                            <p class="heading">Property Type</p>
+                            <p class="value">Villa</p>
+                        </div>
+                        <div class="propertytype">
+                            <p class="heading">Area (sqft)</p>
+                            <p class="value"><i class="fa fa-ruler-combined"></i>{{propertydetailsitem.propertyArea}}</p>
+                        </div>
+                        <div class="propertytype">
+                            <p class="heading">Bedrooms</p>
+                            <p class="value"><i class="fa fa-bed"></i>{{propertydetailsitem.propertyBeds}}</p>
+                        </div>
+                        <div class="propertytype">
+                            <p class="heading">Bathrooms</p>
+                            <p class="value"><i class="fa fa-bath"></i>{{propertydetailsitem.propertyBathrooms}}</p>
+                        </div>
+                        <div class="propertytype">
+                            <p class="heading">Parking</p>
+                            <p class="value"><i class="fa fa-car"></i>{{propertydetailsitem.propertyparking}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="propertyoverview">
+                    <div class="headings">
+                        <p>Address</p>
+                    </div>
+                    <div class="body">
+                        <div class="addressbody">
+                            <div class="side1">
+                                <div class="addpropertytype">
+                                    <p class="heading">Address</p>
+                                    <p class="value">{{propertydetailsitem.propertyAddress}}</p>
+                                </div>
+                                <div class="addpropertytype">
+                                    <p class="heading">City</p>
+                                    <p class="value">{{propertydetailsitem.propertyCity}}</p>
+                                </div>
+                                <!-- <div class="addpropertytype">
+                                    <p class="heading">State</p>
+                                    <p class="value">{{propertydetailsitem.propertyaddress}}</p>
+                                </div> -->
+                            </div>
+                            <div class="side2">
+                                <div class="addpropertytype">
+                                    <p class="heading">Zip/Postal Code</p>
+                                    <p class="value">{{propertydetailsitem.propertyZipCode}}</p>
+                                </div>
+                                <div class="addpropertytype">
+                                    <p class="heading">Area (sqft)</p>
+                                    <p class="value">{{propertydetailsitem.propertyArea}}</p>
+                                </div>
+                                <!-- <div class="addpropertytype">
+                                    <p class="heading">Country</p>
+                                    <p class="value">{{propertydetailsitem.propertyaddress}}</p>
+                                </div> -->
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+                <div class="propertyoverview">
+                    <div class="headings">
+                        <p>Description</p>
+                    </div>
+                    <div class="body">
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                    </div>
+                </div>
+                <div class="propertyoverview propertyfeatures">
+                    <div class="headings">
+                        <p>Features</p>
+                    </div>
+                    <div class="body">
+                        <p><i class="fa fa-check-circle"></i>Gym</p>
+                    </div>
+                </div>
+
+                <div class="propertyoverview propertyfeatures">
+                    <div class="headings">
+                        <p>Video</p>
+                    </div>
+                    <div class="body">
+                                            
+                        <!-- Video Section -->
+                        <div class="video-container">
+                            <video width="100%" controls>
+                                <source src="path/to/your-video.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="propertyoverview propertyreviews">
+                    <div class="headings">
+                        <p>Review</p>
+                    </div>
+                    <div class="body">
+                        <form class="w-100" [formGroup]="userReviewform">
+                            <div class="reviewform">
+                                <div class="reviewdiv">
+                                    <div class="form-group">
+                                        <label for="contactname">Name</label>
+                                        <input type="text" id="contactname" class="form-control" formControlName="username" name="username" required placeholder="Enter Full Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contactname">Email</label>
+                                        <input type="text" id="contactname" class="form-control" formControlName="useremail" name="useremail" required placeholder="Enter Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contactname">Mobile Number</label>
+                                        <input type="text" id="contactname" class="form-control" formControlName="usernumber" name="usernumber" required placeholder="Enter Mobile Number">
+                                    </div>
+                                </div>
+                                <div class="reviewtextarea">
+                                    <div class="form-group mb-3">
+                                        <label for="contactMessage">Message</label>
+                                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="usermessage" name="usermessage" required></textarea>
+                                    </div>
+                                    <button class="btn w-100" (click)="reviewformsubmit()" [disabled]="userReviewform.invalid">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="propertyoverview propertyenquirys">
+                    <div class="headings">
+                        <p>Enquiry</p>
+                    </div>
+                    <div class="body">
+                        <form class="w-100" [formGroup]="userEnquiryform">
+                            <div class="reviewform">
+                                <div class="reviewdiv">
+                                    <div class="form-group">
+                                        <label for="contactname">Name</label>
+                                        <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required placeholder="Enter Full Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contactname">Email</label>
+                                        <input type="text" id="contactname" class="form-control" formControlName="email" name="email" required placeholder="Enter Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contactname">Phone (Optional)</label>
+                                        <input type="text" id="contactname" class="form-control" formControlName="phone" name="phone" placeholder="Enter Mobile Number">
+                                    </div>
+                                </div>
+                                <div class="reviewtextarea">
+                                    <div class="form-group mb-3">
+                                        <label for="contactMessage">Message</label>
+                                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
+                                    </div>
+                                    <button class="btn w-100" (click)="reviewformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="propertyoverview">
+                    <div class="headings">
+                        <p>Location</p>
+                    </div>
+                    <div class="body">
+                        <div class="locationMap" [innerHTML]="iframeHtml"></div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+    <app-footer></app-footer>
+</div>
+

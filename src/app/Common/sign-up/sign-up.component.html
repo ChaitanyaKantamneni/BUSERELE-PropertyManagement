@@ -1,62 +1,71 @@
 <div class="container">
-    <div class="register-form-fields">
-        <div class="user-icon">
-            <i class="fa-solid fa-user"></i>
-        </div>
-        <form (submit)="signup()" [formGroup]="signupform">
-            <div class="form-group">
-              <div class="name" [ngClass]="(submited && form.name.errors) || (form.name.touched && form.name.errors)?'border border-danger':''">
-                <i class="fa-solid fa-user h-100"></i>
-                <input type="text" class="form-control" name="name" placeholder="Enter Name" required formControlName="name" pattern="[A-Za-z]+">
-              </div>
-              <div class="text-danger fw-bold" *ngIf="(submited && form.name.errors) || (form.phone.touched && form.name.errors)">Enter Phone Number</div>
-                <div class="text-danger fw-bold" *ngIf="form.name.errors?.pattern">Enter Name In Correct Format</div>
-            </div>
-
-            <div class="form-group">
-              <div class="email" [ngClass]="(submited && form.email.errors) || (form.email.touched && form.email.errors)?'border border-danger':''">
-                <i class="fa-solid fa-envelope h-100"></i>
-                <input type="email" class="form-control" name="email" placeholder="Enter Email" required formControlName="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
-              </div>
-              <div class="text-danger fw-bold" *ngIf="(submited && form.email.errors) || (form.email.touched && form.email.errors)">Enter Phone Number</div>
-              <div class="text-danger fw-bold" *ngIf="form.email.errors?.pattern">Enter Email In Correct Format</div>
-            </div>
-            
-            
-            <div class="form-group">
-              <div class="phone"  [ngClass]="(submited && form.phone.errors) || (form.phone.touched && form.phone.errors)?'border border-danger':''">
-                <i class="fa-solid fa-phone h-100"></i>
-                <input type="tel" class="form-control" name="phone" placeholder="Mobile Number" required formControlName="phone" minlength="10" maxlength="10" pattern="[0-9]*">
-              </div>
-                <div class="text-danger fw-bold" *ngIf="(submited && form.phone.errors) || (form.phone.touched && form.phone.errors)">Enter Phone Number</div>
-                <div class="text-danger fw-bold" *ngIf="form.phone.errors?.pattern">Enter Phone Number In Correct Format</div>
-            </div>
-            <div class="form-group">
-              <div class="password" [ngClass]="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)  ? 'border border-danger' : ''">
-                <i class="fa-solid fa-lock h-100"></i>
-                <input type="password" name="psw" class="form-control" placeholder="enter password" formControlName="pswd" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+" [(ngModel)]="passwordValue">
-              </div>
-              <p class="text-danger fw-bold" *ngIf="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)">Enter Password</p>
-              <p class="text-danger fw-bold" *ngIf="form.pswd.errors?.pattern">Enter Password In Correct Format</p>
-            </div>
-            <!-- <div class="form-group">
-              <div class="cpassword" [ngClass]="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors) || (passwordValue !== confirmPasswordValue ? 'border border-danger' : '')">
-                <i class="fa-solid fa-lock h-100"></i>
-                <input type="password" name="cpsw" class="form-control" placeholder="confirm password" required [(ngModel)]="confirmPasswordValue">
-              </div>
-              <p class="text-danger fw-bold" *ngIf="(submited && form.pswd.errors) || (form.pswd.touched && form.pswd.errors)">Enter Password</p>
-              <p class="text-danger fw-bold" *ngIf="form.pswd.errors?.pattern">Enter Password In Correct Format</p>
-            </div> -->
-            
-            <div class="login-btn">
-                <button type="submit">Sign Up</button>
-            </div>
-
-            <p [ngStyle]="{'font-weight': 'bold'}" [ngClass]="messageColor">{{registredsuccesfull}}</p>
-        </form>
-        <div class="sign-up text-center mt-4">
-            <span>If you have already registered, </span>
-            <div class="sign-up"><a routerLink="/signin">Sign In</a></div>
-        </div>
+  <div class="register-form-fields">
+    <div class="user-icon">
+      <i class="fa-solid fa-user"></i>
     </div>
+
+    <form (submit)="signup()" [formGroup]="signupform">
+      
+      <!-- First Name Field -->
+      <div class="form-group">
+        <label for="firstname">First Name</label>
+        <div class="name" [ngClass]="(submited && signupform.get('fname')?.errors) || (signupform.get('fname')?.touched && signupform.get('fname')?.errors)?'border border-danger':''">
+          <input id="firstname" type="text" class="form-control" placeholder="Enter First Name" formControlName="fname" />
+        </div>
+        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('fname')?.errors) || (signupform.get('fname')?.touched && signupform.get('fname')?.errors)">Enter First Name</div>
+      </div>
+
+      <!-- Last Name Field -->
+      <div class="form-group">
+        <label for="lastname">Last Name</label>
+        <div class="name" [ngClass]="(submited && signupform.get('lname')?.errors) || (signupform.get('lname')?.touched && signupform.get('lname')?.errors)?'border border-danger':''">
+          <input id="lastname" type="text" class="form-control" placeholder="Enter Last Name" formControlName="lname" />
+        </div>
+        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('lname')?.errors) || (signupform.get('lname')?.touched && signupform.get('lname')?.errors)">Enter Last Name</div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="email" [ngClass]="(submited && signupform.get('email')?.errors) || (signupform.get('email')?.touched && signupform.get('email')?.errors)?'border border-danger':''">
+          <input id="email" type="email" class="form-control" placeholder="Enter Email" formControlName="email" />
+        </div>
+        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('email')?.errors) || (signupform.get('email')?.touched && signupform.get('email')?.errors)">Enter a valid Email</div>
+      </div>
+
+      <!-- Phone Field -->
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <div class="phone" [ngClass]="(submited && signupform.get('phone')?.errors) || (signupform.get('phone')?.touched && signupform.get('phone')?.errors)?'border border-danger':''">
+          <input id="phone" type="tel" class="form-control" placeholder="Mobile Number" formControlName="phone" />
+        </div>
+        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('phone')?.errors) || (signupform.get('phone')?.touched && signupform.get('phone')?.errors)">Enter Phone Number</div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password" [ngClass]="(submited && signupform.get('pswd')?.errors) || (signupform.get('pswd')?.touched && signupform.get('pswd')?.errors)?'border border-danger':''">
+          <input id="password" type="password" class="form-control" placeholder="Enter Password" formControlName="pswd" />
+        </div>
+        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('pswd')?.errors) || (signupform.get('pswd')?.touched && signupform.get('pswd')?.errors)">Enter Password</div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <!-- <div class="form-group">
+        <label for="cpassword">Confirm Password</label>
+        <div class="cpassword" [ngClass]="(submited && signupform.get('cpsw')?.errors) || (signupform.get('cpsw')?.touched && signupform.get('cpsw')?.errors)?'border border-danger':''">
+          <input id="cpassword" type="password" class="form-control" placeholder="Confirm Password" formControlName="cpsw" />
+        </div>
+        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('cpsw')?.errors) || (signupform.get('cpsw')?.touched && signupform.get('cpsw')?.errors)">Confirm Password</div>
+      </div> -->
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary" [disabled]="signupform.invalid">Sign Up</button>
+    </form>
+
+    <div *ngIf="submited" [ngClass]="{'text-danger': messageColor.red, 'text-success': messageColor.green}" class="fw-bold">
+      {{ registredsuccesfull }}
+    </div>
+  </div>
 </div>

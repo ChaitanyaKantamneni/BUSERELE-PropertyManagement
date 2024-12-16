@@ -154,11 +154,7 @@
   }
   
   .name,.email,.phone, .password,.cpassword {
-    background-color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
+    padding: 10px 0px;
   }
 
   .form-group{
@@ -219,4 +215,11 @@
 }
 .green{
   color: green;
+}
+
+.form-group input{
+  border: none;
+  border-bottom: 1px solid gray;
+  border-radius: 0px;
+  background-color: transparent;
 }

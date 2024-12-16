@@ -13,6 +13,9 @@ import { SearchPropertiesComponent } from './Main/search-properties/search-prope
 import { ViewPropertyComponent } from './Main/view-property/view-property.component';
 import { DashboardcomponentComponent } from './Masters/dashboard/dashboardcomponent/dashboardcomponent.component';
 import { Home1Component } from './Main/home1/home1.component';
+import { Review1Component } from './Masters/dashboard/review1/review1.component';
+import { AddAminities1Component } from './Masters/dashboard/add-aminities1/add-aminities1.component';
+import { AddPropertyComponentComponent } from './Masters/dashboard/add-property-component/add-property-component.component';
 
 
 export const routes: Routes = [
@@ -30,11 +33,13 @@ export const routes: Routes = [
         children:
         [
             {path:'',component:DashboardcomponentComponent},
-            {path:'amenities',component:AddAmenitiesComponent},
+            {path:'amenities',component:AddAminities1Component},
             {path:'profile',component:ProfileComponent},
             {path:'membership-details',component:MembershipDetComponent},
-            {path:'addpropertysample',component:AddpropertysampleComponent},
-            {path:'dashboarddet',component:DashboardcomponentComponent}
+            // {path:'addpropertysample',component:AddpropertysampleComponent},
+            {path:'addpropertysample',component:AddPropertyComponentComponent},
+            {path:'dashboarddet',component:DashboardcomponentComponent},
+            {path:'userReviews',component:Review1Component}
         ]
     },
 

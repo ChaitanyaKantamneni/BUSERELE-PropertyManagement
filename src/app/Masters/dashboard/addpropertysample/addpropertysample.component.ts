@@ -101,9 +101,11 @@ export class AddpropertysampleComponent implements OnInit {
    
 
 
-  selectedFiles: FileList | null = null;  
+  selectedFiles: FileList | null = null;
+  selectedFeaturedFiles:FileList|null=null;  
   uploadedImages: Array<{ path: string }> = [];
   uploadedImages1: Array<{ id: number, propID: string, fileName: string, mimeType: string, imageData: Blob, imageUrl: string }> = [];
+  uploadedFeaturedImages1: Array<{ id: number, propID: string, fileName: string, mimeType: string, imageData: Blob, imageUrl: string }> = [];
 
   isModalOpen = false;
   selectedImage: string = '';
@@ -182,6 +184,35 @@ export class AddpropertysampleComponent implements OnInit {
     );
   }
 
+  uploadFeaturedImages(): void {
+    console.log(this.propID);
+    if (!this.propID || !this.selectedFiles || this.selectedFiles.length === 0) {
+      alert('Property ID is required and you must select images.');
+      return;
+    }
+
+    console.log(this.propID);
+
+    const formData = new FormData();
+    formData.append('propID', this.propID);
+
+    // Append each selected file to formData
+    Array.from(this.selectedFiles).forEach((file: File) => {
+      formData.append('images', file, file.name);
+    });
+
+    // Make HTTP request to upload the files
+    this.apihttp.post('https://localhost:7190/api/Users/upload', formData).subscribe(
+      response => {
+        console.log('Images uploaded successfully:', response);
+        this.getFeaturedImagesForProperty(this.propID);  // Refresh the images after upload
+      },
+      error => {
+        console.error('Upload failed:', error);
+      }
+    );
+  }
+
   // Open the modal to view image
   openModal(imagePath: string): void {
     this.selectedImage = imagePath;  // Set the selected image path
@@ -206,24 +237,36 @@ export class AddpropertysampleComponent implements OnInit {
   
 
   deleteImage1(propertyId: string, imageId: number): void {
-    // Send DELETE request to backend to remove the image from the database based on both property and image ID
-    // this.apihttp.delete(`https://localhost:7190/api/Users/delete-image/${propertyId}/${imageId}`).subscribe(
-    //   response => {
-    //     console.log('Image deleted from database:', response);
-  
-    //     // Remove the image from the frontend list
-    //     const index = this.uploadedImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
-    //     if (index !== -1) {
-    //       this.uploadedImages1.splice(index, 1); // Remove image from the UI list
-    //     }
+    this.apihttp.delete(`https://localhost:7190/api/Users/delete-image/${propertyId}/${imageId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      responseType: 'text' // Explicitly set the response type as 'text'
+    }).subscribe({
+      next: (response: string) => {
+        console.log('Image deleted from database:', response);  // 'Image deleted successfully'
+        
+        // Now remove the image from the frontend list
+        const index = this.uploadedImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
+        if (index !== -1) {
+          this.uploadedImages1.splice(index, 1); // Remove image from the UI list
+        }
+    
+        // Optionally, refresh the image list from the server
+        this.getImagesForProperty(this.propID);
+      },
+      error: (error) => {
+        console.error('Error deleting image:', error);
+        console.log('Error response:', error.error);
+      },
+      complete: () => {
+        console.log('Delete request completed');
+      }
+    });
+    
+    console.log(propertyId),
+    console.log(imageId)
+  }
 
-    //     this.getImagesForProperty(this.propID);
-    //   },
-    //   error => {
-    //     console.error('Error deleting image:', error);
-    //   }
-    // );
-
+  deleteFeaturedImage1(propertyId: string, imageId: number): void {
     this.apihttp.delete(`https://localhost:7190/api/Users/delete-image/${propertyId}/${imageId}`, {
       headers: { 'Content-Type': 'application/json' },
       responseType: 'text' // Explicitly set the response type as 'text'
@@ -338,6 +381,37 @@ export class AddpropertysampleComponent implements OnInit {
   });
   }
   getImagesForProperty(propID: string): void {
+    this.apihttp.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
+      // Process response and convert imageData to Blob URL
+      this.uploadedImages1 = response.map((image: any) => {
+        const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
+        const byteArray = new Uint8Array(byteCharacters.length);
+
+        // Copy the binary data into the byteArray
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteArray[i] = byteCharacters.charCodeAt(i);
+        }
+
+        // Create a Blob from the byteArray
+        const blob = new Blob([byteArray], { type: image.mimeType });
+
+        // Create an object URL from the Blob
+        const imageUrl = URL.createObjectURL(blob);
+        console.log(imageUrl);
+        return {
+          ...image,
+          propID: propID,
+          imageUrl // Add the Blob URL to the image object
+        };
+      });
+
+      console.log('Processed image array:', this.uploadedImages1);
+    }, error => {
+      console.error('Error fetching images:', error);
+    });
+  }
+
+  getFeaturedImagesForProperty(propID: string): void {
     this.apihttp.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
       // Process response and convert imageData to Blob URL
       this.uploadedImages1 = response.map((image: any) => {
