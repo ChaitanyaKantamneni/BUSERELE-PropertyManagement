@@ -1,4 +1,490 @@
-.image{
-    height: 300px;
+.container{
+    max-width: 100%;
+    height: auto;
+    background-color: #f6f6f6;
+}
+
+.preloader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+  
+.preloader img {
+    width: 100px; 
+}
+
+.maincontainer{
+    margin: 0px 30px;
+}
+
+p{
+    margin: 0px;
+}
+
+.propertyimagecontainer {
+    height: 550px;
+    padding: 20px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagecon{
+    height: 100%;
+    width: 70%;
+}
+.imagecontainer {
+    height: 80%;
     width: 100%;
+    /* margin-bottom: 20px; */
+}
+
+.imagecontainer img{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.property-image {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* .image-list-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 0;
+    width: 70%;
+    height: 15%;
+}
+
+.thumbnail {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.thumbnail:hover {
+    border-color: #007bff;
+    transform: scale(1.05);
+}
+
+.thumbnail-image {
+    width: 100px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.thumbnail.selected {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+} */
+
+
+
+
+/* Thumbnail container styling */
+.image-list-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: auto; /* Prevent vertical scrolling */
+    padding: 10px 0;
+    width: 100%; /* Full width */
+    max-width: 100%; /* Ensures it doesn't exceed the screen width */
+    height: 100px; /* Adjust height as needed */
+    white-space: nowrap; /* Prevents line breaks */
+}
+
+.thumbnail {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: transform 0.2s, border-color 0.2s;
+    display: inline-block; /* Keeps the thumbnails inline */
+}
+
+.thumbnail:hover {
+    border-color: #007bff; /* Highlight border color on hover */
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+.thumbnail-image {
+    width: 100px; /* Set width for each thumbnail */
+    height: 75px; /* Set height for each thumbnail */
+    /* object-fit: cover; Maintain aspect ratio */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.thumbnail.selected {
+    border-color: #007bff; /* Border color for the selected thumbnail */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Blue glow effect */
+}
+
+/* Custom scroll bar styling */
+.image-list-container::-webkit-scrollbar {
+    height: 8px; /* Scrollbar height */
+}
+
+.image-list-container::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 4px;
+}
+
+.image-list-container::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+
+.enquiryform {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width:25%;
+    height: 80%;
+}
+
+.enquiryform {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.enquiryform .form-group {
+    margin-bottom: 8px;
+}
+
+.enquiryform .form-group label {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.enquiryform .form-control {
+    height: 30px;
+    font-size: 0.85rem;
+}
+
+.enquiryform textarea.form-control {
+    height: 60px; 
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+.enquiryform .btn , .reviewtextarea .btn {
+    padding: 8px;
+    font-size: 0.85rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.enquiryform .btn:hover,.reviewtextarea .btn:hover {
+    background-color: #0056b3;
+}
+
+.video-container {
+    margin-top: 20px; /* Adjust spacing as needed */
+    border: 2px solid #e8e8e8; /* Optional border */
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Ensure content doesn't overflow */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    width: 80%;
+    height:400px;
+}
+
+.video-container video {
+    width: 100%; /* Make the video responsive */
+    height: 100%; /* Maintain aspect ratio */
+}
+
+
+.contactformcontent {
+    height: 100%;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.contactformdiv {
+    max-width: 400px; 
+    margin: auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.propertydetails{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.propertyoverview{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.propertyoverview .headings{
+    background-color: #e8e8e8;
+    color: black;
+    border-radius: 10px;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.propertyoverview .body{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px 40px 10px 40px;
+}
+
+.propertyoverview .body .propertytype{
+    width:19%;
+}
+
+.propertyoverview .body .propertytype .heading{
+    text-align: center;
+}
+
+.propertyoverview .body .value{
+    font-size: 17px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.propertyoverview .body .value i{
+    font-size: 14px;
+    font-weight:600;
+    margin-right: 10px;
+}
+
+.addressbody{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.addressbody .side1,.addressbody .side2{
+    width: 45%;
+}
+
+.addressbody .addpropertytype{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.addressbody .addpropertytype .heading{
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.addressbody .addpropertytype .value{
+    font-size: 16px;
+    font-weight:400;
+}
+
+.propertyfeatures i{
+    background-color: white;
+    color: blue;
+    margin-right: 10px;
+}
+
+.reviewform{
+    width: 100%;
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+}
+
+.reviewform .reviewdiv, .reviewform .reviewtextarea{
+    width: 45%;
+}
+
+.propertyenquirys{
+    display: none;
+}
+
+.locationMap{
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    display: block;
+}
+
+.locationMap iframe{
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 1200px) {
+    .properties .col-lg-3,.row .col-lg-4{
+        width: 22%;
+        margin: 0 10px;
+    }
+    .browsemoreproperties .btn{
+        width: 25%;
+    }
+    .Testimonials .browsemoreproperties{
+        width: 100%;
+    }
+    .ServiceDiv{
+        padding: 30px;
+    }
+
+    .contactformcontent {
+        width: 65%;
+    }
+
+    .contactformdiv {
+        width: 30%;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .maincontainer{
+        margin: 0px 10px;
+    }
+    .propertyimagecontainer{
+        height: auto;
+        padding: 20px 0px;
+    }
+    
+    .imagecontainer{
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .enquiryform{
+        width: 100%;
+    }
+
+    .propertyoverview .body{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap:wrap;
+        width: 100%;
+        padding: 30px 10px ;
+    }
+
+    .propertyoverview .body .propertytype{
+        width:30%;
+        margin-bottom: 10px;
+    }
+
+    .propertyoverview .body .heading{
+        font-size: 10px;
+    }
+
+    .propertyoverview .body .value{
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .propertyoverview .body .value i{
+        font-size: 10px;
+        font-weight:600;
+        margin-right: 5px;
+    }
+
+    .addressbody .side1,.addressbody .side2{
+        width: 100%;
+    }
+
+    .body .addressbody{
+        width: 100%;
+    }
+
+    .addressbody{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .reviewform .reviewdiv, .reviewform .reviewtextarea{
+        width: 100%;
+    }
+
+    .reviewform{
+        width: 100%;
+        display: flex;
+        justify-content:space-around;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .imagecon{
+        height: 100%;
+        width: 100%;
+    }
+    .imagecontainer {
+        height: 80%;
+        width: 100%;
+        /* margin-bottom: 20px; */
+    }
+
+    .enquiryform{
+        display: none;
+    }
+
+    .propertyenquirys{
+        display: block;
+    }
+
+    .image-list-container {
+        height: 120px; /* Adjust height for smaller screens */
+    }
+
+    .thumbnail-image {
+        width: 80px; /* Adjust thumbnail size for smaller screens */
+        height: 60px;
+    }
+
+    .video-container {
+        margin-top: 20px; /* Adjust spacing as needed */
+        border: 2px solid #e8e8e8; /* Optional border */
+        border-radius: 10px; /* Rounded corners */
+        overflow: hidden; /* Ensure content doesn't overflow */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+        width: 100%;
+        height:auto;
+    }
 }

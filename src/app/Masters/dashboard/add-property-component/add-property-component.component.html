@@ -1,0 +1,595 @@
+<div *ngIf="!editclicked && !addnewPropertyclicked">
+  <div class="form-group">
+      <select id="pageSize" class="form-control" (change)="onWhosePropertySelectionChange($event)">
+          <option value="0">Select Whose Properties</option>
+          <option value="1">Own Properties</option>
+          <option value="2">Users Properties</option>
+      </select>
+  </div>
+  <div>
+      <input type="text" class="form-control" [(ngModel)]="searchQuery" placeholder="Search properties..." />
+  </div>
+  <div>
+      <button type="button" (click)="addNewProperty()">Add New</button>
+  </div>
+  <h5>Uploaded Properties:</h5>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>PropertyID</th>
+        <th>Property Name</th>
+        <th>Developed By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let property of getPaginatedProperties()">
+        <td>{{ property.propID }}</td>
+        <td>{{ property.propname }}</td>
+        <td>{{ property.developedby }}</td>
+        <td>
+          <button class="btn btn-warning" (click)="editproperty(property.propID)">
+            <i class="fa fa-edit"></i> Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination Controls (Previous and Next Buttons) -->
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <button class="btn btn-secondary" (click)="previousPage()" [disabled]="currentPage === 1">
+      <i class="fa fa-chevron-left"></i> Previous
+    </button>
+
+    <div>
+      Page {{ currentPage }} of {{ totalPages }}
+    </div>
+
+    <button class="btn btn-secondary" (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Next <i class="fa fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- Bootstrap Pagination with Page Number Buttons -->
+  <nav aria-label="Page navigation example" class="mt-3">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="setPage(1)" [disabled]="currentPage === 1">First</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+      </li>
+
+      <!-- Generate Page Buttons -->
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" 
+          class="page-item" 
+          [class.active]="currentPage === (i + 1)">
+        <button class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</button>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="setPage(totalPages)" [disabled]="currentPage === totalPages">Last</button>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<div *ngIf="editclicked || addnewPropertyclicked">
+  <div class="property-details-container">
+    <form [formGroup]="propertyform">
+        <div class="form-container">
+          <div class="card">
+            <h2>Additional Information</h2>
+            <div class="grid">
+              <!-- Form Column 1 -->
+              <div class="form-column">
+                <input type="text" placeholder="Property ID" formControlName="id" />
+                <input
+                  type="text"
+                  id="MobileNumber"
+                  placeholder="Enter Mobile"
+                  formControlName="MobileNumber"
+                  required
+                />
+                <input type="text" placeholder="Enter Landmark" formControlName="LandMark" required />
+                <!-- <input type="text" placeholder="Enter City" formControlName="City" required /> -->
+                <select formControlName="City" required>
+                    <option value="" disabled selected>Select City</option>
+                    <option *ngFor="let City of cities" [value]="City.id">{{ City.name }}</option>
+                  </select>
+                <input type="text" placeholder="Enter Certificate Number" formControlName="CertificateNumber" required />
+                <select formControlName="PropertyFor" required>
+                  <option value="" disabled selected>Select Property For</option>
+                  <option>For Sale</option>
+                  <option>For Rent</option>
+                  <option>For Lease</option>
+                </select>
+                <input type="text" placeholder="Enter Total Blocks" formControlName="TotalBlocks" required />
+                <input type="text" placeholder="Enter Block Name" formControlName="BlockName" required />
+                <input type="text" placeholder="Enter Number of Bathrooms" formControlName="NumberofBathrooms" required />
+                <select formControlName="AreaType" required>
+                  <option value="" disabled selected>Select Area Type</option>
+                  <option>Sq.Ft</option>
+                  <option>Sq.Yds</option>
+                </select>
+                <input
+                  type="text"
+                  placeholder="Enter Price For"
+                  (input)="calculateTotalPrice()"
+                  formControlName="PriceFor"
+                  required
+                />
+                <input type="text" placeholder="Enter Maintenance Charges" formControlName="MaintenanceCharges" required />
+                <input type="date" formControlName="PossessionDate" />
+              </div>
+          
+              <!-- Form Column 2 -->
+              <div class="form-column">
+                <input type="text" placeholder="Developed By" formControlName="DevelopedBy" required />
+                <input type="email" id="EmailID" placeholder="Enter Email ID" formControlName="EmailID" required />
+                                
+                <select formControlName="Country" (change)="onCountryChange($event)" required>
+                  <option value="" disabled selected>Select Country</option>
+                  <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+                </select>
+                <input type="text" placeholder="Enter Nearby Places" formControlName="NearBy" required />
+                <input type="text" placeholder="Enter Property Approval Status" formControlName="PropertyApprovedBy" required />
+                <select formControlName="PropertyStatus" required>
+                  <option value="" disabled selected>Select Property Status</option>
+                  <option *ngFor="let status of propertyStatuses" [value]="status.id">{{ status.name }}</option>
+                </select>
+                <input type="text" placeholder="Enter Total Floors" formControlName="TotalFloors" required />
+                <input type="text" placeholder="Enter Property Floor" formControlName="PropertyOnWhichFloor" required />
+                <input type="text" placeholder="Enter Number of Balconies" formControlName="NumberofBalconies" required />
+                <input type="text" placeholder="Enter Total Area" formControlName="TotalArea" required />
+                <input type="text" placeholder="Enter Total Price" formControlName="PropertyTotalPrice" readonly required />
+                <input type="text" placeholder="Enter Corpus Fund" formControlName="CorpusFund" required />
+                <input type="date" formControlName="ListDate" />
+              </div>
+          
+              <!-- Form Column 3 -->
+              <div class="form-column">
+                <input type="text" placeholder="Enter Property Title" formControlName="PropertyTitle" required />
+                <input type="text" placeholder="Enter Address" formControlName="Address" required />
+                <select formControlName="State" (change)="onStateChange($event)" required>
+                  <option value="" disabled selected>Select State</option>
+                  <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
+                </select>
+                <input type="text" placeholder="Enter Postal Code" formControlName="PostalCode" required />
+                <select formControlName="PropertyType" required>
+                  <option value="" disabled selected>Select Property Type</option>
+                  <option *ngFor="let type of PropertyType" [value]="type.Id">{{ type.propertyType }}</option>
+                </select>
+                <select formControlName="PropertyFacing" required>
+                  <option value="" disabled selected>Select Property Facing</option>
+                  <option *ngFor="let facing of PropertyFacing" [value]="facing.id">{{ facing.name }}</option>
+                </select>
+                <input type="text" placeholder="Enter Total Flats" formControlName="TotalNoOfFlats" required />
+                <input type="text" placeholder="Enter Number of Bedrooms" formControlName="NumberofBedrooms" required />
+                <input type="text" placeholder="Enter Number of Parkings" formControlName="NumberofParkings" required />
+                <input type="text" placeholder="Enter Carpet Area" formControlName="CarpetArea" required />
+                <input type="text" placeholder="Enter Amenities Charges" formControlName="AmenitiesCharges" required />
+                <input type="text" placeholder="Enter Build Year" formControlName="BuildYear" required />
+              </div>
+            </div>
+          </div>
+          
+        
+    </div>   
+    <br>
+    <div class="form">
+        <div class="card">
+          <div class="form-row">
+            <label class="amenities-label">Amenities:</label>
+            <div class="select-all-checkbox">
+              <input 
+                type="checkbox" 
+                id="selectAll" 
+                [checked]="allSelected"
+                (change)="toggleSelectAll($event)"
+              />
+              <label for="selectAll" style="text-decoration: underline;">Select All / Deselect All</label>
+            </div>
+      
+            <div class="amenities-row">
+              <div class="amenity-item">
+                <ng-container *ngFor="let amenity of aminities; let i = index">
+                    <input
+                    type="checkbox"
+                    formControlName="Amenities"
+                    [checked]="selectedAmenities.includes(amenity.aminitieID)"
+                    (change)="onAmenityChange($event, amenity.aminitieID)"
+                    id="amenity-{{ amenity.aminitieID }}"
+                  />
+                  <label for="amenity-{{ amenity.aminitieID }}">{{ amenity.name }}</label>
+                </ng-container>
+                
+              </div>
+            </div>
+          
+            
+
+          </div>
+        </div>
+    </div>
+    <br>
+
+    <div class="card">
+        <div class="editor-container">
+          <label for="editor" class="editor-label">Description</label>
+          <!-- <quill-editor id="editor"
+          formControlName="Description"
+          [modules]="editorConfig"
+          class="custom-quill-editor"
+          placeholder="Start typing here..." ></quill-editor> -->
+          <textarea id="description" class="form-control" rows="4" formControlName="Description"></textarea>
+          <button class="clear-btn" type="button" (click)="clearContent('description')">Clear Description</button>
+        </div>
+        
+      
+
+        <div class="editor-container">
+          <label for="editor" class="editor-label"> Specific  Description</label>
+          <!-- <quill-editor
+          *ngIf="isDesignMode"  
+            id="editor"
+            formControlName="SpecificDescription"
+            [modules]="editorConfig"
+            class="custom-quill-editor"
+            placeholder="Start typing here..." ></quill-editor> -->
+            <textarea id="description" class="form-control" rows="4" formControlName="SpecificDescription"></textarea>
+          <button class="clear-btn" type="button" (click)="clearContent('Specificdescription')">Clear Specific Description</button>
+        </div>
+    </div>
+    <br>
+
+    <div class="card">
+        <div class="form-section">
+          <div class="imageContainerCard">
+            <!-- <div class="propertyImageContainer">
+                <div class="form-column upload-container col-md-6">
+                    <h5>Property Gallery:</h5>
+                    <label for="gallery-upload">Upload Property Images</label>
+                    <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
+                    <button class="btn btn-primary mt-2" (click)="uploadPropertyImages()">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+                
+                <div class="image-table mt-4">
+                    <h5>Uploaded Images:</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th hidden="true">S.no</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <ng-container *ngFor="let image of uploadedImages1">
+                              <tr>
+                                <td hidden="true">
+                                  <h5>{{image.id}}</h5>
+                                </td>
+                                <td>
+                                  <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                                </td>
+                                <td>
+                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> --
+                                    <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
+                                </td>
+                              </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            
+                <!-- Modal for viewing image --
+                <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">View Image</h5>
+                                <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- </div> --
+            </div>
+
+            <div class="FloorImageContainer">
+              <div class="form-column upload-container col-md-6">
+                  <h5>Floor Gallery:</h5>
+                  <label for="gallery-upload">Upload Floor Images</label>
+                  <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFloorFileSelect($event)">
+                  <button class="btn btn-primary mt-2" (click)="uploadPropertyFloorImages()">
+                      <i class="fas fa-upload"></i> Upload
+                  </button>
+              </div>
+              
+              <div class="image-table mt-4">
+                  <h5>Uploaded Floor Images:</h5>
+                  <table class="table">
+                      <thead>
+                          <tr>
+                              <th hidden="true">S.no</th>
+                              <th>Image</th>
+                              <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          
+                          <ng-container *ngFor="let image of uploadedFloorImages1">
+                            <tr>
+                              <td hidden="true">
+                                <h5>{{image.id}}</h5>
+                              </td>
+                              <td>
+                                <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                              </td>
+                              <td>
+                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> --
+                                  <button class="btn btn-danger" (click)="deleteFloorImage1(image.propID, image.id)">Delete</button>
+                              </td>
+                            </tr>
+                          </ng-container>
+                          
+                      </tbody>
+                  </table>
+              </div>
+          
+              <!-- Modal for viewing image --
+              <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title">View Image</h5>
+                              <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                                  <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                              <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          <!-- </div> --
+            </div> -->
+
+            <div>
+              <div class="form-column upload-container col-md-6">
+                <h5>Property Gallery:</h5>
+                <label for="gallery-upload">Upload Property Images</label>
+                <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
+                <button class="btn btn-primary mt-2" (click)="uploadPropertyImages()">
+                  <i class="fas fa-upload"></i> Upload
+                </button>
+              </div>
+              
+              <div class="image-table mt-4">
+                <h5>Uploaded Images:</h5>
+                <table class="table" *ngIf="uploadedImages1.length > 0">
+                  <thead>
+                    <tr>
+                      <th hidden="true">S.no</th>
+                      <th>Image</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let image of uploadedImages1">
+                      <tr>
+                        <td hidden="true">
+                          <h5>{{ image.id }}</h5>
+                        </td>
+                        <td>
+                          <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                        </td>
+                        <td>
+                          <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            
+              <!-- Modal for viewing image -->
+              <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">View Image</h5>
+                      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Floor Images Section -->
+            <div>
+              <div class="form-column upload-container col-md-6">
+                <h5>Floor Gallery:</h5>
+                <label for="gallery-upload">Upload Floor Images</label>
+                <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFloorFileSelect($event)">
+                <button class="btn btn-primary mt-2" (click)="uploadPropertyFloorImages()">
+                  <i class="fas fa-upload"></i> Upload
+                </button>
+              </div>
+            
+              <div class="image-table mt-4">
+                <h5>Uploaded Floor Images:</h5>
+                <table class="table" *ngIf="uploadedFloorImages1.length > 0">
+                  <thead>
+                    <tr>
+                      <th hidden="true">S.no</th>
+                      <th>Image</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let image of uploadedFloorImages1">
+                      <tr>
+                        <td hidden="true">
+                          <h5>{{ image.id }}</h5>
+                        </td>
+                        <td>
+                          <img [src]="image.imageUrl" alt="Floor Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                        </td>
+                        <td>
+                          <button class="btn btn-danger" (click)="deleteFloorImage1(image.propID, image.id)">Delete</button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+          </div>
+        
+          <div class="row">
+            <!-- Property Videos Section -->
+            <div>            
+              <div class="form-column upload-container col-md-6">
+                <h5>Video Gallery:</h5>
+                <label for="gallery-upload">Upload Property Video</label>
+                <input type="file" id="gallery-upload" accept="video/*" multiple class="form-control-file" (change)="onVideoFileSelect($event)">
+                <button class="btn btn-primary mt-2" (click)="uploadPropertyVideos()">
+                  <i class="fas fa-upload"></i> Upload
+                </button>
+              </div>
+              
+              <div class="video-table mt-4">
+                <h5>Uploaded Videos:</h5>
+                <table class="table" *ngIf="uploadedVideos1.length > 0">
+                  <thead>
+                    <tr>
+                      <th hidden="true">S.no</th>
+                      <th>Video</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let video of uploadedVideos1">
+                      <tr>
+                        <td hidden="true">
+                          <h5>{{ video.id }}</h5>
+                        </td>
+                        <td>
+                          <video [src]="video.videoUrl" width="100" height="100" (click)="openVideoModal(video.videoUrl)" controls>
+                            Your browser does not support the video tag.
+                          </video>
+                        </td>
+                        <td>
+                          <button class="btn btn-danger" (click)="deleteVideo(video.id)">Delete</button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+        
+              <!-- Modal for viewing video -->
+              <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isVideoModalOpen}" [style.display]="isVideoModalOpen ? 'block' : 'none'">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">View Video</h5>
+                      <button type="button" class="close" aria-label="Close" (click)="closeVideoModal()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <video [src]="selectedVideo" class="img-fluid" controls>
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+    <br>
+
+    <div class="card">
+        <div class="social-section">
+            <!-- <h1>Social Networks:</h1> -->
+            <label class="amenities-label">Social Networks:</label>
+            <div class="social-row">
+                <div class="social-column">
+                    <!-- <label>Website link (Optional)</label> -->
+                    <input type="text" placeholder="Website URL" formControlName="WebsiteUrl">
+                    <!-- <label>Facebook link (Optional)</label> -->
+                    <input type="text" placeholder="Facebook URL" formControlName="Facebookurl">
+                </div>
+                <div class="social-column">
+                    <!-- <label>Pinterest (Optional)</label> -->
+                    <input type="text" placeholder="Pinterest URL" formControlName="Pinteresturl">
+                    <!-- <label>Twitter link (Optional)</label> -->
+                    <input type="text" placeholder="Twitter URL" formControlName="Twitterurl">
+                    
+
+                    <div> 
+                    
+                      <input type="text" placeholder="Google Map Location URL" formControlName="GoogleLocationurl">
+                      <small style="color: red;">Note: Please insert IFRAME URL using Google Maps</small>
+                    </div>
+            
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <ul class="list-unstyled">
+        <li class="availability-option">
+          <input type="radio" id="available" name="availabilityOptions" formControlName="AvailabilityOptions" value="1">
+          <label for="available">Advertisement Property</label>
+        </li>
+        <li class="availability-option">
+          <input type="radio" id="featured" name="availabilityOptions" formControlName="AvailabilityOptions" value="2">
+          <label for="featured">Featured Property</label>
+        </li>
+        <li class="availability-option">
+          <input type="radio" id="common" name="availabilityOptions" formControlName="AvailabilityOptions" value="3">
+          <label for="common">Common Property</label>
+        </li>
+    </ul>
+        
+        <div class="button-group">
+          <button class="submit-btn styled-button" (click)="SubmitPropertyClick()">
+            <i class="fas fa-check-circle"></i> Submit
+          </button>
+          <!-- <button  class="back-btn styled-button">
+            <i class="fas fa-arrow-left"></i> Back
+          </button> -->
+        </div>
+        
+    </form>
+</div>
+</div>

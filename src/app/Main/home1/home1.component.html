@@ -1,7 +1,7 @@
-<div *ngIf="isLoading" class="preloader">
+<div *ngIf="isLoadingAdvProperty" class="preloader">
     <img src="assets/images/load.gif" alt="Loading...">
 </div>
-<div *ngIf="!isLoading">
+<div *ngIf="!isLoadingFeaProperty && !isLoadingAdvProperty">
     <app-top-nav-1></app-top-nav-1>
     <div class="container p-0 m-0">
         <div class="maincontainer">

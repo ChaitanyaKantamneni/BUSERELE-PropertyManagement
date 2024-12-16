@@ -1,55 +1,86 @@
 <div class="row justify-content-center align-items-center m-0 w-100">
-    <!-- Moved the navbar to the top for small screens -->
-    <nav class="navbar navbar-expand-md navbar-light bg-light d-md-none col-12">
-        <a class="navbar-brand" routerLink="#">BUSERELE</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/dashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
-            </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link" routerLink="/membership"><i class="fa fa-user-check"></i> Membership Details</a>
-            </li> -->
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="propertyDropdown" role="button" data-bs-toggle="dropdown">
-                <i class="fa fa-building"></i> Property Details
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="propertyDropdown">
-                <li><a class="dropdown-item" routerLink="/dashboard/add-property"><i class="fa fa-plus"></i> Add Property</a></li>
-                <li><a class="dropdown-item" routerLink="/dashboard/amenities"><i class="fa fa-plus"></i> Add Amenities</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/dashboard/profile"><i class="fas fa-user"></i> My Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" (click)="logout()"><i class="fa fa-sign-out-alt"></i> Logout</a>
-            </li>       
+  <!-- Top navigation bar for smaller screens -->
+  <nav class="navbar navbar-expand-md navbar-light bg-light d-md-none col-12">
+    <a class="navbar-brand" href="/home"><img class="h-100" src="assets/images/logo_1.png"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="propertyDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="fa fa-building"></i> Property Details
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="propertyDropdown">
+            <li><a class="dropdown-item" routerLink="/dashboard/add-property"><i class="fa fa-plus"></i> Add Property</a></li>
+            <li><a class="dropdown-item" routerLink="/dashboard/amenities"><i class="fa fa-plus"></i> Add Amenities</a></li>
           </ul>
-        </div>
-    </nav>
-    <div class="sidenavbar p-0 col-12 col-md-3">
-        <!-- Sidebar for larger screens -->
-        <div class="sidebar d-none d-md-block h-100">
-            <div class="logo">
-              <img src="" alt="BUSERELE" />
-            </div>    
-            <ul class="menu">
-              <li routerLink="/dashboard/dashboarddet"><i class="fa fa-tachometer-alt"></i> Dashboard</li>
-              <!-- <li routerLink="/dashboard/membership-details"><i class="fa fa-user-check"></i> Membership Details</li> -->
-              <li routerLink="/dashboard/addpropertysample"><i class="fa fa-plus-circle"></i> Add Property</li>
-              <li routerLink="/dashboard/amenities"><i class="fa fa-plus-circle"></i> Add Amenities</li>
-              <li routerLink="/dashboard/profile"><i class="fas fa-user"></i> My Profile</li>
-              <!-- <li routerLink="/dashboard/addpropertysample"><i class="fas fa-user"></i> add property sample</li> -->
-              <li routerLink="/dashboard/displayimage"><i class="fas fa-user"></i> image upload</li>
-              <li (click)="logout()"><i class="fa fa-sign-out-alt"></i> Logout</li>
-            </ul>
-        </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard/profile"><i class="fas fa-user"></i> My Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="logout()"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
     </div>
-    <div class="d-flex justify-content-center maincontent col-12 col-md-9">
-        <router-outlet></router-outlet>
-    </div>  
+  </nav>
+
+  <!-- Sidebar -->
+  <div class="sidenavbar col-12 col-md-3" [ngClass]="{'collapsed': !isExpanded}">
+    <div class="logo">
+      <a href="/home">
+        <img *ngIf="!isExpanded" src="assets/images/logo_2.png" alt="BUSERELE" />
+        <img *ngIf="isExpanded" src="assets/images/logo_1.png" alt="BUSERELE" />
+      </a>
+    </div>
+    <div class="sidebar d-none d-md-block h-100">
+      <!-- <button class="toggle-btn" (click)="toggleSidebar()">☰</button> -->
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <i class="fa" [ngClass]="isExpanded ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
+      </button>
+      <div class="d-flex flex-column">
+        <ul class="menu">
+          <li routerLink="/dashboard/dashboarddet">
+            <i class="fa fa-tachometer-alt"></i>
+            <span *ngIf="isExpanded">Dashboard</span>
+          </li>
+          <li routerLink="/dashboard/addpropertysample">
+            <i class="fa fa-plus-circle"></i>
+            <span *ngIf="isExpanded">Add Property</span>
+          </li>
+          <li routerLink="/dashboard/amenities">
+            <i class="fa fa-plus-circle"></i>
+            <span *ngIf="isExpanded">Add Amenities</span>
+          </li>
+          <li routerLink="/dashboard/userReviews">
+            <i class="fas fa-comment"></i>
+            <span *ngIf="isExpanded">User Reviews</span>
+          </li>
+          <li routerLink="/dashboard/displayimage">
+            <i class="fas fa-info-circle"></i>
+            <span *ngIf="isExpanded">Enquiries</span>
+          </li>
+        </ul>
+        <ul class="menu">
+          <li routerLink="/dashboard/profile">
+            <i class="fas fa-user"></i>
+            <span *ngIf="isExpanded">My Profile</span>
+          </li>
+          <li (click)="logout()">
+            <i class="fa fa-sign-out-alt"></i>
+            <span *ngIf="isExpanded">Logout</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <div class="maincontent col-12 col-md-9">
+    <router-outlet></router-outlet>
+  </div>
 </div>

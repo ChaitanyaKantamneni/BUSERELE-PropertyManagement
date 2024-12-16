@@ -2,6 +2,16 @@
     max-width: 100%;
 }
 
+h5{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+}
+
+.propertyDetails .propertyaddress{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+}
+
 .preloader {
     position: fixed;
     top: 50%;

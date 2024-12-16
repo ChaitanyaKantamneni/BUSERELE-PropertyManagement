@@ -1,0 +1,176 @@
+.mainReview{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.reviewcard,.reviewview{
+    height: auto;
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profileForm{
+    width:70%;
+}
+
+.profilePicture{
+    width: 25%;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal.show {
+    display: block;
+  }
+  
+  .modal-dialog {
+    position: relative;
+    margin: 10% auto;
+    max-width: 500px;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .modal-footer {
+    text-align: center;
+  }
+
+  
+  .input-container {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  
+  
+  .form-group input,.form-group textarea{
+    /* width: 100%;
+    padding: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid gray; */
+    border: none;
+    border-bottom: 1px solid gray;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    border-radius: 0px;
+  }
+  
+  
+  input:focus,textarea:focus {
+    border-color: #5c9dfc;
+  }
+  
+  label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #999;
+    pointer-events: none;
+    transition: 0.2s ease-in-out;
+    opacity: 0;
+  }
+  
+  /* Label animation when focused or the input has content */
+  input:focus + label,
+  input:not(:placeholder-shown) + label,
+  textarea:focus+label,
+  textarea:not(:placeholder-shown) + label {
+      top: -10px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: black;
+      opacity: 1;
+  }
+  
+  /* Make label hidden when input is empty and not focused */
+  input:placeholder-shown + label,
+  textarea:placeholder-shown + label {
+      opacity: 0;
+  }
+  a{
+    text-decoration: none;
+    color:black
+  }
+  a h5{
+    font-family: fangsong;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0px;
+  }
+  a p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+  }
+
+  .PageHeading{
+    width: 100%;
+    background-color: #e8e8e8;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .PageHeading h5{
+    padding-left: 10px;
+  }
+
+  form{
+    padding: 20px 30px;
+  }
+
+  .formrow{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .formrow .form-group{
+    width:49%;
+    position: relative;
+  }
+
+  .image-preview{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-preview img{
+    height: 115px;
+    width: 60%;
+  }

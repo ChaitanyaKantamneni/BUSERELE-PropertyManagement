@@ -100,7 +100,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
   }
   ]
   propertyFor: string = '';
-  isLoading: boolean = false;
+  isLoadingAdvProperty: boolean = false;
+  isLoadingFeaProperty:boolean=false;
   constructor( public apiurl:HttpClient,private route: ActivatedRoute,public routes:Router){
     emailjs.init('uZT6kwr7RPQM3n5lj');
   }
@@ -123,25 +124,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
     this.propertyFor = option;
     console.log(option);
   }
-
-  // onKeywordChange() {
-  //   if (this.keyword && this.keyword.length > 2) {
-  //     // Make an HTTP GET request to your API endpoint with the keyword as a query parameter
-  //     this.apiurl.get<string[]>(`https://localhost:7190/api/Users/GetKeywordSuggestions?keyword=${encodeURIComponent(this.keyword)}`)
-  //       .subscribe(
-  //         (response) => {
-  //           // Directly assign the response as suggestions
-  //           this.suggestions = response;
-  //         },
-  //         (error) => {
-  //           console.error('Error fetching keyword suggestions:', error);
-  //           this.suggestions = [];
-  //         }
-  //       );
-  //   } else {
-  //     this.suggestions = [];
-  //   }
-  // }
 
   onKeywordChange() {
     if (this.keyword && this.keyword.length > 2) {
@@ -180,7 +162,12 @@ export class Home1Component implements OnInit,AfterViewInit  {
   }
 
   loadPropertyDetails() {
-    this.isLoading=true;
+    this.isLoadingAdvProperty=true;
+    // const minLoadingTime = 2000;
+
+    // const loadingTimer = setTimeout(() => {
+    //   this.isLoadingAdvProperty = false;
+    // }, minLoadingTime);
     this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnAdvertisingProperty')
       .subscribe(
         (response: any[]) => {
@@ -278,7 +265,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
               propertyBadgeColor: propertyBadgeColor
             };
           });
-          this.isLoading=false;
+          // clearTimeout(loadingTimer);
+          this.isLoadingAdvProperty=false;
         },
         (error) => {
           console.error('Error fetching property details:', error);
@@ -287,7 +275,12 @@ export class Home1Component implements OnInit,AfterViewInit  {
   }
 
   loadFeaturedPropertyDetails() {
-    this.isLoading=true;
+    this.isLoadingFeaProperty=true;
+    const minLoadingTime = 1000;
+
+    const loadingTimer = setTimeout(() => {
+      this.isLoadingFeaProperty = false;
+    }, minLoadingTime);
     this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
       .subscribe(
         (response: any[]) => {
@@ -383,7 +376,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
               propertyBadgeColor: propertyBadgeColor
             };
           });
-          this.isLoading=false;
+          clearTimeout(loadingTimer);
+          this.isLoadingFeaProperty=false;
         },
         (error) => {
           console.error('Error fetching property details:', error);
@@ -496,8 +490,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
   // }
 
   sendEmail() {
-    // Replace with your actual Base64 string for the logo image
-    
     const templateParams = {
       to_name: this.userEnquiryform.get('name')?.value, // Change to actual recipient name or use a form value
       to_email: this.userEnquiryform.get('email')?.value, // Recipient email address

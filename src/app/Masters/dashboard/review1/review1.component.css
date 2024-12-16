@@ -18,7 +18,7 @@
     display: flex;
     justify-content:space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin: 10px 0px;
 }
 
 .searchreview,.reviewStatus{
@@ -27,9 +27,10 @@
 }
 
 .reviewstable{
-    height: 275px;
-    width: 100%;
-    overflow: auto;
+  height: auto;
+  width: 100%;
+  overflow: auto;
+  max-height: 275px;
 }
 
 .viewbtn{
@@ -114,6 +115,79 @@
   .updatestatusbuttons i{
     margin-right: 10px;
   }
+
+  .PageHeading{
+    width: 100%;
+    background-color: #e8e8e8;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .PageHeading h5{
+    padding-left: 10px;
+  }
+
+  form{
+    padding: 20px 30px;
+  }
+  .form-group label{
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+
+  .form-group input,.form-group textarea{
+    border: none;
+    border-bottom: 1px solid gray;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    border-radius: 0px;
+  }
+
+  .form-group input:focus{
+    border-bottom: 1px solid blue;
+    outline: none; 
+  }
+
+  a{
+    text-decoration: none;
+    color:black
+  }
+  a h5{
+    font-family: fangsong;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0px;
+  }
+  a p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+  }
+
+  .backLabel{
+    width: fit-content;
+  }
+
+  table thead{
+   font-family:'Roboto', sans-serif;
+   font-size: 12px;
+  }
+
+  table thead tr th{
+    text-align: center;
+  }
+
+  table tbody{
+    font-family:'Roboto', sans-serif;
+    font-size: 10px;
+   }
+ 
+   table tbody tr td{
+     text-align: center;
+   }
 
 @media (max-width: 768px){
     .mainReview{
