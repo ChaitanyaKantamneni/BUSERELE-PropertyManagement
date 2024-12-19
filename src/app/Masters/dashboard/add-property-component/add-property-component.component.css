@@ -1,1144 +1,568 @@
-.property-details-container {
-      margin: 0 auto;
-      background-color: #fff;
-      border-radius: 8px;
-  }
-  
-  h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-  }
-  
-  
-  
-  .card {
-    padding: 16px;
-  }
-  
-  
-  
-  
-  
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 16px;
-   
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  input[type="text"],
-  select,
-  input[type="date"] {
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
-    border: none;
-    border-bottom: 1px solid black;
-    border-radius: 0px;
-    margin-bottom: 20px;
-  }
-  
-  
-  
-  
-  input[type="text"]:focus,
-  select:focus,
-  input[type="date"]:focus {
-    border-color: #007BFF; 
-    outline: none; 
-    
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  .error-message {
-    min-height: 20px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    visibility: hidden; 
-  }
-  
-  .error-message.visible {
-    visibility: visible; 
-  }
-  
-  .error-required {
-    font-size: 12px;
-    color: red;
-  }
-  
-  input:invalid {
-    border-color: red;
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  input, select ,input[type="date"]{
-    padding: 8px;
-    /* margin-bottom: 15px; */
-    /* border: 1px solid #ccc; */
-    border: none;
-    border-radius: 4px;
-    width: 100%;
-    outline: none; 
-    border-bottom: 1px solid black;
-    border-radius: 0px;
-  
-    
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  .form-group input,select,
-  .form-group textarea,
-  .form-group select {
-      width: 100%;
-      padding: 10px;
-      /* font-size: 0.9rem; */
-      border: none; 
-      border-bottom: 1px solid #ddd; 
-      background-color: #f9f9f9; 
-      transition: border-color 0.3s ease, background-color 0.3s ease;
-      background-color: transparent;
-  }
-  
-  .error-message {
-    font-size: 12px;
-    color: red;
-  }
-  .card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 0px solid #ccc;;
-  }
-  
-  
-  .card h2 {
-    /* font-size: 1.25rem; */
-    margin-bottom: 15px;
-    color: #333;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
-    border: none;
-  }
-  
-  .form-column {
-    display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 100%;
-  }
-  
-  
-  
-  
-  
-  input[type="text"], input[type="email"], input[type="date"], select {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: none;
-    border-bottom: 1px solid black;
-    border-radius: 0px;
-  
-    background-color: transparent;
-  
-    margin-bottom: 20px;
-   
-  }
-  
-  
-  
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  input[type="date"]:focus,
-  select:focus {
-      border-color: #007BFF; 
-      outline: none;
-  
-      background-color: transparent;
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  label {
-      font-weight: bold;
-      margin: 10px 0 5px;
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  input::placeholder {
-      color: black;
-  }
-  
-  
-  /* General Card Styling */
-  .card {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px auto;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 1200px; 
-  }
-  
-  .form-section {
-    width: 100%;
-  }
-  
-  .row {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 20px; 
-  }
-  
-  .col-md-6 {
-    flex: 1 1 calc(50% - 20px); 
-    max-width: calc(50% - 20px); 
-  }
-  
-  .col-lg-3 {
-    flex: 1 1 calc(25% - 20px); 
-    max-width: calc(25% - 20px);
-  }
-  
-  .mb-4 {
-    margin-bottom: 20px;
-  }
-  
-  .file-upload h5 {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  
-  .file-upload input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
-  
-  .file-upload button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-  }
-  
-  .file-upload button:hover {
-    background-color: #0056b3;
-  }
-  
-  
-  .image-thumbnails,
-  .video-thumbnails {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .image-thumbnails img,
-  .video-thumbnails video {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .image-thumbnails img:hover,
-  .video-thumbnails video:hover {
-    opacity: 0.8;
-  }
-  
-  .thumbnail-container {
-    position: relative;
-  }
-  
-  .thumbnail {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    cursor: pointer;
-  }
-  
-  .thumbnail:hover {
-    opacity: 0.7;
-  }
-  
-  /* Property Documents */
-  .file-upload a {
-    color: #007bff;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  .file-upload a:hover {
-    text-decoration: underline;
-  }
-  
-  
-  @media (max-width: 768px) {
-    .col-md-6,
-    .col-lg-3 {
-      flex: 1 1 100%; 
-      max-width: 100%;
-    }
-  
-    .file-upload button {
-      width: auto;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .card {
-      padding: 15px; 
-    }
-  
-    .file-upload h5 {
-      font-size: 14px; 
-    }
-  
-    .file-upload input {
-      padding: 8px; 
-    }
-  
-    .image-thumbnails img,
-    .video-thumbnails video {
-      width: 80px;
-      height: 80px;
-    }
-  
-    .file-upload button {
-      padding: 8px 16px; 
-      font-size: 14px; 
-    }
-  }
-  
-  
-  
-  
-  .form {
-      margin: 0 auto;
-      padding: 0px;
-      /* background-color: #f9f9f9; */
-      border-radius: 8px;
-  }
-  
-  .form-row {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 0%;  
-      font-size: smaller;
-  }
-  
-  label {
-      font-weight: bold;
-      margin-bottom: 6px;  
-  }
-  
-  .amenities-row {
+.mainReviewCentered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.mainReview {
+  height: 100vh;
+}
+
+
+.reviewcard,.reviewview{
+  height: auto;
+  width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.reviewcardPropertyView{
+  height: auto;
+  width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.filtersSearch{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  margin: 10px 0px;
+}
+
+.searchreview,.reviewStatus{
+  width: 49%;
+  margin: 0px;
+}
+
+.reviewStatus{
+display: flex;
+justify-content: end;
+align-items: center;
+}
+
+.reviewStatus button{
+background-color: #2495FD;
+color: white;
+border: none;
+}
+
+.reviewStatus button:hover{
+background-color: #0056b3;
+}
+
+.reviewstable{
+height: auto;
+width: 100%;
+overflow: auto;
+max-height: 275px;
+}
+
+.viewbtn{
+  padding: 0px 10px;
+  border-right: 0.5px solid black;
+  border-radius: 0px;
+}
+
+.viewbtn:hover{
+  background-color: blue;
+}
+
+.checkbtn{
+  padding: 0px 10px;
+  border-radius: 0px;
+}
+
+.checkbtn:hover{
+  background-color: green;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+
+.table th, .table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  font-weight: bold;
+}
+
+.btn-secondary{
+  background-color: #2495FD;
+  border: none;
+}
+
+.btn-secondary:hover{
+  background-color: #2495FD;
+  border: 1px solid #2495FD;
+}
+
+form{
+  padding: 20px 30px;
+}
+
+.formrow{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.formrow .form-group{
+  width:32%;
+  position: relative;
+}
+
+.socialLinks .formrow .form-group{
+  width:49%;
+  position: relative;
+}
+
+.propertyAminities label{
+  position: relative;  
+  opacity: 1;     
+  color: #333;   
+  pointer-events: auto; 
+  transition: none;  
+  transform: none;    
+  margin-left: 25px;  
+}
+
+.propertyAminities input[type="checkbox"] {
+  display: inline-block; 
+  margin-right: 10px; 
+}
+
+/* General reset to ensure no unexpected margins or paddings */
+ul.AvailabilityOptions-row {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  display: flex;          /* Use flexbox for horizontal alignment */
+  align-items: center;    /* Vertically center the radio button and label */
+}
+
+.availability-option {
+  display: flex;          /* Align radio buttons and labels horizontally */
+  align-items: center;    /* Vertically center the radio button and label */
+  margin-right: 20px;     /* Space between the radio buttons */
+}
+
+.availability-option input[type="radio"] {
+  margin-right: 8px;      /* Space between the radio button and the label */
+  cursor: pointer;       /* Make the radio button clickable */
+}
+
+.availability-option label {
+  position: relative;
+  font-size: 16px;        /* Default font size */
+  color: #333;            /* Default color for labels */
+  opacity: 1;             /* Make sure label is visible */
+  pointer-events: auto;   /* Allow interaction with the label */
+  transition: none;       /* Disable any transitions */
+  margin: 0;              /* Remove any default margin */
+}
+
+
+
+.amenity-row{
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-    }
-  
-  .amenity-item {
-      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 8px; 
-      flex-basis: 30%; 
+}
+
+
+.media-buttons{
+  width: 22%;
+}
+
+.media-buttons button{
+  border: dotted;
+  background-color: transparent;
+  padding: 10px;
+  text-align: center;
+}
+
+.propertyAminities .singleaminity{
+  width: 32%;
+}
+
+
+
+.updatestatusbuttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.updatestatusbuttons .decline{
+  margin-right: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.updatestatusbuttons .approve{
+  margin-right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.updatestatusbuttons i{
+  margin-right: 10px;
+}
+
+.PageHeading{
+  width: 100%;
+  background-color: #e8e8e8;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.PageHeading h5{
+  padding-left: 10px;
+}
+
+form{
+  padding: 20px 30px;
+}
+/* .form-group label{
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+.form-group input,.form-group textarea{
+  border: none;
+  border-bottom: 1px solid gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  border-radius: 0px;
+}
+
+.form-group input:focus{
+  border-bottom: 1px solid blue;
+  outline: none; 
+} */
+
+.input-container {
+  position: relative;
+  margin-top: 20px;
+}
+
+
+
+.form-group input,.form-group textarea,.form-group select{
+  /* width: 100%;
+  padding: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid gray; */
+  border: none;
+  border-bottom: 1px solid gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  border-radius: 0px;
+}
+
+
+input:focus,textarea:focus,select:focus {
+  border-color: #5c9dfc;
+}
+
+label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #999;
+  pointer-events: none;
+  transition: 0.2s ease-in-out;
+  opacity: 0;
+}
+
+/* Label animation when focused or the input has content */
+input:focus + label,
+input:not(:placeholder-shown) + label,
+textarea:focus+label,
+textarea:not(:placeholder-shown) + label,
+select:focus+label,
+select:not(:placeholder-shown) + label{
+    top: -10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: black;
+    opacity: 1;
+}
+
+/* Make label hidden when input is empty and not focused */
+input:placeholder-shown + label,
+textarea:placeholder-shown + label,
+select:placeholder-shown+label {
+    opacity: 0;
+}
+
+input[type="date"] {
+  padding: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+input[type="date"]:focus + label,
+input[type="date"]:valid + label {
+  top: -10px;
+  font-size: 12px;
+  color: black;
+  opacity: 1;
+}
+
+a{
+  text-decoration: none;
+  color:black
+}
+a h5{
+  font-family: fangsong;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0px;
+}
+a p{
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+}
+
+.backLabel{
+  width: fit-content;
+}
+
+table thead{
+ font-family:'Roboto', sans-serif;
+ font-size: 12px;
+}
+
+table thead tr th{
+  text-align: center;
+}
+
+table tbody{
+  font-family:'Roboto', sans-serif;
+  font-size: 10px;
+ }
+
+ table tbody tr td{
+   text-align: center;
+ }
+
+ .modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-dialog {
+  position: relative;
+  margin: 10% auto;
+  max-width: 500px;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.modal-footer {
+  text-align: center;
+}
+
+.image-table{
+  height:300px;
+  overflow: scroll;
+}
+.image-table table{
+  height: 100%;
+  overflow: scroll;
+}
+
+.SubmitAndUpdateButtons{
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.updateProperty{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.submitButtonDiv{
+  text-align: end;
+  width: 100%;
+}
+
+.updateButton,.SubmitButton{
+  /* margin-right: 20px; */
+  background-color: #2495FD;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.statusButtons .decline{
+  margin-right: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.statusButtons .approve{
+  margin-right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.statusButtons i,.updateButton i,.SubmitButton i{
+  margin-right: 10px;
+}
+
+.addnewButton button{
+  background-color: #2495FD;
+  color: white;
+  border: none;
+}
+
+.addnewButton button:hover{
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px){
+
+  .mainReview{
+      height: 90vh;
   }
-  
-  /* label {
-      font-size: 16px;
-  } */
-  
-  .amenities-label {
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 15px;  
-      display: block;
-  }
-  
-  input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-  }
-  
-  
-  @media (max-width: 768px) {
-      .amenities-row {
-          flex-direction: column; 
-          gap: 10px; 
-      }
-  
-      .amenity-item {
-          flex-basis: 100%; 
-      }
-  }
-  
-  
-  
-  .availability-options {
+  .filtersSearch{
       display: flex;
-      flex-wrap: wrap;  
-      gap: 4px;        
-  }
-  
-  .availability-option {
-      display: flex;
+      justify-content:space-between;
       align-items: center;
-      gap: 5px;         
-      /* flex-basis: 30%;  */
-  }
-  
-  input[type="radio"] {
-      width: 20px;
-      height: 20px;
-  }
-  
-  
-  @media (max-width: 768px) {
-      .availability-options {
-          flex-direction: column;  
-          gap: 10px;
-      }
-  
-      .availability-option {
-          flex-basis: 100%;        
-      }
-  }
-  
-  
-  @media (max-width: 768px) {
-      .property-details-container {
-          padding: 20px;
-      }
-  
-      .form-column {
-          flex: 1 1 100%;
-      }
-  }
-  
-  @media (max-width: 600px) {
-      .form-container {
-          flex-direction: column;
-          align-items: center;
-      }
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  .editor-container {
-      /* max-width: 800px; */
-      margin: 0 auto;
-      padding: 20px;
-      /* background-color: #f9f9f9; */
-      border-radius: 10px;
-      /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-      margin-bottom: 20px; 
-  
-    }
-    
-    .editor-label {
-      font-size: 18px;
-      font-weight: bold;
       margin-bottom: 10px;
-      color: #333;
-      display: block;
-    }
-    
-    quill-editor.custom-quill-editor {
-      height: 300px;
-      /* border: 1px solid #ccc; */
-      border-radius: 5px;
-      background-color: #fff;
-    }
-    
-    .clear-btn {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #ff6666;
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
-    }
-    
-    .clear-btn:hover {
-      background-color: #ff3333;
-    }
-    
-    quill-editor.ql-toolbar {
-      border-radius: 5px 5px 0 0;
-    }
-    
-    quill-editor.ql-container {
-      border-radius: 0 0 5px 5px;
-    }
-    
-  
-  
-  .social-section {
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px auto;
-    background-color: #fff; 
-    max-width: 1200px; 
-  }
-  
-  h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center; 
-  }
-  
-  .social-row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap; 
-  }
-  
-  .social-column {
-    flex: 1;
-    margin-right: 10px;
-  }
-  
-  .social-column:last-child {
-    margin-right: 0;
-  }
-  
-  
-  .social-column input[type="text"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    background-color: transparent;
-    transition: border-color 0.3s;
-  }
-  
-  .social-column input[type="text"]:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  
-  .social-column small {
-    font-size: 12px;
-    color: red;
-    display: block; 
-    margin-top: 5px;
-  }
-  
-  
-  
-  @media (max-width: 768px) {
-    .social-row {
-      flex-direction: column; 
-    }
-  
-    .social-column {
-      margin-right: 0;
-      margin-bottom: 20px; 
-    }
-  }
-  
-  
-  @media (max-width: 480px) {
-    .social-section {
-      padding: 10px; 
-    }
-  
-    h1 {
-      font-size: 20px; 
-    }
-  
-    .social-column input[type="text"] {
-      padding: 10px; 
-      font-size: 14px; 
-    }
-  
-    .social-column small {
-      font-size: 10px; 
-    }
-  }
-  
-  
-  .form-section {
-      /* margin: 20px; */
-      padding: 20px;
-      /* border: 1px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9; */
-  }
-  
-  
-  .file-upload h5 {
-      font-size: 16px;
-      margin-bottom: 10px;
-  }
-  
-  
-  .row {
-      display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      justify-content: space-around;
   }
-  
-  
-  .thumbnail-container {
-      flex: 1 1 45%;  
-      max-width: 45%; 
+  .searchreview,.reviewStatus{
+      width:100%;
+      margin-bottom: 10px;
   }
+
+  .table thead {
+      display: none;  /* Hide the header on small screens */
+    }
   
-  @media (min-width: 768px) {
-      .thumbnail-container {
-          flex: 1 1 30%;  
-      }
-  }
+    .table tbody {
+      display: block;
+    }
   
-  @media (min-width: 992px) {
-      .thumbnail-container {
-          flex: 1 1 22%; 
-      }
-  }
+    .table tbody tr {
+      display: block;
+      margin-bottom: 10px;
+    }
   
+    .table tbody td {
+      width: 100%; /* Make each cell take full width */
+      padding: 15px 8px 8px 8px; /* Add more top padding for spacing */
+      box-sizing: border-box;
+      position: relative;
+      display: block;
+      border: 1px solid #ddd;
+    }
   
-  .thumbnail {
-      width: 100%;
-      height: auto;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.2s;
-  }
+    .table tbody td::before {
+      /* Add labels to the cell for small screens */
+      content: attr(data-label);
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      color: #555;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-size: 12px;  /* Smaller font size for labels */
+      z-index: 1; /* Ensure the label stays on top */
+    }
   
-  .thumbnail:hover {
-      transform: scale(1.05);
-  }
+    /* Ensure content doesn't overlap */
+    .table tbody td {
+      padding-left: 20px; /* Give more space for the label */
+      padding-top: 25px; /* Adjust padding for better content display */
+    }
   
-  
-  .pdf-preview {
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-  }
-  
-  .pdf-preview embed {
-      width: 100%;
-      height: 500px;
-  }
-  
-  .pdf-preview button {
-      margin-top: 10px;
-      padding: 5px 15px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-  }
-  
-  .pdf-preview button:hover {
-      background-color: #0056b3;
-  }
-  
-  
-  
-  
-  
-  /* .form-group {
+    .table tbody td .btn {
+      padding: 5px;
+    }
+
+    .formrow{
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
     }
-     */
-   
-    .form-column {
-      display: flex;
-      flex-direction: column;
-      width: 100%; 
-      margin-left: 0px;
-      
-    }
-    
-   
-    /* label {
-      margin-bottom: 5px;
-    } */
-    
-    input[type="date"] {
-      margin-bottom: 10px;
-      padding: 8px;
-      border-radius: 5px;
-      /* border: 1px solid #ccc; */
-      border-bottom: 1px solid black;
-      border-radius: 0px;
-     
-    }
-    
-  
-  
-  
-  
-  
-  
-   
-  .row > .col-md-6 {
-      margin-right: 20px;
-    }
-    
-    .thumbnail-container {
-      margin-bottom: 10px;
-    }
-    
-    .thumbnail {
-      width: 100%;
-      height: auto;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    
-  
-    .pdf-preview {
-      margin-top: 20px;
-    }
-    
-    .pdf-preview embed {
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    
-  
-    .btn-primary {
-      padding: 10px 20px;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-    }
-    
-    .btn-primary:hover {
-      background-color: #0056b3;
-    }
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    .btn {
-      padding: 10px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .btn:hover {
-      background-color: #0056b3;
-    }
-    
-    .pdf-preview {
-      margin-top: 20px;
-    }
-    
-  
-    
-  .button-group {
-    display: flex;
-    justify-content: flex-start;
-    gap: 15px;
-    margin-top: 30px;
-    width: 40%; 
-    flex-wrap: wrap; 
-  }
-  
-  .styled-button {
-    padding: 12px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.3s ease;
-    flex: 1; 
-    max-width: 40%; 
-    min-width: 150px; 
-  }
-  
-  .styled-button i {
-    font-size: 18px;
-  }
-  
-  
-  .submit-btn {
-    background-color: blue;
-    color: white;
-  }
-  
-  .submit-btn:hover {
-    background-color: darkblue;
-  }
-  
-  
-  .back-btn {
-    background-color: blue;
-    color: white;
-  }
-  
-  .back-btn:hover {
-    background-color: darkblue;
-  }
-  
-  
-  
-  @media (max-width: 768px) {
-    .button-group {
-      justify-content: center; 
-      gap: 10px; 
-    }
-  
-    .styled-button {
-      max-width: 45%; 
-    }
-  }
-  
-  
-  @media (max-width: 480px) {
-    .button-group {
-      flex-direction: column; 
-      align-items: stretch; 
-      gap: 10px;
-    }
-  
-    .styled-button {
-      max-width: 100%; 
-      text-align: center; 
-    }
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    .form-group {
-      position: relative;
-      margin-bottom: 20px;
-    }
-  
-    .input-container {
-      position: relative;
-    }
-    
-  
-  
-  
-    .form-group label {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 5px;
-      display: block;
-  }
-  
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-      width: 100%;
-      padding: 10px;
-      font-size: 0.9rem;
-      border: none; 
-      border-bottom: 1px solid #ddd; 
-      background-color: #f9f9f9; 
-      border-radius: 0; 
-      transition: border-color 0.3s ease, background-color 0.3s ease;
-      background-color: transparent;
-  }
-  
-  .form-group input:focus,
-  .form-group textarea:focus,
-  .form-group select:focus {
-      /* border-color: #007bff;  */
-      outline: none; 
-      background-color: #fff; 
-  }
-  
-  .textarea {
-    resize: vertical;
-  }
-  
-  .grid {
-    display: grid;
-    /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 15px;
-  }
-  
-  .grid .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  .full-width {
-    grid-column: span 2; 
-  }
-  
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-  }
-  
-  .grid .full-width {
-    grid-column: span 3;
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
-  }
-  
-  h1, h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  
-  .property-details-container {
-    margin: 0 auto;
-    background-color: #fff;
-    border-radius: 8px;
-    max-width: 1200px;
-    padding: 20px; 
-  }
-  
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="date"],
-  select,
-  textarea {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: none;
-    border-bottom: 1px solid black;
-    background-color: transparent;
-    border-radius: 0;
-    transition: border-color 0.3s;
-  }
-  
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  input[type="date"]:focus,
-  select:focus,
-  textarea:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  label {
-    font-weight: bold;
-    margin: 10px 0 5px;
-  }
-  
-  input::placeholder {
-    color: black;
-  }
-  
-  .error-text {
-    font-size: 12px;
-    color: red;
-  }
-  
-  
-  .submit-btn,
-  .back-btn,
-  .clear-btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-  }
-  
-  .submit-btn:hover,
-  .back-btn:hover,
-  .clear-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr; 
-    gap: 15px;
-  }
-  
-  .grid .full-width {
-    grid-column: span 1; 
-  }
-  
-  
-  .card {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
 
-  .editor-container{
-    margin:0px;
-  }
-  .editor-container textarea{
-    border: 1px solid black;
-  }
-
-  .image-table{
-    height: 200px;
-    overflow: scroll;
-  }
-
-  /* .imageContainerCard{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  } */
-
-  /* .propertyImageContainer,.FloorImageContainer{
-    width:49%;
-  } */
-  
-  
-  @media (min-width: 768px) {
-    .grid {
-      grid-template-columns: repeat(2, 1fr);
+    .formrow .form-group{
+      width:100%;
     }
-  }
-  
-  
-  @media (min-width: 992px) {
-    .grid {
-      grid-template-columns: repeat(3, 1fr); 
-    }
-  
-    .grid .full-width {
-      grid-column: span 3; 
-    }
-  
-    .availability-options,
-    .amenities-row {
-      flex-direction: row; 
-    }
-  }
+}

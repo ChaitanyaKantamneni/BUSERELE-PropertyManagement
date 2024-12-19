@@ -416,14 +416,14 @@
                 <div class="reviewsList d-flex justify-content-center align-items-center flex-column">
                     <div class="review-container">
                         <div class="review-content">
-                            <ng-container *ngFor="let reviewitem of reviews">
+                            <ng-container *ngFor="let reviewitem of Reviews">
                                 <div class="review-card d-flex flex-column justify-content-center align-items-center">
                                     <div class="image">
                                         <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
                                     </div>
                                     <div class="review-text w-100">
                                         <div class="username w-100 d-flex justify-content-center align-items-center">
-                                            <h5>{{ reviewitem.Username }}</h5>
+                                            <h5>{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</h5>
                                         </div>
                                         <div class="date w-100 d-flex justify-content-center align-items-center">
                                             <p>{{ reviewitem.posteddate }}</p>
@@ -435,14 +435,14 @@
                                 </div>
                             </ng-container>
                             <!-- Clone the content to create the looping effect -->
-                            <ng-container *ngFor="let reviewitem of reviews">
+                            <ng-container *ngFor="let reviewitem of Reviews">
                                 <div class="review-card d-flex flex-column justify-content-center align-items-center">
                                     <div class="image">
                                         <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
                                     </div>
                                     <div class="review-text w-100">
                                         <div class="username w-100 d-flex justify-content-center align-items-center">
-                                            <h5>{{ reviewitem.Username }}</h5>
+                                            <h5>{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</h5>
                                         </div>
                                         <div class="date w-100 d-flex justify-content-center align-items-center">
                                             <p>{{ reviewitem.posteddate }}</p>
@@ -456,7 +456,7 @@
                         </div>                        
                     </div>
                     <div class="browsemoreproperties row justify-content-center align-items-center mt-5">
-                        <button class="btn" routerLink="/search-properties">Browse More Reviews</button>
+                        <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
                     </div>                    
                 </div>
             </div>

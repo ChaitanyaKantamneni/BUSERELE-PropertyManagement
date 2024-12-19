@@ -131,7 +131,9 @@ export class SignInComponent implements OnInit {
     };
     this.loginsuccesfull = true;
     console.log(this.LoginForms);
-
+    if(!localStorage.getItem('email')){
+      this.routes.navigate(['/signin']);
+    }
     this.http.post("https://localhost:7190/api/Users/login", data, { headers: { 'Content-Type': 'application/json' } })
       .subscribe({
         next: (result: any) => {
@@ -142,7 +144,13 @@ export class SignInComponent implements OnInit {
             setTimeout(() => {
               this.routes.navigate(['/dashboard']);
             }, 3000);
-          } else {
+          } else if(result.user.rollId === "2"){
+            localStorage.setItem("email", this.LoginForms.get('email').value);
+            setTimeout(() => {
+              this.routes.navigate(['/UserDashboard']);
+            }, 3000);
+          }
+          else {
             this.LoginStatus = "Login Failed. Please try again!";
             this.messageColor = { red: true, green: false };
             this.routes.navigate(['/signin']);
