@@ -4,12 +4,20 @@
 
 h5{
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 16px;
+    text-transform: uppercase;
 }
 
 .propertyDetails .propertyaddress{
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.propertyspecifications {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .preloader {
@@ -86,6 +94,11 @@ h5{
 
 .smaller-text,.small-icon {
     font-size: 12px; /* Adjust as needed */
+}
+
+.cost{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
 }
 
 .properties .col-lg-3,.row .col-lg-4{

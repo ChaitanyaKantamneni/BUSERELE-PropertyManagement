@@ -435,6 +435,24 @@ select.form-control option:disabled {
 .smaller-text,.small-icon {
     font-size: 12px; /* Adjust as needed */
 }
+
+.propertyspecifications h5{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+
+.propertyaddress{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+.cost{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+}
   
 
 @keyframes scroll {

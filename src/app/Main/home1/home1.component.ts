@@ -31,34 +31,14 @@ export class Home1Component implements OnInit,AfterViewInit  {
   selectedPropertyType: string | null = '';
   propertydetails: any[] = [];
   FeaturedProperties:any[]=[];
+  Reviews:any[]=[];
   reviews: Review[] = [
     {
-      reviewID: '1',
-      Username: 'chaitanya',
-      posteddate: '10-05-2002',
-      review: 'Very professional broker with great apartments selections',
-      imageurl: 'assets/images/usericon.jpg'
-    },
-    {
-      reviewID: '2',
-      Username: 'Abhishek',
-      posteddate: '10-05-2002',
-      review: 'Very professional broker with great apartments selections',
-      imageurl: 'assets/images/usericon.jpg'
-    },
-    {
-      reviewID: '3',
-      Username: 'Rohith',
-      posteddate: '10-05-2002',
-      review: 'Optio veniam, ullam debitis iure natus, recusandae aut qui accusantium consequatur explicabo cum repudiandae nostrum consectetur, blanditiis vitae placeat ab exercitationem amet provident esse eveniet. Cum incidunt nam tempora vero quisquam impedit voluptas ipsum eligendi asperiores error deleniti aperiam tenetur eaque eveniet necessitatibus sint, vel totam ratione.',
-      imageurl: 'assets/images/usericon.jpg'
-    },
-    {
-      reviewID: '4',
-      Username: 'Ganesh',
-      posteddate: '10-05-2002',
-      review: 'Very professional broker with great apartments selections',
-      imageurl: 'assets/images/usericon.jpg'
+      reviewID: '',
+      Username: '',
+      posteddate: '',
+      review: '',
+      imageurl: ''
     }
   ];
   
@@ -118,7 +98,39 @@ export class Home1Component implements OnInit,AfterViewInit  {
 
     this.loadPropertyDetails();
     this.loadFeaturedPropertyDetails();
+    this.getTestimonials();
   }
+
+  getTestimonials() {
+    this.apiurl.get<Review[]>("https://localhost:7190/api/Users/GetUserReviewsStatus1")
+    .subscribe(
+      (response: any) => {
+        
+        this.Reviews = response.data.map((testimonial: any) => {
+
+          return {
+            reviewID: testimonial.id || 'N/A',
+            username: testimonial.username || 'N/A',
+            posteddate: this.formatDate(testimonial.createdDate) || 'N/A',
+            review: testimonial.usermessage || 'N/A',
+            imageurl:  'assets/images/usericon.jpg'
+          };
+        });
+      },
+      (error) => {
+        console.error('Error fetching property details:', error);
+      }
+    );
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+  
 
   selectOption(option: string): void {
     this.propertyFor = option;

@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { QuillModule,QuillEditorComponent } from 'ngx-quill';
+import { QuillEditorComponent, QuillModule } from 'ngx-quill';
 
 interface Amenity {
   id: string;
@@ -11,22 +11,23 @@ interface Amenity {
 }
 
 @Component({
-  selector: 'app-add-property-component',
+  selector: 'app-add-property-by-user',
   standalone: true,
   imports: [ReactiveFormsModule,FormsModule,HttpClientModule,QuillModule,NgIf,NgFor,NgClass],
-  templateUrl: './add-property-component.component.html',
-  styleUrl: './add-property-component.component.css'
+  templateUrl: './add-property-by-user.component.html',
+  styleUrl: './add-property-by-user.component.css'
 })
-export class AddPropertyComponentComponent implements OnInit {
+export class AddPropertyByUserComponent implements OnInit {
   isModalOpen: any;
   isVideoModalOpen:any;
+  userID: string = localStorage.getItem('email') || ''; 
   @ViewChild(QuillEditorComponent) quillEditor!: QuillEditorComponent;
 
   constructor(public http:HttpClient,private cdRef: ChangeDetectorRef,private sanitizer: DomSanitizer){}
   ngOnInit(): void {
     this.propertyform.get('TotalArea')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.propertyform.get('PriceFor')?.valueChanges.subscribe(() => this.calculateTotalPrice());
-    this.fetchProperties();
+    this.getownProperties();
   }
 
   generatePropertyID(){
@@ -37,40 +38,6 @@ export class AddPropertyComponentComponent implements OnInit {
     }, error => {
       console.error('Error fetching property ID:', error);
     });
-  }
-
-  fetchProperties(): void {
-    this.http.get('https://localhost:7190/api/Users/GetAllPropertyDetails')
-      .subscribe((response: any) => {
-  
-        // Map the response to extract only the propID, propname, developedby, and status fields
-        this.properties = response.map((property: any) => {
-          // Determine the PropertyStatus based on the activeStatus of the property
-          let PropertyStatus: string = '';
-  
-          if (property.activeStatus === "2") {
-            PropertyStatus = "Not Approved";
-          } else if (property.activeStatus === "1") {
-            PropertyStatus = "Approved";
-          } else if (property.activeStatus === "0") {
-            PropertyStatus = "Pending";
-          }
-          else{
-            
-          }
-  
-          return {
-            propID: property.propID,            // Adjust field names if necessary
-            propname: property.propname,
-            developedby: property.developedby,
-            status: PropertyStatus              // Add the computed status
-          };
-        });
-  
-        console.log('Mapped properties:', this.properties);
-      }, error => {
-        console.error('Error fetching properties:', error);
-      });
   }
 
   
@@ -1242,21 +1209,6 @@ export class AddPropertyComponentComponent implements OnInit {
     });
     
   }
-  getUserProperties(){
-    this.http.get(`https://localhost:7190/api/Users/GetAllUsersPropertyDetails?userID=${this.userID}`)  // Adjust the API endpoint accordingly
-    .subscribe((response: any) => {
-      this.properties = response.map((property: any) => ({
-        propID: property.propID,
-        propname: property.propname,
-        developedby: property.developedby
-      }));
-
-      console.log('Mapped properties:', this.properties);
-    }, error => {
-      console.error('Error fetching properties:', error);
-    });
-    
-  }
 
   currentPage = 1;
   pageSize = 5; // Fixed page size (5 items per page)
@@ -1379,62 +1331,5 @@ export class AddPropertyComponentComponent implements OnInit {
       });
   }
   
-
-  
-  selectedWhoseProperties: string = '0';
-  selectedPropertyStatus1: string = '0';
-  userID: string = localStorage.getItem('email') || ''; // Get user ID from local storage
-
-  // Method to fetch filtered properties
-  fetchFilteredProperties(whose: string, status: string, search: string): void {
-    console.log(this.userID);
-    const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&search=${search}&UserID=${this.userID}`;
-    this.http.get(url).subscribe((response: any) => {
-      if (response.statusCode === 200) {
-        this.properties = response.data.map((property: any) => ({
-          propID: property.propID,
-          propname: property.propname,
-          developedby: property.developedby,
-          status: this.getPropertyStatus(property.activeStatus)
-        }));
-      } else {
-        console.error('No properties found');
-      }
-    }, error => {
-      console.error('Error fetching properties:', error);
-    });
-  }
-
-  // Handle whose properties filter
-  onWhosePropertySelectionChange(event: any): void {
-    this.selectedWhoseProperties = event.target.value;
-    this.applyFilters();
-  }
-
-  // Handle status filter
-  onWhosePropertyStatusSelectionChange(event: any): void {
-    this.selectedPropertyStatus1 = event.target.value;
-    this.applyFilters();
-  }
-
-  // Apply all filters together
-  applyFilters(): void {
-    this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.searchQuery);
-  }
-
-  // Handle search query change
-  onSearchChange(): void {
-    this.applyFilters();
-  }
-
-  // Convert active status to a readable status
-  getPropertyStatus(activeStatus: string): string {
-    switch (activeStatus) {
-      case '1': return 'Approved';
-      case '2': return 'Declined';
-      case '0': return 'Pending';
-      default: return 'Unknown';
-    }
-  }
-
+ 
 }

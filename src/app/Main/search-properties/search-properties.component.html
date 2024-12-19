@@ -17,7 +17,9 @@
                                         <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
                                         <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
                                         <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
-                                            <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
+                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
+                                                <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
+                                            </div>
                                         </div>
                                     </div>
                                 
