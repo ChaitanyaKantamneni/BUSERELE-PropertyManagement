@@ -21,6 +21,8 @@ import { PropertyForComponent } from './Masters/dashboard/property-for/property-
 import { UserDashboardComponent } from './Users/user-dashboard/user-dashboard.component';
 import { UserDashboardViewComponent } from './Users/user-dashboard/user-dashboard-view/user-dashboard-view.component';
 import { AddPropertyByUserComponent } from './Users/user-dashboard/add-property-by-user/add-property-by-user.component';
+import { authGuard } from './auth.guard';
+import { userAuthGuard } from './user-auth.guard';
 
 
 export const routes: Routes = [
@@ -36,6 +38,7 @@ export const routes: Routes = [
     {path:'view-property/:propertyID',component:ViewPropertyComponent},
     {path:'view-reviews',component:ReviewsComponentComponent},
     {path:'dashboard',component:DashboardComponent,
+        canActivate:[authGuard],
         children:
         [
             {path:'',component:DashboardcomponentComponent},
@@ -50,6 +53,7 @@ export const routes: Routes = [
         ]
     },
     {path:'UserDashboard',component:UserDashboardComponent,
+        canActivate:[userAuthGuard],
         children:
         [
             {path:'',component:UserDashboardViewComponent},
