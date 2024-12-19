@@ -119,6 +119,7 @@ export class SignInComponent implements OnInit {
   public loginsuccesfull: boolean = false;
   public LoginStatus: string = "";
   public messageColor: any = { red: false, green: false };
+  public RollID:string="";
 
   get form() {
     return this.LoginForms.controls;
@@ -140,12 +141,16 @@ export class SignInComponent implements OnInit {
           this.LoginStatus = result.message;
           this.messageColor = { red: false, green: true };
           if (result.user.rollId === "1") {
+            this.RollID="1";
             localStorage.setItem("email", this.LoginForms.get('email').value);
+            localStorage.setItem("RollID",this.RollID);
             setTimeout(() => {
               this.routes.navigate(['/dashboard']);
             }, 3000);
           } else if(result.user.rollId === "2"){
+            this.RollID="2";
             localStorage.setItem("email", this.LoginForms.get('email').value);
+            localStorage.setItem("RollID",this.RollID);
             setTimeout(() => {
               this.routes.navigate(['/UserDashboard']);
             }, 3000);

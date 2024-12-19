@@ -1,26 +1,29 @@
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-side-nav',
   standalone: true,
-  imports: [RouterLink],
+  imports: [ReactiveFormsModule,RouterLink,NgIf,NgClass],
   templateUrl: './dashboard-side-nav.component.html',
   styleUrl: './dashboard-side-nav.component.css'
 })
 export class DashboardSideNavComponent implements OnInit {
-  constructor(private routes:Router){}
+  constructor(private router: Router) {}
   ngOnInit(): void {
+    if(! localStorage.getItem("email")){
+      this.router.navigate(['/signin'])
+    }
   }
-    isSubmenuVisible = false;
+  isExpanded = true;
+  toggleSidebar() {
+    this.isExpanded = !this.isExpanded; // Toggle between expanded and collapsed
+  }
 
-    toggleSubmenu() {
-        this.isSubmenuVisible = !this.isSubmenuVisible;
-    }
-
-    logout(){
-      this.routes.navigate(['/signin'])
-      localStorage.clear();
-    }
+  logout() {
+    this.router.navigate(['/signin'])
+    localStorage.clear();
+  }
 }
