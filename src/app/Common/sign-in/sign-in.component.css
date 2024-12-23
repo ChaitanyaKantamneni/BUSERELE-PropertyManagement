@@ -1,4 +1,4 @@
-* {
+/* * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -81,7 +81,7 @@
     padding-top: 10px;
   }
   
-  /* Responsive styling */
+  /* Responsive styling *
   @media (max-width: 768px) {
    
     .forget-password-sign-up-container {
@@ -99,4 +99,102 @@
   }
   .container{
     max-width: 100%;
+  } */
+
+
+  .input-container {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0px;
+    padding-top: 15px;
+    padding-bottom: 0px;
+    border: none;
+    border-bottom: 2px solid #ccc;  
+    font-size: 16px;
+    outline: none;
+    background-color: transparent;
+    transition: border-color 0.3s ease;
+  }
+  
+  
+  
+  input:focus,
+  input:not(:placeholder-shown) {
+    border-bottom: 2px solid #5c9dfc;  
+  }
+  
+  input:focus + label,
+  input:not(:placeholder-shown) + label {
+    top: 0px; 
+    /* font-size: 12px;
+    color: #5c9dfc; */
+    opacity: 1;  
+  }
+  
+  input:placeholder-shown + label {
+    opacity: 0;
+  }
+  
+  label {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: black;
+    pointer-events: none;
+    transition: 0.2s ease-in-out;
+    opacity: 0; 
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* background-color: #f4f7fa; */
+    font-family:  emoji;
+  }
+  
+  .container form {
+    width: 100%;
+    max-width: 380px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* text-align: center; */
+    transition: all 0.3s ease;
+  }
+  
+  .container form:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #3a3ada;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: rgb(38, 30, 196);
+    /* transform: scale(1.05); */
+  }
+  
+  button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
   }

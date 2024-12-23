@@ -94,7 +94,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, NgClass, NgIf, HttpClientModule],
+  imports: [ReactiveFormsModule, NgClass, NgIf, HttpClientModule,RouterLink],
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css']
 })
@@ -118,7 +118,7 @@ export class SignInComponent implements OnInit {
 
   public loginsuccesfull: boolean = false;
   public LoginStatus: string = "";
-  public messageColor: any = { red: false, green: false };
+  public color = { red: false, green: false };
   public RollID:string="";
 
   get form() {
@@ -139,7 +139,7 @@ export class SignInComponent implements OnInit {
       .subscribe({
         next: (result: any) => {
           this.LoginStatus = result.message;
-          this.messageColor = { red: false, green: true };
+          this.color = { red: false, green: true };
           if (result.user.rollId === "1") {
             this.RollID="1";
             localStorage.setItem("email", this.LoginForms.get('email').value);
@@ -157,14 +157,14 @@ export class SignInComponent implements OnInit {
           }
           else {
             this.LoginStatus = "Login Failed. Please try again!";
-            this.messageColor = { red: true, green: false };
+            this.color = { red: true, green: false };
             this.routes.navigate(['/signin']);
           }
         },
         error: (error) => {
           console.error('Error:', error);
           this.LoginStatus = error.error;
-          this.messageColor = { red: true, green: false };
+          this.color = { red: true, green: false };
         },
         complete: () => {
           console.log('Request completed');

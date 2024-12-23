@@ -1,71 +1,76 @@
 <div class="container">
-  <div class="register-form-fields">
-    <div class="user-icon">
-      <i class="fa-solid fa-user"></i>
-    </div>
+  <form [formGroup]="signupform" class="form-grid">
+    <h2>Registration:</h2>
+    <br>
+    
+    <div class="form-columns">
+      <div class="form-group">
+        <div class="input-container">
+          <input type="text" id="FirstName" formControlName="FirstName" placeholder="First Name" required />
+          <div *ngIf="signupform.get('FirstName')?.invalid && signupform.get('FirstName')?.touched">
+            <p class="text-danger fw-bold" [ngClass]="clr">First Name is required.</p>
+          </div>
+          <label for="FirstName">First Name</label>
+        </div>
+      </div>
 
-    <form (submit)="signup()" [formGroup]="signupform">
+      <div class="form-group">
+        <div class="input-container">
+          <input type="text" id="LastName" formControlName="LastName" placeholder="Last Name" />
+          <label for="LastName">Last Name</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-container">
+          <input type="text" id="mobile" formControlName="Mobile" placeholder="Mobile" required />
+          <div *ngIf="signupform.get('Mobile')?.invalid && signupform.get('Mobile')?.touched">
+            <p class="text-danger fw-bold" [ngClass]="clr">Mobile is required.</p>
+          </div>
+          <label for="mobile">Mobile</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-container">
+          <input type="email" id="email" formControlName="Email" placeholder="Email" required />
+          <div *ngIf="signupform.get('Email')?.invalid && signupform.get('Email')?.touched">
+            <p class="text-danger fw-bold" [ngClass]="clr">Email is required and should be valid.</p>
+          </div>
+          <label for="email">Email</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-container">
+          <input type="password" id="password" formControlName="Password" placeholder="Password" required />
+          <div *ngIf="signupform.get('Password')?.invalid && signupform.get('Password')?.touched">
+            <p class="text-danger fw-bold" [ngClass]="clr">Password is required.</p>
+          </div>
+          <label for="password">Password</label>
+        </div>
+      </div>
       
-      <!-- First Name Field -->
       <div class="form-group">
-        <label for="firstname">First Name</label>
-        <div class="name" [ngClass]="(submited && signupform.get('fname')?.errors) || (signupform.get('fname')?.touched && signupform.get('fname')?.errors)?'border border-danger':''">
-          <input id="firstname" type="text" class="form-control" placeholder="Enter First Name" formControlName="fname" />
+        <div class="input-container">
+          <input type="password" id="confirmPassword" formControlName="ConfirmPassword" placeholder="Confirm Password" required />
+          <div *ngIf="signupform.get('ConfirmPassword')?.invalid && signupform.get('ConfirmPassword')?.touched">
+            <p class="text-danger fw-bold" [ngClass]="clr">Confirm Password is required.</p>
+          </div>
+          <div *ngIf="signupform.hasError('passwordMismatch') && signupform.get('ConfirmPassword')?.touched">
+            <p class="text-danger fw-bold" [ngClass]="clr">Passwords do not match.</p>
+          </div>
+          <label for="confirmPassword">Confirm Password</label>
         </div>
-        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('fname')?.errors) || (signupform.get('fname')?.touched && signupform.get('fname')?.errors)">Enter First Name</div>
       </div>
-
-      <!-- Last Name Field -->
-      <div class="form-group">
-        <label for="lastname">Last Name</label>
-        <div class="name" [ngClass]="(submited && signupform.get('lname')?.errors) || (signupform.get('lname')?.touched && signupform.get('lname')?.errors)?'border border-danger':''">
-          <input id="lastname" type="text" class="form-control" placeholder="Enter Last Name" formControlName="lname" />
-        </div>
-        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('lname')?.errors) || (signupform.get('lname')?.touched && signupform.get('lname')?.errors)">Enter Last Name</div>
-      </div>
-
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="email">Email</label>
-        <div class="email" [ngClass]="(submited && signupform.get('email')?.errors) || (signupform.get('email')?.touched && signupform.get('email')?.errors)?'border border-danger':''">
-          <input id="email" type="email" class="form-control" placeholder="Enter Email" formControlName="email" />
-        </div>
-        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('email')?.errors) || (signupform.get('email')?.touched && signupform.get('email')?.errors)">Enter a valid Email</div>
-      </div>
-
-      <!-- Phone Field -->
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <div class="phone" [ngClass]="(submited && signupform.get('phone')?.errors) || (signupform.get('phone')?.touched && signupform.get('phone')?.errors)?'border border-danger':''">
-          <input id="phone" type="tel" class="form-control" placeholder="Mobile Number" formControlName="phone" />
-        </div>
-        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('phone')?.errors) || (signupform.get('phone')?.touched && signupform.get('phone')?.errors)">Enter Phone Number</div>
-      </div>
-
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="password" [ngClass]="(submited && signupform.get('pswd')?.errors) || (signupform.get('pswd')?.touched && signupform.get('pswd')?.errors)?'border border-danger':''">
-          <input id="password" type="password" class="form-control" placeholder="Enter Password" formControlName="pswd" />
-        </div>
-        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('pswd')?.errors) || (signupform.get('pswd')?.touched && signupform.get('pswd')?.errors)">Enter Password</div>
-      </div>
-
-      <!-- Confirm Password Field -->
-      <!-- <div class="form-group">
-        <label for="cpassword">Confirm Password</label>
-        <div class="cpassword" [ngClass]="(submited && signupform.get('cpsw')?.errors) || (signupform.get('cpsw')?.touched && signupform.get('cpsw')?.errors)?'border border-danger':''">
-          <input id="cpassword" type="password" class="form-control" placeholder="Confirm Password" formControlName="cpsw" />
-        </div>
-        <div class="text-danger fw-bold" *ngIf="(submited && signupform.get('cpsw')?.errors) || (signupform.get('cpsw')?.touched && signupform.get('cpsw')?.errors)">Confirm Password</div>
-      </div> -->
-
-      <!-- Submit Button -->
-      <button type="submit" class="btn btn-primary" [disabled]="signupform.invalid">Sign Up</button>
-    </form>
-
-    <div *ngIf="submited" [ngClass]="{'text-danger': messageColor.red, 'text-success': messageColor.green}" class="fw-bold">
-      {{ registredsuccesfull }}
+      
     </div>
-  </div>
+
+    <div class="form-buttons">
+      <button type="submit" [disabled]="signupform.invalid || signupform.hasError('passwordMismatch')" (click)="signup()">Register</button>
+      <button type="button" [routerLink]="['/signin']" routerLinkActive="router-link-active" >Login</button>
+    </div>
+
+    <p [ngClass]="clr.red ? 'text-danger' : (clr.green ? 'text-success' : '')">{{ registredsuccesfull }}</p>
+  </form>
 </div>
