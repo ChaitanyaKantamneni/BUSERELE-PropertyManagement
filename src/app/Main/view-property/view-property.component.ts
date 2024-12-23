@@ -131,9 +131,15 @@ export class ViewPropertyComponent implements OnInit {
         (response: any) => {
           console.log('API Response:', response);
 
-          if (response && response.images && Array.isArray(response.images) && response.images.length > 0) {
+          if (response) {
             // Process all images and create an array of image URLs
-            const imageUrls = response.images.map((img: any) => this.processImage(img));
+            let imageUrls = [];
+            if (response.images && Array.isArray(response.images) && response.images.length > 0) {
+              imageUrls = response.images.map((img: any) => this.processImage(img));  // Ensure image URLs are processed
+            } else {
+              // Assign a default image if no images are provided
+              imageUrls = ['assets/images/img1.png'];
+            }
             const VideoUrls=response.videos.map((video:any)=>this.processVideo(video));
             
             let propertyBadge = '';

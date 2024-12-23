@@ -225,14 +225,23 @@ export class DashboardcomponentComponent implements OnInit {
                 console.log('images property is missing, not an array, or empty.');
               }
 
-              let propertyBadge = '';
+                let propertyBadge = '';
                 let propertyBadgeColor = '';
+
                 if (property.propertyFor === '1') {
-                  propertyBadge = 'For Sale';
-                  propertyBadgeColor = 'red';
-                } else if (property.propertyFor === '2') {
-                  propertyBadge = 'For Rent';
+                  propertyBadge = 'For Buy';
                   propertyBadgeColor = 'green';
+                } else if (property.propertyFor === '2') {
+                  propertyBadge = 'For Sell';
+                  propertyBadgeColor = 'red';
+                }
+                else if(property.propertyFor === '3') {
+                  propertyBadge = 'For Rent';
+                  propertyBadgeColor = 'blue';
+                }
+                else if(property.propertyFor === '4') {
+                  propertyBadge = 'For Lease';
+                  propertyBadgeColor = 'orange';
                 }
 
                 let PropertyFacing='';

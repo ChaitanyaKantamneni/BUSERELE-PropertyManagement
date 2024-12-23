@@ -492,6 +492,17 @@
     background-color: #0056b3;
   }
   
+  .NoDataFound{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .NoDataFoundImg{
+    height: 180px;
+    width:250px;
+  }
   
   @media (max-width: 768px){
   

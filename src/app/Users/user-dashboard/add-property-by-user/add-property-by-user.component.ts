@@ -167,7 +167,7 @@ export class AddPropertyByUserComponent implements OnInit {
   uploadedImages: Array<{ path: string }> = [];
   uploadedFloorImages:Array<{ path: string }> = [];
   uploadedVideos:Array<{ path: string }> = [];
-  uploadedDocuments:Array<{ path: string }> = [];
+  uploadedDocuments:Array<{ path: string,DocumentPath:SafeResourceUrl }> = [];
   selectedImage: string = '';
   seletedVideo:string='';
   // selectedFloorImage:string = '';
@@ -406,6 +406,118 @@ export class AddPropertyByUserComponent implements OnInit {
     this.propertyDocumentsClicked=false;
   }
 
+  // uploadPropertyImages(): void {
+  //   console.log(this.propID);
+  //   if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
+  //     alert('Property ID is required and you must select images.');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('propID', this.propID);
+
+  //   // Append each selected file to formData
+  //   Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+  //     formData.append('images', file, file.name);
+  //   });
+
+  //   // Make HTTP request to upload the files
+  //   this.http.post('https://localhost:7190/api/Users/upload', formData).subscribe(
+  //     response => {
+  //       console.log('Images uploaded successfully:', response);
+  //       this.getPropertyImagesForProperty(this.propID);  // Refresh the images after upload
+  //     },
+      
+  //     error => {
+  //       console.error('Upload failed:', error);
+  //     }
+  //   );
+  // }
+
+  // uploadPropertyFloorImages(): void {
+  //   console.log(this.propID);
+  //   if (!this.propID || !this.selectedPropertyFloorFiles || this.selectedPropertyFloorFiles.length === 0) {
+  //     alert('Property ID is required and you must select images.');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('propID', this.propID);
+
+  //   // Append each selected file to formData
+  //   Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
+  //     formData.append('images', file, file.name);
+  //   });
+
+  //   // Make HTTP request to upload the files
+  //   this.http.post('https://localhost:7190/api/Users/uploadFloorImages', formData).subscribe(
+  //     response => {
+  //       console.log('Floor Images uploaded successfully:', response);
+  //       this.getPropertyFloorImagesForProperty(this.propID);  // Refresh the images after upload
+  //     },
+      
+  //     error => {
+  //       console.error('Upload failed:', error);
+  //     }
+  //   );
+  // }
+
+  // uploadPropertyVideos(): void {
+  //   console.log(this.propID);
+  //   if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
+  //     alert('Property ID is required and you must select video.');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('propID', this.propID);
+
+  //   // Append each selected file to formData
+  //   Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
+  //     formData.append('videos', file, file.name);
+  //   });
+
+  //   // Make HTTP request to upload the files
+  //   this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
+  //     response => {
+  //       console.log('Property Video uploaded successfully:', response);
+  //       this.getPropertyVideo(this.propID);  // Refresh the images after upload
+  //     },
+      
+  //     error => {
+  //       console.error('Upload failed:', error);
+  //     }
+  //   );
+  // }
+
+  // uploadPropertyDocuments(): void {
+  //   console.log(this.propID);
+  //   if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
+  //     alert('Property ID is required and you must select Document.');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('propID', this.propID);
+
+  //   // Append each selected file to formData
+  //   Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+  //     formData.append('documents', file, file.name);
+  //   });
+
+  //   // Make HTTP request to upload the files
+  //   this.http.post('https://localhost:7190/api/Users/uploadPropertyDocument', formData).subscribe(
+  //     response => {
+  //       console.log('Property Document uploaded successfully:', response);
+  //       this.getPropertyDocument(this.propID); 
+  //     },
+      
+  //     error => {
+  //       console.error('Upload failed:', error);
+  //     }
+  //   );
+  // }
+
   uploadPropertyImages(): void {
     console.log(this.propID);
     if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
@@ -425,6 +537,7 @@ export class AddPropertyByUserComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/upload', formData).subscribe(
       response => {
         console.log('Images uploaded successfully:', response);
+        this.PropertyOnfileClicked=false;
         this.getPropertyImagesForProperty(this.propID);  // Refresh the images after upload
       },
       
@@ -453,6 +566,7 @@ export class AddPropertyByUserComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/uploadFloorImages', formData).subscribe(
       response => {
         console.log('Floor Images uploaded successfully:', response);
+        this.PropertyFloorImageOnFileClicked=false;
         this.getPropertyFloorImagesForProperty(this.propID);  // Refresh the images after upload
       },
       
@@ -481,6 +595,7 @@ export class AddPropertyByUserComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
       response => {
         console.log('Property Video uploaded successfully:', response);
+        this.PropertyVideoOnFileClicked=false;
         this.getPropertyVideo(this.propID);  // Refresh the images after upload
       },
       
@@ -509,6 +624,7 @@ export class AddPropertyByUserComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/uploadPropertyDocument', formData).subscribe(
       response => {
         console.log('Property Document uploaded successfully:', response);
+        this.PropertyDocumentOnFileClicked=false;
         this.getPropertyDocument(this.propID); 
       },
       
@@ -517,8 +633,6 @@ export class AddPropertyByUserComponent implements OnInit {
       }
     );
   }
-
-
 
   getPropertyImagesForProperty(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
@@ -646,13 +760,91 @@ export class AddPropertyByUserComponent implements OnInit {
     });
   }
 
-
   deleteImage(image: any): void {
     const index = this.uploadedImages.indexOf(image);
 
-    console.log(index);
     if (index !== -1) {
-      this.uploadedImages.splice(index, 1); // Remove image from table
+      // Remove image preview from the array
+      this.uploadedImages.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyFiles) {
+        const filesArray = Array.from(this.selectedPropertyFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyFiles = dataTransfer.files;
+      }
+    }
+  }
+
+  deleteFloorImage(image: any): void {
+    const index = this.uploadedFloorImages.indexOf(image);
+
+    if (index !== -1) {
+      // Remove image preview from the array
+      this.uploadedFloorImages.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyFloorFiles) {
+        const filesArray = Array.from(this.selectedPropertyFloorFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyFloorFiles = dataTransfer.files;
+      }
+    }
+  }
+
+  deleteVideoSelected(video: any): void {
+    const index = this.uploadedVideos.indexOf(video);
+
+    if (index !== -1) {
+      // Remove image preview from the array
+      this.uploadedVideos.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyVideoFiles) {
+        const filesArray = Array.from(this.selectedPropertyVideoFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyVideoFiles = dataTransfer.files;
+      }
+    }
+  }
+
+  deletePropertyDocumentSelected(document: any): void {
+    const index = this.uploadedDocuments.indexOf(document);
+
+    if (index !== -1) {
+      // Remove image preview from the array
+      this.uploadedDocuments.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyDocumentFiles) {
+        const filesArray = Array.from(this.selectedPropertyDocumentFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyDocumentFiles = dataTransfer.files;
+      }
     }
   }
   
@@ -769,9 +961,6 @@ export class AddPropertyByUserComponent implements OnInit {
     });
   }
 
-
-  
-
   openModal(imagePath: string): void {
     this.selectedImage = imagePath;  // Set the selected image path
     this.isModalOpen = true;  // Show the modal
@@ -808,9 +997,15 @@ export class AddPropertyByUserComponent implements OnInit {
     }
   }
 
+  PropertyOnfileClicked:boolean=false;
+  PropertyFloorImageOnFileClicked:boolean=false;
+  PropertyVideoOnFileClicked:boolean=false;
+  PropertyDocumentOnFileClicked:boolean=false;
   onFileSelect(event: any): void {
+    this.PropertyOnfileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyFiles = event.target.files;
+      console.log(this.selectedPropertyFiles);
 
       if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
         this.uploadedImages = [];  // Clear previous images
@@ -833,6 +1028,7 @@ export class AddPropertyByUserComponent implements OnInit {
   }
 
   onFloorFileSelect(event: any): void {
+    this.PropertyFloorImageOnFileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyFloorFiles = event.target.files;
 
@@ -857,6 +1053,7 @@ export class AddPropertyByUserComponent implements OnInit {
   }
 
   onVideoFileSelect(event: any): void {
+    this.PropertyVideoOnFileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyVideoFiles = event.target.files;
 
@@ -881,6 +1078,7 @@ export class AddPropertyByUserComponent implements OnInit {
   }
 
   onDocumentFileSelect(event: any): void {
+    this.PropertyDocumentOnFileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyDocumentFiles = event.target.files;
 
@@ -891,8 +1089,11 @@ export class AddPropertyByUserComponent implements OnInit {
         Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
           const reader = new FileReader();
           reader.onload = () => {
-            // Push the data URL (base64 string) into the uploadedImages array
-            this.uploadedDocuments.push({ path: reader.result as string });
+            const unsafeUrl = reader.result as string;  // Base64 data URL
+            const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);  // Sanitize URL
+  
+            // Push the sanitized URL (SafeResourceUrl) and the File object
+            this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
           };
           reader.readAsDataURL(file);  // Read file as data URL for preview
         });
@@ -903,6 +1104,102 @@ export class AddPropertyByUserComponent implements OnInit {
       console.error('No files in the input');
     }
   }
+
+  // onFileSelect(event: any): void {
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyFiles = event.target.files;
+
+  //     if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
+  //       this.uploadedImages = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           // Push the data URL (base64 string) into the uploadedImages array
+  //           this.uploadedImages.push({ path: reader.result as string });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
+
+  // onFloorFileSelect(event: any): void {
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyFloorFiles = event.target.files;
+
+  //     if (this.selectedPropertyFloorFiles && this.selectedPropertyFloorFiles.length > 0) {
+  //       this.uploadedFloorImages = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           // Push the data URL (base64 string) into the uploadedImages array
+  //           this.uploadedFloorImages.push({ path: reader.result as string });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
+
+  // onVideoFileSelect(event: any): void {
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyVideoFiles = event.target.files;
+
+  //     if (this.selectedPropertyVideoFiles && this.selectedPropertyVideoFiles.length > 0) {
+  //       this.uploadedVideos = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           // Push the data URL (base64 string) into the uploadedImages array
+  //           this.uploadedVideos.push({ path: reader.result as string });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
+
+  // onDocumentFileSelect(event: any): void {
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyDocumentFiles = event.target.files;
+
+  //     if (this.selectedPropertyDocumentFiles && this.selectedPropertyDocumentFiles.length > 0) {
+  //       this.uploadedDocuments = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           // Push the data URL (base64 string) into the uploadedImages array
+  //           this.uploadedDocuments.push({ path: reader.result as string });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
 
   SubmitPropertyClick(){
 
@@ -1084,17 +1381,17 @@ export class AddPropertyByUserComponent implements OnInit {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
       next: (response: any) => {
-        this.propertyInsStatus = response.Message;
-        console.log("Data submitted successfully:", response);
+        if(response.statusCode=="200"){
+          this.propertyInsStatus = "Property submitted successfully!";
+          this.isUpdateModalOpen = true;
+          this.editclicked = false;
+          this.addnewPropertyclicked = false;
+        }
       },
       error: (error) => {
-        // If error occurs, show the error message
         this.propertyInsStatus = "Error Inserting Property.";
+        this.isUpdateModalOpen = true;
         console.error("Error details:", error);
-      },
-      complete: () => {
-        // Log when the request completes
-        console.log("Request completed");
       }
     });
   }
@@ -1168,16 +1465,17 @@ export class AddPropertyByUserComponent implements OnInit {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
       next: (response: any) => {
-        this.propertyInsStatus = response.Message;
-        console.log("Updated Property Details Successfully:", response);
+        if (response.statusCode == "200") {
+          this.propertyInsStatus = "Property updated successfully!";
+          this.isUpdateModalOpen = true;
+          this.editclicked = false;
+          this.addnewPropertyclicked = false;
+        }
       },
       error: (error) => {
-        this.propertyInsStatus = "Error Inserting Property.";
+        this.propertyInsStatus = "Error Updating Property.";
+        this.isUpdateModalOpen = true;
         console.error("Error details:", error);
-        console.log("Full Error Object:", error);
-      },
-      complete: () => {
-        console.log("Request completed");
       }
     });
   }
@@ -1330,6 +1628,20 @@ export class AddPropertyByUserComponent implements OnInit {
         console.error('Error fetching properties:', error);
       });
   }
-  
+
+  isUpdateModalOpen:boolean = false;
+  UpdatecloseModal() {
+    this.isUpdateModalOpen = false;
+  }
+
+  // Handle "OK" button click
+  handleOk() {
+    this.UpdatecloseModal();
+    // Execute your actions
+    this.editclicked = false;
+    this.addnewPropertyclicked = false;
+    this.getownProperties();
+  }
+
  
 }

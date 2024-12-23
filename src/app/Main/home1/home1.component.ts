@@ -187,7 +187,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
   
           // Map the API response to the propertydetails array
           this.propertydetails = response.map((property: any) => {
-            let propertyImage: string = ''; // Default image if no valid image found
+            let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
   
             // Log the whole property object for inspection
             console.log('Full Property:', property);
@@ -233,12 +233,20 @@ export class Home1Component implements OnInit,AfterViewInit  {
             let propertyBadge = '';
             let propertyBadgeColor = '';
             
-            if (property.availabilityOptions === '1') {
+            if (property.propertyFor === '1') {
+              propertyBadge = 'For Buy';
+              propertyBadgeColor = 'green';
+            } else if (property.propertyFor === '2') {
               propertyBadge = 'For Sell';
               propertyBadgeColor = 'red';
-            } else if (property.availabilityOptions === '2') {
+            }
+            else if(property.propertyFor === '3') {
               propertyBadge = 'For Rent';
-              propertyBadgeColor = 'green';
+              propertyBadgeColor = 'blue';
+            }
+            else if(property.propertyFor === '4') {
+              propertyBadge = 'For Lease';
+              propertyBadgeColor = 'orange';
             }
 
             let PropertyFacing='';
@@ -282,6 +290,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
         },
         (error) => {
           console.error('Error fetching property details:', error);
+          this.propertydetails=[];
+          this.isLoadingAdvProperty=false;
         }
       );
   }
@@ -393,6 +403,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
         },
         (error) => {
           console.error('Error fetching property details:', error);
+          this.FeaturedProperties=[];
+          this.isLoadingFeaProperty=false;
         }
       );
   }

@@ -108,7 +108,7 @@ export class SearchPropertiesComponent implements OnInit {
         (response: any[]) => {
           console.log('API Response:', response);
             this.propertydetails = response.map((property: any) => {
-            let propertyImage: string = '';
+            let propertyImage: string = 'assets/images/img1.png';
   
             // Log the whole property object for inspection
             console.log('Full Property:', property);
@@ -151,14 +151,23 @@ export class SearchPropertiesComponent implements OnInit {
               console.log('images property is missing, not an array, or empty.');
             }
 
-            let propertyBadge = '';
+              let propertyBadge = '';
               let propertyBadgeColor = '';
+              
               if (property.propertyFor === '1') {
-                propertyBadge = 'For Sale';
-                propertyBadgeColor = 'red';
-              } else if (property.propertyFor === '2') {
-                propertyBadge = 'For Rent';
+                propertyBadge = 'For Buy';
                 propertyBadgeColor = 'green';
+              } else if (property.propertyFor === '2') {
+                propertyBadge = 'For Sell';
+                propertyBadgeColor = 'red';
+              }
+              else if(property.propertyFor === '3') {
+                propertyBadge = 'For Rent';
+                propertyBadgeColor = 'blue';
+              }
+              else if(property.propertyFor === '4') {
+                propertyBadge = 'For Lease';
+                propertyBadgeColor = 'orange';
               }
 
               let PropertyFacing='';

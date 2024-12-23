@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
     <div class="login-form">
       <div class="login-form-fields">
         <div class="login-input-group">
@@ -37,4 +37,34 @@
         </div>
       </div>
     </div>
-</div>  
+</div>   -->
+
+
+<div class="container">
+  <form (submit)="loginform()" [formGroup]="LoginForms">
+    <h2>SIGN IN</h2>
+    
+    <div class="input-container">
+      <input type="email" formControlName="email" placeholder="Enter Email" required />
+      <label for="email">Email</label>
+      <div *ngIf="LoginForms.get('email')?.invalid && LoginForms.get('email')?.touched">
+        <p class="text-danger fw-bold" [ngClass]="color">Enter a valid email address</p>
+      </div>
+    </div>
+    
+    <div class="input-container">
+      <input type="password" formControlName="password" placeholder="Enter Password" required />
+      <label for="password">Password:</label>
+      <div *ngIf="LoginForms.get('password')?.invalid && LoginForms.get('password')?.touched">
+        <p class="text-danger fw-bold" [ngClass]="color">Enter a valid password</p>
+      </div>
+    </div>
+    <div>
+      <button type="submit" [disabled]="LoginForms.invalid" [ngClass]="color">SIGN IN</button>
+    </div>
+    <div>
+      <button type="submit" routerLink="/sign-up">Register</button>
+    </div>
+    <p [ngClass]="color.red ? 'text-danger' : (color.green ? 'text-success' : '')">{{ LoginStatus }}</p>
+  </form>
+</div>

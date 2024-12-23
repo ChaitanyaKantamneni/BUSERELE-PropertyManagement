@@ -34,7 +34,7 @@
       </div>
     
       <div class="reviewstable">
-        <table class="table table-bordered">
+        <table *ngIf="!filteredPropertiesNotNull" class="table table-bordered">
           <thead>
             <tr>
               <th class="visually-hidden">PropertyID</th>
@@ -59,10 +59,12 @@
           </tbody>
           
         </table>
-      
-        <!-- No Reviews Message -->
-        <div *ngIf="filteredProperties.length === 0">
-          <p>No reviews found for the given search or filter criteria.</p>
+        <!-- filteredProperties.length === 0 -->
+        <div *ngIf="filteredPropertiesNotNull" class="NoDataFound">
+          <div class="NoDataFoundImg">
+            <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
+          </div>
+          <p>No properties found for the given search or filter criteria.</p>
         </div>
       </div>
       
@@ -513,18 +515,34 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let image of uploadedImages1">
-                                <td hidden="true">
-                                    <h5>{{image.id}}</h5>
-                                </td>
-                                <td>
-                                    <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
-                                </td>
-                                <td>
-                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
-                                    <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
-                                </td>
+                          <ng-container *ngIf="PropertyOnfileClicked">
+                            <tr *ngFor="let image of uploadedImages">
+                              <td hidden="true">
+                                  <h5>{{image.id}}</h5>
+                              </td>
+                              <td>
+                                  <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
+                              </td>
+                              <td>
+                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                  <button class="btn btn-danger" (click)="deleteImage(image)">Delete</button>
+                              </td>
                             </tr>
+                          </ng-container>
+                          <ng-container *ngIf="!PropertyOnfileClicked">
+                            <tr *ngFor="let image of uploadedImages1">
+                              <td hidden="true">
+                                  <h5>{{image.id}}</h5>
+                              </td>
+                              <td>
+                                  <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                              </td>
+                              <td>
+                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                  <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
+                              </td>
+                            </tr>
+                          </ng-container>
                         </tbody>
                     </table>
                 </div>
@@ -572,7 +590,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let image of uploadedFloorImages1">
+                            <ng-container *ngIf="PropertyFloorImageOnFileClicked">
+                              <tr *ngFor="let image of uploadedFloorImages">
+                                <td hidden="true">
+                                    <h5>{{image.id}}</h5>
+                                </td>
+                                <td>
+                                    <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
+                                </td>
+                                <td>
+                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                    <button class="btn btn-danger" (click)="deleteFloorImage(image)">Delete</button>
+                                </td>
+                            </tr>
+                            </ng-container>
+                            <ng-container *ngIf="!PropertyFloorImageOnFileClicked">
+                              <tr *ngFor="let image of uploadedFloorImages1">
                                 <td hidden="true">
                                     <h5>{{image.id}}</h5>
                                 </td>
@@ -584,6 +617,7 @@
                                     <button class="btn btn-danger" (click)="deleteFloorImage1(image.propID, image.id)">Delete</button>
                                 </td>
                             </tr>
+                            </ng-container>
                         </tbody>
                     </table>
                 </div>
@@ -631,22 +665,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let video of uploadedVideos1">
-                                <td hidden="true">
-                                    <h5>{{video.id}}</h5>
-                                </td>
-                                <td>
-                                    <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
-                                    <video width="75%" height="200" controls (click)="openModal(video.videosUrl)">
-                                      <source [src]="video.videosUrl" type="video/mp4">
-                                      Your browser does not support the video tag.
-                                    </video>                                    
-                                </td>
-                                <td>
-                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
-                                    <button class="btn btn-danger" (click)="deleteVideo(video.propID, video.id)">Delete</button>
-                                </td>
+                          <ng-container *ngIf="PropertyVideoOnFileClicked">
+                            <tr *ngFor="let video of uploadedVideos">
+                              <td hidden="true">
+                                  <h5>{{video.id}}</h5>
+                              </td>
+                              <td>
+                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
+                                  <video width="75%" height="200" controls (click)="openModal(video.path)">
+                                    <source [src]="video.path" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                  </video>                                    
+                              </td>
+                              <td>
+                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                  <button class="btn btn-danger" (click)="deleteVideoSelected(video)">Delete</button>
+                              </td>
                             </tr>
+                          </ng-container>
+                          <ng-container *ngIf="!PropertyVideoOnFileClicked">
+                            <tr *ngFor="let video of uploadedVideos1">
+                              <td hidden="true">
+                                  <h5>{{video.id}}</h5>
+                              </td>
+                              <td>
+                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
+                                  <video width="75%" height="200" controls (click)="openModal(video.videosUrl)">
+                                    <source [src]="video.videosUrl" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                  </video>                                    
+                              </td>
+                              <td>
+                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                  <button class="btn btn-danger" (click)="deleteVideo(video.propID, video.id)">Delete</button>
+                              </td>
+                            </tr>
+                          </ng-container>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -694,27 +749,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let document of uploadedDocuments1">
-                                <td hidden="true">
-                                    <h5>{{document.id}}</h5>
-                                </td>
-                                <td>
-                                    <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
-                                    <!-- <object *ngIf="document.mimeType === 'application/pdf'"
-                                        [data]="document.documentsUrl"
-                                        type="application/pdf"
-                                        width="25%" 
-                                        height="200px">
-                                        Your browser does not support the PDF viewer.
-                                      </object> -->
+                          <ng-container *ngIf="PropertyDocumentOnFileClicked">
+                            <tr *ngFor="let document of uploadedDocuments">
+                              <td hidden="true">
+                                  <h5>{{document.id}}</h5>
+                              </td>
+                              <td>
+                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
+                                  <!-- <object *ngIf="document.mimeType === 'application/pdf'"
+                                      [data]="document.documentsUrl"
+                                      type="application/pdf"
+                                      width="25%" 
+                                      height="200px">
+                                      Your browser does not support the PDF viewer.
+                                    </object> -->
 
-                                      <iframe [src]="document.safeUrl" width="25%" height="200px"></iframe>
-                                </td>
-                                <td>
-                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
-                                    <button class="btn btn-danger" (click)="deleteDocument(document.propID, document.id)">Delete</button>
-                                </td>
+                                    <iframe [src]="document.DocumentPath" width="25%" height="200px"></iframe>
+                              </td>
+                              <td>
+                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                  <button class="btn btn-danger" (click)="deletePropertyDocumentSelected(document)">Delete</button>
+                              </td>
                             </tr>
+                          </ng-container>
+                          <ng-container *ngIf="!PropertyDocumentOnFileClicked">
+                            <tr *ngFor="let document of uploadedDocuments1">
+                              <td hidden="true">
+                                  <h5>{{document.id}}</h5>
+                              </td>
+                              <td>
+                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
+                                  <!-- <object *ngIf="document.mimeType === 'application/pdf'"
+                                      [data]="document.documentsUrl"
+                                      type="application/pdf"
+                                      width="25%" 
+                                      height="200px">
+                                      Your browser does not support the PDF viewer.
+                                    </object> -->
+
+                                    <iframe [src]="document.safeUrl" width="25%" height="200px"></iframe>
+                              </td>
+                              <td>
+                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                  <button class="btn btn-danger" (click)="deleteDocument(document.propID, document.id)">Delete</button>
+                              </td>
+                            </tr>
+                          </ng-container>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -842,5 +923,26 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal for Success/Failure -->
+    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Status</h5>
+            <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>{{ propertyInsStatus }}</p> <!-- Success/Failure message -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

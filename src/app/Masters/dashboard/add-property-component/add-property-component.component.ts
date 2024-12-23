@@ -20,6 +20,7 @@ interface Amenity {
 export class AddPropertyComponentComponent implements OnInit {
   isModalOpen: any;
   isVideoModalOpen:any;
+  PropertyInsUpdateStatus:string="";
   @ViewChild(QuillEditorComponent) quillEditor!: QuillEditorComponent;
 
   constructor(public http:HttpClient,private cdRef: ChangeDetectorRef,private sanitizer: DomSanitizer){}
@@ -144,11 +145,6 @@ export class AddPropertyComponentComponent implements OnInit {
   propertyVideosClicked:boolean=false;
   propertyDocumentsClicked:boolean=false;
 
-
-
-
-
-
   editclicked: boolean = false;
   addnewPropertyclicked:boolean=false;
   properties: Array<{ propID: string, propname: string, developedby: string }> = [];
@@ -200,7 +196,7 @@ export class AddPropertyComponentComponent implements OnInit {
   uploadedImages: Array<{ path: string }> = [];
   uploadedFloorImages:Array<{ path: string }> = [];
   uploadedVideos:Array<{ path: string }> = [];
-  uploadedDocuments:Array<{ path: string }> = [];
+  uploadedDocuments:Array<{ path: string,DocumentPath:SafeResourceUrl }> = [];
   selectedImage: string = '';
   seletedVideo:string='';
   // selectedFloorImage:string = '';
@@ -458,6 +454,7 @@ export class AddPropertyComponentComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/upload', formData).subscribe(
       response => {
         console.log('Images uploaded successfully:', response);
+        this.PropertyOnfileClicked=false;
         this.getPropertyImagesForProperty(this.propID);  // Refresh the images after upload
       },
       
@@ -486,6 +483,7 @@ export class AddPropertyComponentComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/uploadFloorImages', formData).subscribe(
       response => {
         console.log('Floor Images uploaded successfully:', response);
+        this.PropertyFloorImageOnFileClicked=false;
         this.getPropertyFloorImagesForProperty(this.propID);  // Refresh the images after upload
       },
       
@@ -514,6 +512,7 @@ export class AddPropertyComponentComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
       response => {
         console.log('Property Video uploaded successfully:', response);
+        this.PropertyVideoOnFileClicked=false;
         this.getPropertyVideo(this.propID);  // Refresh the images after upload
       },
       
@@ -542,6 +541,7 @@ export class AddPropertyComponentComponent implements OnInit {
     this.http.post('https://localhost:7190/api/Users/uploadPropertyDocument', formData).subscribe(
       response => {
         console.log('Property Document uploaded successfully:', response);
+        this.PropertyDocumentOnFileClicked=false;
         this.getPropertyDocument(this.propID); 
       },
       
@@ -680,12 +680,100 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
 
+  // deleteImage(image: any): void {
+  //   const index = this.uploadedImages.indexOf(image);
+
+  //   console.log(index);
+  //   if (index !== -1) {
+  //     this.uploadedImages.splice(index, 1); // Remove image from table
+  //   }
+  // }
+
   deleteImage(image: any): void {
     const index = this.uploadedImages.indexOf(image);
 
-    console.log(index);
     if (index !== -1) {
-      this.uploadedImages.splice(index, 1); // Remove image from table
+      // Remove image preview from the array
+      this.uploadedImages.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyFiles) {
+        const filesArray = Array.from(this.selectedPropertyFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyFiles = dataTransfer.files;
+      }
+    }
+  }
+
+  deleteFloorImage(image: any): void {
+    const index = this.uploadedFloorImages.indexOf(image);
+
+    if (index !== -1) {
+      // Remove image preview from the array
+      this.uploadedFloorImages.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyFloorFiles) {
+        const filesArray = Array.from(this.selectedPropertyFloorFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyFloorFiles = dataTransfer.files;
+      }
+    }
+  }
+
+  deleteVideoSelected(video: any): void {
+    const index = this.uploadedVideos.indexOf(video);
+
+    if (index !== -1) {
+      // Remove image preview from the array
+      this.uploadedVideos.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyVideoFiles) {
+        const filesArray = Array.from(this.selectedPropertyVideoFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyVideoFiles = dataTransfer.files;
+      }
+    }
+  }
+
+  deletePropertyDocumentSelected(document: any): void {
+    const index = this.uploadedDocuments.indexOf(document);
+
+    if (index !== -1) {
+      // Remove image preview from the array
+      this.uploadedDocuments.splice(index, 1);
+
+      // Update the selected files list by filtering out the deleted image's file
+      if (this.selectedPropertyDocumentFiles) {
+        const filesArray = Array.from(this.selectedPropertyDocumentFiles);
+        const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
+
+        // Create a new DataTransfer object and add the remaining files to it
+        const dataTransfer = new DataTransfer();
+        updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
+
+        // Update selectedPropertyFiles with the new FileList
+        this.selectedPropertyDocumentFiles = dataTransfer.files;
+      }
     }
   }
   
@@ -840,10 +928,15 @@ export class AddPropertyComponentComponent implements OnInit {
       }
     }
   }
-
+  PropertyOnfileClicked:boolean=false;
+  PropertyFloorImageOnFileClicked:boolean=false;
+  PropertyVideoOnFileClicked:boolean=false;
+  PropertyDocumentOnFileClicked:boolean=false;
   onFileSelect(event: any): void {
+    this.PropertyOnfileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyFiles = event.target.files;
+      console.log(this.selectedPropertyFiles);
 
       if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
         this.uploadedImages = [];  // Clear previous images
@@ -866,6 +959,7 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   onFloorFileSelect(event: any): void {
+    this.PropertyFloorImageOnFileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyFloorFiles = event.target.files;
 
@@ -890,6 +984,7 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   onVideoFileSelect(event: any): void {
+    this.PropertyVideoOnFileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyVideoFiles = event.target.files;
 
@@ -914,6 +1009,7 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   onDocumentFileSelect(event: any): void {
+    this.PropertyDocumentOnFileClicked=true;
     if (event?.target?.files) {
       this.selectedPropertyDocumentFiles = event.target.files;
 
@@ -924,8 +1020,11 @@ export class AddPropertyComponentComponent implements OnInit {
         Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
           const reader = new FileReader();
           reader.onload = () => {
-            // Push the data URL (base64 string) into the uploadedImages array
-            this.uploadedDocuments.push({ path: reader.result as string });
+            const unsafeUrl = reader.result as string;  // Base64 data URL
+            const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);  // Sanitize URL
+  
+            // Push the sanitized URL (SafeResourceUrl) and the File object
+            this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
           };
           reader.readAsDataURL(file);  // Read file as data URL for preview
         });
@@ -1111,24 +1210,26 @@ export class AddPropertyComponentComponent implements OnInit {
       userID:new String(localStorage.getItem('email')).toString(),
       ActiveStatus:"0"
     };
-    console.log(data.aminities);
-
     this.http.post("https://localhost:7190/api/Users/inspropertysample", data, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
       next: (response: any) => {
-        this.propertyInsStatus = response.Message;
-        console.log("Data submitted successfully:", response);
+        if(response.statusCode=="200"){
+          this.propertyInsStatus = "Property submitted successfully!";
+          this.isUpdateModalOpen = true;
+          this.editclicked = false;
+          this.addnewPropertyclicked = false;
+        }
       },
       error: (error) => {
-        // If error occurs, show the error message
         this.propertyInsStatus = "Error Inserting Property.";
+        this.isUpdateModalOpen = true;
         console.error("Error details:", error);
-      },
-      complete: () => {
-        // Log when the request completes
-        console.log("Request completed");
       }
+      // complete: () => {
+      //   // Log when the request completes
+      //   console.log("Request completed");
+      // }
     });
   }
 
@@ -1195,22 +1296,33 @@ export class AddPropertyComponentComponent implements OnInit {
       console.error("Invalid propID");
       return;
     }
-    console.log(data);
   
     this.http.put(`https://localhost:7190/api/Users/updatePropertyDet/${this.propID}`, data, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
+      // next: (response: any) => {
+      //   this.propertyInsStatus = response.Message;
+      //   console.log("Updated Property Details Successfully:", response);
+      //   this.editclicked=false;
+      //   this.addnewPropertyclicked=false;
+      // },
+      // error: (error) => {
+      //   this.propertyInsStatus = "Error Inserting Property.";
+      //   console.error("Error details:", error);
+      //   console.log("Full Error Object:", error);
+      // }
       next: (response: any) => {
-        this.propertyInsStatus = response.Message;
-        console.log("Updated Property Details Successfully:", response);
+        if (response.statusCode == "200") {
+          this.propertyInsStatus = "Property updated successfully!";
+          this.isUpdateModalOpen = true;
+          this.editclicked = false;
+          this.addnewPropertyclicked = false;
+        }
       },
       error: (error) => {
-        this.propertyInsStatus = "Error Inserting Property.";
+        this.propertyInsStatus = "Error Updating Property.";
+        this.isUpdateModalOpen = true;
         console.error("Error details:", error);
-        console.log("Full Error Object:", error);
-      },
-      complete: () => {
-        console.log("Request completed");
       }
     });
   }
@@ -1260,7 +1372,7 @@ export class AddPropertyComponentComponent implements OnInit {
 
   currentPage = 1;
   pageSize = 5; // Fixed page size (5 items per page)
-  searchQuery: string = ''; // Variable to hold the search query
+  searchQuery: string = ""; // Variable to hold the search query
 
 
   // Filter properties based on the search query
@@ -1317,6 +1429,7 @@ export class AddPropertyComponentComponent implements OnInit {
     if (this.editclicked || this.addnewPropertyclicked) {
       this.editclicked = false;
       this.addnewPropertyclicked=false;
+      this.fetchProperties();
     }
   }
 
@@ -1333,13 +1446,17 @@ export class AddPropertyComponentComponent implements OnInit {
   updatePropertyStatus(PropId: string, Status: string): void {
     this.http.put(`https://localhost:7190/api/Users/updatePropertyStatus/${PropId}?Status=${Status}`, {}).subscribe({
       next: (response: any) => {
-        console.log('Property status updated successfully:', response);
+        if (response.statusCode == "200") {
+          this.propertyInsStatus = "Property Status updated successfully!";
+          this.isUpdateModalOpen = true;
+          this.editclicked = false;
+          this.addnewPropertyclicked = false;
+        }
       },
       error: (error) => {
-        console.error('Error updating property status:', error);
-      },
-      complete: () => {
-        console.log('Request completed');
+        this.propertyInsStatus = "Error Updating Property.";
+        this.isUpdateModalOpen = true;
+        console.error("Error details:", error);
       }
     });
   }
@@ -1383,11 +1500,13 @@ export class AddPropertyComponentComponent implements OnInit {
   
   selectedWhoseProperties: string = '0';
   selectedPropertyStatus1: string = '0';
-  userID: string = localStorage.getItem('email') || ''; // Get user ID from local storage
+  userID: string = localStorage.getItem('email') || '';
+  filteredPropertiesNotNull:boolean=false;
 
+
+  
   // Method to fetch filtered properties
   fetchFilteredProperties(whose: string, status: string, search: string): void {
-    console.log(this.userID);
     const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&search=${search}&UserID=${this.userID}`;
     this.http.get(url).subscribe((response: any) => {
       if (response.statusCode === 200) {
@@ -1397,13 +1516,60 @@ export class AddPropertyComponentComponent implements OnInit {
           developedby: property.developedby,
           status: this.getPropertyStatus(property.activeStatus)
         }));
+        this.filteredPropertiesNotNull=false;
+      } else if (response.statusCode === 404) {
+        console.log(response);
+        this.filteredPropertiesNotNull=true;
+        console.error(response.Message);
       } else {
-        console.error('No properties found');
+        console.error('Unexpected response status:', response.StatusCode);
+        this.properties = [];
       }
     }, error => {
       console.error('Error fetching properties:', error);
+      this.filteredPropertiesNotNull = true;
+      this.properties = [];
     });
   }
+
+  // fetchFilteredProperties(whose: string, status: string, search: string): void {
+  //   let url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&UserID=${this.userID}`;
+  
+  //   // Only append search if it's not an empty string
+  //   if (search) {
+  //     url += `&search=${encodeURIComponent(search)}`;
+  //   }
+  
+  //   this.http.get(url).subscribe({
+  //     next: (response: any) => {
+  //       console.log('API Response:', response);  // Log the full response to inspect it
+  
+  //       if (response.statusCode === 200) {
+  //         // Successfully retrieved properties
+  //         this.properties = response.data.map((property: any) => ({
+  //           propID: property.propID,
+  //           propname: property.propname,
+  //           developedby: property.developedby,
+  //           status: this.getPropertyStatus(property.ActiveStatus)  // Ensure ActiveStatus is handled correctly
+  //         }));
+  //         this.filteredPropertiesNotNull = false;
+  //       } else {
+  //         console.error('Unexpected response status:', response.statusCode);
+  //         this.properties = [];
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching properties:', error);
+        
+  //       console.error('Error Message:', error.message);
+  //       console.error('Error Status:', error.status);
+  //       console.error('Error StatusText:', error.statusText);
+  //       console.error('Error Response:', error.error);
+  //     }
+  //   });
+  // }
+  
+  
 
   // Handle whose properties filter
   onWhosePropertySelectionChange(event: any): void {
@@ -1435,6 +1601,20 @@ export class AddPropertyComponentComponent implements OnInit {
       case '0': return 'Pending';
       default: return 'Unknown';
     }
+  }
+
+  isUpdateModalOpen:boolean = false;
+  UpdatecloseModal() {
+    this.isUpdateModalOpen = false;
+  }
+
+  // Handle "OK" button click
+  handleOk() {
+    this.UpdatecloseModal();
+    // Execute your actions
+    this.editclicked = false;
+    this.addnewPropertyclicked = false;
+    this.fetchProperties();
   }
 
 }

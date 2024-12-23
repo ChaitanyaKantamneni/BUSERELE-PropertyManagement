@@ -65,6 +65,9 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     // Initialize the form
     this.profileform.reset();
+    const UserID = localStorage.getItem('email') as string;
+    this.getProfileDet(UserID);
+
   }
 
   // Reactive form setup
@@ -96,11 +99,32 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  getProfileDet(UserID: string) {
+    this.apihttp.get(`https://localhost:7190/api/Users/getUserDetailsByID/${UserID}`).subscribe(
+      (response: any) => {
+        // Ensure response is not null or undefined
+        if (response) {
+          // Directly patch the form with the response data
+          this.profileform.patchValue({
+            id: response.propertyTypeID,
+            fname: response.name,
+            lname: response.lastName,
+            email:response.email,
+            mobile:response.mobileNo
+          });
+        } else {
+          console.error('Error: Response is null or undefined');
+        }
+      },
+      error => {
+        console.error('Error fetching review details:', error);
+      }
+    );
+  }
+
   // Handle form submission and update profile
   updateProfileDet() {
     const formData = new FormData();
-    
-    // Append form data
     formData.append('id', this.profileform.get('id')?.value);
     formData.append('fname', this.profileform.get('fname')?.value);
     formData.append('lname', this.profileform.get('lname')?.value);
