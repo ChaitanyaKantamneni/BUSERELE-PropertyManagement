@@ -23,6 +23,7 @@ import { UserDashboardViewComponent } from './Users/user-dashboard/user-dashboar
 import { AddPropertyByUserComponent } from './Users/user-dashboard/add-property-by-user/add-property-by-user.component';
 import { authGuard } from './auth.guard';
 import { userAuthGuard } from './user-auth.guard';
+import { ForgotPasswordComponent } from './Common/forgot-password/forgot-password.component';
 
 
 export const routes: Routes = [
@@ -32,6 +33,7 @@ export const routes: Routes = [
     {path:'about-us',component:AboutUsComponent},
     {path:'signin',component:SignInComponent},
     {path:'sign-up',component:SignUpComponent},
+    {path:'forgot-password',component:ForgotPasswordComponent},
     {path:'search-properties',component:SearchPropertiesComponent},
     {path:'search-properties/:propertyType',component:SearchPropertiesComponent},
     { path: 'search-properties/:propertyType/:keyword', component: SearchPropertiesComponent},

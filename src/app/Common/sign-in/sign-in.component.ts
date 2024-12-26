@@ -188,5 +188,10 @@ export class SignInComponent implements OnInit {
     window.addEventListener('keydown', resetSessionTimeout);
     resetSessionTimeout();
   }
+
+  passwordVisible: boolean = false;
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;  // Toggle the visibility
+  }
 }
 

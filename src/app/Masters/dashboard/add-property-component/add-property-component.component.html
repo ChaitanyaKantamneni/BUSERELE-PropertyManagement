@@ -23,9 +23,12 @@
       <div class="filtersSearch">
         <div class="reviewStatus">
           <select id="pageSize" class="form-control" (change)="onWhosePropertyStatusSelectionChange($event)">
+            <!-- <option value="">Select Property Status</option> -->
             <option value="0">Latest</option>
             <option value="1">Approved</option>
             <option value="2">Declined</option>
+            <option value="3">Active</option>
+            <option value="4">InActive</option>
           </select>
         </div>
         <div class="addnewButton">
@@ -41,6 +44,7 @@
               <th>Property Name</th>
               <th>Developed By</th>
               <th>Status</th>
+              <th>IsActive</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -50,9 +54,16 @@
               <td class="text-center">{{ property.propname }}</td>
               <td class="text-center">{{ property.developedby }}</td>
               <td class="text-center">{{ property.status }}</td>
+              <td class="text-center">{{ property.IsActiveStatus }}</td>
               <td class="text-center">
                 <button class="btn" (click)="editproperty(property.propID)">
                   <i class="fa fa-edit"></i>
+                </button>
+                <button *ngIf="property.IsActiveStatusBoolean==='1'" class="btn editPropbtn" (click)="DeActivateproperty(property.propID)">
+                  <i class="fa fa-trash"></i>
+                </button>
+                <button *ngIf="property.IsActiveStatusBoolean==='0'" class="btn editPropbtn" (click)="Activateproperty(property.propID)">
+                  <i class="fa fa-check"></i>
                 </button>
               </td>
             </tr>

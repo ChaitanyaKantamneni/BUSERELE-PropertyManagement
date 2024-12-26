@@ -135,13 +135,11 @@ export class ProfileComponent implements OnInit {
     if (this.selectedFile) {
       formData.append('profilePicture', this.selectedFile, this.selectedFile.name);
     }
-
-    // API call to submit the profile data
     this.apihttp.post("https://your-backend-api-url", formData).subscribe({
       next: (response) => {
         console.log('Profile updated successfully!', response);
         this.ProfileUpdateStatus = true;
-        this.isModalOpen = true; // Show the success modal
+        this.isModalOpen = true;
       },
       error: (error) => {
         console.error('Error updating profile', error);

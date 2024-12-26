@@ -395,7 +395,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
               propertyparking:property.noOfParkings,
               propertyfacing:PropertyFacing,
               propertyAvailability:propertyBadge,
-              propertyBadgeColor: propertyBadgeColor
+              propertyBadgeColor: propertyBadgeColor,
+              propertyNearBy:property.nearBy
             };
           });
           clearTimeout(loadingTimer);

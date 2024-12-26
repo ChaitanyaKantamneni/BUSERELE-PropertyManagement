@@ -53,8 +53,23 @@
     </div>
     
     <div class="input-container">
-      <input type="password" formControlName="password" placeholder="Enter Password" required />
-      <label for="password">Password:</label>
+      <!-- <input type="password" formControlName="password" placeholder="Enter Password" required /> -->
+      <div class="password-wrapper">
+        <input 
+      [type]="passwordVisible ? 'text' : 'password'" 
+      formControlName="password" 
+      placeholder="Enter Password" 
+      required 
+    />
+    <label for="password">Password</label>
+      <i 
+      class="fas" 
+      [ngClass]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'" 
+      (click)="togglePasswordVisibility()"></i>
+      </div>
+      
+
+      
       <div *ngIf="LoginForms.get('password')?.invalid && LoginForms.get('password')?.touched">
         <p class="text-danger fw-bold" [ngClass]="color">Enter a valid password</p>
       </div>
@@ -62,8 +77,9 @@
     <div>
       <button type="submit" [disabled]="LoginForms.invalid" [ngClass]="color">SIGN IN</button>
     </div>
-    <div>
-      <button type="submit" routerLink="/sign-up">Register</button>
+    <div class="ForgetAndReg">
+      <button type="submit" routerLink="/forgot-password" class="btn">Forgot Password</button>
+      <button type="submit" routerLink="/sign-up" class="btn">Register</button>
     </div>
     <p [ngClass]="color.red ? 'text-danger' : (color.green ? 'text-success' : '')">{{ LoginStatus }}</p>
   </form>

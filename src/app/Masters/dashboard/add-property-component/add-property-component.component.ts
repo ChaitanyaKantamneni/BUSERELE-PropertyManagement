@@ -56,15 +56,22 @@ export class AddPropertyComponentComponent implements OnInit {
           } else if (property.activeStatus === "0") {
             PropertyStatus = "Pending";
           }
-          else{
-            
+
+          let PropertyIsActiveStatus: string = '';
+          if (property.propActiveStatus === "1") {
+            PropertyIsActiveStatus = "Active";
+          } else if (property.propActiveStatus === "0") {
+            PropertyIsActiveStatus = "Not Active";
           }
+
+          console.log("property Status:",property.propActiveStatus);
   
           return {
             propID: property.propID,            // Adjust field names if necessary
             propname: property.propname,
             developedby: property.developedby,
-            status: PropertyStatus              // Add the computed status
+            status: PropertyStatus,
+            IsActiveStatus:PropertyIsActiveStatus
           };
         });
   
@@ -133,7 +140,7 @@ export class AddPropertyComponentComponent implements OnInit {
   selectedCountry: number | null = null;
   selectedState: number | null = null;
   selectedCity:number|null=null;
-  selectedPropertyType:string|null=null;
+  selectedPropertyType:String|null=null;
   selectedPropertyFor:string|null=null;
   selectedPropertyStatus:string|null=null;
   selectedPropertyFacing:string|null=null;
@@ -145,9 +152,16 @@ export class AddPropertyComponentComponent implements OnInit {
   propertyVideosClicked:boolean=false;
   propertyDocumentsClicked:boolean=false;
 
+
+  SelectedCountryName: string = '';
+  SelectedStateName:string='';
+  SelectedCityName:string='';
+  SelectedPropertyTypeName:string='';
+
   editclicked: boolean = false;
   addnewPropertyclicked:boolean=false;
-  properties: Array<{ propID: string, propname: string, developedby: string }> = [];
+  //properties: Array<{ propID: string, propname: string, developedby: string }> = [];
+  properties: Array<{ propID: string, propname: string, developedby: string, status: string, IsActiveStatus: string,IsActiveStatusBoolean:string }> = [];
   propertyInsStatus: any = '';
   //aminities: Array<{ aminitieID: string, name: string, description: string }> = [];
   //propertyImages
@@ -256,13 +270,16 @@ export class AddPropertyComponentComponent implements OnInit {
     }
   }
 
-
   onCountryChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
       const countryId = selectElement.value;
       this.selectedCountry = Number(countryId);
-      console.log('Selected Country ID:', this.selectedCountry);
+      const selectedCountry = this.countries.find(country => country.id === this.selectedCountry);
+      if (selectedCountry) {
+        this.SelectedCountryName = selectedCountry.name;
+        console.log(this.SelectedCountryName);
+      }
       this.loadStates();  
     }
   }
@@ -272,15 +289,43 @@ export class AddPropertyComponentComponent implements OnInit {
     if (selectElement) {
       const stateId = selectElement.value;
       this.selectedState = Number(stateId);
+
+      const selectedState = this.states.find(state => state.id === this.selectedState);
+      if (selectedState) {
+        this.SelectedStateName = selectedState.name;
+        console.log(this.SelectedStateName);
+        console.log(this.selectedState);
+      }
       this.loadCities();  
     }
   }
 
-  oncityChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement; 
+  // oncityChange(event: Event): void {
+  //   const selectElement = event.target as HTMLSelectElement; 
+  //   if (selectElement) {
+  //     const CityId = selectElement.value;
+  //     this.selectedCity = Number(CityId); 
+
+  //     const selectedCity = this.cities.find(city => city.id === this.selectedCity);
+  //     if (selectedCity) {
+  //       this.SelectedCityName = selectedCity.name;
+  //       console.log(this.SelectedCityName);
+  //     }
+  //   }
+  // }
+
+  onCityChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
     if (selectElement) {
       const CityId = selectElement.value;
-      this.selectedCity = Number(CityId); 
+      this.selectedCity = Number(CityId);
+
+      const selectedCity = this.cities.find(city => city.id === this.selectedCity);
+      if (selectedCity) {
+        this.SelectedCityName = selectedCity.name;
+      } else {
+        console.error('City not found');
+      }
     }
   }
 
@@ -291,10 +336,11 @@ export class AddPropertyComponentComponent implements OnInit {
         if (response && Array.isArray(response.data)) {
           // Map the response data to the aminities array
           this.propertytypes = response.data.map((data: any) => ({
-            propertyTypeID: data.propertyTypeID,
+            id: data.propertyTypeID,
             name: data.name,
             description: data.description
           }));
+          console.log(this.propertytypes);
         } else {
           console.error('Unexpected response format or no reviews found');
           this.propertytypes = [];
@@ -308,8 +354,16 @@ export class AddPropertyComponentComponent implements OnInit {
     if (selectElement) {
       const PropertyTypeId = selectElement.value;
       this.selectedPropertyType = String(PropertyTypeId); 
+
+      const selectedPropTypeName = this.propertytypes.find(propertytype => propertytype.id === this.selectedPropertyType);
+      if (selectedPropTypeName) {
+        this.SelectedPropertyTypeName = selectedPropTypeName.name;
+        console.log(this.SelectedPropertyTypeName);
+      }
     }
   }
+
+
 
   onPropertyForChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
@@ -1049,6 +1103,36 @@ export class AddPropertyComponentComponent implements OnInit {
     this.getPropertTypes();
   }
 
+  DeActivateproperty(propertyID: string): void {
+    this.propID = propertyID;
+    const Status="0";
+    this.updatePropertyIsActiveStatus(this.propID,Status);
+  }
+
+  Activateproperty(propertyID: string): void {
+    this.propID = propertyID;
+    const Status="1";
+    this.updatePropertyIsActiveStatus(this.propID,Status);
+  }
+
+  updatePropertyIsActiveStatus(PropId: string, Status: string): void {
+    this.http.put(`https://localhost:7190/api/Users/updatePropertyIsActiveStatus/${PropId}?Status=${Status}`, {}).subscribe({
+      next: (response: any) => {
+        if (response.statusCode == "200") {
+          this.propertyInsStatus = "Property IsActive Status updated successfully!";
+          this.isUpdateModalOpen = true;
+
+          this.fetchProperties();
+        }
+      },
+      error: (error) => {
+        this.propertyInsStatus = "Error Updating Property.";
+        this.isUpdateModalOpen = true;
+        console.error("Error details:", error);
+      }
+    });
+  }
+
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
       const convertToDDMMYYYY = (dateStr: string): string => {
@@ -1208,8 +1292,16 @@ export class AddPropertyComponentComponent implements OnInit {
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || null,
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString(),
       userID:new String(localStorage.getItem('email')).toString(),
-      ActiveStatus:"0"
+      ActiveStatus:"0",
+      CountryName:(this.SelectedCountryName).toString(),
+      StateName:(this.SelectedStateName).toString(),
+      CityName:(this.SelectedCityName).toString(),
+      PropActiveStatus:"1",
+      PropertyTypeName:(this.SelectedPropertyTypeName).toString()
+
     };
+
+    console.log(data);
     this.http.post("https://localhost:7190/api/Users/inspropertysample", data, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
@@ -1289,7 +1381,12 @@ export class AddPropertyComponentComponent implements OnInit {
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
       userID:new String(localStorage.getItem('email')).toString() || '',
-      ActiveStatus:''
+      ActiveStatus:'',
+      CountryName:(this.SelectedCountryName).toString(),
+      StateName:(this.SelectedStateName).toString(),
+      CityName:(this.SelectedCityName).toString(),
+      PropActiveStatus:"",
+      PropertyTypeName:(this.SelectedPropertyTypeName).toString()
     };
   
     if (!this.propID || this.propID.trim() === '') {
@@ -1451,6 +1548,7 @@ export class AddPropertyComponentComponent implements OnInit {
           this.isUpdateModalOpen = true;
           this.editclicked = false;
           this.addnewPropertyclicked = false;
+          this.fetchProperties();
         }
       },
       error: (error) => {
@@ -1499,23 +1597,33 @@ export class AddPropertyComponentComponent implements OnInit {
 
   
   selectedWhoseProperties: string = '0';
-  selectedPropertyStatus1: string = '0';
+  selectedPropertyStatus1: string = '';
+  selectedIsActiveStatus1:string='';
   userID: string = localStorage.getItem('email') || '';
   filteredPropertiesNotNull:boolean=false;
 
 
-  
+  PropertyIsActiveStatusNotActive:boolean=false;
   // Method to fetch filtered properties
-  fetchFilteredProperties(whose: string, status: string, search: string): void {
-    const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&search=${search}&UserID=${this.userID}`;
+  fetchFilteredProperties(whose: string, status: string,IsActivestatus:string, search: string): void {
+    const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&IsActivestatus=${IsActivestatus}&search=${search}&UserID=${this.userID}`;
     this.http.get(url).subscribe((response: any) => {
       if (response.statusCode === 200) {
         this.properties = response.data.map((property: any) => ({
           propID: property.propID,
           propname: property.propname,
           developedby: property.developedby,
-          status: this.getPropertyStatus(property.activeStatus)
+          status: this.getPropertyStatus(property.activeStatus),
+          IsActiveStatus:this.getPropertyIsActiveStatus(property.propActiveStatus),
+          IsActiveStatusBoolean:property.propActiveStatus
+          
         }));
+        this.properties.forEach(property => {
+          console.log(property.IsActiveStatusBoolean); 
+        });
+        //this.PropertyIsActiveStatusNotActive = this.properties.some(property => property.IsActiveStatus === "1");
+
+        console.log(this.PropertyIsActiveStatusNotActive);
         this.filteredPropertiesNotNull=false;
       } else if (response.statusCode === 404) {
         console.log(response);
@@ -1578,14 +1686,60 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   // Handle status filter
+  // onWhosePropertyStatusSelectionChange(event: any): void {
+  //   let selectedStatus='';
+  //   selectedStatus = event.target.value;
+  //   console.log(selectedStatus);
+  //   if(selectedStatus=="1"){
+  //     this.selectedPropertyStatus1==selectedStatus;
+  //   }
+  //   else if(selectedStatus=="2"){
+  //     this.selectedPropertyStatus1==selectedStatus;
+  //   }
+  //   else if(selectedStatus=="3"){
+  //     this.selectedIsActiveStatus1==selectedStatus;
+  //   }
+  //   else if(selectedStatus=="4"){
+  //     this.selectedIsActiveStatus1==selectedStatus;
+  //   }
+  //   else{
+  //     this.selectedPropertyStatus1=='0';
+  //   }
+  //   this.applyFilters();
+  // }
+
   onWhosePropertyStatusSelectionChange(event: any): void {
-    this.selectedPropertyStatus1 = event.target.value;
+    let selectedStatus = event.target.value;
+  
+    // Clear both property status and active/inactive status if "Latest" is selected
+    if (selectedStatus == "0") {
+      this.selectedPropertyStatus1 = '0';  // Latest status
+      this.selectedIsActiveStatus1 = '';  // Reset Active/Inactive filter
+    } 
+    // Handle Approved (1) and Declined (2) statuses
+    else if (selectedStatus == "1" || selectedStatus == "2") {
+      this.selectedPropertyStatus1 = selectedStatus;  // Set to Approved or Declined
+      this.selectedIsActiveStatus1 = '';  // Clear Active/Inactive filter
+    } 
+    // Handle Active (3) and InActive (4) statuses
+    else if (selectedStatus == "3") {
+      this.selectedIsActiveStatus1 = "1";  // Set Active/Inactive
+      this.selectedPropertyStatus1 = '';  // Clear general property status
+    }
+
+    else if (selectedStatus == "4") {
+      this.selectedIsActiveStatus1 = "0";  // Set Active/Inactive
+      this.selectedPropertyStatus1 = '';  // Clear general property status
+    }
+  
+    // After setting the correct values, apply filters to fetch filtered properties
     this.applyFilters();
   }
+  
 
   // Apply all filters together
   applyFilters(): void {
-    this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.searchQuery);
+    this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.selectedIsActiveStatus1, this.searchQuery);
   }
 
   // Handle search query change
@@ -1599,6 +1753,14 @@ export class AddPropertyComponentComponent implements OnInit {
       case '1': return 'Approved';
       case '2': return 'Declined';
       case '0': return 'Pending';
+      default: return 'Unknown';
+    }
+  }
+
+  getPropertyIsActiveStatus(IsActiveStatus: string): string {
+    switch (IsActiveStatus) {
+      case '1': return 'Active';
+      case '0': return 'Not Active';
       default: return 'Unknown';
     }
   }

@@ -174,3 +174,9 @@
     height: 115px;
     width: 60%;
   }
+
+  .updatestatusbuttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
