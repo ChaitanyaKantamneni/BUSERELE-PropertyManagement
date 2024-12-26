@@ -113,6 +113,11 @@ export class AddPropertyByUserComponent implements OnInit {
 
 
 
+  SelectedCountryName: string = '';
+  SelectedStateName:string='';
+  SelectedCityName:string='';
+  SelectedPropertyTypeName:string='';
+
 
 
 
@@ -1317,6 +1322,85 @@ export class AddPropertyByUserComponent implements OnInit {
     });
   }
 
+  // submitpropertyDet(){
+  //   const selectedAmenitiesString = this.selectedAmenities
+  // .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
+  // .join(',');
+  //   const data = {
+  //     id: 0,
+  //     propID: this.propertyform.get('id')?.value,
+  //     propname: this.propertyform.get('PropertyTitle')?.value,
+  //     developedby: this.propertyform.get('DevelopedBy')?.value,
+  //     mobileNumber:new String(this.propertyform.get('MobileNumber')?.value).toString(),
+  //     emailID:new String(this.propertyform.get('EmailID')?.value).toString(),
+  //     address:new String(this.propertyform.get('Address')?.value).toString(),
+  //     landMark:this.propertyform.get('LandMark')?.value,
+  //     country:new String(this.propertyform.get('Country')?.value).toString(),
+  //     state:new String(this.propertyform.get('State')?.value).toString(),
+  //     City:this.propertyform.get('City')?.value,
+  //     NearBy:this.propertyform.get('NearBy')?.value,
+  //     ZIPCode:new String(this.propertyform.get('PostalCode')?.value).toString(),
+  //     ReraCertificateNumber:this.propertyform.get('CertificateNumber')?.value,
+  //     PropertyApprovedBy:this.propertyform.get('PropertyApprovedBy')?.value,
+  //     PropertyType:new String(this.propertyform.get('PropertyType')?.value).toString(),
+  //     PropertyFor:new String(this.propertyform.get('PropertyFor')?.value).toString(),
+  //     PropertyStatus:new String(this.propertyform.get('PropertyStatus')?.value).toString(),
+  //     PropertyFacing:new String(this.propertyform.get('PropertyFacing')?.value).toString(),
+  //     TotalBlocks:new String(this.propertyform.get('TotalBlocks')?.value).toString(),
+  //     TotalFloors:new String(this.propertyform.get('TotalFloors')?.value).toString(),
+  //     NoOfFlats:new String(this.propertyform.get('TotalNoOfFlats')?.value).toString(),
+  //     BlockName:this.propertyform.get('BlockName')?.value,
+  //     PropertyOnWhichFloor:new String(this.propertyform.get('PropertyOnWhichFloor')?.value).toString(),
+  //     NoOfBedrooms:new String(this.propertyform.get('NumberofBedrooms')?.value).toString(),
+  //     NoOfBathrooms:new String(this.propertyform.get('NumberofBathrooms')?.value).toString(),
+  //     NoOfBalconies:new String(this.propertyform.get('NumberofBalconies')?.value).toString(),
+  //     NoOfParkings:new String(this.propertyform.get('NumberofParkings')?.value).toString(),
+  //     AreaType:new String(this.propertyform.get('AreaType')?.value).toString(),
+  //     TotalArea:new String(this.propertyform.get('TotalArea')?.value).toString(),
+  //     CarpetArea:new String(this.propertyform.get('CarpetArea')?.value).toString(),
+  //     PriceFor:new String(this.propertyform.get('PriceFor')?.value).toString(),
+  //     PropertyTotalPrice:new String(this.propertyform.get('PropertyTotalPrice')?.value).toString(),
+  //     AmenitiesCharges:new String(this.propertyform.get('AmenitiesCharges')?.value).toString(),
+  //     MaintenanceCharges:new String(this.propertyform.get('MaintenanceCharges')?.value).toString(),
+  //     CorpusFund:new String(this.propertyform.get('CorpusFund')?.value).toString(),
+  //     BuildYear:new String(this.propertyform.get('BuildYear')?.value).toString(),
+  //     PossessionDate:new Date(this.propertyform.get('PossessionDate')?.value).toISOString(),
+  //     ListDate:new Date(this.propertyform.get('ListDate')?.value).toISOString(),
+
+  //     description:new String(this.propertyform.get('Description')?.value).toString(),
+  //     specificDescription:new String(this.propertyform.get('SpecificDescription')?.value).toString(),
+  //     aminities:selectedAmenitiesString,
+
+  //     websiteurl:new String(this.propertyform.get('WebsiteUrl')?.value).toString() || null,
+  //     Pinteresturl:new String(this.propertyform.get('Pinteresturl')?.value).toString() || null,
+  //     Facebookurl:new String(this.propertyform.get('Facebookurl')?.value).toString() || null,
+  //     Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || null,
+  //     GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || null,
+  //     availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString(),
+  //     userID:new String(localStorage.getItem('email')).toString(),
+  //     ActiveStatus:"0"
+  //   };
+  //   console.log(data.aminities);
+
+  //   this.http.post("https://localhost:7190/api/Users/inspropertysample", data, {
+  //     headers: { 'Content-Type': 'application/json' }
+  //   }).subscribe({
+  //     next: (response: any) => {
+  //       if(response.statusCode=="200"){
+  //         this.propertyInsStatus = "Property submitted successfully!";
+  //         this.isUpdateModalOpen = true;
+  //         this.editclicked = false;
+  //         this.addnewPropertyclicked = false;
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.propertyInsStatus = "Error Inserting Property.";
+  //       this.isUpdateModalOpen = true;
+  //       console.error("Error details:", error);
+  //     }
+  //   });
+  // }
+
   submitpropertyDet(){
     const selectedAmenitiesString = this.selectedAmenities
   .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
@@ -1373,10 +1457,16 @@ export class AddPropertyByUserComponent implements OnInit {
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || null,
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString(),
       userID:new String(localStorage.getItem('email')).toString(),
-      ActiveStatus:"0"
-    };
-    console.log(data.aminities);
+      ActiveStatus:"0",
+      CountryName:(this.SelectedCountryName).toString(),
+      StateName:(this.SelectedStateName).toString(),
+      CityName:(this.SelectedCityName).toString(),
+      PropActiveStatus:"1",
+      PropertyTypeName:(this.SelectedPropertyTypeName).toString()
 
+    };
+
+    console.log(data);
     this.http.post("https://localhost:7190/api/Users/inspropertysample", data, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
@@ -1393,8 +1483,96 @@ export class AddPropertyByUserComponent implements OnInit {
         this.isUpdateModalOpen = true;
         console.error("Error details:", error);
       }
+      // complete: () => {
+      //   // Log when the request completes
+      //   console.log("Request completed");
+      // }
     });
   }
+
+  // updatePropertyDet() {
+  //   const selectedAmenitiesString = this.selectedAmenities
+  // .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
+  // .join(',');
+  //   const data = {
+  //     id: 0,
+  //     propID: this.propertyform.get('id')?.value,
+  //     propname: this.propertyform.get('PropertyTitle')?.value || '',
+  //     developedby: this.propertyform.get('DevelopedBy')?.value || '',
+  //     mobileNumber:new String(this.propertyform.get('MobileNumber')?.value).toString() || '',
+  //     emailID:new String(this.propertyform.get('EmailID')?.value).toString() || '',
+  //     address:new String(this.propertyform.get('Address')?.value).toString() || '',
+  //     landMark:this.propertyform.get('LandMark')?.value || '',
+  //     country:new String(this.propertyform.get('Country')?.value).toString() || '',
+  //     state:new String(this.propertyform.get('State')?.value).toString() || '',
+  //     City:this.propertyform.get('City')?.value || '',
+  //     NearBy:this.propertyform.get('NearBy')?.value || '',
+  //     ZIPCode:new String(this.propertyform.get('PostalCode')?.value).toString() || '',
+  //     ReraCertificateNumber:this.propertyform.get('CertificateNumber')?.value || '',
+  //     PropertyApprovedBy:this.propertyform.get('PropertyApprovedBy')?.value || '',
+  //     PropertyType:new String(this.propertyform.get('PropertyType')?.value).toString() || '',
+  //     PropertyFor:new String(this.propertyform.get('PropertyFor')?.value).toString() || '',
+  //     PropertyStatus:new String(this.propertyform.get('PropertyStatus')?.value).toString() || '',
+  //     PropertyFacing:new String(this.propertyform.get('PropertyFacing')?.value).toString() || '',
+  //     TotalBlocks:new String(this.propertyform.get('TotalBlocks')?.value).toString() || '',
+  //     TotalFloors:new String(this.propertyform.get('TotalFloors')?.value).toString() || '',
+  //     NoOfFlats:new String(this.propertyform.get('TotalNoOfFlats')?.value).toString() || '',
+  //     BlockName:this.propertyform.get('BlockName')?.value || '',
+  //     PropertyOnWhichFloor:new String(this.propertyform.get('PropertyOnWhichFloor')?.value).toString() || '',
+  //     NoOfBedrooms:new String(this.propertyform.get('NumberofBedrooms')?.value).toString() || '',
+  //     NoOfBathrooms:new String(this.propertyform.get('NumberofBathrooms')?.value).toString() || '',
+  //     NoOfBalconies:new String(this.propertyform.get('NumberofBalconies')?.value).toString() || '',
+  //     NoOfParkings:new String(this.propertyform.get('NumberofParkings')?.value).toString() || '',
+  //     AreaType:new String(this.propertyform.get('AreaType')?.value).toString() || '',
+  //     TotalArea:new String(this.propertyform.get('TotalArea')?.value).toString() || '',
+  //     CarpetArea:new String(this.propertyform.get('CarpetArea')?.value).toString() || '',
+  //     PriceFor:new String(this.propertyform.get('PriceFor')?.value).toString() || '',
+  //     PropertyTotalPrice:new String(this.propertyform.get('PropertyTotalPrice')?.value).toString() || '',
+  //     AmenitiesCharges:new String(this.propertyform.get('AmenitiesCharges')?.value).toString() || '',
+  //     MaintenanceCharges:new String(this.propertyform.get('MaintenanceCharges')?.value).toString() || '',
+  //     CorpusFund:new String(this.propertyform.get('CorpusFund')?.value).toString() || '',
+  //     BuildYear:new String(this.propertyform.get('BuildYear')?.value).toString() || '',
+  //     PossessionDate:new Date(this.propertyform.get('PossessionDate')?.value).toISOString() || '',
+  //     ListDate:new Date(this.propertyform.get('ListDate')?.value).toISOString() || '',
+
+  //     description:new String(this.propertyform.get('Description')?.value).toString() || '',
+  //     specificDescription:new String(this.propertyform.get('SpecificDescription')?.value).toString() || '',
+  //     aminities:selectedAmenitiesString,
+
+  //     websiteurl:new String(this.propertyform.get('WebsiteUrl')?.value).toString() || '',
+  //     Pinteresturl:new String(this.propertyform.get('Pinteresturl')?.value).toString() || '',
+  //     Facebookurl:new String(this.propertyform.get('Facebookurl')?.value).toString() || '',
+  //     Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || '',
+  //     GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
+  //     availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
+  //     userID:new String(localStorage.getItem('email')).toString() || '',
+  //     ActiveStatus:''
+  //   };
+  
+  //   if (!this.propID || this.propID.trim() === '') {
+  //     console.error("Invalid propID");
+  //     return;
+  //   }
+  //   console.log(data);
+  
+  //   this.http.put(`https://localhost:7190/api/Users/updatePropertyDet/${this.propID}`, data, {
+  //     headers: { 'Content-Type': 'application/json' }
+  //   }).subscribe({
+  //     next: (response: any) => {
+  //       if (response.statusCode == "200") {
+  //         this.propertyInsStatus = "Property updated successfully!";
+  //         this.isUpdateModalOpen = true;
+  //         this.editclicked = false;
+  //         this.addnewPropertyclicked = false;
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.propertyInsStatus = "Error Updating Property.";
+  //       this.isUpdateModalOpen = true;
+  //       console.error("Error details:", error);
+  //     }
+  //   });
+  // }
 
   updatePropertyDet() {
     const selectedAmenitiesString = this.selectedAmenities
@@ -1452,14 +1630,18 @@ export class AddPropertyByUserComponent implements OnInit {
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
       userID:new String(localStorage.getItem('email')).toString() || '',
-      ActiveStatus:''
+      ActiveStatus:'',
+      CountryName:(this.SelectedCountryName).toString(),
+      StateName:(this.SelectedStateName).toString(),
+      CityName:(this.SelectedCityName).toString(),
+      PropActiveStatus:"",
+      PropertyTypeName:(this.SelectedPropertyTypeName).toString()
     };
   
     if (!this.propID || this.propID.trim() === '') {
       console.error("Invalid propID");
       return;
     }
-    console.log(data);
   
     this.http.put(`https://localhost:7190/api/Users/updatePropertyDet/${this.propID}`, data, {
       headers: { 'Content-Type': 'application/json' }
@@ -1495,13 +1677,39 @@ export class AddPropertyByUserComponent implements OnInit {
     this.http.get(`https://localhost:7190/api/Users/GetAllPropertyDetailsWithUserID?userID=${this.userID}`)  // Adjust the API endpoint accordingly
     .subscribe((response: any) => {
       // Map the response to extract only the propID, propname, and developedby fields
-      this.properties = response.map((property: any) => ({
-        propID: property.propID,
-        propname: property.propname,  // Adjust field names if necessary
-        developedby: property.developedby
-      }));
+      this.properties = response.map((property: any) => {
+      //   propID: property.propID,
+      //   propname: property.propname,  // Adjust field names if necessary
+      //   developedby: property.developedby
+      // }));
 
-      console.log('Mapped properties:', this.properties);
+          let PropertyStatus: string = '';
+  
+          if (property.activeStatus === "2") {
+            PropertyStatus = "Not Approved";
+          } else if (property.activeStatus === "1") {
+            PropertyStatus = "Approved";
+          } else if (property.activeStatus === "0") {
+            PropertyStatus = "Pending";
+          }
+
+          let PropertyIsActiveStatus: string = '';
+          if (property.propActiveStatus === "1") {
+            PropertyIsActiveStatus = "Active";
+          } else if (property.propActiveStatus === "0") {
+            PropertyIsActiveStatus = "Not Active";
+          }
+
+          console.log("property Status:",property.propActiveStatus);
+  
+          return {
+            propID: property.propID,            // Adjust field names if necessary
+            propname: property.propname,
+            developedby: property.developedby,
+            status: PropertyStatus,
+            IsActiveStatus:PropertyIsActiveStatus
+          };
+        });
     }, error => {
       console.error('Error fetching properties:', error);
     });

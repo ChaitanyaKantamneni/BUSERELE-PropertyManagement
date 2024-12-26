@@ -503,6 +503,12 @@ table tbody{
   height: 180px;
   width:250px;
 }
+
+.editPropbtn{
+  padding: 0px 10px;
+  border-left: 0.5px solid black;
+  border-radius: 0px;
+}
 @media (max-width: 768px){
 
   .mainReview{

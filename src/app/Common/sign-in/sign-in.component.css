@@ -102,7 +102,7 @@
   } */
 
 
-  .input-container {
+  /* .input-container {
     position: relative;
     margin-top: 20px;
   }
@@ -131,7 +131,7 @@
   input:not(:placeholder-shown) + label {
     top: 0px; 
     /* font-size: 12px;
-    color: #5c9dfc; */
+    color: #5c9dfc; *
     opacity: 1;  
   }
   
@@ -150,6 +150,105 @@
     transition: 0.2s ease-in-out;
     opacity: 0; 
   }
+
+
+  .password-wrapper {
+    display: flex;
+    align-items: center; /* Aligns the icon and input field vertically *
+  }
+  
+  .password-wrapper input {
+    padding-right: 30px; /* Add some padding on the right to give space for the icon *
+  }
+  
+  .password-wrapper i {
+    cursor: pointer;
+    margin-left: -30px; /* Position the icon to the right side of the input *
+    font-size: 20px;
+  } */
+
+
+  .input-container {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 15px 10px 10px 10px; /* Added padding for better spacing */
+    border: none;
+    border-bottom: 2px solid #ccc;  
+    font-size: 16px;
+    outline: none;
+    background-color: transparent;
+    transition: border-color 0.3s ease;
+  }
+  
+  /* This will show the label when the input has focus or is not empty */
+  input:focus,
+  input:not(:placeholder-shown),
+  .password-wrapper input:focus,
+  .password-wrapper input:not(:placeholder-shown) {
+    border-bottom: 2px solid #5c9dfc;  
+  }
+  
+  /* Show the label when input has text or focus */
+  input:not(:placeholder-shown) + label,
+  input:focus + label,
+  .password-wrapper input:not(:placeholder-shown) + label,
+  .password-wrapper input:focus + label {
+    top: 0px; 
+    opacity: 1;  
+  }
+  
+  /* Hide the label when input is empty and not focused */
+  input:placeholder-shown + label,
+  .password-wrapper input:placeholder-shown + label {
+    opacity: 0;
+  }
+  
+  label {
+    position: absolute;
+    top: 50%;
+    left: 10px;  /* Adjust label position */
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: black;
+    pointer-events: none;
+    transition: 0.2s ease-in-out;
+    opacity: 0; 
+  }
+  
+  .password-wrapper {
+    display: flex;
+    align-items: center; /* Aligns the icon and input field vertically */
+    position: relative;
+  }
+  
+  .password-wrapper input {
+    padding-right: 40px; /* More space on the right to accommodate the icon */
+  }
+  
+  .password-wrapper i {
+    position: absolute;
+    right: 10px; /* Position the icon 10px from the right side */
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .ForgetAndReg{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .ForgetAndReg .btn{
+    width:49%;
+  }
+  
+  
+  
   
   .container {
     display: flex;
