@@ -307,6 +307,16 @@ p{
     margin-right: 10px;
 }
 
+.PropertyDescriptionMain .body .PropertyDescriptionContent{
+    margin-top: 15px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    word-wrap: break-word;
+    text-align: justify;
+    flex-grow: 1;
+}
+
 .propertyfeatures .body {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* This sets 3 items per row */
@@ -486,6 +496,8 @@ p{
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
 }
+
+
   
 
 @media (min-width: 1200px) {
@@ -510,6 +522,8 @@ p{
     .contactformdiv {
         width: 30%;
     }
+
+
 }
 
 
@@ -540,6 +554,7 @@ p{
         width: 100%;
         padding: 30px 10px ;
     }
+    
 
     .propertyoverview .body .propertytype{
         width:30%;

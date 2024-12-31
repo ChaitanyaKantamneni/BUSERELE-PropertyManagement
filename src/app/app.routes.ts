@@ -24,6 +24,7 @@ import { AddPropertyByUserComponent } from './Users/user-dashboard/add-property-
 import { authGuard } from './auth.guard';
 import { userAuthGuard } from './user-auth.guard';
 import { ForgotPasswordComponent } from './Common/forgot-password/forgot-password.component';
+import { DescriptionComponentComponent } from './Users/user-dashboard/description-component/description-component.component';
 
 
 export const routes: Routes = [
@@ -64,7 +65,8 @@ export const routes: Routes = [
             // {path:'addpropertysample',component:AddpropertysampleComponent},
             {path:'UserAddProperty',component:AddPropertyByUserComponent},
             {path:'UserDashboardDet',component:UserDashboardViewComponent},
-            {path:'userReviews',component:Review1Component}
+            {path:'userReviews',component:Review1Component},
+            {path:'descriptions',component:DescriptionComponentComponent}
         ]
     },
 
