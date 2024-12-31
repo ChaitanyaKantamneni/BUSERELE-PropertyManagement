@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TopNav1Component } from "../top-nav-1/top-nav-1.component";
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgStyle } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ interface Review {
 @Component({
   selector: 'app-home1',
   standalone: true,
-  imports: [TopNav1Component, CommonModule, FormsModule, HttpClientModule, RouterModule, FooterComponent,ReactiveFormsModule],
+  imports: [TopNav1Component, CommonModule, FormsModule, HttpClientModule, RouterModule, FooterComponent,ReactiveFormsModule,NgStyle],
   templateUrl: './home1.component.html',
   styleUrl: './home1.component.css'
 })
@@ -188,6 +188,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
           // Map the API response to the propertydetails array
           this.propertydetails = response.map((property: any) => {
             let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
+            let defaultPropImage: string = 'assets/images/img1.png';
   
             // Log the whole property object for inspection
             console.log('Full Property:', property);
@@ -230,6 +231,32 @@ export class Home1Component implements OnInit,AfterViewInit  {
               console.log('images property is missing, not an array, or empty.');
             }
 
+            if (property.image && property.image.fileData) {
+              const firstImage = property.image;
+  
+              try {
+                // Decode the Base64 string into raw binary data
+                const byteCharacters = atob(firstImage.fileData);
+                const byteArray = new Uint8Array(byteCharacters.length);
+  
+                // Copy the binary data into the byteArray
+                for (let i = 0; i < byteCharacters.length; i++) {
+                  byteArray[i] = byteCharacters.charCodeAt(i);
+                }
+  
+                // Create a Blob from the byteArray
+                const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
+  
+                // Create an object URL from the Blob
+                defaultPropImage = URL.createObjectURL(blob);
+  
+                // Log the URL for verification
+                console.log('Generated Default Image URL:', defaultPropImage);
+              } catch (error) {
+                console.error('Error decoding default image data:', error);
+              }
+            }
+
             let propertyBadge = '';
             let propertyBadgeColor = '';
             
@@ -237,7 +264,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
               propertyBadge = 'For Buy';
               propertyBadgeColor = 'green';
             } else if (property.propertyFor === '2') {
-              propertyBadge = 'For Sell';
+              propertyBadge = 'For Sale';
               propertyBadgeColor = 'red';
             }
             else if(property.propertyFor === '3') {
@@ -266,23 +293,24 @@ export class Home1Component implements OnInit,AfterViewInit  {
               PropertyFacing='N/A';
             }
             
-  
-            // Return the final object for each property
             return {
-              propertyID: property.propID || 'N/A',  // Default value if undefined
-              propertyname: property.propname || 'Unknown Property',  // Default value if undefined
-              propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
-              propertyaddress: property.address || 'Address not available',  // Default value if undefined
-              propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
-              propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
-              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
-              propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
+              propertyID: property.propID || 'N/A', 
+              propertyname: property.propname || 'Unknown Property', 
+              propertyprice: property.propertyTotalPrice || 'Price not available',
+              propertyaddress: property.address || 'Address not available', 
+              propertyarea: property.totalArea || 'Area not available', 
+              propertybeds: property.noOfBedrooms || 'Beds not available', 
+              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+              propertytype: property.propertyType || 'Unknown Type', 
               propertytypeName: this.getPropertyTypeName(property.propertyType),
-              propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
+              propertyimage: propertyImage,
+              defaultPropImage:defaultPropImage,
               propertyparking:property.noOfParkings,
               propertyfacing:PropertyFacing,
               propertyAvailability:propertyBadge,
-              propertyBadgeColor: propertyBadgeColor
+              propertyBadgeColor: propertyBadgeColor,
+              PropertyTypeName:property.propertyTypeName
+
             };
           });
           // clearTimeout(loadingTimer);
@@ -296,6 +324,79 @@ export class Home1Component implements OnInit,AfterViewInit  {
       );
   }
 
+  // loadPropertyDetails() {
+  //   this.isLoadingAdvProperty = true;
+  
+  //   this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnAdvertisingProperty')
+  //     .subscribe(
+  //       (response: any[]) => {
+  //         console.log('API Response:', response);
+  
+  //         this.propertydetails = response.map((property: any) => {
+  //           let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
+  //           let defaultPropImage: string = 'assets/images/img1.png'; // Default image for fallback
+  
+  //           // Log the full property object
+  //           console.log('Full Property:', property);
+  
+  //           // Check if 'image' exists and has a Base64 fileData
+  //           if (property.image && property.image.fileData) {
+  //             const firstImage = property.image;
+  
+  //             try {
+  //               // Decode the Base64 string into raw binary data
+  //               const byteCharacters = atob(firstImage.fileData);
+  //               const byteArray = new Uint8Array(byteCharacters.length);
+  
+  //               // Copy the binary data into the byteArray
+  //               for (let i = 0; i < byteCharacters.length; i++) {
+  //                 byteArray[i] = byteCharacters.charCodeAt(i);
+  //               }
+  
+  //               // Create a Blob from the byteArray
+  //               const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
+  
+  //               // Create an object URL from the Blob
+  //               defaultPropImage = URL.createObjectURL(blob);
+  
+  //               // Log the URL for verification
+  //               console.log('Generated Default Image URL:', defaultPropImage);
+  //             } catch (error) {
+  //               console.error('Error decoding default image data:', error);
+  //             }
+  //           }
+  
+  //           // Return the final object for each property
+  //           return {
+  //             propertyID: property.propID || 'N/A',
+  //             propertyname: property.propname || 'Unknown Property',
+  //             propertyprice: property.propertyTotalPrice || 'Price not available',
+  //             propertyaddress: property.address || 'Address not available',
+  //             propertyarea: property.totalArea || 'Area not available',
+  //             propertybeds: property.noOfBedrooms || 'Beds not available',
+  //             propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+  //             propertytype: property.propertyType || 'Unknown Type',
+  //             propertytypeName: this.getPropertyTypeName(property.propertyType),
+  //             propertyimage: propertyImage,  // Set the first image Blob URL (if available)
+  //             defaultPropImage: defaultPropImage,  // Set the default image Blob URL
+  //             propertyparking: property.noOfParkings,
+  //             propertyfacing: property.propertyFacing,
+  //             propertyAvailability: property.propertyFor === '1' ? 'For Buy' : 'For Rent',
+  //             propertyBadgeColor: 'green', // Example badge color
+  //             PropertyTypeName: property.propertyTypeName
+  //           };
+  //         });
+  
+  //         this.isLoadingAdvProperty = false;
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching property details:', error);
+  //         this.propertydetails = [];
+  //         this.isLoadingAdvProperty = false;
+  //       }
+  //     );
+  // }
+  
   loadFeaturedPropertyDetails() {
     this.isLoadingFeaProperty=true;
     const minLoadingTime = 1000;
@@ -310,7 +411,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
   
           // Map the API response to the propertydetails array
           this.FeaturedProperties = response.map((property: any) => {
-            let propertyImage: string = ''; // Default image if no valid image found
+            let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
+            let defaultPropImage: string = 'assets/images/img1.png';
   
             // Log the whole property object for inspection
             console.log('Full Property:', property);
@@ -353,14 +455,49 @@ export class Home1Component implements OnInit,AfterViewInit  {
               console.log('images property is missing, not an array, or empty.');
             }
 
+            if (property.image && property.image.fileData) {
+              const firstImage = property.image;
+  
+              try {
+                // Decode the Base64 string into raw binary data
+                const byteCharacters = atob(firstImage.fileData);
+                const byteArray = new Uint8Array(byteCharacters.length);
+  
+                // Copy the binary data into the byteArray
+                for (let i = 0; i < byteCharacters.length; i++) {
+                  byteArray[i] = byteCharacters.charCodeAt(i);
+                }
+  
+                // Create a Blob from the byteArray
+                const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
+  
+                // Create an object URL from the Blob
+                defaultPropImage = URL.createObjectURL(blob);
+  
+                // Log the URL for verification
+                console.log('Generated Default Image URL:', defaultPropImage);
+              } catch (error) {
+                console.error('Error decoding default image data:', error);
+              }
+            }
+
             let propertyBadge = '';
             let propertyBadgeColor = '';
-            if (property.availabilityOptions === '1') {
-              propertyBadge = 'For Sell';
-              propertyBadgeColor = 'red';
-            } else if (property.availabilityOptions === '2') {
-              propertyBadge = 'For Rent';
+            
+            if (property.propertyFor === '1') {
+              propertyBadge = 'For Buy';
               propertyBadgeColor = 'green';
+            } else if (property.propertyFor === '2') {
+              propertyBadge = 'For Sale';
+              propertyBadgeColor = 'red';
+            }
+            else if(property.propertyFor === '3') {
+              propertyBadge = 'For Rent';
+              propertyBadgeColor = 'blue';
+            }
+            else if(property.propertyFor === '4') {
+              propertyBadge = 'For Lease';
+              propertyBadgeColor = 'orange';
             }
 
             let PropertyFacing='';
@@ -392,6 +529,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
               propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
               propertytypeName: this.getPropertyTypeName(property.propertyType),
               propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
+              defaultPropImage:defaultPropImage,
               propertyparking:property.noOfParkings,
               propertyfacing:PropertyFacing,
               propertyAvailability:propertyBadge,

@@ -1463,7 +1463,6 @@ export class AddPropertyByUserComponent implements OnInit {
       CityName:(this.SelectedCityName).toString(),
       PropActiveStatus:"1",
       PropertyTypeName:(this.SelectedPropertyTypeName).toString()
-
     };
 
     console.log(data);

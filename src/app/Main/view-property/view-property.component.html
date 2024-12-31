@@ -100,7 +100,7 @@
                         <div class="body">
                             <div class="propertytype">
                                 <p class="heading">Property Type</p>
-                                <p class="value">Villa</p>
+                                <p class="value">{{propertydetailsitem.propertyType}}</p>
                             </div>
                             <div class="propertytype">
                                 <p class="heading">Area (sqft)</p>
@@ -118,6 +118,8 @@
                                 <p class="heading">Parking</p>
                                 <p class="value"><i class="fa fa-car"></i>{{propertydetailsitem.propertyparking}}</p>
                             </div>
+
+                 
                         </div>
                     </div>
                     <div class="propertyoverview">
@@ -157,14 +159,23 @@
                             </div>   
                         </div>
                     </div>
-                    <div class="propertyoverview">
+                    <!-- <div class="propertyoverview propertyDescription">
                         <div class="headings">
                             <p>Description</p>
                         </div>
                         <div class="body">
-                            <p>{{propertydetailsitem.propertydescription}}</p>
+                            <p class="w-100 PropertyDescriptionContent" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
+                        </div>
+                    </div> -->
+                    <div class="propertyoverview PropertyDescriptionMain">
+                        <div class="headings">
+                            <p>Description</p>
+                        </div>
+                        <div class="body">
+                            <p class="PropertyDescriptionContent w-100" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
                         </div>
                     </div>
+                    
                     <div class="propertyoverview propertyfeatures">
                         <div class="headings">
                             <p>Features</p>

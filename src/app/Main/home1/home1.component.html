@@ -114,7 +114,7 @@
                                     <div class="propertyFulldet d-flex">
                                         <!-- Property Image Section -->
                                         <div class="propertyImage position-relative">
-                                            <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
+                                            <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
                                             <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
                                             <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
                                                 <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
@@ -149,7 +149,7 @@
                                             <div class="propertyspecifications row m-0 justify-content-center align-items-center">
                                                 <div class="col-4 d-flex align-items-center p-0">
                                                     <i class="fa fa-home text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{ propertyitem.propertytypeName.length > 07 ? (propertyitem.propertytypeName | slice:0:07) + '...' : propertyitem.propertytypeName }}</p>
+                                                    <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 07 ? (propertyitem.PropertyTypeName | slice:0:07) + '...' : propertyitem.PropertyTypeName }}</p>
                                                 </div>
                                                 <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
                                                     <i class="fa fa-compass text-dark me-2 small-icon"></i>
@@ -197,60 +197,24 @@
                                     <div *ngIf="i < 3" class="p-0 mb-3 rounded-2">
                                         <!-- col-lg-4 col-md-6 col-sm-12 -->
                                         <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
-                                            <!-- <div class="propimg rounded-2 position-relative">
-                                                <img [src]="propertyitem.propertyimage" class="img-fluid h-100 w-100" alt="Property Image">
-                                                <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                                <div class="bottom-bar position-absolute bottom-0 start-0 w-100">
-                                                    <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
-                                                        <div class="col-4 d-flex justify-content-center align-items-center p-0">
-                                                            <i class="fa fa-ruler-combined text-white me-2"></i>
-                                                            <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertyarea}} Sqft</p>
-                                                        </div>
-                                                        <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
-                                                            <i class="fa fa-bed text-white me-2"></i>
-                                                            <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybeds}}</p>
-                                                        </div>
-                                                        <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
-                                                            <i class="fa fa-bathtub text-white me-2"></i>
-                                                            <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybathrooms}}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> 
-                                            <div class="PropertyDet">
-                                                <div class="propertyname d-flex justify-content-between align-items-center mt-2">
-                                                    <h5 class="mb-0">{{propertyitem.propertyname}}</h5>
-                                                    <p class="mb-0">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                                </div>
-                                                <div class="propertyaddress d-flex align-items-center mt-1">
-                                                    <i class="fa fa-location"></i>
-                                                    <p class="mb-0 ms-2">{{propertyitem.propertyaddress}}</p>
-                                                </div>
-                                            </div> -->
-        
                                             <div class="propertyFulldet">
                                                 <!-- Property Image Section -->
                                                 <div class="propertyImage position-relative">
-                                                    <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
+                                                    <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
                                                     <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                                    <!-- <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
-                                                        <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
-                                                            <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
-                                                        </div>
-                                                    </div> -->
                                                 </div>
                                             
                                                 <!-- Property Details Section -->
                                                 <div class="propertyDetails">
                                                     <div>
-                                                        <h5 class="mb-0">{{propertyitem.propertyname}}</h5>
+                                                        <h5 class="mb-0" [ngStyle]="{'font-size': propertyitem.propertyname.length > 12 ? '15px' : '17px'}">{{propertyitem.propertyname}}</h5>
                                                     </div>
                                                     <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
                                                         <i class="fa fa-location"></i>
-                                                        <!-- <p class="mb-0 ms-2">
-                                                            {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
-                                                        </p> -->
-                                                        <p class="mb-0 ms-2">{{propertyitem.propertyNearBy}}</p>
+                                                        <p class="mb-0 ms-2">
+                                                            {{ propertyitem.propertyNearBy.length > 10 ? (propertyitem.propertyNearBy | slice:0:10) + '...' : propertyitem.propertyNearBy }}
+                                                        </p>
+                                                        <!-- <p class="mb-0 ms-2">{{propertyitem.propertyNearBy}}</p> -->
                                                     </div>
                                                     <div class="d-flex justify-content-end">
                                                         <div class="price">

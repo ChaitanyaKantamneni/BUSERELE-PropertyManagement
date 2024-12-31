@@ -12,7 +12,8 @@
                     </li>
                 </ng-container>
                 <li>
-                    <button class="btn" (click)="signinORsignup()">SignIn/SignUp</button>
+                    <button *ngIf="!LoginSuccesful" class="btn" (click)="signinORsignup()">SignIn/SignUp</button>
+                    <button *ngIf="LoginSuccesful" class="btn" (click)="dashboardClick()">Dashboard</button>
                 </li>
             </ul>
         </div>

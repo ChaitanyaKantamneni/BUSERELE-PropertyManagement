@@ -4,6 +4,8 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QuillModule,QuillEditorComponent } from 'ngx-quill';
+import Compress from 'compress.js'; 
+
 
 interface Amenity {
   id: string;
@@ -177,7 +179,8 @@ export class AddPropertyComponentComponent implements OnInit {
     fileName: string, 
     mimeType: string, 
     imageData: Blob, 
-    imageUrl: string 
+    imageUrl: string,
+    DefaultImage: string
   }> = [];
 
   uploadedFloorImages1:Array<{ 
@@ -968,41 +971,63 @@ export class AddPropertyComponentComponent implements OnInit {
     this.seletedVideo = '';  // Clear the selected image path
   }
 
-  clearContent(editorId: string): void {
-    
-    if (this.quillEditor) {
-     
-      this.quillEditor.quillEditor.setText('');
-
-      this.propertyform.controls['Description'].setValue('');
-      this.propertyform.get('SpecificDescription')?.setValue('');  
-      const quillEditor = document.getElementById(editorId) as any;
-      if (quillEditor && quillEditor.__quill) {
-        quillEditor.__quill.root.innerHTML = '';  
-      }
-    }
-  }
   PropertyOnfileClicked:boolean=false;
   PropertyFloorImageOnFileClicked:boolean=false;
   PropertyVideoOnFileClicked:boolean=false;
   PropertyDocumentOnFileClicked:boolean=false;
+  // onFileSelect(event: any): void {
+  //   this.PropertyOnfileClicked=true;
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyFiles = event.target.files;
+  //     console.log(this.selectedPropertyFiles);
+
+  //     if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
+  //       this.uploadedImages = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           // Push the data URL (base64 string) into the uploadedImages array
+  //           this.uploadedImages.push({ path: reader.result as string });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
+
   onFileSelect(event: any): void {
-    this.PropertyOnfileClicked=true;
+    this.PropertyOnfileClicked = true;
+  
     if (event?.target?.files) {
       this.selectedPropertyFiles = event.target.files;
       console.log(this.selectedPropertyFiles);
-
+  
       if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
         this.uploadedImages = [];  // Clear previous images
-
+  
         // Convert FileList to an array and create image previews
         Array.from(this.selectedPropertyFiles).forEach((file: File) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            // Push the data URL (base64 string) into the uploadedImages array
-            this.uploadedImages.push({ path: reader.result as string });
-          };
-          reader.readAsDataURL(file);  // Read file as data URL for preview
+          // Check if the file size is less than 1024KB (1MB = 1024KB)
+          const fileSizeKB = file.size / 1024; // Convert bytes to KB
+  
+          if (fileSizeKB < 1024) { // 1MB = 1024KB
+            const reader = new FileReader();
+            reader.onload = () => {
+              // Push the data URL (base64 string) into the uploadedImages array
+              this.uploadedImages.push({ path: reader.result as string });
+            };
+            reader.readAsDataURL(file);  // Read file as data URL for preview
+          } else {
+            // Show a popup alert when the file size is too large
+            this.PropertyOnfileClicked=false;
+            alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 1MB.`);
+          }
         });
       } else {
         console.error('No files selected');
@@ -1011,23 +1036,61 @@ export class AddPropertyComponentComponent implements OnInit {
       console.error('No files in the input');
     }
   }
+  
+  
+  
+
+  // onFloorFileSelect(event: any): void {
+  //   this.PropertyFloorImageOnFileClicked=true;
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyFloorFiles = event.target.files;
+
+  //     if (this.selectedPropertyFloorFiles && this.selectedPropertyFloorFiles.length > 0) {
+  //       this.uploadedFloorImages = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           // Push the data URL (base64 string) into the uploadedImages array
+  //           this.uploadedFloorImages.push({ path: reader.result as string });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
 
   onFloorFileSelect(event: any): void {
-    this.PropertyFloorImageOnFileClicked=true;
+    this.PropertyFloorImageOnFileClicked = true;
+  
     if (event?.target?.files) {
       this.selectedPropertyFloorFiles = event.target.files;
-
+  
       if (this.selectedPropertyFloorFiles && this.selectedPropertyFloorFiles.length > 0) {
         this.uploadedFloorImages = [];  // Clear previous images
-
+  
         // Convert FileList to an array and create image previews
         Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            // Push the data URL (base64 string) into the uploadedImages array
-            this.uploadedFloorImages.push({ path: reader.result as string });
-          };
-          reader.readAsDataURL(file);  // Read file as data URL for preview
+          // Check if the file size is less than 1024KB (1MB = 1024KB)
+          const fileSizeKB = file.size / 1024; // Convert bytes to KB
+  
+          if (fileSizeKB < 1024) { // 1MB = 1024KB
+            const reader = new FileReader();
+            reader.onload = () => {
+              // Push the data URL (base64 string) into the uploadedImages array
+              this.uploadedFloorImages.push({ path: reader.result as string });
+            };
+            reader.readAsDataURL(file);  // Read file as data URL for preview
+          } else {
+            // Show a popup alert when the file size is too large
+            this.PropertyFloorImageOnFileClicked=false;
+            alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 1MB.`);
+          }
         });
       } else {
         console.error('No files selected');
@@ -1036,23 +1099,60 @@ export class AddPropertyComponentComponent implements OnInit {
       console.error('No files in the input');
     }
   }
+  
+
+  // onVideoFileSelect(event: any): void {
+  //   this.PropertyVideoOnFileClicked=true;
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyVideoFiles = event.target.files;
+
+  //     if (this.selectedPropertyVideoFiles && this.selectedPropertyVideoFiles.length > 0) {
+  //       this.uploadedVideos = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           // Push the data URL (base64 string) into the uploadedImages array
+  //           this.uploadedVideos.push({ path: reader.result as string });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
+
 
   onVideoFileSelect(event: any): void {
-    this.PropertyVideoOnFileClicked=true;
+    this.PropertyVideoOnFileClicked = true;
+  
     if (event?.target?.files) {
       this.selectedPropertyVideoFiles = event.target.files;
-
+  
       if (this.selectedPropertyVideoFiles && this.selectedPropertyVideoFiles.length > 0) {
-        this.uploadedVideos = [];  // Clear previous images
-
-        // Convert FileList to an array and create image previews
+        this.uploadedVideos = [];  // Clear previous videos
+  
+        // Convert FileList to an array and process each file
         Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            // Push the data URL (base64 string) into the uploadedImages array
-            this.uploadedVideos.push({ path: reader.result as string });
-          };
-          reader.readAsDataURL(file);  // Read file as data URL for preview
+          // Check if the file size is less than 2048KB (2MB = 2048KB)
+          const fileSizeKB = file.size / 1024; // Convert bytes to KB
+  
+          if (fileSizeKB < 2048) { // 2MB = 2048KB
+            const reader = new FileReader();
+            reader.onload = () => {
+              // Push the data URL (base64 string) into the uploadedVideos array
+              this.uploadedVideos.push({ path: reader.result as string });
+            };
+            reader.readAsDataURL(file);  // Read file as data URL for preview
+          } else {
+            // Show a popup alert when the file size is too large
+            this.PropertyVideoOnFileClicked = false;
+            alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 2MB.`);
+          }
         });
       } else {
         console.error('No files selected');
@@ -1061,26 +1161,66 @@ export class AddPropertyComponentComponent implements OnInit {
       console.error('No files in the input');
     }
   }
+  
+  // onDocumentFileSelect(event: any): void {
+  //   this.PropertyDocumentOnFileClicked=true;
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyDocumentFiles = event.target.files;
+
+  //     if (this.selectedPropertyDocumentFiles && this.selectedPropertyDocumentFiles.length > 0) {
+  //       this.uploadedDocuments = [];  // Clear previous images
+
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           const unsafeUrl = reader.result as string;  // Base64 data URL
+  //           const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);  // Sanitize URL
+  
+  //           // Push the sanitized URL (SafeResourceUrl) and the File object
+  //           this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
+  //         };
+  //         reader.readAsDataURL(file);  // Read file as data URL for preview
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
 
   onDocumentFileSelect(event: any): void {
-    this.PropertyDocumentOnFileClicked=true;
+    this.PropertyDocumentOnFileClicked = true;
+  
     if (event?.target?.files) {
       this.selectedPropertyDocumentFiles = event.target.files;
-
-      if (this.selectedPropertyDocumentFiles && this.selectedPropertyDocumentFiles.length > 0) {
-        this.uploadedDocuments = [];  // Clear previous images
-
-        // Convert FileList to an array and create image previews
-        Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const unsafeUrl = reader.result as string;  // Base64 data URL
-            const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);  // Sanitize URL
   
-            // Push the sanitized URL (SafeResourceUrl) and the File object
-            this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
-          };
-          reader.readAsDataURL(file);  // Read file as data URL for preview
+      if (this.selectedPropertyDocumentFiles && this.selectedPropertyDocumentFiles.length > 0) {
+        this.uploadedDocuments = [];  // Clear previous documents
+  
+        // Convert FileList to an array and process each file
+        Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+          // Check if the file size is less than 2048KB (2MB = 2048KB)
+          const fileSizeKB = file.size / 1024; // Convert bytes to KB
+  
+          if (fileSizeKB < 2048) { // 2MB = 2048KB
+            const reader = new FileReader();
+            reader.onload = () => {
+              const unsafeUrl = reader.result as string;  // Base64 data URL
+              const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);  // Sanitize URL
+  
+              // Push the sanitized URL (SafeResourceUrl) and the File object
+              this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
+            };
+            reader.readAsDataURL(file);  // Read file as data URL for preview
+          } else {
+            // Show a popup alert when the file size is too large
+            this.PropertyDocumentOnFileClicked = false;
+            this.propertyInsStatus = `Document file ${file.name} is too large and will not be uploaded. Maximum size allowed is 2MB.`;
+            this.isUpdateModalOpen = true;
+            
+          }
         });
       } else {
         console.error('No files selected');
@@ -1089,6 +1229,7 @@ export class AddPropertyComponentComponent implements OnInit {
       console.error('No files in the input');
     }
   }
+  
 
   SubmitPropertyClick(){
 
@@ -1298,7 +1439,6 @@ export class AddPropertyComponentComponent implements OnInit {
       CityName:(this.SelectedCityName).toString(),
       PropActiveStatus:"1",
       PropertyTypeName:(this.SelectedPropertyTypeName).toString()
-
     };
 
     console.log(data);
@@ -1774,9 +1914,59 @@ export class AddPropertyComponentComponent implements OnInit {
   handleOk() {
     this.UpdatecloseModal();
     // Execute your actions
-    this.editclicked = false;
-    this.addnewPropertyclicked = false;
-    this.fetchProperties();
+    if(!this.propertyImagesClicked && !this.propertyFloorImagesClicked && !this.propertyVideosClicked && !this.propertyDocumentsClicked){
+      this.editclicked = false;
+      this.addnewPropertyclicked = false;
+      this.fetchProperties();
+    }
+    
   }
 
+  clearContent(editorId: string): void {
+    this.propertyform.get('Description')?.setValue('');
+    this.propertyform.get('SpecificDescription')?.setValue('');
+
+    const quillEditor = document.getElementById(editorId) as any;
+    if (quillEditor && quillEditor.__quill) {
+      quillEditor.__quill.root.innerHTML = '';
+    }
+  }
+
+
+  makeImageDefault(propID: string, imageID: number) {
+    // Find the image by matching imageID with the image id in the array
+    const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
+  
+    if (selectedImage) {
+      // Set the selected image as default
+      selectedImage.DefaultImage = "1"; // "1" means default image
+  
+      // Set all other images' DefaultImage to "0"
+      this.uploadedImages1.forEach(img => {
+        if (img.id !== imageID) {
+          img.DefaultImage = "0"; // "0" means not a default image
+        }
+      });
+  
+      // Reorder the array to ensure the default image appears first
+      this.uploadedImages1 = [
+        selectedImage, 
+        ...this.uploadedImages1.filter(img => img.id !== imageID)
+      ];
+  
+      // Update the database to reflect the change (update the default image)
+      this.updateDefaultImageInDatabase(propID, imageID);
+    }
+  }
+  
+  updateDefaultImageInDatabase(propID: string, imageID: number) {
+    console.log("selected ImageID:",imageID);
+    this.http.put(`https://localhost:7190/api/Users/update-default-image/${propID}/${imageID}`, {})
+      .subscribe(response => {
+        console.log('Default image updated successfully');
+      }, error => {
+        console.error('Error updating default image:', error);
+      });
+  }
+  
 }

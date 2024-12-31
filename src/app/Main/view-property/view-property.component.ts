@@ -186,14 +186,14 @@ export class ViewPropertyComponent implements OnInit {
               propertyArea: response.totalArea || 'Area not available',
               propertyBeds: response.noOfBedrooms || 'Beds not available',
               propertyBathrooms: response.noOfBathrooms || 'Bathrooms not available',
-              propertyType: response.propertyType || 'Unknown Type',
+              propertyType: response.propertyTypeName || 'Unknown Type',
               propertyImages: imageUrls, // Set the array of image URLs
               propertyVideos:VideoUrls,
               propertyparking:response.noOfParkings,
               propertyfacing:PropertyFacing,
               propertyAvailability:propertyBadge,
               propertyBadgeColor: propertyBadgeColor,
-              propertyCity:response.city,
+              propertyCity:response.cityName,
               propertyZipCode:response.zipCode,
               GmapUrl:response.googleLocationurl,
               propertydescription:response.description,
@@ -488,6 +488,10 @@ sendEmail() {
     console.error('Error sending email:', error);
     alert('Failed to send email. Please try again later.');
   });
+}
+
+sanitizeHtml(content: string): SafeHtml {
+  return this.sanitizer.bypassSecurityTrustHtml(content);  
 }
 
 }
