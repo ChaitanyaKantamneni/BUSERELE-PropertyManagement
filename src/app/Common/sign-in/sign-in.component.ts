@@ -161,7 +161,7 @@ export class SignInComponent implements OnInit {
 
   private addSessionTimeoutListeners(): void {
     let sessionTimeoutId: any;
-    const sessionTimeoutDuration = 30 * 60 * 1000; // 30 minutes
+    const sessionTimeoutDuration = 30 * 60 * 1000; 
 
     const resetSessionTimeout = () => {
       clearTimeout(sessionTimeoutId);

@@ -31,7 +31,8 @@ export class TopNavComponent implements OnInit {
   {
     navname:'Contact',
     navurl:'/contact-us'
-  }
+  },
+  
 ];
 
 signinORsignup(){
