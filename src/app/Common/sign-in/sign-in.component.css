@@ -245,6 +245,35 @@
 
   .ForgetAndReg .btn{
     width:49%;
+    background-color: transparent;
+    border: none;
+    color: black;
+    font-size: 13px;
+    text-align: left;
+    padding: 0px;
+  }
+
+  .ForgetAndReg .btn:hover{
+    color: #5c9dfc;
+    font-size: 15px;
+  }
+
+  .btn-registration{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 49%;
+  }
+
+  .btn-registration p{
+    font-size: 11px;
+    margin: 0px;
+  }
+
+  .btn-registration .btn{
+    padding: 0px;
+    width: auto;
+    padding-left: 4px;
   }
   
   
