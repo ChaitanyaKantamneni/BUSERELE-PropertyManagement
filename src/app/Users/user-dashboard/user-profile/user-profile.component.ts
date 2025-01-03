@@ -1,23 +1,24 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-user-profile',
   standalone: true,
   imports: [HttpClientModule,FormsModule,ReactiveFormsModule,NgClass,NgIf],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  templateUrl: './user-profile.component.html',
+  styleUrl: './user-profile.component.css'
 })
-export class ProfileComponent implements OnInit {
-
-  constructor(private apihttp: HttpClient) {}
+export class UserProfileComponent implements OnInit {
+  constructor(private apihttp: HttpClient,private router: Router) {}
 
   ngOnInit(): void {
     // Initialize the form
     this.profileform.reset();
     const UserID = localStorage.getItem('email') as string;
+    this.ProfileDeactivatedSuccesful=false;
     this.getProfileDet(UserID);
     this.fetchProfileimage(UserID);
   }
@@ -44,7 +45,8 @@ export class ProfileComponent implements OnInit {
   }
 
   isModalOpen = false;
-  ProfileUpdateStatus: boolean = false; // Flag to control modal status
+  ProfileUpdateStatus: boolean = false;
+  ProfileDeactivatedSuccesful:boolean=false;
   updateStausMessage:string='';
 
   // Image preview state
@@ -157,7 +159,14 @@ export class ProfileComponent implements OnInit {
 
   // Handle "OK" button click
   handleOk() {
-    this.closeModal();
+    if(this.ProfileDeactivatedSuccesful==true){
+      this.router.navigate(['/signin'])
+      localStorage.clear();
+      this.closeModal();
+    }
+    else{
+      this.closeModal();
+    }
   }
 
   changePasswordClicked:boolean=false;
@@ -195,19 +204,22 @@ export class ProfileComponent implements OnInit {
     });
   }
   
-  deactivateAccount(email: string): void{
-    const url = `https://localhost:7190/api/Users/DeactivateAccount?email=${email}`;
-    this.apihttp.put(url,{}).subscribe({
+  deactivateAccount(): void{
+    const email=this.profileform.get('email')?.value;
+    const url = `https://localhost:7190/api/Users/DeactivateAccount/${email}`;
+    this.apihttp.put<any>(url,{}).subscribe({
       next: (response:any) => {
         if (response && response.statusCode) {
           if(response.statusCode="200"){
             this.updateStausMessage=response.message;
             this.ProfileUpdateStatus = true;
+            this.ProfileDeactivatedSuccesful=true;
             this.isModalOpen = true;
           }
           else{
             this.updateStausMessage=response.message;
             this.ProfileUpdateStatus = false;
+            this.ProfileDeactivatedSuccesful=false;
             this.isModalOpen = true;
           }
         } else {
@@ -217,6 +229,7 @@ export class ProfileComponent implements OnInit {
       error: (error) => {
         console.error('Error updating profile', error);
         this.ProfileUpdateStatus = false;
+        this.ProfileDeactivatedSuccesful=false;
         this.isModalOpen = true;
       }
     })

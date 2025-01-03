@@ -615,7 +615,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
       next: (response: any) => {
         alert('We have received your enquiry. Our team will contact you soon...!');
         this.routes.navigate(['/home']);
-        this.sendEmail();
+        // this.sendEmail();
       },
       error: (error) => {
         console.error("Error details:", error);

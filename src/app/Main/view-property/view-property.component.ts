@@ -454,7 +454,7 @@ enquiryformsubmit() {
     next: (response: any) => {
       alert('We have received your enquiry. Our team will contact you soon...!');
       this.router.navigate(['/home']);
-      this.sendEmail();
+      // this.sendEmail();
     },
     error: (error) => {
       console.error("Error details:", error);

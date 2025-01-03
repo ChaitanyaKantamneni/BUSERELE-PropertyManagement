@@ -25,6 +25,7 @@ import { authGuard } from './auth.guard';
 import { userAuthGuard } from './user-auth.guard';
 import { ForgotPasswordComponent } from './Common/forgot-password/forgot-password.component';
 import { DescriptionComponentComponent } from './Users/user-dashboard/description-component/description-component.component';
+import { UserProfileComponent } from './Users/user-dashboard/user-profile/user-profile.component';
 
 
 export const routes: Routes = [
@@ -60,7 +61,7 @@ export const routes: Routes = [
         children:
         [
             {path:'',component:UserDashboardViewComponent},
-            {path:'profile',component:ProfileComponent},
+            {path:'profile',component:UserProfileComponent},
             //{path:'membership-details',component:MembershipDetComponent},
             // {path:'addpropertysample',component:AddpropertysampleComponent},
             {path:'UserAddProperty',component:AddPropertyByUserComponent},

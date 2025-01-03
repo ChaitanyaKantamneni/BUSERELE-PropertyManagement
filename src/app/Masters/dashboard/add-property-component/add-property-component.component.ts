@@ -4,7 +4,6 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QuillModule,QuillEditorComponent } from 'ngx-quill';
-import Compress from 'compress.js'; 
 
 
 interface Amenity {
@@ -45,12 +44,8 @@ export class AddPropertyComponentComponent implements OnInit {
   fetchProperties(): void {
     this.http.get('https://localhost:7190/api/Users/GetAllPropertyDetails')
       .subscribe((response: any) => {
-  
-        // Map the response to extract only the propID, propname, developedby, and status fields
         this.properties = response.map((property: any) => {
-          // Determine the PropertyStatus based on the activeStatus of the property
           let PropertyStatus: string = '';
-  
           if (property.activeStatus === "2") {
             PropertyStatus = "Not Approved";
           } else if (property.activeStatus === "1") {
@@ -69,7 +64,7 @@ export class AddPropertyComponentComponent implements OnInit {
           console.log("property Status:",property.propActiveStatus);
   
           return {
-            propID: property.propID,            // Adjust field names if necessary
+            propID: property.propID,
             propname: property.propname,
             developedby: property.developedby,
             status: PropertyStatus,
@@ -83,6 +78,9 @@ export class AddPropertyComponentComponent implements OnInit {
       });
   }
 
+  // postalCode:[Validators.required, Validators.pattern(/^\d{6}$/)]
+  // totalNoOfFlats,blockname,NumberofBedrooms,CarpetArea,AmenitiesCharges=, [Validators.required, Validators.min(1)]
+  // buildYear=, [Validators.required, Validators.pattern(/^\d{4}$/)]
   
   propertyform: FormGroup = new FormGroup({
     id: new FormControl(),
@@ -90,48 +88,48 @@ export class AddPropertyComponentComponent implements OnInit {
     DevelopedBy: new FormControl('', [Validators.required]),
     MobileNumber: new FormControl('', [Validators.required]),
     EmailID: new FormControl('', [Validators.required, Validators.email]),
-    Address: new FormControl('', [Validators.required]),
+    Address: new FormControl(''),
     LandMark: new FormControl(),
     Country: new FormControl('', [Validators.required]),
     State: new FormControl('', [Validators.required]),
     City: new FormControl('', [Validators.required]),
-    NearBy: new FormControl('', [Validators.required]),
-    PostalCode: new FormControl('', [Validators.required, Validators.pattern(/^\d{6}$/)]),
-    CertificateNumber: new FormControl('', [Validators.required]),
-    PropertyApprovedBy: new FormControl('', [Validators.required]),
-    PropertyType: new FormControl('', [Validators.required]),
-    PropertyFor: new FormControl('', [Validators.required]),
-    PropertyStatus: new FormControl('', [Validators.required]),
-    PropertyFacing: new FormControl('', [Validators.required]),
-    TotalBlocks: new FormControl('', [Validators.required, Validators.min(1)]),
-    TotalFloors: new FormControl('', [Validators.required, Validators.min(1)]),
-    TotalNoOfFlats: new FormControl('', [Validators.required, Validators.min(1)]),
-    BlockName: new FormControl('', [Validators.required, Validators.min(1)]),
+    NearBy: new FormControl(''),
+    PostalCode: new FormControl(''), 
+    CertificateNumber: new FormControl(''),
+    PropertyApprovedBy: new FormControl(''),
+    PropertyType: new FormControl(''),
+    PropertyFor: new FormControl(''),
+    PropertyStatus: new FormControl(''),
+    PropertyFacing: new FormControl(''),
+    TotalBlocks: new FormControl(''),
+    TotalFloors: new FormControl(''),
+    TotalNoOfFlats: new FormControl(''),
+    BlockName: new FormControl(''),
     PropertyOnWhichFloor: new FormControl(''),
-    NumberofBedrooms: new FormControl('', [Validators.required, Validators.min(1)]),
+    NumberofBedrooms: new FormControl(''),
     NumberofBathrooms: new FormControl(''),
     NumberofBalconies: new FormControl(''),
     NumberofParkings: new FormControl(''),
     AreaType: new FormControl('', [Validators.required]),
     TotalArea: new FormControl('', [Validators.required, Validators.min(1)]),
-    CarpetArea: new FormControl('', [Validators.required, Validators.min(1)]),
+    CarpetArea: new FormControl(''),
     PriceFor: new FormControl('', [Validators.required, Validators.min(1)]),
     PropertyTotalPrice: new FormControl({ value: '', disabled: true }),
-    AmenitiesCharges: new FormControl('', [Validators.required, Validators.min(1)]),
+    AmenitiesCharges: new FormControl(''),
     MaintenanceCharges: new FormControl(''),
     CorpusFund: new FormControl(''),
-    BuildYear: new FormControl('', [Validators.required, Validators.pattern(/^\d{4}$/)]),
+    BuildYear: new FormControl(''),
     PossessionDate: new FormControl(''),
     ListDate: new FormControl(''),
     
-    Description: new FormControl('', [Validators.required]),
+    Description: new FormControl(''),
     SpecificDescription: new FormControl(''),
     
     WebsiteUrl: new FormControl(''),
     Pinteresturl: new FormControl(''),
     Facebookurl: new FormControl(''),
     Twitterurl: new FormControl(''),
-    GoogleLocationurl: new FormControl('', [Validators.required]),
+    GoogleLocationurl: new FormControl(''),
     AvailabilityOptions: new FormControl()
   });
   
@@ -1537,17 +1535,6 @@ export class AddPropertyComponentComponent implements OnInit {
     this.http.put(`https://localhost:7190/api/Users/updatePropertyDet/${this.propID}`, data, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
-      // next: (response: any) => {
-      //   this.propertyInsStatus = response.Message;
-      //   console.log("Updated Property Details Successfully:", response);
-      //   this.editclicked=false;
-      //   this.addnewPropertyclicked=false;
-      // },
-      // error: (error) => {
-      //   this.propertyInsStatus = "Error Inserting Property.";
-      //   console.error("Error details:", error);
-      //   console.log("Full Error Object:", error);
-      // }
       next: (response: any) => {
         if (response.statusCode == "200") {
           this.propertyInsStatus = "Property updated successfully!";

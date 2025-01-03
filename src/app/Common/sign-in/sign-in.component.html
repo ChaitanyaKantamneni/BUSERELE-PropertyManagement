@@ -78,8 +78,11 @@
       <button type="submit" [disabled]="LoginForms.invalid" [ngClass]="color">SIGN IN</button>
     </div>
     <div class="ForgetAndReg">
-      <button type="submit" routerLink="/forgot-password" class="btn">Forgot Password</button>
-      <button type="submit" routerLink="/sign-up" class="btn">Register</button>
+      <button routerLink="/forgot-password" class="btn">Forgot Password</button>
+      <div class="btn-registration">
+        <p>Not a member? </p>
+        <button routerLink="/sign-up" class="btn">Register</button>
+      </div>
     </div>
     <p [ngClass]="color.red ? 'text-danger' : (color.green ? 'text-success' : '')">{{ LoginStatus }}</p>
   </form>
