@@ -42,43 +42,35 @@ export class Home1Component implements OnInit,AfterViewInit  {
     }
   ];
   
-  propertytypes:any[]=[{
-    icon:'fa-building',
-    name:'Apartments/Flats',
-    propertyType:'1',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-landmark',
-    name:'Villa',
-    propertyType:'2',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-home',
-    name:'Home',
-    propertyType:'3',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-hotel',
-    name:'Office Space',
-    propertyType:'4',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-city',
-    name:'Commercial Space',
-    propertyType:'5',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-building',
-    name:'Studio Apartment',
-    propertyType:'6',
-    propertiesCount:''
+  // propertytypes:any[]=[{
+  //   icon:'',
+  //   name:'',
+  //   propertyType:'',
+  //   propertiesCount:''
+  // }
+  // ]
+
+  propertytypes:any[]=[];
+
+  getPropertTypes(): void {
+    this.apiurl.get('https://localhost:7190/api/Users/GetAllPropertyTypes')
+      .subscribe((response: any) => {
+        console.log('API response:', response);
+        if (response && Array.isArray(response.data)) {
+          // Map the response data to the aminities array
+          this.propertytypes = response.data.map((data: any) => ({
+            propertyTypeID: data.propertyTypeID,
+            name: data.name,
+            description: data.description
+          }));
+        } else {
+          console.error('Unexpected response format or no reviews found');
+          this.propertytypes = [];
+        }
+      }, error => {
+        console.error('Error fetching reviews:', error);
+      });
   }
-  ]
   propertyFor: string = '';
   isLoadingAdvProperty: boolean = false;
   isLoadingFeaProperty:boolean=false;
@@ -98,7 +90,24 @@ export class Home1Component implements OnInit,AfterViewInit  {
 
     this.loadPropertyDetails();
     this.loadFeaturedPropertyDetails();
+    this.intervalId = setInterval(() => {
+      this.loadProperties();  // Update displayed properties every 30 seconds
+    }, 30000);
     this.getTestimonials();
+    this.getPropertTypes();
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId); // Cleanup the interval on destroy
+    }
+  }
+
+  // Method to load properties continuously
+  loadProperties(): void {
+    const propertiesToDisplay = this.FeaturedProperties.slice(this.currentIndex, this.currentIndex + 3);
+    this.displayedProperties = propertiesToDisplay;
+    this.currentIndex = (this.currentIndex + 3) % this.FeaturedProperties.length;
   }
 
   getTestimonials() {
@@ -674,4 +683,25 @@ export class Home1Component implements OnInit,AfterViewInit  {
       alert('Failed to send email. Please try again later.');
     });
   }
+
+  scrollLeft() {
+    const scrollContainer = document.querySelector('.scrollable-properties');
+    if (scrollContainer) {
+      scrollContainer.scrollBy({ left: -300, behavior: 'smooth' }); // Scroll left by 300px
+    }
+  }
+
+  // Method to scroll right
+  scrollRight() {
+    const scrollContainer = document.querySelector('.scrollable-properties');
+    if (scrollContainer) {
+      scrollContainer.scrollBy({ left: 300, behavior: 'smooth' }); // Scroll right by 300px
+    }
+  }
+
+
+  displayedProperties: any[] = [];
+  currentIndex = 0;
+  intervalId: any;
+  isLoadingFeaProperty1 = false;
 }
