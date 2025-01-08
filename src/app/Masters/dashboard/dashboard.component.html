@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
+          <a class="nav-link" routerLink="/dashboard/dashboarddet"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="propertyDropdown" role="button" data-bs-toggle="dropdown">
@@ -18,6 +18,9 @@
             <li><a class="dropdown-item" routerLink="/dashboard/add-property"><i class="fa fa-plus"></i> Add Property</a></li>
             <li><a class="dropdown-item" routerLink="/dashboard/amenities"><i class="fa fa-plus"></i> Add Amenities</a></li>
           </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard/blog"><i class="fas fa-user"></i> Blog</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard/profile"><i class="fas fa-user"></i> My Profile</a>
@@ -68,9 +71,9 @@
             <i class="fas fa-comment"></i>
             <span *ngIf="isExpanded">User Reviews</span>
           </li>
-          <li routerLink="/dashboard/displayimage">
+          <li routerLink="/dashboard/blog">
             <i class="fas fa-info-circle"></i>
-            <span *ngIf="isExpanded">Enquiries</span>
+            <span *ngIf="isExpanded">Blog</span>
           </li>
         </ul>
         <ul class="menu">

@@ -26,7 +26,7 @@ import { userAuthGuard } from './user-auth.guard';
 import { ForgotPasswordComponent } from './Common/forgot-password/forgot-password.component';
 import { DescriptionComponentComponent } from './Users/user-dashboard/description-component/description-component.component';
 import { UserProfileComponent } from './Users/user-dashboard/user-profile/user-profile.component';
-import { BlogComponent } from './Masters/dashboard/blog/blog.component';
+import { BlogComponentComponent } from './Masters/dashboard/blog-component/blog-component.component';
 
 
 export const routes: Routes = [
@@ -55,8 +55,7 @@ export const routes: Routes = [
             {path:'dashboarddet',component:DashboardcomponentComponent},
             {path:'userReviews',component:Review1Component},
             {path:'addpropertytype',component:PropertyForComponent},
-            {path:'blog',component:BlogComponent}
-
+            {path:'blog',component:BlogComponentComponent}
         ]
     },
     {path:'UserDashboard',component:UserDashboardComponent,
