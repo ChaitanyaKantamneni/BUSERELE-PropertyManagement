@@ -437,7 +437,7 @@
               </div>
             </div>
             
-            <div class="formDescriptions reviewcardPropertyView mt-4">
+            <!-- <div class="formDescriptions reviewcardPropertyView mt-4">
               <div class="PageHeading mb-3">
                 <h5 class="text-center m-0"><b>PROPERTY DESCRIPTION</b></h5>
               </div>
@@ -453,8 +453,43 @@
                   <label for="SpecificDescription">Specific Description</label>
                 </div>
               </div>
-            </div>
+            </div> -->
   
+            <div class="formDescriptions reviewcardPropertyView mt-4">
+              <div class="PageHeading mb-3">
+                <h5 class="text-center m-0"><b>PROPERTY DESCRIPTION</b></h5>
+              </div>
+              <div class="form-group">
+                <div class="input-container">
+                  <!-- <textarea id="Description" type="text" placeholder="Description" rows="4" formControlName="Description" class="form-control" ></textarea>  -->
+                  <quill-editor
+                  formControlName="Description"
+                  id="Description"
+                  [modules]="editorConfig"
+                  class="custom-quill-editor"
+                  placeholder="Description"
+                ></quill-editor>
+            
+                <button class="clear-btn" type="button" (click)="clearContent('Description')">Clear Description</button>
+                  <label for="Description">Description</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-container">
+                  <!-- <textarea id="SpecificDescription" type="text" placeholder="Specific Description" rows="4" formControlName="SpecificDescription" class="form-control"></textarea>  -->
+                  <quill-editor
+                  formControlName="SpecificDescription"
+                  id="SpecificDescription"
+                  [modules]="editorConfig"
+                  class="custom-quill-editor"
+                  placeholder="Specific Description"
+                ></quill-editor>
+            
+                <button class="clear-btn" type="button" (click)="clearContent('SpecificDescription')">Clear Specific Description</button>
+                  <label for="SpecificDescription">Specific Description</label>
+                </div>
+              </div>
+            </div>
             <div class="propertyMedia reviewcardPropertyView mt-4">
               <div class="PageHeading mb-3">
                 <h5 class="text-center m-0"><b>MEDIA</b></h5>
