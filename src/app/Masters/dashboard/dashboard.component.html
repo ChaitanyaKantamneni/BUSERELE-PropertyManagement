@@ -23,6 +23,10 @@
           <a class="nav-link" routerLink="/dashboard/profile"><i class="fas fa-user"></i> My Profile</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard/blog"><i class="fas fa-user"></i>Blog</a>
+        </li>
+      
+        <li class="nav-item">
           <a class="nav-link" (click)="logout()"><i class="fa fa-sign-out-alt"></i> Logout</a>
         </li>
       </ul>
@@ -70,6 +74,10 @@
           </li>
         </ul>
         <ul class="menu">
+          <li routerLink="/dashboard/blog">
+            <i class="fas fa-user"></i>
+            <span *ngIf="isExpanded">Blog</span>
+          </li>
           <li routerLink="/dashboard/profile">
             <i class="fas fa-user"></i>
             <span *ngIf="isExpanded">My Profile</span>

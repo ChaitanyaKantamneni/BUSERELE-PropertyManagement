@@ -1,4 +1,4 @@
-
+<!-- 
 <div style="text-align: center;">
     <h1>Contact Us</h1>
 </div>
@@ -43,7 +43,7 @@
            <!-- <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509123!2d144.9537353153163!3d-37.81627997975157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11f5b3%3A0x5045675218ceed30!2sYour%20Location!5e0!3m2!1sen!2sau!4v1616161616161!5m2!1sen!2sau"
                 style="border:0;" allowfullscreen="" loading="lazy">
-            </iframe> --> 
+            </iframe> ---
             <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509123!2d78.4751317!3d17.4784881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9be6a16fede3%3A0x4c28311053c6b9fe!2sGVR%20Infosystems%20Pvt.%20Ltd.%2C%20Opp%3A%20Tata%20Motors%20Service%20Centre%2C%20Plot%20No%203%2C%203rd%20Floor%2C%20Sri%20Sai%20Enclave%2C%20Old%20Bowenpally%2C%20Hyderabad%2C%20Telangana%20500011!5e0!3m2!1sen!2sin!4v1616161616161!5m2!1sen!2sin"
             style="border:0;" allowfullscreen="" loading="lazy">
@@ -70,4 +70,165 @@
         </div>
     </div>
 
+ -->
 
+
+
+
+ <!-- <app-topnav></app-topnav>
+<div style="text-align: center;">
+    <h1>Contact Us</h1>
+</div>
+<div class="contact-section">
+    <div class="contact-info">
+        <div class="contact-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Corporate Office</h3>
+            <p>
+                Plot No. 3, 3rd Floor, Sri Sai Enclave,<br>
+                Opp: Tata Service Center, Old Bowenpally, HYDERABAD, INDIA
+            </p>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Direct Contact</h3>
+            <p>
+                <strong>Phone:</strong> +91 000000000<br>
+                <strong>Email:</strong> support.com<br>
+                <strong>Website:</strong> www.gvrinfosystems.com
+            </p>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-business-time"></i>
+            <h3>Business Hours</h3>
+            <p>
+                <strong>Monday-Saturday:</strong> 10AM - 8PM<br>
+                <strong>Sunday:</strong> Closed
+            </p>
+        </div>
+    </div>
+</div>
+<div class="main-content">
+    <div class="map-view">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509123!2d78.4751317!3d17.4784881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9be6a16fede3%3A0x4c28311053c6b9fe!2sGVR%20Infosystems%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1616161616161!5m2!1sen!2sin"
+            style="border:0;" allowfullscreen="" loading="lazy">
+        </iframe>
+    </div>
+    <div class="contact-form">
+        <h3>Send Us a Message</h3>
+        <form>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Message:</label>
+                <textarea id="message" name="message" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Send Message</button>
+        </form>
+    </div>
+</div>
+<app-footer></app-footer> -->
+
+
+<app-top-nav-1></app-top-nav-1>
+<div class="contact-header">
+    <h1>Contact Us</h1>
+    <p routerLink="/home">Home / Contact Us</p>
+ </div>
+ <div class="contact-container" style="margin: 0px 125px;">
+   
+    <h2>We're always eager to hear from you!</h2>
+    <p></p>
+    <div class="contact-container">
+        <div class="contact-details">
+            <div class="contact-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                    <h4 style="font-weight: bold;">Address</h4>
+                    <p>
+                        Plot No. 3, 3rd Floor, Sri Sai Enclave,<br>
+                        Opp: Tata Service Center, Old Bowenpally, HYDERABAD, INDIA
+                    </p>
+                </div>
+            </div>
+            <div class="contact-card">
+                <i class="fas fa-phone"></i>
+                <div>
+                    <h4 style="font-weight: bold;">Contact</h4>
+                    <p style="font-weight: lighter;">
+                        <strong>Phone:</strong> +91 000000000<br>
+                        <strong>Email:</strong> {{ Email }}<br>
+                        <strong>Website:</strong> www.gvrinfosystems.com
+                    </p>
+                </div>
+            </div>
+            <div class="contact-card">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <h4 style="font-weight: bold;">Business Hours</h4>
+                    <p style="font-weight: lighter;">
+                        <strong>Monday-Friday:</strong> 9:30AM - 6PM<br>
+                        <strong>Saturday-Sunday:</strong> Closed
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="map">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509123!2d78.4751317!3d17.4784881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9be6a16fede3%3A0x4c28311053c6b9fe!2sGVR%20Infosystems%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1616161616161!5m2!1sen!2sin"
+            allowfullscreen=""
+            loading="lazy"
+        ></iframe>
+    </div>
+
+
+        <div class="email-form" style="margin: 0px 100px;">
+            <h3>Send Us An Email</h3>
+            <form [formGroup]="userEnquiryform" (submit)="enquiryformsubmit()">
+                <div class="form-group">
+                    <div class="input-container">
+                        <input
+                            type="text"
+                            id="Name"
+                            name="name"
+                            [(ngModel)]="name"
+                            placeholder=" "
+                            required formControlName="name"/>
+                        <label for="Name">Name</label>
+                    </div>
+                    <div class="input-container">
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            [(ngModel)]="email"
+                            placeholder=" "
+                            required  formControlName="email"/>
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+                <div class="input-container full-width">
+                    <textarea
+                        [(ngModel)]="message"
+                        name="message"
+                        rows="5"
+                        placeholder=" "
+                        required formControlName="message"></textarea>
+                    <label>Enter Your Message</label>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        
+</div>
+  

@@ -1909,15 +1909,36 @@ export class AddPropertyComponentComponent implements OnInit {
     
   }
 
-  clearContent(editorId: string): void {
-    this.propertyform.get('Description')?.setValue('');
-    this.propertyform.get('SpecificDescription')?.setValue('');
+  // clearContent(editorId: string): void {
+  //   this.propertyform.get('Description')?.setValue('');
+  //   this.propertyform.get('SpecificDescription')?.setValue('');
 
-    const quillEditor = document.getElementById(editorId) as any;
-    if (quillEditor && quillEditor.__quill) {
-      quillEditor.__quill.root.innerHTML = '';
+  //   const quillEditor = document.getElementById(editorId) as any;
+  //   if (quillEditor && quillEditor.__quill) {
+  //     quillEditor.__quill.root.innerHTML = '';
+  //   }
+  // }
+
+  
+
+  clearContent(editorId: string): void {
+    if (editorId === 'Description') {
+      this.propertyform.controls['Description'].setValue('');
+      const quillEditor = document.getElementById('Description') as any;
+      if (quillEditor && quillEditor.__quill) {
+        quillEditor.__quill.root.innerHTML = '';  
+      }
+    } else if (editorId === 'SpecificDescription') {
+      this.propertyform.controls['SpecificDescription'].setValue('');
+      const quillEditor = document.getElementById('SpecificDescription') as any;
+      if (quillEditor && quillEditor.__quill) {
+        quillEditor.__quill.root.innerHTML = '';  
+      }
     }
   }
+  
+
+
 
 
   makeImageDefault(propID: string, imageID: number) {

@@ -1,0 +1,87 @@
+
+<form [formGroup]="propertytype" (ngSubmit)="onSubmit()" class="editor-container">
+  
+    <div class="card-body">
+      
+      <div class="left-side">
+        <div class="PageHeading">
+          <h2 class="text-center m-0"><b> BLOG </b></h2>
+        </div>
+        
+
+        <div class="form-group">
+          <div class="input-container">
+            <input 
+              type="text" 
+              id="Name" 
+              formControlName="Name" 
+              class="form-control" 
+              placeholder="" 
+              required 
+              autocomplete="off" 
+            />
+            <label for="Name" class="editor-label">TITLE:</label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div>
+            <label for="Blog" class="editorblog-label">BLOG:</label>
+            <button class="clear-btn" type="button" (click)="clearContent('Blog')">Clear Blog</button>
+          </div>
+          
+          <quill-editor
+            formControlName="Blog" id="Blog"
+            [modules]="editorConfig" class="custom-quill-editor" placeholder="Start typing here..."></quill-editor>
+
+
+            
+        </div>
+        
+        
+      </div>
+
+      <div class="right-side">
+        <div class="upload-container">
+          <div class="drag-and-drop">
+            <div>
+              <i class="fas fa-upload upload-icon"></i>
+            </div>
+            <div>
+              <label class="drag-label">Drag and Drop Files Here or</label>
+            </div>
+            <div>
+              <button class="browse-btn" type="button" (click)="fileInput.click()">Browse</button>
+            </div>
+            <input type="file" #fileInput (change)="onFilesSelected($event)" accept="image/*" hidden />
+            <ul class="file-list">
+              <li *ngFor="let file of files">
+                <span>{{ file.name }}</span>
+                <button type="button" class="remove-btn" (click)="removeFile(file)">x</button>
+                <button type="button" class="view-btn" (click)="viewImage(file)">
+                  <i class="fas fa-eye"></i> 
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  <button type="submit" class="submit-btn" [disabled]="!propertytype.valid || !imageUrl">Submit Blog</button>
+</form>
+
+<div class="modal" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <img [src]="imageUrl" alt="Image Preview" class="modal-image">
+    <button class="close-btn" (click)="closeModal()">X</button>
+  </div>
+</div>
+
+
+<div class="card" *ngIf="imageUrl && blogText">
+  <div class="card-body">
+    <img [src]="imageUrl" alt="Uploaded Image" class="card-img-top">
+    <div class="card-text" [innerHTML]="sanitizeHtml(blogText)"></div>
+  </div>
+</div>
