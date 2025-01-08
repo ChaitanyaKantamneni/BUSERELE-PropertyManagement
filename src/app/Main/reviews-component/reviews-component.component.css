@@ -1,0 +1,96 @@
+.container{
+    max-width: 100%;
+}
+
+.preloader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.preloader img {
+    width: 100px; 
+}
+
+.Testimonials .browsemoreproperties .btn{
+    background-color: transparent;
+    border: dotted;
+    color: black;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+.Testimonials .browsemoreproperties .btn:hover{
+    background-color: #2495FD;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+.Testimonials .image{
+    height: 100px;
+    width: 50%;
+    border-radius: 50%;
+}
+
+.Testimonials .bold-text {
+    font-weight: bold;
+    font-size: x-large;
+    font-family: 'Arial Rounded MT Bold', serif;
+}
+
+.review-container {
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    width: 100%;
+}
+  
+.review-content {
+    display: inline-flex;
+    animation: scroll 20s linear infinite;
+}
+
+.review-container{
+    width: 75%;
+}
+
+.review-card {
+    display: inline-block;
+    width: 250px;
+    margin-right: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    vertical-align: top;
+    padding: 10px;
+}
+  
+.review-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+
+.review-text {
+        width: 100%; 
+        padding: 10px;
+        text-align: center;
+}
+    
+.review-text-content {
+        display: block;
+        word-wrap: break-word;
+        white-space: normal; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 100px;
+        line-height: 1.5;
+        font-size: 1rem;
+        font-family: 'Arial', sans-serif; 
+        color: #333; 
+        font-style: italic;
+} 

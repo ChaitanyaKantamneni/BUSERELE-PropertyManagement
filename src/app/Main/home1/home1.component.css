@@ -9,6 +9,73 @@
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
+
+.AdvertisingPropertiesAdds{
+    height: 100%;
+    width: 25%;
+    border-left: 1px solid black;
+    /* background: #fff;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 15px rgba(221, 221, 221, 0.56); */
+}
+
+.AdvertisingPropertiesAdds .badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    color: white;
+    font-size: 11px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.AdvertisingPropertiesAdds .propertyFulldet{
+    border-radius: 15px;
+}
+
+.AdvertisingPropertiesAdds .propertyFulldet img{
+    border-radius: 15px 0px 0px 15px;
+}
+
+.AdvertisingPropertiesAdds .propertyFulldet .propertyDetails{
+    border-radius: 0px 15px 15px 0px;
+}
+
+.AdvertisingPropertiesAdds .propertyImage{
+    height: 86px;
+    width: 30%;
+}
+
+.AdvertisingPropertiesAdds .propertyDetails{
+    height: 86px;
+    width: 70%;
+}
+
+/* .AdvertisingPropertiesAdds .propertyDetails h5{
+    font-size: 17px;
+} */
+
+.AdvertisingPropertiesAdds .propertyDetails i,.AdvertisingPropertiesAdds .propertyDetails .ms-2{
+    font-size: 11px;
+}
+.AdvertisingPropertiesAdds .propertyDetails p{
+    font-size: 13px;
+}
+.AdvertisingPropertiesAdds .propertyDetails .price p{
+    font-size: 12px;
+}
+
+.AdvertisingPropertiesAdds .propertyFulldet{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    height: auto;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
   
 .preloader img {
     width: 100px; 
@@ -181,10 +248,23 @@ select.form-control option:disabled {
 }
 
 .ExploreAdertisingProperties{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    margin: 10px 0px;
+}
+
+.ExploreAdertisingProperties .container{
+    width: 74%;
     margin: 50px 0px;
 }
+
+.AdvertisingPropertiesAdds .ExploreFeaturedProperties .container{
+    width: 100%;
+}
 .ExploreFeaturedProperties,.Testimonials{
-    margin: 80px 40px;
+    margin: 40px 20px;
 }
 
 .ServiceDiv .bold-text1 {
@@ -373,7 +453,6 @@ select.form-control option:disabled {
 .propertyDetails {
     height: 40%;
     padding: 15px;
-    background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
@@ -435,6 +514,24 @@ select.form-control option:disabled {
 .smaller-text,.small-icon {
     font-size: 12px; /* Adjust as needed */
 }
+
+.propertyspecifications h5{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+
+.propertyaddress{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+.cost{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+}
   
 
 @keyframes scroll {
@@ -452,11 +549,15 @@ select.form-control option:disabled {
         height: 80vh;
     }
     .properties .col-lg-3,.row .col-lg-4{
-        width: 22%;
+        width: 32%;
         margin: 0 10px;
     }
     .browsemoreproperties .btn{
-        width: 25%;
+        width: 40%;
+    }
+
+    .ExploreAdertisingProperties .AdvertisingPropertiesAdds .btn{
+        width:100%;
     }
     .Testimonials .browsemoreproperties{
         width: 100%;

@@ -115,6 +115,12 @@
     margin-top: 20px;
   }
 
+  td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+  }
+  
   .updatestatusbuttons .decline{
     margin-right: 20px;
     background-color: red;

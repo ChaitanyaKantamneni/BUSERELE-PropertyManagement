@@ -16,6 +16,16 @@ import { Home1Component } from './Main/home1/home1.component';
 import { Review1Component } from './Masters/dashboard/review1/review1.component';
 import { AddAminities1Component } from './Masters/dashboard/add-aminities1/add-aminities1.component';
 import { AddPropertyComponentComponent } from './Masters/dashboard/add-property-component/add-property-component.component';
+import { ReviewsComponentComponent } from './Main/reviews-component/reviews-component.component';
+import { PropertyForComponent } from './Masters/dashboard/property-for/property-for.component';
+import { UserDashboardComponent } from './Users/user-dashboard/user-dashboard.component';
+import { UserDashboardViewComponent } from './Users/user-dashboard/user-dashboard-view/user-dashboard-view.component';
+import { AddPropertyByUserComponent } from './Users/user-dashboard/add-property-by-user/add-property-by-user.component';
+import { authGuard } from './auth.guard';
+import { userAuthGuard } from './user-auth.guard';
+import { ForgotPasswordComponent } from './Common/forgot-password/forgot-password.component';
+import { DescriptionComponentComponent } from './Users/user-dashboard/description-component/description-component.component';
+import { UserProfileComponent } from './Users/user-dashboard/user-profile/user-profile.component';
 
 
 export const routes: Routes = [
@@ -25,11 +35,14 @@ export const routes: Routes = [
     {path:'about-us',component:AboutUsComponent},
     {path:'signin',component:SignInComponent},
     {path:'sign-up',component:SignUpComponent},
+    {path:'forgot-password',component:ForgotPasswordComponent},
     {path:'search-properties',component:SearchPropertiesComponent},
     {path:'search-properties/:propertyType',component:SearchPropertiesComponent},
     { path: 'search-properties/:propertyType/:keyword', component: SearchPropertiesComponent},
     {path:'view-property/:propertyID',component:ViewPropertyComponent},
+    {path:'view-reviews',component:ReviewsComponentComponent},
     {path:'dashboard',component:DashboardComponent,
+        canActivate:[authGuard],
         children:
         [
             {path:'',component:DashboardcomponentComponent},
@@ -39,7 +52,22 @@ export const routes: Routes = [
             // {path:'addpropertysample',component:AddpropertysampleComponent},
             {path:'addpropertysample',component:AddPropertyComponentComponent},
             {path:'dashboarddet',component:DashboardcomponentComponent},
-            {path:'userReviews',component:Review1Component}
+            {path:'userReviews',component:Review1Component},
+            {path:'addpropertytype',component:PropertyForComponent}
+        ]
+    },
+    {path:'UserDashboard',component:UserDashboardComponent,
+        canActivate:[userAuthGuard],
+        children:
+        [
+            {path:'',component:UserDashboardViewComponent},
+            {path:'profile',component:UserProfileComponent},
+            //{path:'membership-details',component:MembershipDetComponent},
+            // {path:'addpropertysample',component:AddpropertysampleComponent},
+            {path:'UserAddProperty',component:AddPropertyByUserComponent},
+            {path:'UserDashboardDet',component:UserDashboardViewComponent},
+            {path:'userReviews',component:Review1Component},
+            {path:'descriptions',component:DescriptionComponentComponent}
         ]
     },
 

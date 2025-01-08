@@ -1,0 +1,389 @@
+.mainReview{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.reviewcard,.reviewview{
+    height: auto;
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.filtersSearch{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.searchreview,.reviewStatus{
+    width: 49%;
+    margin: 0px;
+}
+
+.reviewStatus{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.reviewStatus button{
+  background-color: #2495FD;
+  color: white;
+  border: none;
+}
+
+.reviewStatus button:hover{
+  background-color: #0056b3;
+}
+
+.reviewstable{
+  height: auto;
+  width: 100%;
+  overflow: auto;
+  max-height: 275px;
+}
+
+.viewbtn{
+    padding: 0px 10px;
+    border-right: 0.5px solid black;
+    border-radius: 0px;
+}
+
+.viewbtn:hover{
+    background-color: blue;
+}
+
+.checkbtn{
+    padding: 0px 10px;
+    border-radius: 0px;
+}
+
+.checkbtn:hover{
+    background-color: green;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .table th {
+    font-weight: bold;
+  }
+
+  .btn-secondary{
+    background-color: #2495FD;
+    border: none;
+  }
+
+  .btn-secondary:hover{
+    background-color: #2495FD;
+    border: 1px solid #2495FD;
+  }
+
+  form{
+    padding: 20px 30px;
+  }
+
+  .formrow{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .formrow .form-group{
+    width:49%;
+    position: relative;
+  }
+
+  .updatestatusbuttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .updatestatusbuttons .decline{
+    margin-right: 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+  }
+
+  .updatestatusbuttons .approve{
+    margin-right: 20px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+  }
+
+  .updatestatusbuttons i{
+    margin-right: 10px;
+  }
+
+  .PageHeading{
+    width: 100%;
+    background-color: #e8e8e8;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .PageHeading h5{
+    padding-left: 10px;
+  }
+
+  form{
+    padding: 20px 30px;
+  }
+  /* .form-group label{
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+
+  .form-group input,.form-group textarea{
+    border: none;
+    border-bottom: 1px solid gray;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    border-radius: 0px;
+  }
+
+  .form-group input:focus{
+    border-bottom: 1px solid blue;
+    outline: none; 
+  } */
+
+  .input-container {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  
+  
+  .form-group input,.form-group textarea{
+    /* width: 100%;
+    padding: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid gray; */
+    border: none;
+    border-bottom: 1px solid gray;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    border-radius: 0px;
+  }
+  
+  
+  input:focus,textarea:focus {
+    border-color: #5c9dfc;
+  }
+  
+  label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #999;
+    pointer-events: none;
+    transition: 0.2s ease-in-out;
+    opacity: 0;
+  }
+  
+  /* Label animation when focused or the input has content */
+  input:focus + label,
+  input:not(:placeholder-shown) + label,
+  textarea:focus+label,
+  textarea:not(:placeholder-shown) + label {
+      top: -10px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: black;
+      opacity: 1;
+  }
+  
+  /* Make label hidden when input is empty and not focused */
+  input:placeholder-shown + label,
+  textarea:placeholder-shown + label {
+      opacity: 0;
+  }
+  a{
+    text-decoration: none;
+    color:black
+  }
+  a h5{
+    font-family: fangsong;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0px;
+  }
+  a p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+  }
+
+  .backLabel{
+    width: fit-content;
+  }
+
+  table thead{
+   font-family:'Roboto', sans-serif;
+   font-size: 12px;
+  }
+
+  table thead tr th{
+    text-align: center;
+  }
+
+  table tbody{
+    font-family:'Roboto', sans-serif;
+    font-size: 10px;
+   }
+ 
+   table tbody tr td{
+     text-align: center;
+   }
+
+   .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal.show {
+    display: block;
+  }
+  
+  .modal-dialog {
+    position: relative;
+    margin: 10% auto;
+    max-width: 500px;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .modal-footer {
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+  }
+  
+
+@media (max-width: 768px){
+
+    .mainReview{
+        height: 90vh;
+    }
+    .filtersSearch{
+        display: flex;
+        justify-content:space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+    .searchreview,.reviewStatus{
+        width:100%;
+        margin-bottom: 10px;
+    }
+
+    .table thead {
+        display: none;  /* Hide the header on small screens */
+      }
+    
+      .table tbody {
+        display: block;
+      }
+    
+      .table tbody tr {
+        display: block;
+        margin-bottom: 10px;
+      }
+    
+      .table tbody td {
+        width: 100%; /* Make each cell take full width */
+        padding: 15px 8px 8px 8px; /* Add more top padding for spacing */
+        box-sizing: border-box;
+        position: relative;
+        display: block;
+        border: 1px solid #ddd;
+      }
+    
+      .table tbody td::before {
+        /* Add labels to the cell for small screens */
+        content: attr(data-label);
+        font-weight: bold;
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        color: #555;
+        margin-right: 10px;
+        text-transform: uppercase;
+        font-size: 12px;  /* Smaller font size for labels */
+        z-index: 1; /* Ensure the label stays on top */
+      }
+    
+      /* Ensure content doesn't overlap */
+      .table tbody td {
+        padding-left: 20px; /* Give more space for the label */
+        padding-top: 25px; /* Adjust padding for better content display */
+      }
+    
+      .table tbody td .btn {
+        padding: 5px;
+      }
+
+      .formrow{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .formrow .form-group{
+        width:100%;
+      }
+}

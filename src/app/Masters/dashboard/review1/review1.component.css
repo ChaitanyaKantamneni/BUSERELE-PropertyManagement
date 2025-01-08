@@ -33,6 +33,12 @@
   max-height: 275px;
 }
 
+td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
+
 .viewbtn{
     padding: 0px 10px;
     border-right: 0.5px solid black;

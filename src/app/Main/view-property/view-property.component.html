@@ -5,7 +5,8 @@
     <app-top-nav-1></app-top-nav-1>
     <div class="container">
         <div class="maincontainer" *ngFor="let propertydetailsitem of propertydetails">
-            <div class="propertyimagecontainer d-flex flex-wrap justify-content-between align-items-start">
+            <h5 class="propertyTitle">{{propertydetailsitem.propertyName}}</h5>
+            <div class="propertyimagecontainer d-flex flex-wrap justify-content-between align-items-start p-0 mb-4">
                 <!-- <div class="imagecontainer">
                     <img src="{{propertydetailsitem.propertyimage}}">
                 </div> -->
@@ -90,181 +91,318 @@
                     </form>
                 </div>
             </div>
-            <div class="propertydetails">
-                <div class="propertyoverview">
-                    <div class="headings">
-                        <p>Overview</p>
-                    </div>
-                    <div class="body">
-                        <div class="propertytype">
-                            <p class="heading">Property Type</p>
-                            <p class="value">Villa</p>
+            <div class="PropertyContentMain">
+                <div class="propertydetails">
+                    <div class="propertyoverview">
+                        <div class="headings">
+                            <p>Overview</p>
                         </div>
-                        <div class="propertytype">
-                            <p class="heading">Area (sqft)</p>
-                            <p class="value"><i class="fa fa-ruler-combined"></i>{{propertydetailsitem.propertyArea}}</p>
-                        </div>
-                        <div class="propertytype">
-                            <p class="heading">Bedrooms</p>
-                            <p class="value"><i class="fa fa-bed"></i>{{propertydetailsitem.propertyBeds}}</p>
-                        </div>
-                        <div class="propertytype">
-                            <p class="heading">Bathrooms</p>
-                            <p class="value"><i class="fa fa-bath"></i>{{propertydetailsitem.propertyBathrooms}}</p>
-                        </div>
-                        <div class="propertytype">
-                            <p class="heading">Parking</p>
-                            <p class="value"><i class="fa fa-car"></i>{{propertydetailsitem.propertyparking}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="propertyoverview">
-                    <div class="headings">
-                        <p>Address</p>
-                    </div>
-                    <div class="body">
-                        <div class="addressbody">
-                            <div class="side1">
-                                <div class="addpropertytype">
-                                    <p class="heading">Address</p>
-                                    <p class="value">{{propertydetailsitem.propertyAddress}}</p>
-                                </div>
-                                <div class="addpropertytype">
-                                    <p class="heading">City</p>
-                                    <p class="value">{{propertydetailsitem.propertyCity}}</p>
-                                </div>
-                                <!-- <div class="addpropertytype">
-                                    <p class="heading">State</p>
-                                    <p class="value">{{propertydetailsitem.propertyaddress}}</p>
-                                </div> -->
+                        <div class="body">
+                            <div class="propertytype">
+                                <p class="heading">Property Type</p>
+                                <p class="value">{{propertydetailsitem.propertyType}}</p>
                             </div>
-                            <div class="side2">
-                                <div class="addpropertytype">
-                                    <p class="heading">Zip/Postal Code</p>
-                                    <p class="value">{{propertydetailsitem.propertyZipCode}}</p>
-                                </div>
-                                <div class="addpropertytype">
-                                    <p class="heading">Area (sqft)</p>
-                                    <p class="value">{{propertydetailsitem.propertyArea}}</p>
-                                </div>
-                                <!-- <div class="addpropertytype">
-                                    <p class="heading">Country</p>
-                                    <p class="value">{{propertydetailsitem.propertyaddress}}</p>
-                                </div> -->
+                            <div class="propertytype">
+                                <p class="heading">Area (sqft)</p>
+                                <p class="value"><i class="fa fa-ruler-combined"></i>{{propertydetailsitem.propertyArea}}</p>
                             </div>
-                        </div>   
-                    </div>
-                </div>
-                <div class="propertyoverview">
-                    <div class="headings">
-                        <p>Description</p>
-                    </div>
-                    <div class="body">
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                    </div>
-                </div>
-                <div class="propertyoverview propertyfeatures">
-                    <div class="headings">
-                        <p>Features</p>
-                    </div>
-                    <div class="body">
-                        <p><i class="fa fa-check-circle"></i>Gym</p>
-                    </div>
-                </div>
+                            <div class="propertytype">
+                                <p class="heading">Bedrooms</p>
+                                <p class="value"><i class="fa fa-bed"></i>{{propertydetailsitem.propertyBeds}}</p>
+                            </div>
+                            <div class="propertytype">
+                                <p class="heading">Bathrooms</p>
+                                <p class="value"><i class="fa fa-bath"></i>{{propertydetailsitem.propertyBathrooms}}</p>
+                            </div>
+                            <div class="propertytype">
+                                <p class="heading">Parking</p>
+                                <p class="value"><i class="fa fa-car"></i>{{propertydetailsitem.propertyparking}}</p>
+                            </div>
 
-                <div class="propertyoverview propertyfeatures">
-                    <div class="headings">
-                        <p>Video</p>
-                    </div>
-                    <div class="body">
-                                            
-                        <!-- Video Section -->
-                        <div class="video-container">
-                            <video width="100%" controls>
-                                <source src="path/to/your-video.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
+                 
                         </div>
                     </div>
-                </div>
-                
-
-                <div class="propertyoverview propertyreviews">
-                    <div class="headings">
-                        <p>Review</p>
+                    <div class="propertyoverview">
+                        <div class="headings">
+                            <p>Address</p>
+                        </div>
+                        <div class="body">
+                            <div class="addressbody">
+                                <div class="side1">
+                                    <div class="addpropertytype">
+                                        <p class="heading">Address</p>
+                                        <p class="value">{{propertydetailsitem.propertyAddress}}</p>
+                                    </div>
+                                    <div class="addpropertytype">
+                                        <p class="heading">City</p>
+                                        <p class="value">{{propertydetailsitem.propertyCity}}</p>
+                                    </div>
+                                    <!-- <div class="addpropertytype">
+                                        <p class="heading">State</p>
+                                        <p class="value">{{propertydetailsitem.propertyaddress}}</p>
+                                    </div> -->
+                                </div>
+                                <div class="side2">
+                                    <div class="addpropertytype">
+                                        <p class="heading">Zip/Postal Code</p>
+                                        <p class="value">{{propertydetailsitem.propertyZipCode}}</p>
+                                    </div>
+                                    <div class="addpropertytype">
+                                        <p class="heading">Area (sqft)</p>
+                                        <p class="value">{{propertydetailsitem.propertyArea}}</p>
+                                    </div>
+                                    <!-- <div class="addpropertytype">
+                                        <p class="heading">Country</p>
+                                        <p class="value">{{propertydetailsitem.propertyaddress}}</p>
+                                    </div> -->
+                                </div>
+                            </div>   
+                        </div>
                     </div>
-                    <div class="body">
-                        <form class="w-100" [formGroup]="userReviewform">
-                            <div class="reviewform">
-                                <div class="reviewdiv">
-                                    <div class="form-group">
-                                        <label for="contactname">Name</label>
-                                        <input type="text" id="contactname" class="form-control" formControlName="username" name="username" required placeholder="Enter Full Name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contactname">Email</label>
-                                        <input type="text" id="contactname" class="form-control" formControlName="useremail" name="useremail" required placeholder="Enter Email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contactname">Mobile Number</label>
-                                        <input type="text" id="contactname" class="form-control" formControlName="usernumber" name="usernumber" required placeholder="Enter Mobile Number">
-                                    </div>
-                                </div>
-                                <div class="reviewtextarea">
-                                    <div class="form-group mb-3">
-                                        <label for="contactMessage">Message</label>
-                                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="usermessage" name="usermessage" required></textarea>
-                                    </div>
-                                    <button class="btn w-100" (click)="reviewformsubmit()" [disabled]="userReviewform.invalid">Submit</button>
-                                </div>
+                    <!-- <div class="propertyoverview propertyDescription">
+                        <div class="headings">
+                            <p>Description</p>
+                        </div>
+                        <div class="body">
+                            <p class="w-100 PropertyDescriptionContent" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
+                        </div>
+                    </div> -->
+                    <div class="propertyoverview PropertyDescriptionMain">
+                        <div class="headings">
+                            <p>Description</p>
+                        </div>
+                        <div class="body">
+                            <p class="PropertyDescriptionContent w-100" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="propertyoverview propertyfeatures">
+                        <div class="headings">
+                            <p>Features</p>
+                        </div>
+                        <div class="body">
+                            <div *ngFor="let amenity of selectedAmenities">
+                                <p><i class="fa fa-check-circle"></i>{{ amenity.name}}</p>
                             </div>
-                        </form>
+                        </div>                       
                     </div>
-                </div>
-
-                <div class="propertyoverview propertyenquirys">
-                    <div class="headings">
-                        <p>Enquiry</p>
-                    </div>
-                    <div class="body">
-                        <form class="w-100" [formGroup]="userEnquiryform">
-                            <div class="reviewform">
-                                <div class="reviewdiv">
-                                    <div class="form-group">
-                                        <label for="contactname">Name</label>
-                                        <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required placeholder="Enter Full Name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contactname">Email</label>
-                                        <input type="text" id="contactname" class="form-control" formControlName="email" name="email" required placeholder="Enter Email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contactname">Phone (Optional)</label>
-                                        <input type="text" id="contactname" class="form-control" formControlName="phone" name="phone" placeholder="Enter Mobile Number">
-                                    </div>
-                                </div>
-                                <div class="reviewtextarea">
-                                    <div class="form-group mb-3">
-                                        <label for="contactMessage">Message</label>
-                                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
-                                    </div>
-                                    <button class="btn w-100" (click)="reviewformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
-                                </div>
+    
+                    <div class="propertyoverview propertyVideo">
+                        <div class="headings">
+                            <p>Video</p>
+                        </div>
+                        <div class="body">
+                                                
+                            <!-- Video Section -->
+                            <div class="video-container">
+                                <video width="100%" controls>
+                                    <source src="{{selectedVideo}}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
 
-                <div class="propertyoverview">
-                    <div class="headings">
-                        <p>Location</p>
+                    <!-- <div class="propertyoverview propertyfeatures">
+                        <div class="headings">
+                            <p>Video</p>
+                        </div>
+                        <div class="imagecontainer">
+                            <div class="video-container">
+                                <video width="100%" controls>
+                                    <source src="{{selectedVideo}}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <ng-template #noVideo>
+                                <img *ngIf="propertydetails[0]?.propertyVideos?.length > 0; else noVideosAvailable"
+                                    [src]="propertydetails[0]?.propertyVideos[0]"
+                                    [alt]="'Property Video 1'"
+                                    class="property-image">
+                            </ng-template>
+                            <ng-template #noImagesAvailable>
+                                <p>No Videos available.</p>
+                            </ng-template>
+                        </div>
+                    
+                        <!-- Thumbnail container -->
+                        <!-- <div class="image-list-container mt-3 d-flex flex-wrap">
+                            <div *ngFor="let video of propertydetails[0]?.propertyVideos; let i = index"
+                                class="thumbnail"
+                                (click)="selectMainVideo(video)">
+                                <img [src]="image"
+                                    [alt]="'Thumbnail ' + (i + 1)"
+                                    class="thumbnail-image"
+                                    [class.selected]="image === selectedImage">
+                            </div>
+                        </div> --
+                    </div> -->
+                    
+    
+                    <div class="propertyoverview propertyreviews">
+                        <div class="headings">
+                            <p>Review</p>
+                        </div>
+                        <div class="body">
+                            <form class="w-100" [formGroup]="userReviewform">
+                                <div class="reviewform">
+                                    <div class="reviewdiv">
+                                        <div class="form-group">
+                                            <label for="contactname">Name</label>
+                                            <input type="text" id="contactname" class="form-control" formControlName="username" name="username" required placeholder="Enter Full Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contactname">Email</label>
+                                            <input type="text" id="contactname" class="form-control" formControlName="useremail" name="useremail" required placeholder="Enter Email">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contactname">Mobile Number</label>
+                                            <input type="text" id="contactname" class="form-control" formControlName="usernumber" name="usernumber" required placeholder="Enter Mobile Number">
+                                        </div>
+                                    </div>
+                                    <div class="reviewtextarea">
+                                        <div class="form-group mb-3">
+                                            <label for="contactMessage">Message</label>
+                                            <textarea id="contactMessage" class="form-control" rows="4" formControlName="usermessage" name="usermessage" required></textarea>
+                                        </div>
+                                        <button class="btn w-100" (click)="reviewformsubmit()" [disabled]="userReviewform.invalid">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="body">
-                        <div class="locationMap" [innerHTML]="iframeHtml"></div>
+    
+                    <div class="propertyoverview propertyenquirys">
+                        <div class="headings">
+                            <p>Enquiry</p>
+                        </div>
+                        <div class="body">
+                            <form class="w-100" [formGroup]="userEnquiryform">
+                                <div class="reviewform">
+                                    <div class="reviewdiv">
+                                        <div class="form-group">
+                                            <label for="contactname">Name</label>
+                                            <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required placeholder="Enter Full Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contactname">Email</label>
+                                            <input type="text" id="contactname" class="form-control" formControlName="email" name="email" required placeholder="Enter Email">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contactname">Phone (Optional)</label>
+                                            <input type="text" id="contactname" class="form-control" formControlName="phone" name="phone" placeholder="Enter Mobile Number">
+                                        </div>
+                                    </div>
+                                    <div class="reviewtextarea">
+                                        <div class="form-group mb-3">
+                                            <label for="contactMessage">Message</label>
+                                            <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
+                                        </div>
+                                        <button class="btn w-100" (click)="reviewformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+    
+                    <div class="propertyoverview">
+                        <div class="headings">
+                            <p>Location</p>
+                        </div>
+                        <div class="body">
+                            <div class="locationMap" [innerHTML]="iframeHtml"></div>
+                        </div>
+                    </div>
+    
+                    
                 </div>
-
-                
+                <div class="AdvertisementProperties">
+                    <!-- <div class="ExploreFeaturedProperties">
+                        <div class="container h-100">
+                            <div class="headding">
+                                <h5 class="bold-text d-flex justify-content-center align-items-center">Featured Listings</h5>
+                                <p class="p-text d-flex justify-content-center align-items-center">Browse our wide range of featured properties.</p>
+                            </div>
+                            <div class="PropertiesList">
+                                <div class="properties m-0">
+                                    <ng-container *ngFor="let propertyitem of FeaturedProperties; let i = index">
+                                        <div *ngIf="i < 3" class="p-0 mb-3 rounded-2">
+                                            <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
+                                                <div class="propertyFulldet d-flex">
+                                                    <!-- Property Image Section --
+                                                    <div class="propertyImage position-relative">
+                                                        <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
+                                                        <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
+                                                        <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
+                                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
+                                                                <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+                                                    <!-- Property Details Section --
+                                                    <div class="propertyDetails">
+                                                        <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
+                                                            <i class="fa fa-location"></i>
+                                                            <p class="mb-0 ms-2">
+                                                                {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-1">
+                                                            <div class="col-4 d-flex align-items-center p-0">
+                                                                <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
+                                                                <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
+                                                            </div>
+                                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                                <i class="fa fa-bed text-dark me-2 small-icon"></i>
+                                                                <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
+                                                            </div>
+                                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                                <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
+                                                                <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="propertyspecifications row m-0 justify-content-center align-items-center">
+                                                            <div class="col-4 d-flex align-items-center p-0">
+                                                                <i class="fa fa-home text-dark me-2 small-icon"></i>
+                                                                <p class="mb-0 text-dark smaller-text">{{ propertyitem.propertytypeName.length > 07 ? (propertyitem.propertytypeName | slice:0:07) + '...' : propertyitem.propertytypeName }}</p>
+                                                            </div>
+                                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                                <i class="fa fa-compass text-dark me-2 small-icon"></i>
+                                                                <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
+                                                            </div>
+                                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                                                <i class="fa fa-car text-dark me-2 small-icon"></i>
+                                                                <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="propertyFooter position-relative mt-2">
+                                                            <div class="bottom-bar2 d-flex justify-content-end align-items-center">
+                                                                
+                                                                <div class="cost d-flex justify-content-end">
+                                                                    <div class="price">
+                                                                        <p class="mb-0 text-white m-lg-1">Price: </p>
+                                                                    </div>
+                                                                    <p class="mb-0 text-white m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                </div>
+                                                
+                                            </a>
+                                        </div>
+                                    </ng-container>  
+                                </div>                    
+                                <!-- <div class="browsemoreproperties row justify-content-center align-items-center m-0">
+                                    <button class="btn" routerLink="/search-properties">Browse More Properties</button>
+                                </div>                     --
+                            </div>
+                        </div>
+                    </div>                                      -->
+                </div>
             </div>
         </div>
     </div>
