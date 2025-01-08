@@ -6,7 +6,8 @@
 }
 
 .cardmain{
-    height: 92%;
+    width: 100%;
+    height: auto;
 }
 
 .PageHeading{
@@ -198,7 +199,7 @@
   .card-body {
     display: flex;
     width: 100%;
-    height: 86%;
+    height: 79%;
     /* padding: 20px; */
   }
   
@@ -380,7 +381,119 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  .filtersSearch{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    margin: 10px 0px;
+  }
   
+  .searchreview,.reviewStatus{
+    width: 49%;
+    margin: 0px;
+  }
+  
+  .reviewStatus{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  }
+  
+  .reviewStatus button{
+  background-color: #2495FD;
+  color: white;
+  border: none;
+  }
+  
+  .reviewStatus button:hover{
+  background-color: #0056b3;
+  }
+  
+  .reviewstable{
+  height: auto;
+  width: 100%;
+  overflow: auto;
+  max-height: 275px;
+  }
+  
+  .viewbtn{
+    padding: 0px 10px;
+    border-right: 0.5px solid black;
+    border-radius: 0px;
+  }
+  
+  .viewbtn:hover{
+    background-color: blue;
+  }
+  
+  .checkbtn{
+    padding: 0px 10px;
+    border-radius: 0px;
+  }
+  
+  .checkbtn:hover{
+    background-color: green;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+  }
+  
+  
+  .table th, .table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .table th {
+    font-weight: bold;
+  }
+  
+  .reviewcard,.reviewview{
+    height: auto;
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+  .addnewButton button{
+    background-color: #2495FD;
+    color: white;
+    border: none;
+  }
+  
+  .addnewButton button:hover{
+    background-color: #0056b3;
+  }
+  
+  .NoDataFound{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .NoDataFoundImg{
+    height: 180px;
+    width:250px;
+  }
+  
+  .editPropbtn{
+    padding: 0px 10px;
+    border-left: 0.5px solid black;
+    border-radius: 0px;
+  }
   
   @media (max-width: 768px) {
    
