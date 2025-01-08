@@ -336,7 +336,7 @@ export class SearchPropertiesComponent implements OnInit {
       .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
-          if(Array.isArray(response) && response.length > 0){
+          if(response.length > 0){
             this.propertydetails = response.map((property: any) => {
               let propertyImage: string = ''; 
               if (property.images && Array.isArray(property.images) && property.images.length > 0) {

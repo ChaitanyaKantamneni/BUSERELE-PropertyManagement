@@ -1,7 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QuillModule,QuillEditorComponent } from 'ngx-quill';
 
@@ -111,9 +111,9 @@ export class AddPropertyComponentComponent implements OnInit {
     NumberofBalconies: new FormControl(''),
     NumberofParkings: new FormControl(''),
     AreaType: new FormControl('', [Validators.required]),
-    TotalArea: new FormControl('', [Validators.required, Validators.min(1)]),
+    TotalArea: new FormControl('', [Validators.required, Validators.min(1),this.areaValidator]),
     CarpetArea: new FormControl(''),
-    PriceFor: new FormControl('', [Validators.required, Validators.min(1)]),
+    PriceFor: new FormControl('', [Validators.required, Validators.min(1),this.priceForValidator]),
     PropertyTotalPrice: new FormControl({ value: '', disabled: true }),
     AmenitiesCharges: new FormControl(''),
     MaintenanceCharges: new FormControl(''),
@@ -216,17 +216,17 @@ export class AddPropertyComponentComponent implements OnInit {
   seletedVideo:string='';
   // selectedFloorImage:string = '';
 
-  calculateTotalPrice(): void {
-    const totalArea = this.propertyform.get('TotalArea')?.value;
-    const priceFor = this.propertyform.get('PriceFor')?.value;
+  // calculateTotalPrice(): void {
+  //   const totalArea = this.propertyform.get('TotalArea')?.value;
+  //   const priceFor = this.propertyform.get('PriceFor')?.value;
 
-    if (totalArea && priceFor) {
-      const totalPrice = totalArea * priceFor;
-      this.propertyform.get('PropertyTotalPrice')?.setValue(totalPrice, { emitEvent: false });
-    } else {
-      this.propertyform.get('PropertyTotalPrice')?.setValue('', { emitEvent: false });
-    }
-  }
+  //   if (totalArea && priceFor) {
+  //     const totalPrice = totalArea * priceFor;
+  //     this.propertyform.get('PropertyTotalPrice')?.setValue(totalPrice, { emitEvent: false });
+  //   } else {
+  //     this.propertyform.get('PropertyTotalPrice')?.setValue('', { emitEvent: false });
+  //   }
+  // }
 
   loadCountries(): void {
     this.http.get<any[]>('https://localhost:7190/api/Users/Countries')
@@ -1955,5 +1955,132 @@ export class AddPropertyComponentComponent implements OnInit {
         console.error('Error updating default image:', error);
       });
   }
+
+  areaValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (typeof value === 'number' && value >= 1500 && value <= 3500) {
+      return null; // Valid area if between 1500 and 3500
+    }
+    return { invalidArea: true }; // Invalid area value
+  }
+
+  // Custom validator for PriceFor field to handle single value or range
+  priceForValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    
+    // Check if it's a single number
+    if (typeof value === 'number') {
+      return null; // Valid single price
+    }
+
+    // Check if it's a valid range like '5000-7000'
+    const priceRangePattern = /^\d{4,5}-\d{4,5}$/; // Regex for price range (e.g., 5000-7000)
+    if (priceRangePattern.test(value)) {
+      return null; // Valid price range
+    }
+
+    return { invalidPrice: true }; // Invalid price value
+  }
+
+  calculateTotalPrice() {
+    const totalArea = this.propertyform.get('TotalArea')?.value;
+    const priceFor = this.propertyform.get('PriceFor')?.value;
+
+    // Initializing variables for minimum and maximum values.
+    let totalAreaMin = 0;
+    let totalAreaMax = 0;
+    let priceForMin = 0;
+    let priceForMax = 0;
+
+    // Handle TotalArea: Check if it's a range (e.g., "1500-3500") or a single number
+    if (totalArea && typeof totalArea === 'string' && totalArea.includes('-')) {
+        // Split the range by '-' and convert to numbers
+        const [minArea, maxArea] = totalArea.split('-').map(Number);
+        totalAreaMin = minArea;
+        totalAreaMax = maxArea;
+    } else if (totalArea && !isNaN(totalArea)) {
+        totalAreaMin = totalArea;       // If it's a single value, use it for both min and max
+        totalAreaMax = totalArea;
+    }
+
+    // Handle PriceFor: Check if it's a range (e.g., "4500-5000") or a single number
+    if (priceFor && typeof priceFor === 'string' && priceFor.includes('-')) {
+        // Split the range by '-' and convert to numbers
+        const [minPrice, maxPrice] = priceFor.split('-').map(Number);
+        priceForMin = minPrice;
+        priceForMax = maxPrice;
+    } else if (priceFor && !isNaN(priceFor)) {
+        priceForMin = priceFor;        // If it's a single value, use it for both min and max
+        priceForMax = priceFor;
+    }
+
+    // If the total area and price range is valid, calculate the total price
+    if (!isNaN(totalAreaMin) && !isNaN(priceForMin) && totalAreaMin > 0 && priceForMin > 0) {
+        const totalPriceMin = totalAreaMin * priceForMin;
+        const totalPriceMax = totalAreaMax * priceForMax;
+
+        // If both min and max prices are valid, show the range
+        if (totalPriceMin !== totalPriceMax) {
+            this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}-${totalPriceMax}`);
+        } else {
+            this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}`);
+        }
+    } else {
+        this.propertyform.get('PropertyTotalPrice')?.setValue(''); // Show empty if invalid
+    }
+}
+
+
+
+
+
+
+// calculateTotalPrice() {
+//   const totalArea = this.propertyform.get('TotalArea')?.value;
+//   const priceFor = this.propertyform.get('PriceFor')?.value;
+
+//   let totalAreaMin = 0;
+//   let totalAreaMax = 0;
+//   let priceForMin = 0;
+//   let priceForMax = 0;
+
+//   // Handle TotalArea: Check if it's a range (e.g., "1230-1500") or a single number
+//   if (totalArea && typeof totalArea === 'string' && totalArea.includes('-')) {
+//       // Split the range by '-' and convert to numbers
+//       const [minArea, maxArea] = totalArea.split('-').map(Number);
+//       totalAreaMin = minArea;
+//       totalAreaMax = maxArea;
+//   } else if (totalArea && typeof totalArea === 'number') {
+//       totalAreaMin = totalArea;
+//       totalAreaMax = totalArea; // If it's a single value, use it for both min and max
+//   }
+
+//   // Handle PriceFor: Check if it's a range (e.g., "5000-7000") or a single number
+//   if (priceFor && typeof priceFor === 'string' && priceFor.includes('-')) {
+//       // Split the range by '-' and convert to numbers
+//       const [minPrice, maxPrice] = priceFor.split('-').map(Number);
+//       priceForMin = minPrice;
+//       priceForMax = maxPrice;
+//   } else if (priceFor && typeof priceFor === 'number') {
+//       priceForMin = priceFor;
+//       priceForMax = priceFor; // If it's a single value, use it for both min and max
+//   }
+
+//   // Calculate the minimum and maximum total prices
+//   const minTotalPrice = totalAreaMin * priceForMin;
+//   const maxTotalPrice = totalAreaMax * priceForMax;
+
+//   // Set the PropertyTotalPrice as a range
+//   if (minTotalPrice > 0 && maxTotalPrice > 0) {
+//       this.propertyform.get('PropertyTotalPrice')?.setValue(`${minTotalPrice}-${maxTotalPrice}`);
+//   } else {
+//       this.propertyform.get('PropertyTotalPrice')?.setValue('');
+//   }
+// }
+
+
   
+  // get formControls() {
+  //   return this.propertyform.controls;
+  // }
 }
