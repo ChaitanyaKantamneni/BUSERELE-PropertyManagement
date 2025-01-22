@@ -196,11 +196,9 @@ loadPropertyDetails() {
               console.log('First Image File Data:', firstImage.fileData);
 
               try {
-                // Decode the Base64 string into raw binary data
                 const byteCharacters = atob(firstImage.fileData);
                 const byteArray = new Uint8Array(byteCharacters.length);
 
-                // Copy the binary data into the byteArray
                 for (let i = 0; i < byteCharacters.length; i++) {
                   byteArray[i] = byteCharacters.charCodeAt(i);
                 }

@@ -36,6 +36,7 @@ interface PropertyDet {
   propertyBathrooms: string;
   propertyType: string;
   propertydescription:string;
+  propertySpecificdescription:string;
 }
 
 @Component({
@@ -113,7 +114,7 @@ export class ViewPropertyComponent implements OnInit {
       this.router.navigate(['/home']);
     }
 
-    this.loadFeaturedPropertyDetails();
+    // this.loadFeaturedPropertyDetails();
   }
 
   //propertydetails:PropertyDet[]=[];
@@ -123,6 +124,32 @@ export class ViewPropertyComponent implements OnInit {
   isLoading: boolean = false;
   isLoadingFeaProperty: boolean = false;
   selectedAmenities:any[]=[];
+
+
+
+  isShareMenuVisible = false;
+
+
+  toggleShareMenu() {
+    this.isShareMenuVisible = !this.isShareMenuVisible;
+  }
+  shareOnWhatsApp() {
+    const message = 'Check this out!';
+    const url = encodeURIComponent(window.location.href);
+    const whatsappUrl = `https://wa.me/?text=${message}%20${url}`;
+    window.open(whatsappUrl, '_blank');
+  }
+  shareOnInstagram() {
+    alert('Sharing on Instagram (this is a placeholder)');
+  }
+
+  shareOnFacebook() {
+    const url = encodeURIComponent(window.location.href);
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    window.open(facebookUrl, '_blank');
+  }
+
+
 
   loadPropertyDetailsByPropertyID(propertyID: string) {
     this.isLoading=true;
@@ -134,12 +161,29 @@ export class ViewPropertyComponent implements OnInit {
           if (response) {
             // Process all images and create an array of image URLs
             let imageUrls = [];
+            let floorImages = [];
+
             if (response.images && Array.isArray(response.images) && response.images.length > 0) {
               imageUrls = response.images.map((img: any) => this.processImage(img));  // Ensure image URLs are processed
-            } else {
-              // Assign a default image if no images are provided
+            }
+            else {
               imageUrls = ['assets/images/img1.png'];
             }
+            
+            if (response.floorImages && Array.isArray(response.floorImages) && response.floorImages.length > 0) {
+              floorImages = response.floorImages.map((img: any) => this.processImage(img));  // Process floor images
+            }
+            else {
+              floorImages = [];
+            }
+            
+
+            // const allImages = [...imageUrls, ...floorImages];
+            const allImages = [...imageUrls, ...floorImages].sort((a, b) => {
+              const orderA = a.imageOrder ? parseInt(a.imageOrder, 10) : 0;
+              const orderB = b.imageOrder ? parseInt(b.imageOrder, 10) : 0;
+              return orderA - orderB; // Ascending order
+            });
             const VideoUrls=response.videos.map((video:any)=>this.processVideo(video));
             
             let propertyBadge = '';
@@ -152,22 +196,50 @@ export class ViewPropertyComponent implements OnInit {
               propertyBadge = 'For Rent';
               propertyBadgeColor = 'green';
             }
+            
+            let propertyForBadge = '';
+            if (response.propertyFor === '1') {
+              propertyForBadge = 'For Buy';
+              propertyBadgeColor = 'green';
+            } else if (response.propertyFor === '2') {
+              propertyForBadge = 'For Sale';
+              propertyBadgeColor = 'red';
+            }
+            else if(response.propertyFor === '3') {
+              propertyForBadge = 'For Rent';
+              propertyBadgeColor = 'blue';
+            }
+            else if(response.propertyFor === '4') {
+              propertyForBadge = 'For Lease';
+              propertyBadgeColor = 'orange';
+            }
 
-            let PropertyFacing='';
+            let PropertyFacingDB='';
             if(response.propertyFacing === '1'){
-              PropertyFacing='North';
+              PropertyFacingDB='North';
             }
             else if (response.propertyFacing === '2') {
-              PropertyFacing='South';
+              PropertyFacingDB='South';
             }
             else if (response.propertyFacing === '3') {
-              PropertyFacing='East';
+              PropertyFacingDB='East';
             }
             else if (response.propertyFacing === '4') {
-              PropertyFacing='West';
+              PropertyFacingDB='West';
             }
             else{
-              PropertyFacing='N/A';
+              PropertyFacingDB='N/A';
+            }
+
+            let PropertyStatusDB='';
+            if(response.propertyStatus === '1'){
+              PropertyStatusDB='Ready To Move';
+            }
+            else if (response.propertyStatus === '2') {
+              PropertyStatusDB='Under Construction';
+            }
+            else{
+              PropertyStatusDB='N/A';
             }
 
             const selectedAmenitiesString = response.aminities || '';
@@ -178,6 +250,11 @@ export class ViewPropertyComponent implements OnInit {
   })
   .filter((amenity: Amenity) => amenity.id && amenity.name);
 
+
+  const formattedPossessionDate = this.formatDate(response.possessionDate);
+  const formattedListDate = this.formatDate(response.listDate);
+
+
             this.propertydetails = [{
               propertyID: response.propID || 'N/A',
               propertyName: response.propname || 'Unknown Property',
@@ -187,16 +264,50 @@ export class ViewPropertyComponent implements OnInit {
               propertyBeds: response.noOfBedrooms || 'Beds not available',
               propertyBathrooms: response.noOfBathrooms || 'Bathrooms not available',
               propertyType: response.propertyTypeName || 'Unknown Type',
-              propertyImages: imageUrls, // Set the array of image URLs
+              propertyImages: allImages, // Set the array of image URLs
               propertyVideos:VideoUrls,
               propertyparking:response.noOfParkings,
-              propertyfacing:PropertyFacing,
+              propertyfacing:PropertyFacingDB,
               propertyAvailability:propertyBadge,
               propertyBadgeColor: propertyBadgeColor,
               propertyCity:response.cityName,
               propertyZipCode:response.zipCode,
               GmapUrl:response.googleLocationurl,
               propertydescription:response.description,
+              propertyspecificDescription:response.specificDescription,
+              developedby:response.developedby,
+              mobileNumber:response.mobileNumber,
+              emailID:response.emailID,
+              country:response.countryName,
+              state:response.stateName,
+              nearBy:response.nearBy,
+              reraCertificateNumber:response.reraCertificateNumber,
+              propertyApprovedBy:response.propertyApprovedBy,
+              propertyFor:propertyForBadge,
+              propertyStatus:PropertyStatusDB,
+              totalBlocks:response.totalBlocks,
+              totalFloors:response.totalFloors,
+              noOfFlats:response.noOfFlats,
+              blockName:response.blockName,
+              propertyOnWhichFloor:response.propertyOnWhichFloor,
+              noOfBalconies:response.noOfBalconies,
+              propertyFacing:PropertyFacingDB,
+              buildYear:response.buildYear,
+
+              // possessionDate:response.possessionDate,
+              // listDate:response.listDate,
+              
+
+              possessionDate: formattedPossessionDate,
+              listDate: formattedListDate,
+
+              propname:response.propname,
+              landMark:response.landMark,
+              amenitiesCharges:response.amenitiesCharges,
+              websiteurl:response.websiteurl,
+              pinteresturl:response.pinteresturl,
+              facebookurl:response.facebookurl,
+              twitterurl:response.twitterurl,
             }];
 
             if (response.googleLocationurl) {
@@ -205,6 +316,7 @@ export class ViewPropertyComponent implements OnInit {
             }
 
             this.selectedImage = this.propertydetails[0]?.propertyImages[0] || null;
+            console.log('selected Image',this.selectedImage);
             this.selectedVideo=this.propertydetails[0]?.propertyVideos[0]||null;
             this.isLoading=false;
           } else {
@@ -223,129 +335,136 @@ export class ViewPropertyComponent implements OnInit {
       );
   }
 
-  loadFeaturedPropertyDetails() {
-    this.isLoadingFeaProperty=true;
-    const minLoadingTime = 1000;
-
-    const loadingTimer = setTimeout(() => {
-      this.isLoadingFeaProperty = false;
-    }, minLoadingTime);
-    this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
-      .subscribe(
-        (response: any[]) => {
-          console.log('API Response:', response);
-  
-          // Map the API response to the propertydetails array
-          this.FeaturedProperties = response.map((property: any) => {
-            let propertyImage: string = ''; // Default image if no valid image found
-  
-            // Log the whole property object for inspection
-            console.log('Full Property:', property);
-  
-            // Check if 'images' exists and is an array
-            if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-              console.log('Property Images:', property.images);
-  
-              // Process the first image in the array
-              const firstImage = property.images[0];
-  
-              if (firstImage.fileData) {
-                console.log('First Image File Data:', firstImage.fileData);
-  
-                try {
-                  // Decode the Base64 string into raw binary data
-                  const byteCharacters = atob(firstImage.fileData);
-                  const byteArray = new Uint8Array(byteCharacters.length);
-  
-                  // Copy the binary data into the byteArray
-                  for (let i = 0; i < byteCharacters.length; i++) {
-                    byteArray[i] = byteCharacters.charCodeAt(i);
-                  }
-  
-                  // Create a Blob from the byteArray
-                  const blob = new Blob([byteArray], { type: firstImage.mimeType });
-  
-                  // Create an object URL from the Blob
-                  propertyImage = URL.createObjectURL(blob);
-  
-                  // Log the URL for verification
-                  console.log('Generated Image URL:', propertyImage);
-                } catch (error) {
-                  console.error('Error decoding first image data:', error);
-                }
-              } else {
-                propertyImage='assets/images/img1.png';
-              }
-            } else {
-              console.log('images property is missing, not an array, or empty.');
-            }
-
-            let propertyBadge = '';
-            let propertyBadgeColor = '';
-            if (property.availabilityOptions === '1') {
-              propertyBadge = 'For Sell';
-              propertyBadgeColor = 'red';
-            } else if (property.availabilityOptions === '2') {
-              propertyBadge = 'For Rent';
-              propertyBadgeColor = 'green';
-            }
-
-            let PropertyFacing='';
-            if(property.propertyFacing === '1'){
-              PropertyFacing='North';
-            }
-            else if (property.propertyFacing === '2') {
-              PropertyFacing='South';
-            }
-            else if (property.propertyFacing === '3') {
-              PropertyFacing='East';
-            }
-            else if (property.propertyFacing === '4') {
-              PropertyFacing='West';
-            }
-            else{
-              PropertyFacing='N/A';
-            }
-  
-            // Return the final object for each property
-            return {
-              propertyID: property.propID || 'N/A',  // Default value if undefined
-              propertyname: property.propname || 'Unknown Property',  // Default value if undefined
-              propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
-              propertyaddress: property.address || 'Address not available',  // Default value if undefined
-              propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
-              propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
-              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
-              propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
-              propertytypeName: this.getPropertyTypeName(property.propertyType),
-              propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
-              propertyparking:property.noOfParkings,
-              propertyfacing:PropertyFacing,
-              propertyAvailability:propertyBadge,
-              propertyBadgeColor: propertyBadgeColor
-            };
-          });
-          clearTimeout(loadingTimer);
-          this.isLoadingFeaProperty=false;
-        },
-        (error) => {
-          console.error('Error fetching property details:', error);
-        }
-      );
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   }
 
-  convertToCrores(value: number): string {
-    if (value >= 10000000) {
-      // Convert to crores and format with 2 decimal places
-      return (value / 10000000).toFixed(2) + 'Cr';
-    } else if (value >= 100000) {
-      // Convert to lakhs and format with 2 decimal places
-      return (value / 100000).toFixed(2) + 'L';
-    } else {
-      // Return the value as-is if it's less than 1 lakh
-      return value.toString();
-    }
-  }
+
+  // loadFeaturedPropertyDetails() {
+  //   this.isLoadingFeaProperty=true;
+  //   const minLoadingTime = 1000;
+
+  //   const loadingTimer = setTimeout(() => {
+  //     this.isLoadingFeaProperty = false;
+  //   }, minLoadingTime);
+  //   this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
+  //     .subscribe(
+  //       (response: any[]) => {
+  //         console.log('API Response:', response);
+  
+  //         // Map the API response to the propertydetails array
+  //         this.FeaturedProperties = response.map((property: any) => {
+  //           let propertyImage: string = ''; // Default image if no valid image found
+  
+  //           // Log the whole property object for inspection
+  //           console.log('Full Property:', property);
+  
+  //           // Check if 'images' exists and is an array
+  //           if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+  //             console.log('Property Images:', property.images);
+  
+  //             // Process the first image in the array
+  //             const firstImage = property.images[0];
+  
+  //             if (firstImage.fileData) {
+  //               console.log('First Image File Data:', firstImage.fileData);
+  
+  //               try {
+  //                 // Decode the Base64 string into raw binary data
+  //                 const byteCharacters = atob(firstImage.fileData);
+  //                 const byteArray = new Uint8Array(byteCharacters.length);
+  
+  //                 // Copy the binary data into the byteArray
+  //                 for (let i = 0; i < byteCharacters.length; i++) {
+  //                   byteArray[i] = byteCharacters.charCodeAt(i);
+  //                 }
+  
+  //                 // Create a Blob from the byteArray
+  //                 const blob = new Blob([byteArray], { type: firstImage.mimeType });
+  
+  //                 // Create an object URL from the Blob
+  //                 propertyImage = URL.createObjectURL(blob);
+  
+  //                 // Log the URL for verification
+  //                 console.log('Generated Image URL:', propertyImage);
+  //               } catch (error) {
+  //                 console.error('Error decoding first image data:', error);
+  //               }
+  //             } else {
+  //               propertyImage='assets/images/img1.png';
+  //             }
+  //           } else {
+  //             console.log('images property is missing, not an array, or empty.');
+  //           }
+
+  //           let propertyBadge = '';
+  //           let propertyBadgeColor = '';
+  //           if (property.availabilityOptions === '1') {
+  //             propertyBadge = 'For Sell';
+  //             propertyBadgeColor = 'red';
+  //           } else if (property.availabilityOptions === '2') {
+  //             propertyBadge = 'For Rent';
+  //             propertyBadgeColor = 'green';
+  //           }
+
+  //           let PropertyFacing='';
+  //           if(property.propertyFacing === '1'){
+  //             PropertyFacing='North';
+  //           }
+  //           else if (property.propertyFacing === '2') {
+  //             PropertyFacing='South';
+  //           }
+  //           else if (property.propertyFacing === '3') {
+  //             PropertyFacing='East';
+  //           }
+  //           else if (property.propertyFacing === '4') {
+  //             PropertyFacing='West';
+  //           }
+  //           else{
+  //             PropertyFacing='N/A';
+  //           }
+  
+  //           // Return the final object for each property
+  //           return {
+  //             propertyID: property.propID || 'N/A',  // Default value if undefined
+  //             propertyname: property.propname || 'Unknown Property',  // Default value if undefined
+  //             propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
+  //             propertyaddress: property.address || 'Address not available',  // Default value if undefined
+  //             propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
+  //             propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
+  //             propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
+  //             propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
+  //             propertytypeName: this.getPropertyTypeName(property.propertyType),
+  //             propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
+  //             propertyparking:property.noOfParkings,
+  //             propertyfacing:PropertyFacing,
+  //             propertyAvailability:propertyBadge,
+  //             propertyBadgeColor: propertyBadgeColor
+              
+  //           };
+  //         });
+  //         clearTimeout(loadingTimer);
+  //         this.isLoadingFeaProperty=false;
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching property details:', error);
+  //       }
+  //     );
+  // }
+
+  // convertToCrores(value: number): string {
+  //   if (value >= 10000000) {
+  //     return (value / 10000000).toFixed(2) + 'Cr';
+  //   } else if (value >= 100000) {
+  //     return (value / 100000).toFixed(2) + 'L';
+  //   } else {
+  //     return value.toString();
+  //   }
+  // }
 
   getPropertyTypeName(propertyTypeId: string): string {
     const propertyType = this.propertytypes.find(pt => pt.propertyType === propertyTypeId);
@@ -493,5 +612,88 @@ sendEmail() {
 sanitizeHtml(content: string): SafeHtml {
   return this.sanitizer.bypassSecurityTrustHtml(content);  
 }
+
+
+
+
+
+
+
+convertToCrores(value: number | string): string {
+  if (!value) return 'N/A'; // Handle empty or undefined value
+
+  // If value is a range (e.g., "14000000-20000000"), split and process
+  if (typeof value === 'string' && value.includes('-')) {
+    const [min, max] = value.split('-').map(Number);
+    return this.formatPrice(min) + ' - ' + this.formatPrice(max);
+  }
+
+  // Handle single price
+  return this.formatPrice(Number(value));
+}
+
+formatPrice(value: number): string {
+  if (value >= 10000000) {
+    return (value / 10000000).toFixed(2) + 'Cr'; // Convert to Crores
+  } else if (value >= 100000) {
+    return (value / 100000).toFixed(2) + 'L'; // Convert to Lakhs
+  } else {
+    return value.toString(); // Leave as-is for smaller numbers
+  }
+}
+
+propertyKeys = [
+  'propertyID', 'developedby', 'propname', 'mobileNumber', 'emailID', 
+  'landMark', 'country', 'state', 'nearBy', 'reraCertificateNumber', 
+  'propertyApprovedBy', 'propertyType', 'propertyFor', 'propertyStatus',
+  'propertyFacing', 'totalBlocks', 'totalFloors', 'noOfFlats', 
+  'blockName', 'propertyOnWhichFloor', 'propertyBeds', 'propertyBathrooms', 
+  'noOfBalconies', 'propertyparking', 'amenitiesCharges', 'buildYear', 
+  'possessionDate', 'listDate'
+];
+
+getLabel(key: string): string {
+  const labels: { [key: string]: string } = {
+    'propertyID': 'Property ID',
+    'developedby': 'Developed By',
+    'propname': 'Property Title',
+    'mobileNumber': 'Mobile Number',
+    'emailID': 'Email ID',
+    'landMark': 'Landmark',
+    'country': 'Country',
+    'state': 'State',
+    'nearBy': 'Nearby',
+    'reraCertificateNumber': 'Certificate Number',
+    'propertyApprovedBy': 'Approved By',
+    'propertyType': 'Property Type',
+    'propertyFor': 'Property For',
+    'propertyStatus': 'Property Status',
+    'propertyFacing': 'Property Facing',
+    'totalBlocks': 'Total Blocks',
+    'totalFloors': 'Total Floors',
+    'noOfFlats': 'No. of Flats',
+    'blockName': 'Block Name',
+    'propertyOnWhichFloor': 'Property Floor',
+    'propertyBeds': 'Bedrooms',
+    'propertyBathrooms': 'Bathrooms',
+    'noOfBalconies': 'Balconies',
+    'propertyparking': 'Parking',
+    'amenitiesCharges': 'Amenities Charges',
+    'buildYear': 'Build Year',
+    'possessionDate': 'Possession Date',
+    'listDate': 'List Date'
+  };
+  
+  return labels[key] || key; // Default to the key if no label is found
+}
+
+getValueStyle(key: string): any {
+  // You can customize styling based on the property key if needed
+  if (key === 'emailID') {
+    return { 'text-align': 'center' }; // Example style for emailID
+  }
+  return {}; // No special style
+}
+
 
 }

@@ -125,6 +125,9 @@
     margin-left: 60px;
   }
   
+
+
+  
   @media (max-width: 768px) {
     .sidenavbar {
       display: none;

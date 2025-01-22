@@ -67,7 +67,7 @@ export class UserDashboardViewComponent {
 
   getPropertyTypeName(propertyTypeId: string): string {
     const propertyType = this.propertytypes.find(pt => pt.propertyType === propertyTypeId);
-    return propertyType ? propertyType.name : 'Unknown Type';
+    return propertyType ? propertyType.name : '';
   }
 
   getownProperties(UserID:string) {
@@ -81,7 +81,9 @@ export class UserDashboardViewComponent {
               console.log('API Response:', response);
               this.propertydetails = response.map((property: any) => {
               let propertyImage: string = '';
+
     
+              let defaultPropImage: string = '';
               // Log the whole property object for inspection
               console.log('Full Property:', property);
     
@@ -120,6 +122,37 @@ export class UserDashboardViewComponent {
                   propertyImage='assets/images/img1.png';
                 }
               } else {
+                defaultPropImage='assets/images/img1.png';
+                console.log('images property is missing, not an array, or empty.');
+              }
+
+              if (property.image && property.image.fileData) {
+                const firstImage = property.image;
+    
+                try {
+                  // Decode the Base64 string into raw binary data
+                  const byteCharacters = atob(firstImage.fileData);
+                  const byteArray = new Uint8Array(byteCharacters.length);
+    
+                  // Copy the binary data into the byteArray
+                  for (let i = 0; i < byteCharacters.length; i++) {
+                    byteArray[i] = byteCharacters.charCodeAt(i);
+                  }
+    
+                  // Create a Blob from the byteArray
+                  const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
+    
+                  // Create an object URL from the Blob
+                  defaultPropImage = URL.createObjectURL(blob);
+    
+                  // Log the URL for verification
+                  console.log('Generated Default Image URL:', defaultPropImage);
+                } catch (error) {
+                  console.error('Error decoding default image data:', error);
+                }
+              }
+              else {
+                defaultPropImage='assets/images/img1.png';
                 console.log('images property is missing, not an array, or empty.');
               }
 
@@ -163,15 +196,15 @@ export class UserDashboardViewComponent {
                 propertyID: property.propID || 'N/A',  // Default value if undefined
                 propertyname: property.propname || 'Unknown Property',  // Default value if undefined
                 propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
-                propertyaddress: property.address || 'Address not available',  // Default value if undefined
+                propertyaddress: property.landMark || 'Address not available',  // Default value if undefined
                 propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
                 propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
                 propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
                 propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
-                propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
+                propertyimage: defaultPropImage,  // Set the first converted Blob URL or default image URL
                 propertyfor:property.propertyFor,
                 propertyparking:property.noOfParkings,
-                propertytypeName: this.getPropertyTypeName(property.propertyType),
+                PropertyTypeName:property.propertyTypeName,
                 propertyfacing:PropertyFacing,
                 propertyAvailability:propertyBadge,
                 propertyBadgeColor: propertyBadgeColor
@@ -194,16 +227,38 @@ export class UserDashboardViewComponent {
       );
   }
 
-  convertToCrores(value: number): string {
+  // convertToCrores(value: number): string {
+  //   if (value >= 10000000) {
+  //     return (value / 10000000).toFixed(2) + 'Cr';
+  //   } else if (value >= 100000) {
+  //     return (value / 100000).toFixed(2) + 'L';
+  //   } else {
+  //     return value.toString();
+  //   }
+  // }
+
+
+  convertToCrores(value: number | string): string {
+    if (!value) return 'N/A'; // Handle empty or undefined value
+  
+    // If value is a range (e.g., "14000000-20000000"), split and process
+    if (typeof value === 'string' && value.includes('-')) {
+      const [min, max] = value.split('-').map(Number);
+      return this.formatPrice(min) + ' - ' + this.formatPrice(max);
+    }
+  
+    // Handle single price
+    return this.formatPrice(Number(value));
+  }
+  
+  formatPrice(value: number): string {
     if (value >= 10000000) {
-      // Convert to crores and format with 2 decimal places
-      return (value / 10000000).toFixed(2) + 'Cr';
+      return (value / 10000000).toFixed(2) + 'Cr'; // Convert to Crores
     } else if (value >= 100000) {
-      // Convert to lakhs and format with 2 decimal places
-      return (value / 100000).toFixed(2) + 'L';
+      return (value / 100000).toFixed(2) + 'L'; // Convert to Lakhs
     } else {
-      // Return the value as-is if it's less than 1 lakh
-      return value.toString();
+      return value.toString(); // Leave as-is for smaller numbers
     }
   }
+  
 }
