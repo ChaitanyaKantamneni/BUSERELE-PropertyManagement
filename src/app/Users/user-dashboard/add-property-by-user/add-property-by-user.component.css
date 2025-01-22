@@ -134,6 +134,7 @@
     position: relative;
   }
   
+  
   .propertyAminities label{
     position: relative;  
     opacity: 1;     
@@ -146,7 +147,22 @@
   
   .propertyAminities input[type="checkbox"] {
     display: inline-block; 
-    margin-right: 10px; 
+    margin-right: 0px; 
+  }
+
+
+  .select-buttons button {
+    background-color: #2495FD;
+    color: white;
+    border: none;
+    /* padding: 10px 20px; */
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .select-buttons button:hover {
+    background-color: #0056b3;
   }
   
   /* General reset to ensure no unexpected margins or paddings */
@@ -181,13 +197,18 @@
   
   
   
-  .amenity-row{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
+  .amenity-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;  /* Ensure the checkboxes are evenly distributed */
+    gap: 10px; /* Add space between items */
   }
-  
+  .singleamenity {
+    flex: 1 1 30%;  
+    min-width: 200px; 
+    /* margin-bottom: 10px; */
+    box-sizing: border-box;
+  }
   
   .media-buttons{
     width: 22%;
@@ -503,6 +524,52 @@
     height: 180px;
     width:250px;
   }
+
+
+  .custom-quill-editor {
+    width: 100%;
+    height: auto !important; /* Ensure height adjusts dynamically */
+    padding: 10px !important; /* Ensure consistent padding */
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 1.1em !important; /* Set font size */
+    box-sizing: border-box;
+    overflow: hidden !important; /* Avoid unnecessary scrollbars */
+}
+
+.custom-quill-editor .ql-editor {
+  white-space: normal; /* Allow word wrapping */
+  word-wrap: break-word; /* Prevent breaking words unnecessarily */
+  overflow-wrap: break-word; /* Cross-browser compatibility */
+  line-height: 1.6;
+  font-size: 14px;
+  hyphens: none; /* Prevent automatic hyphenation */
+}
+
+
+.ql-container {
+    height: auto !important; /* Automatically resize container */
+    box-sizing: border-box;
+    padding: 0 !important; /* Avoid extra padding */
+}
+
+.ql-container .ql-editor {
+    line-height: 1.5 !important; /* Consistent line spacing */
+    white-space: pre-wrap !important; /* Preserve text formatting and spacing */
+    word-break: break-word !important; /* Prevent unnecessary word breaking */
+    word-wrap: break-word !important; /* Handle wrapping of long words */
+    outline: none !important; /* Remove focus outline */
+    height: auto !important; /* Dynamic height adjustment */
+}
+
+.custom-quill-editor .ql-editor span {
+  white-space: nowrap; /* Ensure no breaking for specific parts */
+  display: inline; /* Keep elements inline */
+}
+
+.no-wrap {
+  white-space: nowrap; /* Add this class to prevent word breaks on certain phrases */
+}
   
   @media (max-width: 768px){
   
@@ -576,5 +643,14 @@
   
       .formrow .form-group{
         width:100%;
+      }
+
+      .singleamenity {
+        flex: 1 1 45%;  /* Adjust for smaller screens */
+        min-width: 150px;
+      }
+    
+      .amenity-row {
+        justify-content: center; /* Center align on smaller screens */
       }
   }

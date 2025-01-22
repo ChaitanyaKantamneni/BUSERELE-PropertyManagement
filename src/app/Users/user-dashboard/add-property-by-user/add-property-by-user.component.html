@@ -1056,10 +1056,10 @@
                   <div class="input-container">
                     <select formControlName="PropertyFor" (change)="onPropertyForChange($event)" id="PropertyFor" class="form-control">
                       <option value="" disabled selected>Select Property For</option>
-                      <option value="1">Buy</option>
-                      <option value="2">Sell</option>
-                      <option value="3">Rent</option>
-                      <option value="4">Lease</option>
+                      <!-- <option value="1">For Buy</option> -->
+                      <option value="2">For Sale</option>
+                      <option value="3">For Rent</option>
+                      <option value="4">For Lease</option>
                     </select>
                     <label for="PropertyFor">Property For</label>
                   </div>
@@ -1068,6 +1068,10 @@
                   <div class="input-container">
                     <select formControlName="PropertyStatus" (change)="onPropertyStatusChange($event)" id="PropertyStatus" class="form-control">
                       <option value="" disabled selected>Select Property Status</option>
+                     
+                      <!-- <option value="1">Furnished</option>
+                      <option value="2">Semi Furnished</option>
+                      <option value="3">Not Furnished</option> -->
                       <option value="1">Completed</option>
                       <option value="2">Under Construction</option>
                     </select>
@@ -1239,42 +1243,36 @@
                 </div>
               </div>
             </div>
-  
             <div class="propertyAminities reviewcardPropertyView mt-4">
               <div class="PageHeading mb-3">
                 <h5 class="text-center m-0"><b>AMINITIES</b></h5>
               </div>
+              
+              <div class="select-buttons text-center mb-3" style="display: flex; flex-direction: row;">
+                <button (click)="selectAll()">
+                  <i class="fas fa-check-circle"></i> Select All
+                </button>
+                <button (click)="deselectAll()">
+                  <i class="fas fa-times-circle"></i> Deselect All
+                </button>
+              </div>
+              
               <div class="amenity-row">
-                <!-- <ng-container *ngFor="let amenity of amenities">
-                  <div class="singleaminity">
+                <ng-container *ngFor="let amenity of amenities">
+                  <div class="singleamenity">
                     <label>
                       <input 
                         type="checkbox" 
                         [value]="amenity.aminitieID" 
-                        (change)="onAmenityChange($event, amenity.aminitieID)" 
-                        [checked]="selectedAmenities.includes(amenity.aminitieID)">
+                        (change)="onAmenityChange($event, amenity)" 
+                        [checked]="isSelected(amenity)">
                       {{ amenity.name }}
                     </label>
                   </div>
-                </ng-container> -->
-              
-                <div class="amenity-row">
-                  <ng-container *ngFor="let amenity of amenities">
-                    <div class="singleamenity">
-                      <label>
-                        <input 
-                          type="checkbox" 
-                          [value]="amenity.aminitieID" 
-                          (change)="onAmenityChange($event, amenity)" 
-                          [checked]="isSelected(amenity)">
-                        {{ amenity.name }}
-                      </label>
-                    </div>
-                  </ng-container>
-                </div>
-                
+                </ng-container>
               </div>
             </div>
+            
             
             <div class="formDescriptions reviewcardPropertyView mt-4">
               <div class="PageHeading mb-3">
@@ -1339,7 +1337,7 @@
                       <h5>Property Gallery:</h5>
                       <label for="gallery-upload">Upload Property Images</label>
                       <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
-                      <button class="btn btn-primary mt-2" (click)="uploadPropertyImages()">
+                      <button class="btn btn-primary mt-2"  [disabled]="propertyImagesUploadButtonClick" (click)="uploadPropertyImages()">
                           <i class="fas fa-upload"></i> Upload
                       </button>
                   </div>
@@ -1347,13 +1345,21 @@
                   <div class="image-table mt-4">
                       <h5>Uploaded Images:</h5>
                       <table class="table">
-                          <thead>
-                              <tr>
-                                  <th hidden="true">S.no</th>
-                                  <th>Image</th>
-                                  <th>Actions</th>
-                              </tr>
-                          </thead>
+                        <thead *ngIf="PropertyOnfileClicked">
+                          <tr>
+                              <th hidden="true">S.no</th>
+                              <th>Image</th>
+                              <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <thead *ngIf="!PropertyOnfileClicked">
+                        <tr>
+                            <th hidden="true">S.no</th>
+                            <th>Image</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
                           <tbody>
                             <ng-container *ngIf="PropertyOnfileClicked">
                               <tr *ngFor="let image of uploadedImages">
@@ -1369,6 +1375,23 @@
                                 </td>
                               </tr>
                             </ng-container>
+                            <!-- <ng-container *ngIf="!PropertyOnfileClicked">
+                              <tr *ngFor="let image of uploadedImages1">
+                                <td hidden="true">
+                                    <h5>{{image.id}}</h5>
+                                </td>
+                                <td>
+                                    <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                                </td>
+                                <td>
+                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> --
+                                    <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
+                                    <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button>
+                                </td>
+                              </tr>
+                            </ng-container> -->
+
+
                             <ng-container *ngIf="!PropertyOnfileClicked">
                               <tr *ngFor="let image of uploadedImages1">
                                 <td hidden="true">
@@ -1378,12 +1401,28 @@
                                     <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
                                 </td>
                                 <td>
+                                  <!-- Use ngModel with standalone option -->
+                                  <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    [(ngModel)]="image.customOrder" 
+                                    placeholder="Set Order" 
+                                    min="1" 
+                                    [ngModelOptions]="{standalone: true}">
+                                </td>
+                                <td>
                                     <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                     <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
-                                    <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button>
+                                    <!-- <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button> -->
                                 </td>
                               </tr>
                             </ng-container>
+
+                            <button 
+                            class="btn btn-primary mt-3" 
+                            (click)="submitCustomOrder()">
+                            Submit Order
+                          </button>
                           </tbody>
                       </table>
                   </div>
@@ -1423,13 +1462,21 @@
                   <div class="image-table mt-4">
                       <h5>Uploaded Floor Images:</h5>
                       <table class="table">
-                          <thead>
-                              <tr>
-                                  <th hidden="true">S.no</th>
-                                  <th>Image</th>
-                                  <th>Actions</th>
-                              </tr>
-                          </thead>
+                        <thead *ngIf="PropertyFloorImageOnFileClicked">
+                          <tr>
+                              <th hidden="true">S.no</th>
+                              <th>Image</th>
+                              <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <thead *ngIf="!PropertyFloorImageOnFileClicked">
+                        <tr>
+                            <th hidden="true">S.no</th>
+                            <th>Image</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
                           <tbody>
                               <ng-container *ngIf="PropertyFloorImageOnFileClicked">
                                 <tr *ngFor="let image of uploadedFloorImages">
@@ -1454,11 +1501,26 @@
                                       <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
                                   </td>
                                   <td>
+                                    <!-- Use ngModel with standalone option -->
+                                    <input 
+                                      type="number" 
+                                      class="form-control" 
+                                      [(ngModel)]="image.customOrder" 
+                                      placeholder="Set Order" 
+                                      min="1" 
+                                      [ngModelOptions]="{standalone: true}">
+                                  </td>
+                                  <td>
                                       <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                       <button class="btn btn-danger" (click)="deleteFloorImage1(image.propID, image.id)">Delete</button>
                                   </td>
                               </tr>
                               </ng-container>
+                              <button 
+                            class="btn btn-primary mt-3" 
+                            (click)="submitFloorImagesCustomOrder()">
+                            Submit Order
+                          </button>
                           </tbody>
                       </table>
                   </div>
@@ -1663,6 +1725,7 @@
   
             <div class="socialLinks reviewcardPropertyView mt-4">
               <div class="PageHeading mb-3">
+                
                 <h5 class="text-center m-0"><b>SOCIAL LINKS</b></h5>
               </div>
               <div class="formrow">
@@ -1749,8 +1812,12 @@
           </form>
   
           <div class="SubmitAndUpdateButtons">
-            <div class="submitButtonDiv" *ngIf="!editclicked && addnewPropertyclicked">
+            <!-- <div class="submitButtonDiv" *ngIf="!editclicked && addnewPropertyclicked">
               <button type="submit" class="SubmitButton" (click)="submitpropertyDet()" [disabled]="propertyform.invalid"><i class="fa fa-paper-plane" aria-hidden="true"></i>Submit</button>
+            </div> -->
+            
+            <div class="submitButtonDiv"  *ngIf="!editclicked && addnewPropertyclicked"  >
+              <button type="submit" class="SubmitButton" (click)="submitpropertyDet()" ><i class="fa fa-paper-plane" aria-hidden="true"></i>Submit</button>
             </div>
             <div class="updateProperty" *ngIf="!addnewPropertyclicked && editclicked">
               <div>
@@ -1761,7 +1828,7 @@
         </div>
       </div>
 
-          <!-- Modal for Success/Failure -->
+          <!-- Modal for Success/Failure --> 
     <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
