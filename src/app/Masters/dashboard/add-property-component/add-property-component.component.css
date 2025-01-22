@@ -144,9 +144,25 @@ form{
   margin-left: 25px;  
 }
 
+
+
+.select-buttons button {
+  background-color: #2495FD;
+  color: white;
+  border: none;
+  /* padding: 10px 20px; */
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.select-buttons button:hover {
+  background-color: #0056b3;
+}
+
 .propertyAminities input[type="checkbox"] {
   display: inline-block; 
-  margin-right: 10px; 
+  margin-right: 0px; 
 }
 
 /* General reset to ensure no unexpected margins or paddings */
@@ -181,13 +197,18 @@ ul.AvailabilityOptions-row {
 
 
 
-.amenity-row{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
+.amenity-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;  /* Ensure the checkboxes are evenly distributed */
+  gap: 10px; /* Add space between items */
 }
-
+.singleamenity {
+  flex: 1 1 30%;  
+  min-width: 200px; 
+  /* margin-bottom: 10px; */
+  box-sizing: border-box;
+}
 
 .media-buttons{
   width: 22%;

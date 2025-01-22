@@ -1,7 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QuillModule,QuillEditorComponent } from 'ngx-quill';
 
@@ -171,23 +171,48 @@ export class AddPropertyComponentComponent implements OnInit {
   selectedPropertyVideoFiles: FileList | null = null;
   selectedPropertyDocumentFiles:FileList | null = null;
   //uploadedImages1: Array<{ id: number, propID: string, fileName: string, mimeType: string, imageData: Blob, imageUrl: string }> = [];
-  uploadedImages1: Array<{ 
-    id: number, 
-    propID: string, 
-    fileName: string, 
-    mimeType: string, 
-    imageData: Blob, 
-    imageUrl: string,
-    DefaultImage: string
-  }> = [];
+  // uploadedImages1: Array<{ 
+  //   id: number, 
+  //   propID: string, 
+  //   fileName: string, 
+  //   mimeType: string, 
+  //   imageData: Blob, 
+  //   imageUrl: string,
+  //   DefaultImage: string
+  // }> = [];
 
-  uploadedFloorImages1:Array<{ 
-    id: number, 
-    propID: string, 
-    fileName: string, 
-    mimeType: string, 
-    imageData: Blob, 
-    imageUrl: string 
+  uploadedImages1: Array<{ 
+    id: number; 
+    propID: string; 
+    fileName: string; 
+    mimeType: string; 
+    imageData: Blob; 
+    imageUrl: string; 
+    DefaultImage: string; 
+    ImageOrder: number;     // New property for internal image order
+    customOrder: number;    // New property for custom order input
+  }> = [];
+  
+
+  // uploadedFloorImages1:Array<{ 
+  //   id: number, 
+  //   propID: string, 
+  //   fileName: string, 
+  //   mimeType: string, 
+  //   imageData: Blob, 
+  //   imageUrl: string 
+  // }> = [];
+
+  uploadedFloorImages1: Array<{ 
+    id: number; 
+    propID: string; 
+    fileName: string; 
+    mimeType: string; 
+    imageData: Blob; 
+    imageUrl: string; 
+    DefaultImage: string; 
+    ImageOrder: number;     // New property for internal image order
+    customOrder: number;    // New property for custom order input
   }> = [];
 
   uploadedVideos1:Array<{ 
@@ -490,7 +515,14 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyDocumentsClicked=false;
   }
 
+  propertyImagesUploadButtonClick:boolean=false;
+  propertyfloorImagesUploadButtonClick:boolean=false;
+  propertyVideoUploadButtonClick:boolean=false;
+  propertydocumenetUploadButtonClick:boolean=false;
+
   uploadPropertyImages(): void {
+
+    this.propertyImagesUploadButtonClick=true;
     console.log(this.propID);
     if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
       alert('Property ID is required and you must select images.');
@@ -510,6 +542,7 @@ export class AddPropertyComponentComponent implements OnInit {
       response => {
         console.log('Images uploaded successfully:', response);
         this.PropertyOnfileClicked=false;
+        this.propertyImagesUploadButtonClick=false;
         this.getPropertyImagesForProperty(this.propID);  // Refresh the images after upload
       },
       
@@ -520,6 +553,8 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   uploadPropertyFloorImages(): void {
+    this.propertyfloorImagesUploadButtonClick=true;
+
     console.log(this.propID);
     if (!this.propID || !this.selectedPropertyFloorFiles || this.selectedPropertyFloorFiles.length === 0) {
       alert('Property ID is required and you must select images.');
@@ -539,6 +574,7 @@ export class AddPropertyComponentComponent implements OnInit {
       response => {
         console.log('Floor Images uploaded successfully:', response);
         this.PropertyFloorImageOnFileClicked=false;
+        this.propertyfloorImagesUploadButtonClick=false;
         this.getPropertyFloorImagesForProperty(this.propID);  // Refresh the images after upload
       },
       
@@ -549,6 +585,8 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   uploadPropertyVideos(): void {
+    this.propertyVideoUploadButtonClick=true;
+
     console.log(this.propID);
     if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
       alert('Property ID is required and you must select video.');
@@ -568,6 +606,7 @@ export class AddPropertyComponentComponent implements OnInit {
       response => {
         console.log('Property Video uploaded successfully:', response);
         this.PropertyVideoOnFileClicked=false;
+        this.propertyVideoUploadButtonClick=false;
         this.getPropertyVideo(this.propID);  // Refresh the images after upload
       },
       
@@ -578,6 +617,7 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   uploadPropertyDocuments(): void {
+    this.propertydocumenetUploadButtonClick=true;
     console.log(this.propID);
     if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
       alert('Property ID is required and you must select Document.');
@@ -597,6 +637,7 @@ export class AddPropertyComponentComponent implements OnInit {
       response => {
         console.log('Property Document uploaded successfully:', response);
         this.PropertyDocumentOnFileClicked=false;
+        this.propertydocumenetUploadButtonClick=false;
         this.getPropertyDocument(this.propID); 
       },
       
@@ -608,36 +649,74 @@ export class AddPropertyComponentComponent implements OnInit {
 
 
 
+  // getPropertyImagesForProperty(propID: string): void {
+  //   this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
+  //     // Process response and convert imageData to Blob URL
+  //     this.uploadedImages1 = response.map((image: any) => {
+  //       const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
+  //       const byteArray = new Uint8Array(byteCharacters.length);
+
+  //       // Copy the binary data into the byteArray
+  //       for (let i = 0; i < byteCharacters.length; i++) {
+  //         byteArray[i] = byteCharacters.charCodeAt(i);
+  //       }
+
+  //       // Create a Blob from the byteArray
+  //       const blob = new Blob([byteArray], { type: image.mimeType });
+
+  //       // Create an object URL from the Blob
+  //       const imageUrl = URL.createObjectURL(blob);
+  //       console.log(imageUrl);
+  //       return {
+  //         ...image,
+  //         propID: propID,
+  //         imageUrl // Add the Blob URL to the image object
+  //       };
+  //     });
+
+  //     console.log('Processed image array:', this.uploadedImages1);
+  //   }, error => {
+  //     console.error('Error fetching images:', error);
+  //   });
+  // }
+
   getPropertyImagesForProperty(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
       // Process response and convert imageData to Blob URL
       this.uploadedImages1 = response.map((image: any) => {
         const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
         const byteArray = new Uint8Array(byteCharacters.length);
-
+  
         // Copy the binary data into the byteArray
         for (let i = 0; i < byteCharacters.length; i++) {
           byteArray[i] = byteCharacters.charCodeAt(i);
         }
-
+  
         // Create a Blob from the byteArray
         const blob = new Blob([byteArray], { type: image.mimeType });
-
+  
         // Create an object URL from the Blob
         const imageUrl = URL.createObjectURL(blob);
-        console.log(imageUrl);
+  
+        // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
+        const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+  
+        // Return the updated image object
         return {
           ...image,
           propID: propID,
-          imageUrl // Add the Blob URL to the image object
+          imageUrl,           // Add the Blob URL to the image object
+          ImageOrder: image.imageOrder, // Include the ImageOrder
+          customOrder         // Add the customOrder field
         };
       });
-
+  
       console.log('Processed image array:', this.uploadedImages1);
     }, error => {
       console.error('Error fetching images:', error);
     });
   }
+  
 
   getPropertyFloorImagesForProperty(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/get-Floorimages/${propID}`).subscribe((response: any) => {
@@ -654,13 +733,17 @@ export class AddPropertyComponentComponent implements OnInit {
         // Create a Blob from the byteArray
         const blob = new Blob([byteArray], { type: image.mimeType });
 
+        const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+
         // Create an object URL from the Blob
         const imageUrl = URL.createObjectURL(blob);
         console.log(imageUrl);
         return {
           ...image,
           propID: propID,
-          imageUrl // Add the Blob URL to the image object
+          imageUrl, // Add the Blob URL to the image object
+          ImageOrder: image.imageOrder, // Include the ImageOrder
+          customOrder         // Add the customOrder field
         };
       });
 
@@ -1274,6 +1357,7 @@ export class AddPropertyComponentComponent implements OnInit {
 
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
+      this.UserIDDb=response.userID;
       const convertToDDMMYYYY = (dateStr: string): string => {
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -1463,6 +1547,8 @@ export class AddPropertyComponentComponent implements OnInit {
     });
   }
 
+
+  UserIDDb:any='';
   updatePropertyDet() {
     const selectedAmenitiesString = this.selectedAmenities
   .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
@@ -1518,7 +1604,7 @@ export class AddPropertyComponentComponent implements OnInit {
       Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || '',
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
-      userID:new String(localStorage.getItem('email')).toString() || '',
+      userID:(this.UserIDDb).toString(),
       ActiveStatus:'',
       CountryName:(this.SelectedCountryName).toString(),
       StateName:(this.SelectedStateName).toString(),
@@ -1666,6 +1752,21 @@ export class AddPropertyComponentComponent implements OnInit {
     const PropId=this.propertyform.get('id')?.value
     this.updatePropertyStatus(PropId,'1');
   }
+
+
+    // Select all amenities
+    selectAll(): void {
+      this.selectedAmenities = this.amenities.map(amenity => ({
+        id: amenity.aminitieID,
+        name: amenity.name
+      }));
+      console.log('All amenities selected:', this.selectedAmenities);
+    }
+  
+    deselectAll(): void {
+      this.selectedAmenities = [];
+      console.log('All amenities deselected');
+    }
 
   updatePropertyStatus(PropId: string, Status: string): void {
     this.http.put(`https://localhost:7190/api/Users/updatePropertyStatus/${PropId}?Status=${Status}`, {}).subscribe({
@@ -1941,6 +2042,43 @@ export class AddPropertyComponentComponent implements OnInit {
 
 
 
+  // makeImageDefault(propID: string, imageID: number) {
+  //   // Find the image by matching imageID with the image id in the array
+  //   const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
+  
+  //   if (selectedImage) {
+  //     // Set the selected image as default
+  //     selectedImage.DefaultImage = "1"; // "1" means default image
+  
+  //     // Set all other images' DefaultImage to "0"
+  //     this.uploadedImages1.forEach(img => {
+  //       if (img.id !== imageID) {
+  //         img.DefaultImage = "0"; // "0" means not a default image
+  //       }
+  //     });
+  
+  //     // Reorder the array to ensure the default image appears first
+  //     this.uploadedImages1 = [
+  //       selectedImage, 
+  //       ...this.uploadedImages1.filter(img => img.id !== imageID)
+  //     ];
+  
+  //     // Update the database to reflect the change (update the default image)
+  //     this.updateDefaultImageInDatabase(propID, imageID);
+  //   }
+  // }
+  
+  // updateDefaultImageInDatabase(propID: string, imageID: number) {
+  //   console.log("selected ImageID:",imageID);
+  //   this.http.put(`https://localhost:7190/api/Users/update-default-image/${propID}/${imageID}`, {})
+  //     .subscribe(response => {
+  //       console.log('Default image updated successfully');
+  //     }, error => {
+  //       console.error('Error updating default image:', error);
+  //     });
+  // }
+
+
   makeImageDefault(propID: string, imageID: number) {
     // Find the image by matching imageID with the image id in the array
     const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
@@ -1956,7 +2094,7 @@ export class AddPropertyComponentComponent implements OnInit {
         }
       });
   
-      // Reorder the array to ensure the default image appears first
+      // Reorder the array to ensure the default image appears first (if required)
       this.uploadedImages1 = [
         selectedImage, 
         ...this.uploadedImages1.filter(img => img.id !== imageID)
@@ -1968,7 +2106,7 @@ export class AddPropertyComponentComponent implements OnInit {
   }
   
   updateDefaultImageInDatabase(propID: string, imageID: number) {
-    console.log("selected ImageID:",imageID);
+    console.log("selected ImageID:", imageID);
     this.http.put(`https://localhost:7190/api/Users/update-default-image/${propID}/${imageID}`, {})
       .subscribe(response => {
         console.log('Default image updated successfully');
@@ -1976,6 +2114,93 @@ export class AddPropertyComponentComponent implements OnInit {
         console.error('Error updating default image:', error);
       });
   }
+  
+  // submitCustomOrder() {
+  //   // Ensure each image has a valid custom order before submitting
+  //   this.uploadedImages1.forEach((image, index) => {
+  //     // Set the ImageOrder field based on the custom order input
+  //     image.ImageOrder = image.customOrder || index + 1; // Default to index+1 if customOrder is undefined
+  //   });
+  
+  //   // Send the updated image order and default image data to the server
+  //   this.updateImageOrderInDatabase();
+  // }
+  
+  // updateImageOrderInDatabase() {
+  //   // Send the updated order and default image data to the server
+  //   const updatedImages = this.uploadedImages1.map(img => ({
+  //     id: img.id,
+  //     imageOrder: img.ImageOrder,
+  //     defaultImage: img.DefaultImage
+  //   }));
+  
+  //   this.http.put(`https://localhost:7190/api/Users/update-image-order-and-default/${this.propID}`, updatedImages)
+  //     .subscribe(response => {
+  //       console.log('Image order and default image updated successfully');
+  //     }, error => {
+  //       console.error('Error updating image order and default image:', error);
+  //     });
+  // }
+
+  submitCustomOrder() {
+    // Prepare the payload with the custom order and default image info
+    const updatedImages = this.uploadedImages1.map(image => ({
+      id: image.id,
+      imageOrder: image.customOrder.toString(),  // Ensure it's a string
+      defaultImage: image.DefaultImage === "1" ? "1" : "0"  // Set default to "1" or "0"
+    }));
+
+    console.log('Updated images payload:', updatedImages);  // Verify the payload before sending
+
+    this.updateImageOrderInDatabase(updatedImages);
+  }
+  
+  
+  updateImageOrderInDatabase(updatedImages: any[]) {
+    this.http.put(`https://localhost:7190/api/Users/update-image-order-and-default/${this.propID}`, updatedImages)
+      .subscribe(
+        response => {
+          console.log('Image order and default image updated successfully');
+        },
+        error => {
+          console.error('Error updating image order and default image:', error);
+        }
+      );
+  }
+
+
+  submitFloorImagesCustomOrder() {
+    // Prepare the payload with the custom order and default image info
+    const updatedImages = this.uploadedFloorImages1.map(image => ({
+      id: image.id,
+      imageOrder: image.customOrder.toString(),  // Ensure it's a string
+      defaultImage: image.DefaultImage === "1" ? "1" : "0"  // Set default to "1" or "0"
+    }));
+
+    console.log('Updated images payload:', updatedImages);  // Verify the payload before sending
+
+    this.updateFloorImageOrderInDatabase(updatedImages);
+  }
+  
+  
+  updateFloorImageOrderInDatabase(updatedImages: any[]) {
+    this.http.put(`https://localhost:7190/api/Users/update-floor-image-order-and-default/${this.propID}`, updatedImages)
+      .subscribe(
+        response => {
+          console.log('Image order and default image updated successfully');
+        },
+        error => {
+          console.error('Error updating image order and default image:', error);
+        }
+      );
+  }
+  
+  
+  
+  
+  
+  
+  
 
   areaValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;

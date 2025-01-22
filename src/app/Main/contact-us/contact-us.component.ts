@@ -4,18 +4,19 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { Router, RouterLink } from '@angular/router';
 import emailjs from 'emailjs-com';
 import { TopNav1Component } from '../top-nav-1/top-nav-1.component';
+import { FooterComponent } from "../footer/footer.component";
 
 @Component({
   selector: 'app-contact-us',
   standalone: true,
-  imports: [RouterLink,FormsModule,HttpClientModule,ReactiveFormsModule,TopNav1Component],
+  imports: [RouterLink, FormsModule, HttpClientModule, ReactiveFormsModule, TopNav1Component, FooterComponent],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css'
 })
 export class ContactUsComponent  {
 
   constructor( public apiurl:HttpClient,public routes:Router){}
-  Email:string='gvrinfosystem@gmail.com';
+  // Email:string='info@buserele.com';
 
   name: string = '';
   email: string = '';

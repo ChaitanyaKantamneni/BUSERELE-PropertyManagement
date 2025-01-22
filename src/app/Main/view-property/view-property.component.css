@@ -9,7 +9,6 @@
     font-size: 20px;
     text-transform: uppercase;
     font-weight: 700;
-    padding-top: 20px;
 }
 
 .preloader {
@@ -254,7 +253,7 @@ p{
     width: 25%;
 }
 
-.propertyoverview{
+.propertyoverview {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -267,7 +266,7 @@ p{
     margin-bottom: 20px;
 }
 
-.propertyoverview .headings{
+.propertyoverview .headings {
     background-color: #e8e8e8;
     color: black;
     border-radius: 10px;
@@ -276,38 +275,46 @@ p{
     display: flex;
     align-items: center;
 }
-
-.propertyoverview .body{
+.propertyoverview .body {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     width: 100%;
     padding: 20px 40px 10px 40px;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-.propertyoverview .body .propertytype{
-    width:19%;
+
+.propertyoverview .body .propertytype {
+    /* width: 23%;  */
+    margin-bottom: 20px;
 }
 
 .propertyoverview .body .propertytype .heading{
     text-align: center;
+    font-weight: 400;
+    color: #222222
 }
 
-.propertyoverview .body .value{
-    font-size: 17px;
-    font-weight: bold;
+.propertyoverview .body .value {
+    font-size: 15px;
+    font-weight: 400;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #888;
 }
 
-.propertyoverview .body .value i{
+
+.propertyoverview .body .value i {
     font-size: 14px;
-    font-weight:600;
+    font-weight: 400;
     margin-right: 10px;
+    color: #222222
 }
 
-.PropertyDescriptionMain .body .PropertyDescriptionContent{
+/* .PropertyDescriptionMain .body .PropertyDescriptionContent{
     margin-top: 15px;
     font-size: 1rem;
     line-height: 1.6;
@@ -315,7 +322,36 @@ p{
     word-wrap: break-word;
     text-align: justify;
     flex-grow: 1;
-}
+} */
+
+.PropertyDescriptionMain .body .PropertyDescriptionContent {
+    
+    overflow-wrap: break-word !important; /* Better browser compatibility for wrapping */
+    white-space: normal !important;  /* Ensure normal word spacing */
+    hyphens: none !important; /* Prevent automatic hyphenation */
+    line-height: 1.6 !important;
+    font-size: 1rem !important;
+    color: #333 !important;
+  }
+
+  .PropertyDescriptionContent {
+   
+    overflow-wrap: break-word;        /* Cross-browser compatibility for word wrap */
+    white-space: normal;              /* Allow normal wrapping without unnecessary spaces */
+    line-height: 1.6;                 /* Maintain consistent line spacing */
+    font-size: 1rem;                  /* Standard font size */
+    color: #333;                      /* Text color */
+    hyphens: none;                    /* Prevent automatic hyphenation */
+    word-break: break-all;           /* Prevent words like 'Rohith-Reddy' from breaking across lines */
+  }
+
+  .no-wrap-hyphen {
+    white-space: nowrap;              /* Prevent word from breaking across lines */
+    display: inline;                  /* Keeps words in a continuous inline flow */
+  }
+
+
+
 
 .propertyfeatures .body {
     display: grid;
@@ -324,33 +360,41 @@ p{
 }
 
 
-.addressbody{
+.addressbody {
+    display: flex;
+    justify-content: space-between; /* Ensure spacing between side1 and side2 */
+    align-items: flex-start;
+    width: 100%;
+    gap: 20px; /* Add gap between the sides */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.addressbody .side1, .addressbody .side2 {
+    width: 48%; /* Make both sides 48% of the width */
+}
+
+.addressbody .addpropertytype {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.addpropertytype {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    width: 100%;
+    margin-bottom: 15px;
 }
 
-.addressbody .side1,.addressbody .side2{
-    width: 45%;
+.addressbody .addpropertytype .heading {
+    font-size: 14px;
+    font-weight: 400;
+    margin-right: 10px;
+    color: #222222
 }
 
-.addressbody .addpropertytype{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.addressbody .addpropertytype .heading{
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.addressbody .addpropertytype .value{
-    font-size: 16px;
-    font-weight:400;
+.addressbody .addpropertytype .value {
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .propertyfeatures i{
@@ -498,6 +542,159 @@ p{
 }
 
 
+
+
+
+
+
+.share-icon {
+    background-color: #1877F2;
+    color: white;
+    padding: 1px;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    text-align: center;
+    width: 35px;
+    height: 29px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+    align-items: center;
+}
+
+.share-icon:hover {
+    background-color: #145A8A;
+}
+
+.share-container {
+    position: relative; 
+}
+
+.share-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    gap: 10px;
+}
+
+.share-container:hover .share-menu {
+    display: flex;
+    /* flex-direction: column;  */
+    height: 40px;
+}
+
+.share-menu a {
+    cursor: pointer;
+}
+
+.share-menu i {
+    width: 24px;
+    height: 24px;
+}
+
+
+.share-menu {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+
+
+
+  
+
+
+.social-icon {
+    display: inline-block;
+    font-size: 30px; 
+    padding: 10px;
+    text-decoration: none; 
+    color: black; 
+    text-align: center;
+    position: relative; 
+}
+
+
+.social-icon .value {
+    display: none;  
+    position: absolute; 
+    bottom: -20px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    font-size: 14px;
+    color: black; 
+}
+
+.social-icon:hover .value {
+    display: block;  
+}
+
+.social-icon.website:hover {
+    color: #0073e6;  
+}
+
+.social-icon.pinterest:hover {
+    color: #e60023;  
+}
+
+.social-icon.facebook:hover {
+    color: #1877f2;  
+}
+
+.social-icon.twitter:hover {
+    color: #1da1f2;  
+}
+
+.social-icon, .social-icon .value {
+    transition: color 0.3s ease, display 0.3s ease;
+}
+
+
+.propPriceDet{
+    display: flex; 
+    align-items: center; 
+    justify-content: end; 
+    width: 72%; 
+    flex-wrap: nowrap; 
+    white-space: nowrap; 
+    position: relative;
+}
+
+.propTitlePrice{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap;
+    width: 70%;
+    padding: 20px 0px;
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(24%, 1fr)); /* Ensures each item takes 24% width */
+    gap: 10px; /* Adjusts space between items */
+    width: 100%; /* Ensure grid container takes 100% width */
+    box-sizing: border-box; /* Includes padding and border in width calculation */
+  }
+  
+  .grid-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .propertytype {
+    /* Optionally, add some padding or styling */
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+  
+  
   
 
 @media (min-width: 1200px) {
@@ -527,6 +724,7 @@ p{
 }
 
 
+
 @media (max-width: 767px) {
     .maincontainer{
         margin: 0px 10px;
@@ -546,19 +744,18 @@ p{
         width: 100%;
     }
 
-    .propertyoverview .body{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap:wrap;
-        width: 100%;
-        padding: 30px 10px ;
+    .propertyoverview .body {
+        flex-direction: column;
+        padding: 20px 10px;
+    }
+
+    .propertyoverview .propSocialLinks{
+        flex-direction: row;
     }
     
 
-    .propertyoverview .body .propertytype{
-        width:30%;
-        margin-bottom: 10px;
+    .propertyoverview .body .propertytype {
+        width: 100%;
     }
 
     .propertyoverview .body .heading{
@@ -579,8 +776,8 @@ p{
         margin-right: 5px;
     }
 
-    .addressbody .side1,.addressbody .side2{
-        width: 100%;
+    .addressbody .side1, .addressbody .side2 {
+        width: 100%; /* Stack items vertically on small screens */
     }
 
     .body .addressbody{
@@ -595,7 +792,7 @@ p{
         flex-wrap: wrap;
     }
 
-    .reviewform .reviewdiv, .reviewform .reviewtextarea{
+    .reviewform .reviewdiv, .reviewform .reviewtextarea {
         width: 100%;
     }
 
@@ -643,4 +840,33 @@ p{
         width: 100%;
         height:auto;
     }
+
+    .propertydetails{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .propPriceDet{
+        display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            flex-wrap:wrap;
+            white-space: nowrap;
+            position: relative;
+            margin: 15px 0px;
+    }
+
+    .propTitlePrice{
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        flex-wrap: wrap;
+        width: 100%;
+        
+    }
+
 }

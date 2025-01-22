@@ -26,7 +26,7 @@
   .property-card {
     flex: 0 0 auto;
     width: 100%;
-    max-width: 300px; /* Adjust based on your preferred size */
+    max-width: 290px; /* Adjust based on your preferred size */
   }
   
   .scroll-btn {
@@ -100,10 +100,10 @@
 .AdvertisingPropertiesAdds .propertyFulldet{
     border-radius: 15px;
 }
-
+/* 
 .AdvertisingPropertiesAdds .propertyFulldet img{
     border-radius: 15px 0px 0px 15px;
-}
+} */
 
 .AdvertisingPropertiesAdds .propertyFulldet .propertyDetails{
     border-radius: 0px 15px 15px 0px;
@@ -119,6 +119,7 @@
     width: 70%;
 }
 
+
 /* .AdvertisingPropertiesAdds .propertyDetails h5{
     font-size: 17px;
 } */
@@ -127,7 +128,7 @@
     font-size: 11px;
 }
 .AdvertisingPropertiesAdds .propertyDetails p{
-    font-size: 13px;
+    font-size: 10px;
 }
 .AdvertisingPropertiesAdds .propertyDetails .price p{
     font-size: 12px;
@@ -284,6 +285,8 @@ select.form-control option:disabled {
     width: 100%;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    
 }
 
 .propimg img {
@@ -508,22 +511,61 @@ select.form-control option:disabled {
     height: 350px;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
+.propertyFulldet:hover {
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 20px; /* Darker and larger shadow on hover */
+}
+
+
+
+.ExploreFeaturedProperties .propertyImage{
+    border-radius: 15px 0px 0px 15px;
+}
 
 .propertyImage {
     position: relative;
     width: 100%;
     height: 60%;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: transform 0.3s ease;
 }
+
+.propertyImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 2.3s ease; 
+}
+
+.propertyImage:hover img {
+    transform: scale(1.1); 
+}
+
+.propertyImage:hover {
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 15px; 
+}
+
+
+.propertyImage {
+    transition: box-shadow 0.3s ease; /* Smooth transition on hover */
+}
+
+
+
+
+
+
 
 .propertyDetails {
     height: 40%;
-    padding: 15px;
+    padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
+
 
 .bottom-bar {
     background-color: rgba(0, 0, 0, 0.6);
@@ -558,6 +600,8 @@ select.form-control option:disabled {
 
 
 
+
+
 .propertyaddress i {
     font-size: 1.2rem; /* Adjust as needed */
 }
@@ -577,7 +621,7 @@ select.form-control option:disabled {
 }
 
 .smaller-text,.small-icon {
-    font-size: 12px; /* Adjust as needed */
+    font-size: 10px; /* Adjust as needed */
 }
 
 .propertyspecifications h5{
@@ -598,6 +642,65 @@ select.form-control option:disabled {
     font-size: 15px;
 }
   
+
+
+
+
+
+
+
+
+
+.contact i {
+    font-size: 8px;
+    padding-left: 4px;
+  }
+  
+  .contact a {
+    font-size: 14px; /* Match link size */
+  }
+  
+  .bottom-bar2 {
+    /* padding: 5px 10px; */
+    padding: 0px 10px;
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent background */
+    border-radius: 5px;
+    width: 100%;  /* Ensure it takes full width */
+    display: flex;
+    justify-content: space-between;  /* Space between the contact and price sections */
+    align-items: center; 
+    
+  }
+
+  
+  
+  
+  .cost .price p {
+    margin: 0;
+    font-size: 14px; 
+  }
+  
+  .text-primary {
+    color: white !important; /* Adjust the color for Contact */
+  }
+  
+  .text-primary:hover {
+    color: white !important; 
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @keyframes scroll {
     from {
@@ -723,4 +826,116 @@ select.form-control option:disabled {
     .smaller-text,.small-icon {
         font-size: 16px; /* Adjust as needed */
     }
+
+    .ExploreAdertisingProperties{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        flex-wrap: wrap;
+        margin: 10px 0px;
+    }
+
+    .ExploreAdertisingProperties .container{
+        width: 100%;
+        margin: 50px 0px;
+    }
+
+    .AdvertisingPropertiesAdds{
+        height: 100%;
+        width: 100%;
+        /* border-left: 1px solid black; */
+        /* background: #fff;
+        margin-bottom: 30px;
+        padding: 20px;
+        border-radius: 3px;
+        box-shadow: 0 0 15px rgba(221, 221, 221, 0.56); */
+    }
+
+    .AdvertisingPropertiesAdds .propertyImage{
+        height: 100px;
+        width: 30%;
+    }
+    
+    .AdvertisingPropertiesAdds .propertyDetails{
+        height: 100px;
+        width: 70%;
+    }
+
+
 }
+
+
+/* @media (max-width: 767px) {
+    .maincontainer {
+        height: 90vh;
+    }
+    .steps h4 {
+        font-size: 1.25rem;
+    }
+    .steps h5 {
+        font-size: 1rem;
+    }
+    .form-control {
+        font-size: 0.9rem;
+    }
+    .btn {
+        padding: 0.5rem;
+    }
+    .ServiceDiv{
+        padding: 10px;
+    }
+
+    .contactformcontent,
+    .contactformdiv {
+        width: 100%; 
+        padding: 15px; 
+    }
+
+    .contactform {
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .contactform .p-text {
+        font-size: 1.2rem; 
+    }
+
+    .form-group label {
+        font-size: 0.9rem; 
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.9rem;
+    }
+
+    .review-container{
+        width: 100%;
+    }
+
+    .ExploreFeaturedProperties,.ExploreAdertisingProperties{
+        margin: 20px 10px;
+    }
+
+    .content .heading,.content .steps{
+        width: 100%;
+    }
+
+    .propertyFulldet {
+        flex-direction: column;
+    }
+
+    .propertyImage {
+        flex: 1;
+    }
+
+    .propertyDetails {
+        flex: 2;
+    }
+
+    .smaller-text,.small-icon {
+        font-size: 16px; 
+    }
+} */
+

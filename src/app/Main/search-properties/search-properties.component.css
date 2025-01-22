@@ -48,7 +48,7 @@ h5{
 
 .propertyDetails {
     height: 40%;
-    padding: 15px;
+    padding: 10px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -93,11 +93,11 @@ h5{
 }
 
 .smaller-text,.small-icon {
-    font-size: 12px; /* Adjust as needed */
+    font-size: 10px; /* Adjust as needed */
 }
 
 .cost{
-    font-family: 'Roboto', sans-serif;
+    /* font-family: 'Roboto', sans-serif; */
     font-size: 15px;
 }
 
@@ -192,6 +192,61 @@ h5{
 .btn:hover {
     background-color: #0056b3;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.contact i {
+    font-size: 8px;
+    padding-left: 4px;
+  }
+  
+  .contact a {
+    font-size: 14px; /* Match link size */
+  }
+  
+  .bottom-bar2 {
+    /* padding: 5px 10px; */
+    padding: 0px 10px;
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent background */
+    border-radius: 5px;
+    width: 100%;  /* Ensure it takes full width */
+    display: flex;
+    justify-content: space-between;  /* Space between the contact and price sections */
+    align-items: center; 
+    
+  }
+
+  
+  
+  
+  .cost .price p {
+    margin: 0;
+    font-size: 14px; 
+  }
+  
+  .text-primary {
+    color: white !important; /* Adjust the color for Contact */
+  }
+  
+  .text-primary:hover {
+    color: white !important; 
+  }
+  
+
+
+
+
+
+
 
 
 
