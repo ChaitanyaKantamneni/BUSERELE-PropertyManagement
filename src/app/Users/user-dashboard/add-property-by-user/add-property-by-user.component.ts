@@ -3282,6 +3282,8 @@ export class AddPropertyByUserComponent implements OnInit {
 
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
+
+      this.UserIDDb=response.userID;
       const convertToDDMMYYYY = (dateStr: string): string => {
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -3526,7 +3528,7 @@ export class AddPropertyByUserComponent implements OnInit {
       Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || '',
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
-      userID:new String(localStorage.getItem('email')).toString() || '',
+      userID:(this.UserIDDb).toString(),
       ActiveStatus:'',
       CountryName:(this.SelectedCountryName).toString(),
       StateName:(this.SelectedStateName).toString(),
@@ -3661,7 +3663,7 @@ export class AddPropertyByUserComponent implements OnInit {
     if (this.editclicked || this.addnewPropertyclicked) {
       this.editclicked = false;
       this.addnewPropertyclicked=false;
-      this.fetchProperties();
+      this.getownProperties();
     }
   }
 
@@ -3736,6 +3738,7 @@ export class AddPropertyByUserComponent implements OnInit {
   selectedIsActiveStatus1:string='';
   userID: string = localStorage.getItem('email') || '';
   filteredPropertiesNotNull:boolean=false;
+  UserIDDb:any='';
 
 
   PropertyIsActiveStatusNotActive:boolean=false;

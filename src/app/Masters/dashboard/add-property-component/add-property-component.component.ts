@@ -1274,6 +1274,7 @@ export class AddPropertyComponentComponent implements OnInit {
 
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
+      this.UserIDDb=response.userID;
       const convertToDDMMYYYY = (dateStr: string): string => {
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -1463,6 +1464,8 @@ export class AddPropertyComponentComponent implements OnInit {
     });
   }
 
+  UserIDDb:any='';
+
   updatePropertyDet() {
     const selectedAmenitiesString = this.selectedAmenities
   .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
@@ -1518,7 +1521,8 @@ export class AddPropertyComponentComponent implements OnInit {
       Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || '',
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
-      userID:new String(localStorage.getItem('email')).toString() || '',
+      // userID:new String(localStorage.getItem('email')).toString() || '',
+      userID:(this.UserIDDb).toString(),
       ActiveStatus:'',
       CountryName:(this.SelectedCountryName).toString(),
       StateName:(this.SelectedStateName).toString(),

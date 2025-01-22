@@ -723,4 +723,39 @@ select.form-control option:disabled {
     .smaller-text,.small-icon {
         font-size: 16px; /* Adjust as needed */
     }
+
+    .ExploreAdertisingProperties{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        flex-wrap: wrap;
+        margin: 10px 0px;
+    }
+
+    .ExploreAdertisingProperties .container{
+        width: 100%;
+        margin: 50px 0px;
+    }
+
+    .AdvertisingPropertiesAdds{
+        height: 100%;
+        width: 100%;
+        /* border-left: 1px solid black; */
+        /* background: #fff;
+        margin-bottom: 30px;
+        padding: 20px;
+        border-radius: 3px;
+        box-shadow: 0 0 15px rgba(221, 221, 221, 0.56); */
+    }
+
+    .AdvertisingPropertiesAdds .propertyImage{
+        height: 100px;
+        width: 30%;
+    }
+    
+    .AdvertisingPropertiesAdds .propertyDetails{
+        height: 100px;
+        width: 70%;
+    }
 }
