@@ -861,12 +861,7 @@ select.form-control option:disabled {
         height: 100px;
         width: 70%;
     }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 5571ee983d296339e1f9fc93c9d14d862770f02e
-}
 
 
 /* @media (max-width: 767px) {
@@ -941,4 +936,4 @@ select.form-control option:disabled {
         font-size: 16px; 
     }
 } */
-
+}

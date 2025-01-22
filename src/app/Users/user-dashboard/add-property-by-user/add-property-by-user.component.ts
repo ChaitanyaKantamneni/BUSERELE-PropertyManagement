@@ -3,8 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { QuillEditorComponent, QuillModule } from 'ngx-quill';
-import Compressor from 'compressorjs'; 
+import { QuillEditorComponent, QuillModule } from 'ngx-quill'; 
 
 
 
@@ -1360,10 +1359,6 @@ export class AddPropertyByUserComponent implements OnInit {
 
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
-<<<<<<< HEAD
-
-=======
->>>>>>> 5571ee983d296339e1f9fc93c9d14d862770f02e
       this.UserIDDb=response.userID;
       const convertToDDMMYYYY = (dateStr: string): string => {
         const date = new Date(dateStr);
@@ -1836,7 +1831,6 @@ export class AddPropertyByUserComponent implements OnInit {
   selectedIsActiveStatus1:string='';
   userID: string = localStorage.getItem('email') || '';
   filteredPropertiesNotNull:boolean=false;
-  UserIDDb:any='';
 
 
   PropertyIsActiveStatusNotActive:boolean=false;

@@ -1547,13 +1547,8 @@ export class AddPropertyComponentComponent implements OnInit {
     });
   }
 
-<<<<<<< HEAD
   UserIDDb:any='';
 
-=======
-
-  UserIDDb:any='';
->>>>>>> 5571ee983d296339e1f9fc93c9d14d862770f02e
   updatePropertyDet() {
     const selectedAmenitiesString = this.selectedAmenities
   .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
@@ -1609,10 +1604,7 @@ export class AddPropertyComponentComponent implements OnInit {
       Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || '',
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
-<<<<<<< HEAD
-      // userID:new String(localStorage.getItem('email')).toString() || '',
-=======
->>>>>>> 5571ee983d296339e1f9fc93c9d14d862770f02e
+
       userID:(this.UserIDDb).toString(),
       ActiveStatus:'',
       CountryName:(this.SelectedCountryName).toString(),
