@@ -481,6 +481,17 @@ table tbody{
   padding: 10px 20px;
 }
 
+.is-invalid {
+  border-color: red;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.875em;
+  display: block;
+}
+
+
 .statusButtons .decline{
   margin-right: 20px;
   background-color: red;
@@ -493,6 +504,15 @@ table tbody{
 .statusButtons .approve{
   margin-right: 20px;
   background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.statusButtons .soldOut{
+  margin-right: 20px;
+  background-color: blue;
   color: white;
   border: none;
   border-radius: 20px;

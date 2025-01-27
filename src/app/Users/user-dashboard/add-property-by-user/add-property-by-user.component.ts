@@ -3,8 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { QuillEditorComponent, QuillModule } from 'ngx-quill';
-import Compressor from 'compressorjs'; 
+import { QuillEditorComponent, QuillModule } from 'ngx-quill'; 
 
 
 

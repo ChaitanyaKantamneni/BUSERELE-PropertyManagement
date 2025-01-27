@@ -582,6 +582,70 @@
                 </div>
             </div>
         </div> -->
+        <div class="blog">
+            <div class="container">
+                <div class="headding">
+                    <h5 class="bold-text d-flex justify-content-center align-items-center">Latest Blogs</h5>
+                    <!-- <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p> -->
+                </div>
+                <div class="row">
+                    <div *ngFor="let blog of blogdetails; let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
+                    <div class="card">
+                        <!-- (click)="goToBlogDetail(blog)" -->
+                        <div class="image-container" >
+                            <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="info-section">
+                                <!-- <i class="fas fa-user"></i> -->
+                                <h5 class="card-title">
+                                    {{ blog.BlogTitle | slice:0:50 }}
+                                </h5>
+                            </div>
+                        
+                            <div class="content-section">
+                                <div class="card-text">
+                                    <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
+  
+    <!-- Toggle button to expand/collapse content -->
+    <button *ngIf="blog.BlogDescription.length > 120" (click)="toggleExpand(i)" class="btn btn-link read-more-btn">
+      {{ expandedContent[i] ? 'Read Less' : 'Read More' }}
+    </button>
+                                </div>
+                                  
+                                  
+                                  
+                                <!-- <p class="card-text">
+                                <!-- <span *ngIf="!expandedContent[i]">{{ truncateContent(stripHtmlTags(blog.BlogDescription), 120) }}</span>
+                                <span *ngIf="expandedContent[i]">{{ stripHtmlTags(blog.BlogDescription) }}</span> --
+                                
+
+                                
+                                <!-- <button *ngIf="blog.BlogDescription.length > 120" (click)="toggleContent(i)" class="btn btn-link read-more-btn">
+                                    {{ expandedContent[i] ? 'Read Less' : 'Read More' }}
+                                </button> --
+                                </p> -->
+                            </div>
+                            <div class="blogposteddate">
+                                <button>Read More</button>
+                                <p class="date" *ngIf="blog.BlogCreatedDate">
+                                    <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
+                                    </p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+              
+              
+              
+              <!-- <div class="pagination">
+                <button (click)="scrollToPrev()" [disabled]="currentPage === 1">&larr;</button>
+                <button (click)="scrollToNext()" [disabled]="currentPage === totalPages">&rarr;</button>
+              </div> -->
+        </div>
         <div class="Testimonials">
             <div class="container">
                 <div class="headding">

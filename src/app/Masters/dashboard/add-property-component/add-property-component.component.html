@@ -29,6 +29,7 @@
             <option value="2">Declined</option>
             <option value="3">Active</option>
             <option value="4">InActive</option>
+            <option value="5">Sold Out</option>
           </select>
         </div>
         <div class="addnewButton">
@@ -605,36 +606,7 @@
                               </td>
                             </tr>
                           </ng-container>
-                          <!-- <ng-container *ngIf="!PropertyOnfileClicked">
-                            <table>
-                              <tr *ngFor="let image of uploadedImages1; let i = index">
-                                <td hidden="true">
-                                  <h5>{{ image.id }}</h5>
-                                </td>
-                                <td>
-                                  <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
-                                </td>
-                                <td>
-                                  <!-- Textbox to set the order --
-                                  <input 
-                                    type="number" 
-                                    class="form-control" 
-                                    [(ngModel)]="image.customOrder" 
-                                    placeholder="Set Order" 
-                                    min="1">
-                                </td>
-                                <td>
-                                  <button 
-                                    class="btn btn-danger" 
-                                    (click)="deleteImage1(image.propID, image.id)">
-                                    Delete
-                                  </button>
-                                </td>
-                              </tr>
-                            </table>
-                          </ng-container> -->
                           
-                          <!-- Submit Button -->
                           <button 
                             class="btn btn-primary mt-3" 
                             (click)="submitCustomOrder()">
@@ -1039,6 +1011,7 @@
             <div class="statusButtons">
               <button class="decline" (click)="declineProperty()"><i class="fa fa-times-circle"></i>Decline</button>
               <button class="approve" (click)="ApproveProperty()"><i class="fa fa-check-circle"></i>Approve</button>
+              <button *ngIf="SoldOutProperty" class="soldOut" (click)="SoldOutPropertyClick()">Sold Out</button>
             </div>
             <div>
               <button class="updateButton" (click)="updatePropertyDet()"><i class="fa fa-refresh" aria-hidden="true"></i>Update</button>

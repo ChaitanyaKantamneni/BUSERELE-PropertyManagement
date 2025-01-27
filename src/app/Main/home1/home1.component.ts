@@ -15,6 +15,15 @@ interface Review {
   imageurl: string;
 }
 
+interface BlogImage {
+  id: any;
+  imageUrl: string;
+  blogDescription: string;
+  name: string;
+  date: string;
+  formattedDate?: string;
+}
+
 
 @Component({
   selector: 'app-home1',
@@ -95,12 +104,21 @@ export class Home1Component implements OnInit,AfterViewInit  {
     }, 30000);
     this.getTestimonials();
     this.getPropertTypes();
+
+    //blog
+    this.fetchblogDet();
+    // this.startAutoScroll();
   }
 
   ngOnDestroy(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId); // Cleanup the interval on destroy
     }
+
+    if (this.BlogintervalId !== null) {
+      clearInterval(this.BlogintervalId); // Clean up blog interval on component destroy
+    }
+
   }
 
   // Method to load properties continuously
@@ -732,4 +750,247 @@ export class Home1Component implements OnInit,AfterViewInit  {
   currentIndex = 0;
   intervalId: any;
   isLoadingFeaProperty1 = false;
+
+
+
+  //blog
+  //blogImages: Array<BlogImage> = [];
+  blogdetails: any[] = [];
+  expandedContent: { [key: number]: boolean } = {};
+  currentBlogPage = 1;
+  BlogitemsPerPage = 3; // Show 3 blogs at a time
+  totalBlogPages = 0;
+  BlogintervalId: number | null = null; // Store the interval ID
+
+  truncateContent(content: string, limit: number): string {
+    // If the content length is greater than the limit, truncate it and add ellipsis
+    if (content.length > limit) {
+      return content.substring(0, limit) + '...';
+    } else {
+      // If the content is shorter or equal to the limit, return it as is
+      return content;
+    }
+  }
+
+  stripHtmlTags(content: string): string {
+        const div = document.createElement('div');
+        div.innerHTML = content;
+        return div.textContent || div.innerText || '';
+      }
+
+
+
+// fetchblogDet() {
+//   this.apiurl.get<any[]>('https://localhost:7190/api/Users/allUploadedBlogs')
+//     .subscribe(
+//       (response: any[]) => {
+//         console.log('API Response:', response);
+//         this.blogdetails = response.map((blog: any) => {
+//           let blogImage: string = '';  // Declare blogImage here, so it persists across the block
+
+//           console.log('Full blog:', blog);
+
+//           if (blog.fileData && blog.fileData !== '') {
+//             try {
+//               // Decode the Base64 string into raw binary data
+//               const byteCharacters = atob(blog.fileData);
+//               const byteArray = new Uint8Array(byteCharacters.length);
+//               for (let i = 0; i < byteCharacters.length; i++) {
+//                 byteArray[i] = byteCharacters.charCodeAt(i);
+//               }
+//               // Create a Blob from the byteArray
+//               const blob = new Blob([byteArray], { type: 'image/jpeg' });
+//               blogImage = URL.createObjectURL(blob);  // Assign the generated image URL to blogImage
+
+//               // Log the URL for verification
+//               console.log('Generated blog Image URL:', blogImage);
+//             } catch (error) {
+//               console.error('Error decoding image data:', error);
+//             }
+//           } else {
+//             // Fallback image when FileData is missing or empty
+//             blogImage = 'assets/images/img1.png';
+//             console.log('Image data is missing or empty, using fallback image:', blogImage);
+//           }
+
+//           return {
+//             BlogID: blog.iD || 'N/A',
+//             BlogCreatedDate: new Date(blog.createdDate).toLocaleDateString('en-US', {
+//               year: 'numeric',
+//               month: 'long',
+//               day: 'numeric',
+//             }),
+//             BlogTitle: blog.title || 'Unknown Type',
+//             BlogDescription: blog.description,
+//             BlogImage: blogImage  // Use the blogImage correctly here
+//           };
+//         });
+//       },
+//       (error) => {
+//         console.error('Error fetching property details:', error);
+//         this.blogdetails = [];
+//         this.isLoadingAdvProperty = false;
+//       }
+//     );
+// }
+
+
+// Your component properties and methods
+expandedblogContent: boolean[] = []; // Array to track expanded state for each blog
+
+fetchblogDet() {
+  this.apiurl.get<any[]>('https://localhost:7190/api/Users/allUploadedBlogs')
+    .subscribe(
+      (response: any[]) => {
+        console.log('API Response:', response);
+        this.blogdetails = response.map((blog: any, index: number) => {
+          this.expandedblogContent[index] = false;  // Initially collapse all blog content
+
+          let blogImage: string = '';  // Declare blogImage here
+
+          if (blog.fileData && blog.fileData !== '') {
+            try {
+              const byteCharacters = atob(blog.fileData);
+              const byteArray = new Uint8Array(byteCharacters.length);
+              for (let i = 0; i < byteCharacters.length; i++) {
+                byteArray[i] = byteCharacters.charCodeAt(i);
+              }
+              const blob = new Blob([byteArray], { type: 'image/jpeg' });
+              blogImage = URL.createObjectURL(blob);
+            } catch (error) {
+              console.error('Error decoding image data:', error);
+            }
+          } else {
+            blogImage = 'assets/images/img1.png';
+          }
+
+          return {
+            BlogID: blog.iD || 'N/A',
+            BlogCreatedDate: new Date(blog.createdDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }),
+            BlogTitle: blog.title || 'Unknown Type',
+            BlogDescription: blog.description,
+            BlogImage: blogImage,
+          };
+        });
+      },
+      (error) => {
+        console.error('Error fetching property details:', error);
+        this.blogdetails = [];
+        
+      }
+    );
+}
+
+// Function to process text (either truncated or full based on expanded state)
+processText(blogDescription: string, index: number): string {
+  const strippedText = this.stripHtmlTags(blogDescription).trim();  // Strip HTML tags and remove extra spaces
+
+  if (strippedText.length === 0) {
+    return '';  // If description is empty after stripping HTML, return an empty string
+  }
+
+  if (this.expandedContent[index]) {
+    return strippedText;  // Return full content if expanded
+  } else {
+    return this.truncateblogContent(strippedText, 120);  // Truncate content if not expanded
+  }
+}
+
+// Truncate content based on the character limit
+truncateblogContent(content: string, limit: number): string {
+  if (content.length <= limit) {
+    return content;  // Return content as is if it's already shorter than the limit
+  }
+  
+  return content.substring(0, limit) + '...';  // Truncate and add ellipsis
+} 
+
+// Toggle expanded content
+toggleExpand(index: number): void {
+  this.expandedContent[index] = !this.expandedContent[index];
+}
+
+// fetchblogDet() {
+//   this.apiurl.get<any[]>('https://localhost:7190/api/Users/allUploadedBlogs')
+//     .subscribe(
+//       (response: any[]) => {
+//         console.log('API Response:', response);
+//         this.blogdetails = response.map((blog: any) => {
+//           let blogImage: string = '';
+//           console.log('Full blog:', blog);
+//           if (blog.fileData && blog.fileData !== '') {
+//             try {
+//               const byteCharacters = atob(blog.fileData);
+//               const byteArray = new Uint8Array(byteCharacters.length);
+//               for (let i = 0; i < byteCharacters.length; i++) {
+//                 byteArray[i] = byteCharacters.charCodeAt(i);
+//               }
+//               const blob = new Blob([byteArray], { type: 'image/jpeg' });
+//               const blogImage = URL.createObjectURL(blob);
+          
+//               // Log the URL for verification
+//               console.log('Generated blog Image URL:', blogImage);
+//             } catch (error) {
+//               console.error('Error decoding image data:', error);
+//             }
+//           } else {
+//             // Fallback image when FileData is missing or empty
+//             const blogImage = 'assets/images/img1.png';
+//             console.log('Image data is missing or empty, using fallback image:', blogImage);
+//           }
+
+//           // if (blog.image && blog.image.fileData) {
+//           //   const firstImage = blog.image;
+
+//           //   try {
+//           //     // Decode the Base64 string into raw binary data
+//           //     const byteCharacters = atob(firstImage.fileData);
+//           //     const byteArray = new Uint8Array(byteCharacters.length);
+
+//           //     // Copy the binary data into the byteArray
+//           //     for (let i = 0; i < byteCharacters.length; i++) {
+//           //       byteArray[i] = byteCharacters.charCodeAt(i);
+//           //     }
+
+//           //     // Create a Blob from the byteArray
+//           //     const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
+
+//           //     // Create an object URL from the Blob
+//           //     blogImage = URL.createObjectURL(blob);
+
+//           //     // Log the URL for verification
+//           //     console.log('Generated blog Image URL:', blogImage);
+//           //   } catch (error) {
+//           //     console.error('Error decoding default image data:', error);
+//           //   }
+//           // }
+//           // else {
+//           //   blogImage='assets/images/img1.png';
+//           //   console.log('images property is missing, not an array, or empty.');
+//           // }
+//           return {
+//             BlogID: blog.iD || 'N/A',  
+//             BlogCreatedDate: new Date(blog.createdDate).toLocaleDateString('en-US', {
+//                         year: 'numeric',
+//                         month: 'long',
+//                         day: 'numeric',
+//                       }),
+//             BlogTitle: blog.title || 'Unknown Type', 
+//             BlogDescription: blog.description,
+//             BlogImage: blogImage
+//           };
+//         });
+//       },
+//       (error) => {
+//         console.error('Error fetching property details:', error);
+//         this.propertydetails=[];
+//         this.isLoadingAdvProperty=false;
+//       }
+//     );
+// }
+  
 }
