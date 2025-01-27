@@ -732,4 +732,12 @@ export class Home1Component implements OnInit,AfterViewInit  {
   currentIndex = 0;
   intervalId: any;
   isLoadingFeaProperty1 = false;
+
+
+
+
+
+
+
+  
 }

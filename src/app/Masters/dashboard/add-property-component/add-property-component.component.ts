@@ -4,6 +4,13 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QuillModule,QuillEditorComponent } from 'ngx-quill';
+import Compressor from 'compressorjs';
+
+interface UploadedImage {
+  file: File;
+  path: string;
+  size: number;
+}
 
 
 interface Amenity {
@@ -22,9 +29,15 @@ export class AddPropertyComponentComponent implements OnInit {
   isModalOpen: any;
   isVideoModalOpen:any;
   PropertyInsUpdateStatus:string="";
+
+
+ 
+
+  
   @ViewChild(QuillEditorComponent) quillEditor!: QuillEditorComponent;
 
   constructor(public http:HttpClient,private cdRef: ChangeDetectorRef,private sanitizer: DomSanitizer){}
+  
   ngOnInit(): void {
     this.propertyform.get('TotalArea')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.propertyform.get('PriceFor')?.valueChanges.subscribe(() => this.calculateTotalPrice());
@@ -233,7 +246,7 @@ export class AddPropertyComponentComponent implements OnInit {
     DocumentUrl: string 
   }> = [];
   
-  uploadedImages: Array<{ path: string }> = [];
+  uploadedImages: Array<{ path: string,file:File,size:number }> = [];
   uploadedFloorImages:Array<{ path: string }> = [];
   uploadedVideos:Array<{ path: string }> = [];
   uploadedDocuments:Array<{ path: string,DocumentPath:SafeResourceUrl }> = [];
@@ -1082,43 +1095,124 @@ export class AddPropertyComponentComponent implements OnInit {
   //   }
   // }
 
-  onFileSelect(event: any): void {
-    this.PropertyOnfileClicked = true;
-  
-    if (event?.target?.files) {
-      this.selectedPropertyFiles = event.target.files;
-      console.log(this.selectedPropertyFiles);
-  
-      if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
-        this.uploadedImages = [];  // Clear previous images
-  
-        // Convert FileList to an array and create image previews
-        Array.from(this.selectedPropertyFiles).forEach((file: File) => {
-          // Check if the file size is less than 1024KB (1MB = 1024KB)
-          const fileSizeKB = file.size / 1024; // Convert bytes to KB
-  
-          if (fileSizeKB < 1024) { // 1MB = 1024KB
-            const reader = new FileReader();
-            reader.onload = () => {
-              // Push the data URL (base64 string) into the uploadedImages array
-              this.uploadedImages.push({ path: reader.result as string });
-            };
-            reader.readAsDataURL(file);  // Read file as data URL for preview
-          } else {
-            // Show a popup alert when the file size is too large
-            this.PropertyOnfileClicked=false;
-            alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 1MB.`);
+ compressedImageSize: string | null = null;
+
+ onFileSelect(event: any): void {
+  this.PropertyOnfileClicked = true;
+
+  if (event?.target?.files) {
+    this.selectedPropertyFiles = event.target.files;
+    console.log(this.selectedPropertyFiles);
+
+    if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
+      this.uploadedImages = [];  // Clear previous images
+
+      Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+        const fileSizeKB = file.size / 1024; // Convert bytes to KB
+
+        // Preview the original image first
+        const reader = new FileReader();
+        reader.onload = () => {
+          // Push the original image into uploadedImages array
+          this.uploadedImages.push({
+            file: file,
+            path: reader.result as string,
+            size: fileSizeKB
+          });
+
+          console.log(this.uploadedImages, "Original image preview");
+
+          if (fileSizeKB >= 1024) {
+            // Compress image if file size is larger than 1MB
+            new Compressor(file, {
+              quality: 0.6, // Adjust quality to reduce file size
+              maxWidth: 800, // Optional: set max width
+              maxHeight: 800, // Optional: set max height
+              success: (compressedFile: Blob) => {
+                
+                // Type cast compressedFile (Blob) to File type
+                const compressedFileAsFile = compressedFile as File;
+
+                const compressedReader = new FileReader();
+                compressedReader.onload = () => {
+                  // Push the compressed image into the uploadedImages array
+                  this.uploadedImages.push({
+                    file: compressedFileAsFile,  // Use the compressed file as a File
+                    path: compressedReader.result as string,
+                    size: compressedFileAsFile.size / 1024 // Size in KB
+                  });
+
+                  // Log the compressed file size
+                  const compressedSizeKB = compressedFileAsFile.size / 1024; // Size in KB
+                  const compressedSizeMB = compressedSizeKB / 1024; // Size in MB
+
+                  this.compressedImageSize = `Compressed size: ${compressedSizeKB.toFixed(2)} KB (${compressedSizeMB.toFixed(2)} MB)`;
+                  console.log('Compressed file size in KB:', compressedSizeKB.toFixed(2));
+                  console.log('Compressed file size in MB:', compressedSizeMB.toFixed(2));
+                };
+                compressedReader.readAsDataURL(compressedFileAsFile);  // Read compressed file as Data URL
+                console.log('Compression successful');
+              },
+              error: (err) => {
+                console.error('Compression failed', err);
+              }
+            });
           }
-        });
-      } else {
-        console.error('No files selected');
-      }
+        };
+        reader.readAsDataURL(file);  // Read the original file as Data URL
+      });
     } else {
-      console.error('No files in the input');
+      console.error('No files selected');
     }
+  } else {
+    console.error('No files in the input');
   }
+}
+
+
   
   
+
+
+  // onFileSelect(event: any): void {
+  //   this.PropertyOnfileClicked = true;
+  
+  //   if (event?.target?.files) {
+  //     this.selectedPropertyFiles = event.target.files;
+  //     console.log(this.selectedPropertyFiles);
+  
+  //     if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
+  //       this.uploadedImages = [];  // Clear previous images
+  
+  //       // Convert FileList to an array and create image previews
+  //       Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+  //         // Check if the file size is less than 1024KB (1MB = 1024KB)
+  //         const fileSizeKB = file.size / 1024; // Convert bytes to KB
+  
+  //         if (fileSizeKB < 1024) { // 1MB = 1024KB
+  //           const reader = new FileReader();
+  //           reader.onload = () => {
+  //             // Push the data URL (base64 string) into the uploadedImages array
+  //             this.uploadedImages.push({ path: reader.result as string });
+  //           };
+  //           reader.readAsDataURL(file);  // Read file as data URL for preview
+  //         } else {
+  //           // Show a popup alert when the file size is too large
+  //           this.PropertyOnfileClicked=false;
+  //           alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 1MB.`);
+  //         }
+  //       });
+  //     } else {
+  //       console.error('No files selected');
+  //     }
+  //   } else {
+  //     console.error('No files in the input');
+  //   }
+  // }
+  
+  
+  
+
   
 
   // onFloorFileSelect(event: any): void {
@@ -2275,6 +2369,7 @@ export class AddPropertyComponentComponent implements OnInit {
         this.propertyform.get('PropertyTotalPrice')?.setValue(''); // Show empty if invalid
     }
 }
+
 
 
 

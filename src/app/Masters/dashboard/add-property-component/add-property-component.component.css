@@ -543,6 +543,10 @@ table tbody{
   background-color: #fff;
   font-size: 1.1em;
   box-sizing: border-box;
+
+  white-space: normal; 
+  word-wrap: break-word; 
+  hyphens: auto; 
 }
 
 .custom-quill-editor .ql-editor {

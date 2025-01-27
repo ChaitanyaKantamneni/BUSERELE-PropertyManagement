@@ -651,4 +651,5 @@ export class BlogComponentComponent {
         this.propID = blogID;  
         this.fetchBlogDetailsById(blogID);
       }
+      
 }
