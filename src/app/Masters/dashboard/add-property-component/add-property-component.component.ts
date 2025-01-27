@@ -1449,9 +1449,17 @@ export class AddPropertyComponentComponent implements OnInit {
     });
   }
 
+  SoldOutProperty:boolean=false;
+
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
       this.UserIDDb=response.userID;
+      if(response.propertySaleStatus=true){
+        this.SoldOutProperty=true;
+      }
+      else{
+        this.SoldOutProperty=false;
+      }
       const convertToDDMMYYYY = (dateStr: string): string => {
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -1614,7 +1622,8 @@ export class AddPropertyComponentComponent implements OnInit {
       StateName:(this.SelectedStateName).toString(),
       CityName:(this.SelectedCityName).toString(),
       PropActiveStatus:"1",
-      PropertyTypeName:(this.SelectedPropertyTypeName).toString()
+      PropertyTypeName:(this.SelectedPropertyTypeName).toString(),
+      propertySaleStatus:"0"
     };
 
     console.log(data);
@@ -1641,8 +1650,8 @@ export class AddPropertyComponentComponent implements OnInit {
     });
   }
 
-
   UserIDDb:any='';
+
   updatePropertyDet() {
     const selectedAmenitiesString = this.selectedAmenities
   .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
@@ -1698,6 +1707,7 @@ export class AddPropertyComponentComponent implements OnInit {
       Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || '',
       GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
       availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
+
       userID:(this.UserIDDb).toString(),
       ActiveStatus:'',
       CountryName:(this.SelectedCountryName).toString(),
@@ -1847,6 +1857,11 @@ export class AddPropertyComponentComponent implements OnInit {
     this.updatePropertyStatus(PropId,'1');
   }
 
+  SoldOutPropertyClick(){
+    const PropId=this.propertyform.get('id')?.value
+    this.updatePropertySoldOutStatus(PropId,'1');
+  }
+
 
     // Select all amenities
     selectAll(): void {
@@ -1867,6 +1882,25 @@ export class AddPropertyComponentComponent implements OnInit {
       next: (response: any) => {
         if (response.statusCode == "200") {
           this.propertyInsStatus = "Property Status updated successfully!";
+          this.isUpdateModalOpen = true;
+          this.editclicked = false;
+          this.addnewPropertyclicked = false;
+          this.fetchProperties();
+        }
+      },
+      error: (error) => {
+        this.propertyInsStatus = "Error Updating Property.";
+        this.isUpdateModalOpen = true;
+        console.error("Error details:", error);
+      }
+    });
+  }
+
+  updatePropertySoldOutStatus(PropId: string, SoldOutStatus: string): void {
+    this.http.put(`https://localhost:7190/api/Users/updatePropertySoldOutStatus/${PropId}?SoldOutStatus=${SoldOutStatus}`, {}).subscribe({
+      next: (response: any) => {
+        if (response.statusCode == "200") {
+          this.propertyInsStatus = "Property sold out status updated successfully!";
           this.isUpdateModalOpen = true;
           this.editclicked = false;
           this.addnewPropertyclicked = false;
@@ -1921,14 +1955,15 @@ export class AddPropertyComponentComponent implements OnInit {
   selectedWhoseProperties: string = '0';
   selectedPropertyStatus1: string = '';
   selectedIsActiveStatus1:string='';
+  propertySoldOutStatus1:string='';
   userID: string = localStorage.getItem('email') || '';
   filteredPropertiesNotNull:boolean=false;
 
 
   PropertyIsActiveStatusNotActive:boolean=false;
   // Method to fetch filtered properties
-  fetchFilteredProperties(whose: string, status: string,IsActivestatus:string, search: string): void {
-    const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&IsActivestatus=${IsActivestatus}&search=${search}&UserID=${this.userID}`;
+  fetchFilteredProperties(whose: string, status: string,IsActivestatus:string,SoldOutstatus:string, search: string): void {
+    const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&IsActivestatus=${IsActivestatus}&SoldOutstatus=${SoldOutstatus}&search=${search}&UserID=${this.userID}`;
     this.http.get(url).subscribe((response: any) => {
       if (response.statusCode === 200) {
         this.properties = response.data.map((property: any) => ({
@@ -2037,21 +2072,31 @@ export class AddPropertyComponentComponent implements OnInit {
     if (selectedStatus == "0") {
       this.selectedPropertyStatus1 = '0';  // Latest status
       this.selectedIsActiveStatus1 = '';  // Reset Active/Inactive filter
+      this.propertySoldOutStatus1='';
     } 
     // Handle Approved (1) and Declined (2) statuses
     else if (selectedStatus == "1" || selectedStatus == "2") {
       this.selectedPropertyStatus1 = selectedStatus;  // Set to Approved or Declined
       this.selectedIsActiveStatus1 = '';  // Clear Active/Inactive filter
+      this.propertySoldOutStatus1='';
     } 
     // Handle Active (3) and InActive (4) statuses
     else if (selectedStatus == "3") {
       this.selectedIsActiveStatus1 = "1";  // Set Active/Inactive
       this.selectedPropertyStatus1 = '';  // Clear general property status
+      this.propertySoldOutStatus1='';
     }
 
     else if (selectedStatus == "4") {
       this.selectedIsActiveStatus1 = "0";  // Set Active/Inactive
       this.selectedPropertyStatus1 = '';  // Clear general property status
+      this.propertySoldOutStatus1='';
+    }
+
+    else if(selectedStatus == "5"){
+      this.selectedIsActiveStatus1 = '';
+      this.selectedPropertyStatus1 = '';
+      this.propertySoldOutStatus1="1";
     }
   
     // After setting the correct values, apply filters to fetch filtered properties
@@ -2061,7 +2106,7 @@ export class AddPropertyComponentComponent implements OnInit {
 
   // Apply all filters together
   applyFilters(): void {
-    this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.selectedIsActiveStatus1, this.searchQuery);
+    this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.selectedIsActiveStatus1,this.propertySoldOutStatus1, this.searchQuery);
   }
 
   // Handle search query change
@@ -2208,46 +2253,61 @@ export class AddPropertyComponentComponent implements OnInit {
         console.error('Error updating default image:', error);
       });
   }
-  
-  // submitCustomOrder() {
-  //   // Ensure each image has a valid custom order before submitting
-  //   this.uploadedImages1.forEach((image, index) => {
-  //     // Set the ImageOrder field based on the custom order input
-  //     image.ImageOrder = image.customOrder || index + 1; // Default to index+1 if customOrder is undefined
-  //   });
-  
-  //   // Send the updated image order and default image data to the server
-  //   this.updateImageOrderInDatabase();
-  // }
-  
-  // updateImageOrderInDatabase() {
-  //   // Send the updated order and default image data to the server
-  //   const updatedImages = this.uploadedImages1.map(img => ({
-  //     id: img.id,
-  //     imageOrder: img.ImageOrder,
-  //     defaultImage: img.DefaultImage
-  //   }));
-  
-  //   this.http.put(`https://localhost:7190/api/Users/update-image-order-and-default/${this.propID}`, updatedImages)
-  //     .subscribe(response => {
-  //       console.log('Image order and default image updated successfully');
-  //     }, error => {
-  //       console.error('Error updating image order and default image:', error);
-  //     });
-  // }
 
   submitCustomOrder() {
+    // Check for duplicate and sequence validity
+    const validationError = this.validateOrders();
+  
+    if (validationError) {
+      alert(validationError);  // Show the error message if validation fails
+      return;  // Prevent further execution if validation fails
+    }
+  
     // Prepare the payload with the custom order and default image info
     const updatedImages = this.uploadedImages1.map(image => ({
       id: image.id,
       imageOrder: image.customOrder.toString(),  // Ensure it's a string
       defaultImage: image.DefaultImage === "1" ? "1" : "0"  // Set default to "1" or "0"
     }));
-
+  
     console.log('Updated images payload:', updatedImages);  // Verify the payload before sending
-
+  
     this.updateImageOrderInDatabase(updatedImages);
   }
+  
+  validateOrders(): string | null {
+    // Check for duplicates and sequence
+    const seenOrders = new Set<number>();
+    const orderNumbers = this.uploadedImages1.map(image => image.customOrder).sort((a, b) => a - b);
+  
+    for (let i = 0; i < orderNumbers.length; i++) {
+      if (seenOrders.has(orderNumbers[i])) {
+        return 'There are duplicate order numbers. Please ensure all order numbers are unique.';
+      }
+  
+      if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
+        return 'Order numbers must be in sequence (no gaps). Please correct the sequence.';
+      }
+  
+      seenOrders.add(orderNumbers[i]);
+    }
+  
+    return null;  // Return null if everything is valid
+  }
+  
+  
+  // submitCustomOrder() {
+  //   // Prepare the payload with the custom order and default image info
+  //   const updatedImages = this.uploadedImages1.map(image => ({
+  //     id: image.id,
+  //     imageOrder: image.customOrder.toString(),  // Ensure it's a string
+  //     defaultImage: image.DefaultImage === "1" ? "1" : "0"  // Set default to "1" or "0"
+  //   }));
+
+  //   console.log('Updated images payload:', updatedImages);  // Verify the payload before sending
+
+  //   this.updateImageOrderInDatabase(updatedImages);
+  // }
   
   
   updateImageOrderInDatabase(updatedImages: any[]) {
@@ -2369,6 +2429,18 @@ export class AddPropertyComponentComponent implements OnInit {
         this.propertyform.get('PropertyTotalPrice')?.setValue(''); // Show empty if invalid
     }
 }
+
+// checkForDuplicateOrder(newOrder: any, currentImageId: string): boolean {
+//   // Convert newOrder to a number to ensure the comparison is valid
+//   const newOrderNumber = Number(newOrder);  // Convert the input (which may be a string) to a number
+//   return this.uploadedImages1.some(image => 
+//     image.customOrder === newOrderNumber && image.id !== currentImageId
+//   );
+// }
+
+
+
+
 
 
 
