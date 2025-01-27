@@ -450,6 +450,29 @@ select.form-control option:disabled {
     font-family: 'Arial Rounded MT Bold', serif;
 }
 
+.blog .bold-text{
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-size: x-large;
+    font-family: 'Arial Rounded MT Bold', serif;
+}
+.blog button{
+    border: none;
+    background-color: transparent;
+    font-family: emoji;
+    border-bottom: 1px solid;
+}
+
+.blog .blogposteddate{
+    display: flex;
+        justify-content: space-between;
+        text-align: center;
+}
+
+.blog .blogposteddate p{
+    margin-bottom: 0px;
+}
+
 .review-container {
     overflow: hidden;
     white-space: nowrap;
@@ -688,7 +711,53 @@ select.form-control option:disabled {
     color: white !important; 
   }
   
+  .blog img{
+    height: 200px;
+    width: 100%;
+  }
 
+  .blog .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .blog .info-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .blog .date {
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  .blog .card-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    text-align: justify;
+    flex-grow: 1;
+    overflow: hidden; 
+    margin-bottom: 10px;
+  }
+
+  .blog{
+    margin: 50px 10px 0px 10px;
+  }
+
+
+  .blog-description {
+    white-space: normal;      /* Allow text to wrap normally */
+    word-wrap: break-word;    /* Prevent words from overflowing the container */
+    word-break: break-word;   /* Prevent long words from breaking into the next line */
+  }
+  
+  
+  
 
 
 
@@ -719,6 +788,9 @@ select.form-control option:disabled {
     .properties .col-lg-3,.row .col-lg-4{
         width: 32%;
         margin: 0 10px;
+    }
+    .blog .row .col-lg-4{
+        width: 23%;
     }
     .browsemoreproperties .btn{
         width: 40%;
