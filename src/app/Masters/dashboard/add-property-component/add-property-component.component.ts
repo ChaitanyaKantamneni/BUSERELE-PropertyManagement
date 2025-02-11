@@ -81,7 +81,8 @@ export class AddPropertyComponentComponent implements OnInit {
             propname: property.propname,
             developedby: property.developedby,
             status: PropertyStatus,
-            IsActiveStatus:PropertyIsActiveStatus
+            IsActiveStatus:PropertyIsActiveStatus,
+            IsActiveStatusBoolean:property.propActiveStatus
           };
         });
   
@@ -661,32 +662,37 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
 
-
   // getPropertyImagesForProperty(propID: string): void {
   //   this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
   //     // Process response and convert imageData to Blob URL
   //     this.uploadedImages1 = response.map((image: any) => {
   //       const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
   //       const byteArray = new Uint8Array(byteCharacters.length);
-
+  
   //       // Copy the binary data into the byteArray
   //       for (let i = 0; i < byteCharacters.length; i++) {
   //         byteArray[i] = byteCharacters.charCodeAt(i);
   //       }
-
+  
   //       // Create a Blob from the byteArray
   //       const blob = new Blob([byteArray], { type: image.mimeType });
-
+  
   //       // Create an object URL from the Blob
   //       const imageUrl = URL.createObjectURL(blob);
-  //       console.log(imageUrl);
+  
+  //       // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
+  //       const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+  
+  //       // Return the updated image object
   //       return {
   //         ...image,
   //         propID: propID,
-  //         imageUrl // Add the Blob URL to the image object
+  //         imageUrl,           // Add the Blob URL to the image object
+  //         ImageOrder: image.imageOrder, // Include the ImageOrder
+  //         customOrder         // Add the customOrder field
   //       };
   //     });
-
+  
   //     console.log('Processed image array:', this.uploadedImages1);
   //   }, error => {
   //     console.error('Error fetching images:', error);
@@ -694,31 +700,20 @@ export class AddPropertyComponentComponent implements OnInit {
   // }
 
   getPropertyImagesForProperty(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
+    this.http.get(`https://localhost:7190/api/Users/getimages/${propID}`).subscribe((response: any) => {
+      // Map the response to properly format image URLs
       this.uploadedImages1 = response.map((image: any) => {
-        const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
-  
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
-        }
-  
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: image.mimeType });
-  
-        // Create an object URL from the Blob
-        const imageUrl = URL.createObjectURL(blob);
+        const imageUrls = `https://localhost:7190${image.url}`; // Assuming the backend URL is relative, prepend the base URL
+        console.log("Image URL:", imageUrls);  // Check the image URL
   
         // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
         const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
-  
+      
         // Return the updated image object
         return {
           ...image,
           propID: propID,
-          imageUrl,           // Add the Blob URL to the image object
+          imageUrls,           // Correctly assign the image URL here
           ImageOrder: image.imageOrder, // Include the ImageOrder
           customOrder         // Add the customOrder field
         };
@@ -1096,6 +1091,7 @@ export class AddPropertyComponentComponent implements OnInit {
   //   }
   // }
 
+<<<<<<< HEAD
  compressedImageSize: string | null = null;
 
  onFileSelect(event: any): void {
@@ -1162,6 +1158,39 @@ export class AddPropertyComponentComponent implements OnInit {
         };
         reader.readAsDataURL(file);  // Read the original file as Data URL
       });
+=======
+  onFileSelect(event: any): void {
+    this.PropertyOnfileClicked = true;
+  
+    if (event?.target?.files) {
+      this.selectedPropertyFiles = event.target.files;
+      console.log(this.selectedPropertyFiles);
+  
+      if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
+        this.uploadedImages = [];  // Clear previous images
+  
+        // Convert FileList to an array and create image previews
+        Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+          // Check if the file size is less than 1024KB (1MB = 1024KB)
+          const fileSizeKB = file.size / 1024; // Convert bytes to KB
+  
+          // if (fileSizeKB < 1024) { // 1MB = 1024KB
+            const reader = new FileReader();
+            reader.onload = () => {
+              // Push the data URL (base64 string) into the uploadedImages array
+              this.uploadedImages.push({ path: reader.result as string });
+            };
+            reader.readAsDataURL(file);  // Read file as data URL for preview
+          // } else {
+          //   // Show a popup alert when the file size is too large
+          //   this.PropertyOnfileClicked=false;
+          //   alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 1MB.`);
+          // }
+        });
+      } else {
+        console.error('No files selected');
+      }
+>>>>>>> 9c193b4b812804b8866fcc6b81b32acc83031176
     } else {
       console.error('No files selected');
     }
@@ -1451,16 +1480,17 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   SoldOutProperty:boolean=false;
+  propertyActiveStatus:boolean=false;
 
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
       this.UserIDDb=response.userID;
-      if(response.propertySaleStatus=true){
-        this.SoldOutProperty=true;
-      }
-      else{
-        this.SoldOutProperty=false;
-      }
+      // if(response.propertySaleStatus=true){
+      //   this.SoldOutProperty=true;
+      // }
+      // else{
+      //   this.SoldOutProperty=false;
+      // }
       const convertToDDMMYYYY = (dateStr: string): string => {
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -1548,6 +1578,19 @@ export class AddPropertyComponentComponent implements OnInit {
       this.loadStates();  // Load states based on the selected country
       this.loadCities();  // Load cities based on the selected state
 
+      if(response.activeStatus=="1"){
+        this.propertyActiveStatus=true;
+      }
+      else{
+        this.propertyActiveStatus=false;
+      }
+
+      if(response.propertySaleStatus=="1"){
+        this.SoldOutProperty=false;
+      }
+      else{
+        this.SoldOutProperty=true;
+      }
     }, error => {
       console.error('Error fetching property details:', error);
     });
@@ -2071,9 +2114,10 @@ export class AddPropertyComponentComponent implements OnInit {
   
     // Clear both property status and active/inactive status if "Latest" is selected
     if (selectedStatus == "0") {
-      this.selectedPropertyStatus1 = '0';  // Latest status
-      this.selectedIsActiveStatus1 = '';  // Reset Active/Inactive filter
-      this.propertySoldOutStatus1='';
+      // this.selectedPropertyStatus1 = '0';  // Latest status
+      // this.selectedIsActiveStatus1 = '';  // Reset Active/Inactive filter
+      // this.propertySoldOutStatus1='';
+      this.fetchProperties();
     } 
     // Handle Approved (1) and Declined (2) statuses
     else if (selectedStatus == "1" || selectedStatus == "2") {

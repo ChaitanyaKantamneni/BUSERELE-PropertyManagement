@@ -34,10 +34,12 @@ interface BlogImage {
 })
 export class Home1Component implements OnInit,AfterViewInit  {
   propertyType: string | null = null;
+  propertyForType:string|null=null;
   keyword: string | null = '';
   selectedPropertyID: string | null = '';
   suggestions: string[] = [];
   selectedPropertyType: string | null = '';
+  selectedPropertyFor:string| null='';
   propertydetails: any[] = [];
   FeaturedProperties:any[]=[];
   Reviews:any[]=[];
@@ -90,12 +92,15 @@ export class Home1Component implements OnInit,AfterViewInit  {
     // this.loadPropertiesCount();
     this.route.paramMap.subscribe(params => {
       this.propertyType = params.get('propertyType');
+      this.propertyForType = params.get('propertyFor');
       this.keyword = params.get('keyword');
       this.selectedPropertyID=params.get('propID');
       if (this.propertyType) {
         this.selectedPropertyType = this.propertyType;
       }
-
+      if (this.propertyForType) {
+        this.selectedPropertyFor = this.propertyForType;
+      }
     });
 
     this.loadPropertyDetails();
@@ -237,7 +242,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
   
           // Map the API response to the propertydetails array
           this.propertydetails = response.map((property: any) => {
-            let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
+            let propertyImage: string = 'assets/images/img2.jpg'; // Default image if no valid image found
             let defaultPropImage: string = '';
   
             // Log the whole property object for inspection
@@ -275,31 +280,33 @@ export class Home1Component implements OnInit,AfterViewInit  {
                   console.error('Error decoding first image data:', error);
                 }
               } else {
-                propertyImage='assets/images/img1.png';
+                propertyImage='assets/images/img2.jpg';
               }
             } else {
-              defaultPropImage='assets/images/img1.png';
+              defaultPropImage='assets/images/img2.jpg';
               console.log('images property is missing, not an array, or empty.');
             }
 
-            if (property.image && property.image.fileData) {
+            if (property.image && property.image.filePath) {
               const firstImage = property.image;
   
               try {
-                // Decode the Base64 string into raw binary data
-                const byteCharacters = atob(firstImage.fileData);
-                const byteArray = new Uint8Array(byteCharacters.length);
+                // // Decode the Base64 string into raw binary data
+                // const byteCharacters = atob(firstImage.fileData);
+                // const byteArray = new Uint8Array(byteCharacters.length);
   
-                // Copy the binary data into the byteArray
-                for (let i = 0; i < byteCharacters.length; i++) {
-                  byteArray[i] = byteCharacters.charCodeAt(i);
-                }
+                // // Copy the binary data into the byteArray
+                // for (let i = 0; i < byteCharacters.length; i++) {
+                //   byteArray[i] = byteCharacters.charCodeAt(i);
+                // }
   
-                // Create a Blob from the byteArray
-                const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
+                // // Create a Blob from the byteArray
+                // const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
   
-                // Create an object URL from the Blob
-                defaultPropImage = URL.createObjectURL(blob);
+                // // Create an object URL from the Blob
+                // defaultPropImage = URL.createObjectURL(blob);
+
+                defaultPropImage=`https://localhost:7190${property.image.filePath}`;
   
                 // Log the URL for verification
                 console.log('Generated Default Image URL:', defaultPropImage);
@@ -308,7 +315,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
               }
             }
             else {
-              defaultPropImage='assets/images/img1.png';
+              defaultPropImage='assets/images/img2.jpg';
               console.log('images property is missing, not an array, or empty.');
             }
 
@@ -379,78 +386,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
       );
   }
 
-  // loadPropertyDetails() {
-  //   this.isLoadingAdvProperty = true;
-  
-  //   this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnAdvertisingProperty')
-  //     .subscribe(
-  //       (response: any[]) => {
-  //         console.log('API Response:', response);
-  
-  //         this.propertydetails = response.map((property: any) => {
-  //           let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
-  //           let defaultPropImage: string = 'assets/images/img1.png'; // Default image for fallback
-  
-  //           // Log the full property object
-  //           console.log('Full Property:', property);
-  
-  //           // Check if 'image' exists and has a Base64 fileData
-  //           if (property.image && property.image.fileData) {
-  //             const firstImage = property.image;
-  
-  //             try {
-  //               // Decode the Base64 string into raw binary data
-  //               const byteCharacters = atob(firstImage.fileData);
-  //               const byteArray = new Uint8Array(byteCharacters.length);
-  
-  //               // Copy the binary data into the byteArray
-  //               for (let i = 0; i < byteCharacters.length; i++) {
-  //                 byteArray[i] = byteCharacters.charCodeAt(i);
-  //               }
-  
-  //               // Create a Blob from the byteArray
-  //               const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
-  
-  //               // Create an object URL from the Blob
-  //               defaultPropImage = URL.createObjectURL(blob);
-  
-  //               // Log the URL for verification
-  //               console.log('Generated Default Image URL:', defaultPropImage);
-  //             } catch (error) {
-  //               console.error('Error decoding default image data:', error);
-  //             }
-  //           }
-  
-  //           // Return the final object for each property
-  //           return {
-  //             propertyID: property.propID || 'N/A',
-  //             propertyname: property.propname || 'Unknown Property',
-  //             propertyprice: property.propertyTotalPrice || 'Price not available',
-  //             propertyaddress: property.address || 'Address not available',
-  //             propertyarea: property.totalArea || 'Area not available',
-  //             propertybeds: property.noOfBedrooms || 'Beds not available',
-  //             propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
-  //             propertytype: property.propertyType || 'Unknown Type',
-  //             propertytypeName: this.getPropertyTypeName(property.propertyType),
-  //             propertyimage: propertyImage,  // Set the first image Blob URL (if available)
-  //             defaultPropImage: defaultPropImage,  // Set the default image Blob URL
-  //             propertyparking: property.noOfParkings,
-  //             propertyfacing: property.propertyFacing,
-  //             propertyAvailability: property.propertyFor === '1' ? 'For Buy' : 'For Rent',
-  //             propertyBadgeColor: 'green', // Example badge color
-  //             PropertyTypeName: property.propertyTypeName
-  //           };
-  //         });
-  
-  //         this.isLoadingAdvProperty = false;
-  //       },
-  //       (error) => {
-  //         console.error('Error fetching property details:', error);
-  //         this.propertydetails = [];
-  //         this.isLoadingAdvProperty = false;
-  //       }
-  //     );
-  // }
   
   loadFeaturedPropertyDetails() {
     this.isLoadingFeaProperty=true;
@@ -466,8 +401,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
   
           // Map the API response to the propertydetails array
           this.FeaturedProperties = response.map((property: any) => {
-            let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
-            let defaultPropImage: string = 'assets/images/img1.png';
+            let propertyImage: string = 'assets/images/img2.jpg'; // Default image if no valid image found
+            let defaultPropImage: string = 'assets/images/img2.jpg';
   
             // Log the whole property object for inspection
             console.log('Full Property:', property);
@@ -504,30 +439,17 @@ export class Home1Component implements OnInit,AfterViewInit  {
                   console.error('Error decoding first image data:', error);
                 }
               } else {
-                propertyImage='assets/images/img1.png';
+                propertyImage='assets/images/img2.jpg';
               }
             } else {
               console.log('images property is missing, not an array, or empty.');
             }
 
-            if (property.image && property.image.fileData) {
+            if (property.image && property.image.filePath) {
               const firstImage = property.image;
   
               try {
-                // Decode the Base64 string into raw binary data
-                const byteCharacters = atob(firstImage.fileData);
-                const byteArray = new Uint8Array(byteCharacters.length);
-  
-                // Copy the binary data into the byteArray
-                for (let i = 0; i < byteCharacters.length; i++) {
-                  byteArray[i] = byteCharacters.charCodeAt(i);
-                }
-  
-                // Create a Blob from the byteArray
-                const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
-  
-                // Create an object URL from the Blob
-                defaultPropImage = URL.createObjectURL(blob);
+                defaultPropImage=`https://localhost:7190${property.image.filePath}`;
   
                 // Log the URL for verification
                 console.log('Generated Default Image URL:', defaultPropImage);
@@ -606,12 +528,12 @@ export class Home1Component implements OnInit,AfterViewInit  {
 
   
   searchclick(){
-    if (this.selectedPropertyType && this.keyword) {
+    if (this.selectedPropertyType && this.selectedPropertyFor && this.keyword) {
       // Navigate if both selected property type and keyword are provided
-      this.routes.navigate(['/search-properties', this.selectedPropertyType, this.keyword]);
-    } else if (this.selectedPropertyType || this.keyword) {
+      this.routes.navigate(['/search-properties', this.selectedPropertyType,this.selectedPropertyFor, this.keyword]);
+    } else if (this.selectedPropertyType || this.keyword || this.selectedPropertyFor) {
       // Navigate if at least one is provided
-      this.routes.navigate(['/search-properties', this.selectedPropertyType || 'defaultType', this.keyword || 'defaultKeyword']);
+      this.routes.navigate(['/search-properties', this.selectedPropertyType || 'defaultType',this.selectedPropertyFor||'defaultFor',this.keyword || 'defaultKeyword']);
     } else {
       alert('Please select a property type or enter a keyword.');
     }
@@ -904,7 +826,7 @@ fetchblogDet() {
               console.error('Error decoding image data:', error);
             }
           } else {
-            blogImage = 'assets/images/img1.png';
+            blogImage = 'assets/images/img2.jpg';
           }
 
           return {

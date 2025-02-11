@@ -46,6 +46,7 @@
                             </div>
                             <div class="col-12 col-md-3">
                                 <select class="form-control" [(ngModel)]="selectedPropertyType" >
+                                <select class="form-control" [(ngModel)]="selectedPropertyType">
                                 <option value="" disabled hidden>Property Type</option>
                                 <ng-container *ngFor="let property of propertytypes">
                                     <option [value]="property.propertyTypeID">{{ property.name }}</option>
@@ -70,6 +71,17 @@
                                 </select>
                               </div>
                               
+=======
+                            <div class="col-12 col-md-3">
+                                <select class="form-control" [(ngModel)]="selectedPropertyFor">
+                                <option value="" disabled selected>Property For</option>
+                                <option value="1">Buy</option>
+                                <option value="2">Sale</option>
+                                <option value="3">Rent</option>
+                                <option value="4">Lease</option>
+                                </select>
+                            </div>
+>>>>>>> 9c193b4b812804b8866fcc6b81b32acc83031176
                             
                             <div class="col-12 col-md-3">
                                 <button class="btn w-100" (click)="searchclick()">Search</button>
