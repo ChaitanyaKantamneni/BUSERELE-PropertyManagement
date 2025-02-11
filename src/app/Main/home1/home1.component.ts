@@ -83,7 +83,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
   propertyFor: string = '';
   isLoadingAdvProperty: boolean = false;
   isLoadingFeaProperty:boolean=false;
-  constructor( public apiurl:HttpClient,private route: ActivatedRoute,public routes:Router){
+  constructor( public apiurl:HttpClient,private route: ActivatedRoute,public routes:Router,private router: Router){
     emailjs.init('uZT6kwr7RPQM3n5lj');
   }
   ngOnInit(): void {
@@ -95,6 +95,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
       if (this.propertyType) {
         this.selectedPropertyType = this.propertyType;
       }
+
     });
 
     this.loadPropertyDetails();
@@ -108,7 +109,24 @@ export class Home1Component implements OnInit,AfterViewInit  {
     //blog
     this.fetchblogDet();
     // this.startAutoScroll();
+    setInterval(() => {
+      this.changePage();
+    }, 20000); 
+    
+
+
+    this.route.paramMap.subscribe(params => {
+      this.blogId = params.get('id');  // Get the blog ID from route parameters
+
+      if (this.blogId) {
+       this.fetchblogDet();
+      }
+    });
+    
   }
+  blog: BlogImage | null = null;
+  blogId: string | null = null;
+ 
 
   ngOnDestroy(): void {
     if (this.intervalId) {
@@ -164,6 +182,11 @@ export class Home1Component implements OnInit,AfterViewInit  {
     console.log(option);
   }
 
+  selectOptionproperty(event: any): void {
+    this.propertyFor = event.target.value;
+    console.log(this.propertyFor);
+  }
+  
   onKeywordChange() {
     if (this.keyword && this.keyword.length > 2) {
       // Construct the URL with the keyword and optionally propertyFor parameter
@@ -580,6 +603,8 @@ export class Home1Component implements OnInit,AfterViewInit  {
       );
   }
 
+
+  
   searchclick(){
     if (this.selectedPropertyType && this.keyword) {
       // Navigate if both selected property type and keyword are provided
@@ -746,6 +771,24 @@ export class Home1Component implements OnInit,AfterViewInit  {
   }
 
 
+  scrollLeftblog() {
+    const totalPages = Math.ceil(this.blogdetails.length / this.blogsPerPage);
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    } else {
+      this.currentPage = totalPages - 1; // Loop back to the last page
+    }
+  }
+  scrollRightblog() {
+    const totalPages = Math.ceil(this.blogdetails.length / this.blogsPerPage);
+    if (this.currentPage < totalPages - 1) {
+      this.currentPage++;
+    } else {
+      this.currentPage = 0; // Loop back to the first page
+    }
+  }
+
+
   displayedProperties: any[] = [];
   currentIndex = 0;
   intervalId: any;
@@ -865,7 +908,7 @@ fetchblogDet() {
           }
 
           return {
-            BlogID: blog.iD || 'N/A',
+            BlogID: blog.id,
             BlogCreatedDate: new Date(blog.createdDate).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
@@ -913,6 +956,50 @@ truncateblogContent(content: string, limit: number): string {
 toggleExpand(index: number): void {
   this.expandedContent[index] = !this.expandedContent[index];
 }
+
+toggleExpandblog(index: number, blog: any): void {
+  // Navigate to the 'viewblog' route with the blog ID
+  this.router.navigate(['/viewblog', blog.id]);
+  
+  // Toggle the expanded state of the content
+  this.expandedContent[index] = !this.expandedContent[index];
+}
+
+
+
+
+ viewReview(id: number): void {
+    this.router.navigate(['/review', id]);
+  }
+
+  navigateToBlog(blogId: string): void {
+    // Navigate to the ViewblogComponent with the blog id
+    this.router.navigate([`/viewblog/${blogId}`]);
+  }
+  
+
+
+getDisplayedBlogs() {
+  // Sort blogs by creation date in descending order to get the latest one first
+  this.blogdetails.sort((a, b) => new Date(b.BlogCreatedDate).getTime() - new Date(a.BlogCreatedDate).getTime());
+  const startIndex = this.currentPage * this.blogsPerPage;
+  return this.blogdetails.slice(startIndex, startIndex + this.blogsPerPage);
+}
+
+incrementViewCount(blogIndex: number) {
+  this.blogdetails[blogIndex].totalViews += 1;
+}
+ 
+
+changePage() {
+  this.currentPage++;
+  if (this.currentPage * this.blogsPerPage >= this.blogdetails.length) {
+    this.currentPage = 0; // Reset the page if we reach the end
+  }
+}
+
+currentPage = 0;
+blogsPerPage = 4;
 
 // fetchblogDet() {
 //   this.apiurl.get<any[]>('https://localhost:7190/api/Users/allUploadedBlogs')

@@ -28,7 +28,7 @@
                         </div>
                         
                         <div class="row justify-content-center align-items-center h-100 m-0 bg-white rounded">
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-3">
                                 <input
                                 type="text"
                                 class="form-control"
@@ -44,8 +44,8 @@
                                 </ul>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <select class="form-control" [(ngModel)]="selectedPropertyType">
+                            <div class="col-12 col-md-3">
+                                <select class="form-control" [(ngModel)]="selectedPropertyType" >
                                 <option value="" disabled hidden>Property Type</option>
                                 <ng-container *ngFor="let property of propertytypes">
                                     <option [value]="property.propertyTypeID">{{ property.name }}</option>
@@ -54,14 +54,24 @@
                             </div>
                             <!-- <div class="col-12 col-md-3">
                                 <select class="form-control">
-                                <option value="" disabled selected>Location</option>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
+                                <option value="" disabled selected>Property For</option>
+                                <option  (click)="selectOption('1')" value="option1">For sale</option>
+                                <option (click)="selectOption('2')"  value="option2">For Rent</option>
+                                <option   (click)="selectOption('2')" value="option3">For lease</option>
                                 </select>
                             </div> -->
+                            <div class="col-12 col-md-3">
+                                <select class="form-control" (change)="selectOptionproperty($event)">
+                                  <option value="" disabled selected>Property For</option>
+                                  <option value="2">For sale</option>
+                                  <option value="3">For Rent</option>
+                                  <option value="4">For lease</option>
+                                  <option value="1">For Buy</option>
+                                </select>
+                              </div>
+                              
                             
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-3">
                                 <button class="btn w-100" (click)="searchclick()">Search</button>
                             </div>
                             
@@ -585,68 +595,66 @@
         </div> -->
         <div class="blog">
             <div class="container">
-                <div class="headding">
-                    <h5 class="bold-text d-flex justify-content-center align-items-center">Latest Blogs</h5>
-                    <!-- <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p> -->
-                </div>
-                <div class="row">
-                    <div *ngFor="let blog of blogdetails; let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <div class="card">
-                        <!-- (click)="goToBlogDetail(blog)" -->
-                        <div class="image-container" >
-                            <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
-                        </div>
-                        
-                        <div class="card-body">
-                            <div class="info-section">
-                                <!-- <i class="fas fa-user"></i> -->
-                                <h5 class="card-title">
-                                    {{ blog.BlogTitle | slice:0:50 }}
-                                </h5>
-                            </div>
-                        
-                            <div class="content-section">
-                                <div class="card-text">
-                                    <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
-  
-    <!-- Toggle button to expand/collapse content -->
-    <button *ngIf="blog.BlogDescription.length > 120" (click)="toggleExpand(i)" class="btn btn-link read-more-btn">
-      {{ expandedContent[i] ? 'Read Less' : 'Read More' }}
-    </button>
-                                </div>
-                                  
-                                  
-                                  
-                                <!-- <p class="card-text">
-                                <!-- <span *ngIf="!expandedContent[i]">{{ truncateContent(stripHtmlTags(blog.BlogDescription), 120) }}</span>
-                                <span *ngIf="expandedContent[i]">{{ stripHtmlTags(blog.BlogDescription) }}</span> --
-                                
+              <div class="headding">
+                <h5 class="bold-text d-flex justify-content-center align-items-center">Latest Blogs</h5>
+              </div>
+          
+              <div class="row">
+                <!-- Loop through the blogs to display the blogs for the current page -->
+                <div *ngFor="let blog of getDisplayedBlogs(); let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
+                  <div class="card">
+                    <div class="image-container">
+                      <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
+                    </div>
+          
+                    <div class="card-body">
+                      <div class="info-section">
+                        <h5 class="card-title">{{ blog.BlogTitle | slice:0:50 }}</h5>
+                      </div>
+          
+                      <div class="content-section">
+                        <div class="card-text">
+                          <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
+          
+                          <!-- Toggle button to expand/collapse content -->
+                          <!-- <button *ngIf="blog.BlogDescription.length > 120" (click)="toggleExpandblog(i)" class="btn btn-link read-more-btn">
+                            {{ expandedContent[i] ? 'Read Less' : 'Read More' }}
+                          </button> -->
+                          <!-- <button *ngIf="blog.BlogDescription.length > 120" 
+                            [routerLink]="['/viewblog/', blog.id]"  routerLinkActive="router-link-active"
+                            class="btn btn-link read-more-btn">
+                            Read More
+                            
+                          </button> -->
+                          <!-- <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black"> -->
 
-                                
-                                <!-- <button *ngIf="blog.BlogDescription.length > 120" (click)="toggleContent(i)" class="btn btn-link read-more-btn">
-                                    {{ expandedContent[i] ? 'Read Less' : 'Read More' }}
-                                </button> --
-                                </p> -->
-                            </div>
-                            <div class="blogposteddate">
-                                <button>Read More</button>
-                                <p class="date" *ngIf="blog.BlogCreatedDate">
-                                    <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
-                                    </p>
-                            </div>
+                    
+                    
+                                  <!-- Full content, shown when the blog is expanded -->
+                    <p *ngIf="expandedContent[i]">{{ blog.BlogDescription }}</p>
+                                                    
                         </div>
+                      </div>
+                      <div class="blogposteddate">
+                        <button  [routerLink]="'/viewblog/' + blog.BlogID">Read More</button>
+                        <p class="date" *ngIf="blog.BlogCreatedDate">
+                          <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
+                        </p>
+                      </div>
                     </div>
-                    </div>
+                  </div>
                 </div>
+              </div>
+            
             </div>
-              
-              
-              
-              <!-- <div class="pagination">
-                <button (click)="scrollToPrev()" [disabled]="currentPage === 1">&larr;</button>
-                <button (click)="scrollToNext()" [disabled]="currentPage === totalPages">&rarr;</button>
-              </div> -->
+            <!-- Scroll Buttons -->
+            <div class="scrollbtn text-end">
+                <button class="scrollbtn-left" (click)="scrollLeftblog()">&#8592;</button>
+                <button  class="scrollbtn-right" (click)="scrollRightblog()">&#8594;</button>
+            </div>
         </div>
+
+          
         <div class="Testimonials">
             <div class="container">
                 <div class="headding">
@@ -674,7 +682,6 @@
                                     </div>
                                 </div>
                             </ng-container>
-                            <!-- Clone the content to create the looping effect -->
                             <ng-container *ngFor="let reviewitem of Reviews">
                                 <div class="review-card d-flex flex-column justify-content-center align-items-center">
                                     <div class="image">

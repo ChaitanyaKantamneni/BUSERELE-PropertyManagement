@@ -264,6 +264,9 @@ p{
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
+
+    padding: 15px;     /* Add padding for better text display */
+    box-sizing: border-box; 
 }
 
 .propertyoverview .headings {
@@ -324,7 +327,7 @@ p{
     flex-grow: 1;
 } */
 
-.PropertyDescriptionMain .body .PropertyDescriptionContent {
+.PropertyDescriptionMain .body .PropertyDescriptionContent ,.PropertyDescriptionContent {
     
     overflow-wrap: break-word !important; /* Better browser compatibility for wrapping */
     white-space: normal !important;  /* Ensure normal word spacing */
@@ -335,20 +338,19 @@ p{
   }
 
   .PropertyDescriptionContent {
-   
-    overflow-wrap: break-word;        /* Cross-browser compatibility for word wrap */
-    white-space: normal;              /* Allow normal wrapping without unnecessary spaces */
-    line-height: 1.6;                 /* Maintain consistent line spacing */
-    font-size: 1rem;                  /* Standard font size */
-    color: #333;                      /* Text color */
-    hyphens: none;                    /* Prevent automatic hyphenation */
-    word-break: break-all;           /* Prevent words like 'Rohith-Reddy' from breaking across lines */
-  }
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+    hyphens: none !important;
+    line-height: 1.6 !important;
+    font-size: 1rem !important;
+    color: #333 !important;
+    word-break: keep-all !important; /* Ensure words don't break arbitrarily */
+}
 
-  .no-wrap-hyphen {
-    white-space: nowrap;              /* Prevent word from breaking across lines */
-    display: inline;                  /* Keeps words in a continuous inline flow */
-  }
+.no-wrap-hyphen {
+    white-space: nowrap !important; /* Prevent word from breaking across lines */
+    display: inline !important;     /* Keeps words in a continuous inline flow */
+}
 
 
 

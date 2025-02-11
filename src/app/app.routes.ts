@@ -27,6 +27,9 @@ import { ForgotPasswordComponent } from './Common/forgot-password/forgot-passwor
 import { DescriptionComponentComponent } from './Users/user-dashboard/description-component/description-component.component';
 import { UserProfileComponent } from './Users/user-dashboard/user-profile/user-profile.component';
 import { BlogComponentComponent } from './Masters/dashboard/blog-component/blog-component.component';
+import { PrivacyComponent } from './Common/privacy/privacy.component';
+import { ViewblogComponent } from './viewblog/viewblog.component';
+import { ViewreviewsComponent } from './viewreviews/viewreviews.component';
 
 
 export const routes: Routes = [
@@ -36,6 +39,7 @@ export const routes: Routes = [
     {path:'about-us',component:AboutUsComponent},
     {path:'signin',component:SignInComponent},
     {path:'sign-up',component:SignUpComponent},
+    {path:'privacy',component:PrivacyComponent},
     {path:'forgot-password',component:ForgotPasswordComponent},
     {path:'search-properties',component:SearchPropertiesComponent},
     {path:'search-properties/:propertyType',component:SearchPropertiesComponent},
@@ -76,5 +80,9 @@ export const routes: Routes = [
 
     {path:'',component:Home1Component},
     {path:'home',component:Home1Component},
+    // {path:'blogviewpage',component:BlogComponentComponent},
+    //  { path: 'viewblog', component: ViewblogComponent },
+     { path: 'viewblog/:id', component: ViewblogComponent },  // Route for a specific blog
+    // { path: 'view-reviews', component: ViewreviewsComponent } 
 
 ];

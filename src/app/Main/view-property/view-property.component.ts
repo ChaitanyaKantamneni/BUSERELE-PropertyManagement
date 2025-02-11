@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TopNav1Component } from "../top-nav-1/top-nav-1.component";
 import { FooterComponent } from "../footer/footer.component";
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import emailjs from 'emailjs-com';
 import { SafeHtml,DomSanitizer } from '@angular/platform-browser';
 
@@ -97,11 +97,16 @@ export class ViewPropertyComponent implements OnInit {
   ]
 
   userReviewform:FormGroup=new FormGroup({
-    useremail:new FormControl(''),
-    username:new FormControl(''),
-    usernumber:new FormControl(''),
+    useremail:new FormControl('',[Validators.required,Validators.email]),
+    // username:new FormControl('',[Validators.required,Validators.pattern('^[a-zA-Z\\s]+$')]),
+    username: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[a-zA-Z\s]+$') // Only allows letters and spaces
+    ]),
+    usernumber:new FormControl('',[Validators.required,Validators.pattern('^[0-9]{10}$')]),
     usermessage:new FormControl('')
   })
+  
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.selectedPropertyID = params.get('propertyID');
@@ -165,7 +170,7 @@ export class ViewPropertyComponent implements OnInit {
           if (response) {
             // Process all images and create an array of image URLs
             let imageUrls = [];
-            let floorImages = [];
+            // let floorImages = [];
 
             if (response.images && Array.isArray(response.images) && response.images.length > 0) {
               imageUrls = response.images.map((img: any) => this.processImage(img));  // Ensure image URLs are processed
@@ -174,13 +179,26 @@ export class ViewPropertyComponent implements OnInit {
               imageUrls = ['assets/images/img1.png'];
             }
             
-            if (response.floorImages && Array.isArray(response.floorImages) && response.floorImages.length > 0) {
-              floorImages = response.floorImages.map((img: any) => this.processImage(img));  // Process floor images
-            }
-            else {
-              floorImages = [];
-            }
+            // if (response.floorImages && Array.isArray(response.floorImages) && response.floorImages.length > 0) {
+            //   floorImages = response.floorImages.map((img: any) => this.processImage(img));  // Process floor images
+            // }
+            // else {
+            //   floorImages = [];
+            // }
             
+            // Process floor images
+            let floorImages = [];
+            if (response.floorImages && Array.isArray(response.floorImages) && response.floorImages.length > 0) {
+              floorImages = response.floorImages.map((image: any) => {
+                const imageUrls = image.imageUrl ? `https://localhost:7190${image.imageUrl}` : 'assets/images/default-floor.jpg';  
+                console.log('Processed Floor Image URL:', imageUrls);
+                
+                return imageUrls;
+              });
+            } else {
+              floorImages = ['assets/images/default-floor.jpg'];  
+            }
+
 
             // const allImages = [...imageUrls, ...floorImages];
             const allImages = [...imageUrls, ...floorImages].sort((a, b) => {

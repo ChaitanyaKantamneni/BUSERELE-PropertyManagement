@@ -555,99 +555,176 @@ export class AddPropertyByUserComponent implements OnInit {
   }
 
   uploadPropertyFloorImages(): void {
-    this.propertyfloorImagesUploadButtonClick=true;
-
+    this.propertyfloorImagesUploadButtonClick = true;
+  
     console.log(this.propID);
     if (!this.propID || !this.selectedPropertyFloorFiles || this.selectedPropertyFloorFiles.length === 0) {
-      alert('Property ID is required and you must select images.');
+      alert('Property ID is required, and you must select images.');
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('propID', this.propID);
-
-    // Append each selected file to formData
+  
+    // Append each selected file to the formData
     Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
       formData.append('images', file, file.name);
     });
-
+  
     // Make HTTP request to upload the files
     this.http.post('https://localhost:7190/api/Users/uploadFloorImages', formData).subscribe(
-      response => {
+      (response) => {
         console.log('Floor Images uploaded successfully:', response);
-        this.PropertyFloorImageOnFileClicked=false;
-        this.propertyfloorImagesUploadButtonClick=false;
-        this.getPropertyFloorImagesForProperty(this.propID);  // Refresh the images after upload
+  
+        this.PropertyFloorImageOnFileClicked = false;
+        this.propertyfloorImagesUploadButtonClick = false;
+  
+        // Refresh images after successful upload
+        this.getPropertyFloorImagesForProperty(this.propID);
       },
-      
-      error => {
+      (error) => {
         console.error('Upload failed:', error);
+        alert('An error occurred while uploading the images. Please try again.');
+        this.propertyfloorImagesUploadButtonClick = false; // Reset the button click state
       }
     );
   }
+  
 
-  uploadPropertyVideos(): void {
-    this.propertyVideoUploadButtonClick=true;
+  // uploadPropertyVideos(): void {
+  //   this.propertyVideoUploadButtonClick=true;
 
-    console.log(this.propID);
-    if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
-      alert('Property ID is required and you must select video.');
-      return;
+  //   console.log(this.propID);
+  //   if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
+  //     alert('Property ID is required and you must select video.');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('propID', this.propID);
+
+  //   // Append each selected file to formData
+  //   Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
+  //     formData.append('videos', file, file.name);
+  //   });
+
+  //   // Make HTTP request to upload the files
+  //   this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
+  //     response => {
+  //       console.log('Property Video uploaded successfully:', response);
+  //       this.PropertyVideoOnFileClicked=false;
+  //       this.propertyVideoUploadButtonClick=false;
+  //       this.getPropertyVideo(this.propID);  // Refresh the images after upload
+  //     },
+      
+  //     error => {
+  //       console.error('Upload failed:', error);
+  //     }
+  //   );
+  // }
+
+
+    uploadPropertyVideos(): void {
+      this.propertyVideoUploadButtonClick = true;
+
+      console.log(this.propID);
+      if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
+          alert('Property ID is required and you must select a video.');
+          return;
+      }
+
+      const formData = new FormData();
+      formData.append('propID', this.propID);
+
+      // Append each selected video file to formData
+      Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
+          formData.append('videos', file, file.name);
+      });
+
+      // Make HTTP request to upload the files
+      this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
+          response => {
+              console.log('Property Video uploaded successfully:', response);
+              this.PropertyVideoOnFileClicked = false;
+              this.propertyVideoUploadButtonClick = false;
+              this.getPropertyVideo(this.propID);  // Refresh the videos after upload
+          },
+          error => {
+              console.error('Upload failed:', error);
+          }
+      );
+  }
+
+
+  // uploadPropertyDocuments(): void {
+  //   this.propertydocumenetUploadButtonClick=true;
+  //   console.log(this.propID);
+  //   if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
+  //     alert('Property ID is required and you must select Document.');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('propID', this.propID);
+
+  //   // Append each selected file to formData
+  //   Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+  //     formData.append('documents', file, file.name);
+  //   });
+
+  //   // Make HTTP request to upload the files
+  //   this.http.post('https://localhost:7190/api/Users/uploadPropertyDocument', formData).subscribe(
+  //     response => {
+  //       console.log('Property Document uploaded successfully:', response);
+  //       this.PropertyDocumentOnFileClicked=false;
+  //       this.propertydocumenetUploadButtonClick=false;
+  //       this.getPropertyDocument(this.propID); 
+  //     },
+      
+  //     error => {
+  //       console.error('Upload failed:', error);
+  //     }
+  //   );
+  // }
+
+uploadPropertyDocuments(): void {
+  this.propertydocumenetUploadButtonClick = true;
+  console.log(this.propID);
+
+  // Validate that a property ID is selected and at least one document is chosen
+  if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
+    alert('Property ID is required and you must select a document.');
+    this.propertydocumenetUploadButtonClick = false;
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('propID', this.propID);
+
+  // Append each selected document to the form data
+  Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+    formData.append('documents', file, file.name);
+  });
+
+  // Make the HTTP request to upload the documents
+  this.http.post('https://localhost:7190/api/Users/uploadPropertyDocument', formData).subscribe(
+    response => {
+      console.log('Property Document uploaded successfully:', response);
+
+      // Hide the upload UI and trigger document retrieval
+      this.PropertyDocumentOnFileClicked = false;
+      this.propertydocumenetUploadButtonClick = false;
+
+      // Reload the documents for the given property ID
+      this.getPropertyDocument(this.propID);
+    },
+    error => {
+      console.error('Upload failed:', error);
+      this.propertydocumenetUploadButtonClick = false;
     }
+  );
+}
 
-    const formData = new FormData();
-    formData.append('propID', this.propID);
-
-    // Append each selected file to formData
-    Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-      formData.append('videos', file, file.name);
-    });
-
-    // Make HTTP request to upload the files
-    this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
-      response => {
-        console.log('Property Video uploaded successfully:', response);
-        this.PropertyVideoOnFileClicked=false;
-        this.propertyVideoUploadButtonClick=false;
-        this.getPropertyVideo(this.propID);  // Refresh the images after upload
-      },
-      
-      error => {
-        console.error('Upload failed:', error);
-      }
-    );
-  }
-
-  uploadPropertyDocuments(): void {
-    this.propertydocumenetUploadButtonClick=true;
-    console.log(this.propID);
-    if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
-      alert('Property ID is required and you must select Document.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('propID', this.propID);
-
-    // Append each selected file to formData
-    Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
-      formData.append('documents', file, file.name);
-    });
-
-    // Make HTTP request to upload the files
-    this.http.post('https://localhost:7190/api/Users/uploadPropertyDocument', formData).subscribe(
-      response => {
-        console.log('Property Document uploaded successfully:', response);
-        this.PropertyDocumentOnFileClicked=false;
-        this.propertydocumenetUploadButtonClick=false;
-        this.getPropertyDocument(this.propID); 
-      },
-      
-      error => {
-        console.error('Upload failed:', error);
-      }
-    );
-  }
 
 
 
@@ -682,32 +759,86 @@ export class AddPropertyByUserComponent implements OnInit {
   //   });
   // }
 
+  // getPropertyImagesForProperty(propID: string): void {
+  //   this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
+  //     // Process response and convert imageData to Blob URL
+  //     this.uploadedImages1 = response.map((image: any) => {
+  //       const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
+  //       const byteArray = new Uint8Array(byteCharacters.length);
+  
+  //       // Copy the binary data into the byteArray
+  //       for (let i = 0; i < byteCharacters.length; i++) {
+  //         byteArray[i] = byteCharacters.charCodeAt(i);
+  //       }
+  
+  //       // Create a Blob from the byteArray
+  //       const blob = new Blob([byteArray], { type: image.mimeType });
+  
+  //       // Create an object URL from the Blob
+  //       const imageUrl = URL.createObjectURL(blob);
+  
+  //       // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
+  //       const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+  
+  //       // Return the updated image object
+  //       return {
+  //         ...image,
+  //         propID: propID,
+  //         imageUrl,           // Add the Blob URL to the image object
+  //         ImageOrder: image.imageOrder, // Include the ImageOrder
+  //         customOrder         // Add the customOrder field
+  //       };
+  //     });
+  
+  //     console.log('Processed image array:', this.uploadedImages1);
+  //   }, error => {
+  //     console.error('Error fetching images:', error);
+  //   });
+  // }
+  
+
+  // getPropertyImagesForProperty(propID: string): void {
+  //   this.http.get(`https://localhost:7103/api/Images/getimages/${propID}`).subscribe((response: any) => {
+  //     // Simply use the URL returned from the backend
+  //     this.uploadedImages1 = response.map((image: any) => {
+  //       const imageUrls = image.imageUrls; // Use the `url` returned from the backend response
+  //       console.log("Image URL:", image.imageUrl);
+
+  //       // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
+  //       const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+  
+  //       // Return the updated image object
+  //       return {
+  //         ...image,
+  //         propID: propID,
+  //         imageUrls,           // Add the imageUrl from response
+  //         ImageOrder: image.imageOrder, // Include the ImageOrder
+  //         customOrder         // Add the customOrder field
+  //       };
+  //     });
+  
+  //     console.log('Processed image array:', this.uploadedImages1);
+  //   }, error => {
+  //     console.error('Error fetching images:', error);
+  //   });
+  // }
+  
+
   getPropertyImagesForProperty(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
+    this.http.get(`https://localhost:7103/api/Images/getimages/${propID}`).subscribe((response: any) => {
+      // Map the response to properly format image URLs
       this.uploadedImages1 = response.map((image: any) => {
-        const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
-  
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
-        }
-  
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: image.mimeType });
-  
-        // Create an object URL from the Blob
-        const imageUrl = URL.createObjectURL(blob);
+        const imageUrls = `https://localhost:7103${image.url}`; // Assuming the backend URL is relative, prepend the base URL
+        console.log("Image URL:", imageUrls);  // Check the image URL
   
         // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
         const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
-  
+      
         // Return the updated image object
         return {
           ...image,
           propID: propID,
-          imageUrl,           // Add the Blob URL to the image object
+          imageUrls,           // Correctly assign the image URL here
           ImageOrder: image.imageOrder, // Include the ImageOrder
           customOrder         // Add the customOrder field
         };
@@ -720,105 +851,218 @@ export class AddPropertyByUserComponent implements OnInit {
   }
   
 
+  // getPropertyFloorImagesForProperty(propID: string): void {
+  //   this.http.get(`https://localhost:7190/api/Users/get-Floorimages/${propID}`).subscribe((response: any) => {
+  //     // Process response and convert imageData to Blob URL
+  //     this.uploadedFloorImages1 = response.map((image: any) => {
+  //       const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
+  //       const byteArray = new Uint8Array(byteCharacters.length);
+
+  //       // Copy the binary data into the byteArray
+  //       for (let i = 0; i < byteCharacters.length; i++) {
+  //         byteArray[i] = byteCharacters.charCodeAt(i);
+  //       }
+
+  //       // Create a Blob from the byteArray
+  //       const blob = new Blob([byteArray], { type: image.mimeType });
+
+  //       const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+
+  //       // Create an object URL from the Blob
+  //       const imageUrl = URL.createObjectURL(blob);
+  //       console.log(imageUrl);
+  //       return {
+  //         ...image,
+  //         propID: propID,
+  //         imageUrl, // Add the Blob URL to the image object
+  //         ImageOrder: image.imageOrder, // Include the ImageOrder
+  //         customOrder         // Add the customOrder field
+  //       };
+  //     });
+
+  //     console.log('Processed image array:', this.uploadedFloorImages1);
+  //   }, error => {
+  //     console.error('Error fetching images:', error);
+  //   });
+  // }
+
   getPropertyFloorImagesForProperty(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-Floorimages/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
-      this.uploadedFloorImages1 = response.map((image: any) => {
-        const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
-
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
+    this.http.get(`https://localhost:7190/api/Users/get-Floorimages/${propID}`).subscribe(
+      (response: any) => {
+        console.log('Backend response:', response);  // Log the raw response
+  
+        if (!Array.isArray(response)) {
+          console.error('Expected an array of floor images, but got:', response);
+          return;
         }
+  
+        this.uploadedFloorImages1 = response.map((image: any) => {
+          // Log the image object to verify it's correct
+          console.log('Image object:', image);
+  
+          // Ensure that the imageUrl is correctly constructed by adding the base URL
+          const imageUrls = image.imageUrl ? `https://localhost:7190${image.imageUrl}` : '';  // Full URL
+          console.log('Processed Image URL:', imageUrls);
+  
+          // Get custom order or default to 0
+          const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+  
+          return {
+            ...image,
+            propID: propID,
+            imageUrls,  // Ensure imageUrls is properly set
+            ImageOrder: image.imageOrder, // Ensure ImageOrder is passed
+            customOrder,
+          };
+        });
+  
+        console.log('Processed floor images:', this.uploadedFloorImages1);
+      },
+      (error) => {
+        console.error('Error fetching floor images:', error);
+        alert('An error occurred while fetching floor images. Please try again later.');
+      }
+    );
+  }
+  
+  
+  
+  
+  // getPropertyVideo(propID: string): void {
+  //   this.http.get(`https://localhost:7190/api/Users/get-PropertyVideo/${propID}`).subscribe((response: any) => {
+  //     // Process response and convert imageData to Blob URL
+  //     this.uploadedVideos1 = response.map((video: any) => {
+  //       const byteCharacters = atob(video.videoData); // Decoding base64 to raw binary
+  //       const byteArray = new Uint8Array(byteCharacters.length);
 
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: image.mimeType });
+  //       // Copy the binary data into the byteArray
+  //       for (let i = 0; i < byteCharacters.length; i++) {
+  //         byteArray[i] = byteCharacters.charCodeAt(i);
+  //       }
 
-        const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+  //       // Create a Blob from the byteArray
+  //       const blob = new Blob([byteArray], { type: video.mimeType });
 
-        // Create an object URL from the Blob
-        const imageUrl = URL.createObjectURL(blob);
-        console.log(imageUrl);
-        return {
-          ...image,
-          propID: propID,
-          imageUrl, // Add the Blob URL to the image object
-          ImageOrder: image.imageOrder, // Include the ImageOrder
-          customOrder         // Add the customOrder field
-        };
-      });
+  //       // Create an object URL from the Blob
+  //       const videosUrl = URL.createObjectURL(blob);
+  //       console.log("VideoUrl:", videosUrl);
+  //       return {
+  //         ...video,
+  //         propID: propID,
+  //         videosUrl // Add the Blob URL to the image object
+  //       };
+  //     });
 
-      console.log('Processed image array:', this.uploadedFloorImages1);
-    }, error => {
-      console.error('Error fetching images:', error);
-    });
+  //     console.log('Processed Video array:', this.uploadedVideos1);
+  //   }, error => {
+  //     console.error('Error fetching images:', error);
+  //   });
+  // }
+
+    getPropertyVideo(propID: string): void {
+      this.http.get(`https://localhost:7190/api/Users/get-PropertyVideo/${propID}`).subscribe(
+          (response: any) => {
+              // Log the response to verify that `FileName` is coming back correctly
+              console.log('Video API Response:', response);
+
+              // Check if the response is an array of videos
+              if (Array.isArray(response)) {
+                  this.uploadedVideos1 = response.map((video: any) => {
+                      // Log the individual video object to ensure fileName exists
+                      console.log('Video object:', video);
+
+                      // Ensure video.FileName exists and is valid
+                      if (!video.fileName) {
+                          console.error('Video file name is missing for', video);
+                          return null; // Skip videos without a file name
+                      }
+
+                      // Construct the video URL using the file name
+                      // const videoUrl = `https://localhost:7190${video.videoUrl}`; // Ensure full URL
+                    const videoUrl = `https://localhost:7190${video.videoUrl}`;
+                      console.log('Video URL:', video.videoUrl);
+
+                      return {
+                          ...video,
+                          propID: propID,
+                          videoUrl // Add the URL for video playback
+                      };
+                  }).filter((video: any) => video !== null); // Filter out null entries if any
+
+                  console.log('Processed Video array:', this.uploadedVideos1);
+              } else {
+                  console.error("Response is not an array:", response);
+              }
+          },
+          error => {
+              console.error('Error fetching videos:', error);
+              alert("Failed to fetch videos. Please try again later.");
+          }
+      );
   }
 
-  getPropertyVideo(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-PropertyVideo/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
-      this.uploadedVideos1 = response.map((video: any) => {
-        const byteCharacters = atob(video.videoData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
 
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
-        }
 
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: video.mimeType });
 
-        // Create an object URL from the Blob
-        const videosUrl = URL.createObjectURL(blob);
-        console.log("VideoUrl:", videosUrl);
-        return {
-          ...video,
-          propID: propID,
-          videosUrl // Add the Blob URL to the image object
-        };
-      });
 
-      console.log('Processed Video array:', this.uploadedVideos1);
-    }, error => {
-      console.error('Error fetching images:', error);
-    });
-  }
+  // getPropertyDocument(propID: string): void {
+  //   this.http.get(`https://localhost:7190/api/Users/get-PropertyDocument/${propID}`).subscribe((response: any) => {
+  //     // Process response and convert imageData to Blob URL
+  //     this.uploadedDocuments1 = response.map((document: any) => {
+  //       const byteCharacters = atob(document.documentData); // Decoding base64 to raw binary
+  //       const byteArray = new Uint8Array(byteCharacters.length);
+
+  //       // Copy the binary data into the byteArray
+  //       for (let i = 0; i < byteCharacters.length; i++) {
+  //         byteArray[i] = byteCharacters.charCodeAt(i);
+  //       }
+
+  //       // Create a Blob from the byteArray
+  //       const blob = new Blob([byteArray], { type: document.mimeType });
+
+  //       // Create an object URL from the Blob
+  //       const documentsUrl = URL.createObjectURL(blob);
+
+  //       const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentsUrl);
+  //       console.log("documentUrl:", documentsUrl);
+  //       return {
+  //         ...document,
+  //         propID: propID,
+  //         safeUrl // Add the Blob URL to the image object
+  //       };
+  //     });
+
+  //     console.log('Processed Video array:', this.uploadedVideos1);
+  //   }, error => {
+  //     console.error('Error fetching images:', error);
+  //   });
+  // }
+  
 
   getPropertyDocument(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-PropertyDocument/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
-      this.uploadedDocuments1 = response.map((document: any) => {
-        const byteCharacters = atob(document.documentData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
-
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
-        }
-
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: document.mimeType });
-
-        // Create an object URL from the Blob
-        const documentsUrl = URL.createObjectURL(blob);
-
-        const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentsUrl);
-        console.log("documentUrl:", documentsUrl);
-        return {
-          ...document,
-          propID: propID,
-          safeUrl // Add the Blob URL to the image object
-        };
-      });
-
-      console.log('Processed Video array:', this.uploadedVideos1);
-    }, error => {
-      console.error('Error fetching images:', error);
-    });
+    this.http.get(`https://localhost:7190/api/Users/get-Documents/${propID}`).subscribe(
+      (response: any) => {
+        console.log('Processed Documents:', response);  // Log the response to verify
+          this.uploadedDocuments = response.map((document: any) => {
+            const documentUrl = `https://localhost:7190${document.documentUrl}`;
+  
+          const safeDocumentUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentUrl);
+  
+          return {
+            ...document,  
+            documentUrl,   
+            safeDocumentUrl,  
+          };
+        });
+        console.log('Processed Documents:', this.uploadedDocuments);
+      },
+      error => {
+        console.error('Error fetching documents:', error);
+      }
+    );
   }
-
+  
+  
 
   // deleteImage(image: any): void {
   //   const index = this.uploadedImages.indexOf(image);

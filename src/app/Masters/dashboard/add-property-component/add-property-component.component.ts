@@ -1069,6 +1069,7 @@ export class AddPropertyComponentComponent implements OnInit {
   PropertyFloorImageOnFileClicked:boolean=false;
   PropertyVideoOnFileClicked:boolean=false;
   PropertyDocumentOnFileClicked:boolean=false;
+  
   // onFileSelect(event: any): void {
   //   this.PropertyOnfileClicked=true;
   //   if (event?.target?.files) {

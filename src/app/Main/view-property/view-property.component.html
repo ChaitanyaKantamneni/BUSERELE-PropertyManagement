@@ -109,6 +109,8 @@
                                 class="property-image">
                                 
                         </ng-template>
+
+                        
                         <ng-template #noImagesAvailable>
                             <p>No images available.</p>
                         </ng-template>
@@ -145,6 +147,8 @@
                                 
                         </div>
                     </div>
+
+                    
                 </div>
                 
               
@@ -154,7 +158,7 @@
                     <form [formGroup]="userEnquiryform">
                         <div class="form-group">
                         <label for="contactname">Name</label>
-                        <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required>
+                        <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required  pattern="^[a-zA-Z\s]+$">
                         </div>
                         <div class="form-group">
                         <label for="contactEmail">Email</label>
@@ -162,7 +166,7 @@
                         </div>
                         <div class="form-group">
                         <label for="contactphone">Phone (Optional)</label>
-                        <input type="text" id="contactphone" class="form-control" formControlName="phone" name="phone">
+                        <input type="text" id="contactphone" class="form-control" formControlName="phone" name="phone" pattern="^[0-9]{10}$">
                         </div>
                         <div class="form-group">
                         <label for="contactMessage">Message</label>
@@ -385,7 +389,7 @@
                           <p>Overview</p>
                         </div>
                         <div class="body">
-                            <div class="grid-container">
+                            <div class="grid-container">    
                                 <ng-container *ngFor="let key of propertyKeys">
                                   <div *ngIf="propertydetailsitem[key]" class="grid-item">
                                     <div class="propertytype">
@@ -441,7 +445,7 @@
                             <p class="w-100 PropertyDescriptionContent" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
                         </div>
                     </div> -->
-                    <div class="propertyoverview PropertyDescriptionMain">
+                    <!-- <div class="propertyoverview PropertyDescriptionMain">
                         <div class="headings">
                             <p>Description</p>
                         </div>
@@ -457,9 +461,30 @@
                         <div class="body">
                             <p class="PropertyDescriptionContent w-100" [innerHTML]="sanitizeHtml(propertydetailsitem.propertyspecificDescription)"></p>
                         </div>
-                    </div>
+                    </div> -->
                     
-                    <div class="propertyoverview propertyfeatures">
+
+                    <!-- Property Description Section -->
+            <div *ngIf="propertydetailsitem.propertydescription" class="propertyoverview PropertyDescriptionMain  ">
+                <div class="headings">
+                <p>Description</p>
+                </div>
+                <div class="body">
+                <p class="PropertyDescriptionContent w-100 no-wrap" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
+                </div>
+            </div>
+  
+  <!-- Specific Description Section -->
+            <div *ngIf="propertydetailsitem.propertyspecificDescription" class="propertyoverview PropertyDescriptionMain">
+                <div class="headings">
+                <p>Specific Description</p>
+                </div>
+                <div class="body">
+                <p class="PropertyDescriptionContent w-100 no-wrap" [innerHTML]="sanitizeHtml(propertydetailsitem.propertyspecificDescription)"></p>
+                </div>
+            </div>
+  
+                    <!-- <div class="propertyoverview propertyfeatures">
                         <div class="headings">
                             <p>Features</p>
                         </div>
@@ -468,23 +493,57 @@
                                 <p><i class="fa fa-check-circle"></i>{{ amenity.name}}</p>
                             </div>
                         </div>                       
-                    </div>
+                    </div> -->
     
-                    <div class="propertyoverview propertyVideo">
+
+                    <!-- Features Section -->
+                <div *ngIf="selectedAmenities.length > 0" class="propertyoverview propertyfeatures">
+                    <div class="headings">
+                    <p>Features</p>
+                    </div>
+                    <div class="body">
+                    <div *ngFor="let amenity of selectedAmenities">
+                        <p><i class="fa fa-check-circle"></i>{{ amenity.name }}</p>
+                    </div>
+                    </div>
+                </div>
+  
+                    <!-- <div class="propertyoverview propertyVideo">
                         <div class="headings">
                             <p>Video</p>
                         </div>
                         <div class="body">
                                                 
-                            <!-- Video Section -->
+                            <!-- Video Section --
                             <div class="video-container">
-                                <video width="100%" controls>
+                                <!-- <video width="100%" controls>
                                     <source src="{{selectedVideo}}" type="video/mp4">
                                     Your browser does not support the video tag.
+                                </video> --
+                                <video width="100%" controls>
+                                    <source [src]="selectedVideo" type="video/mp4">
+                                    Your browser does not support the video tag.
                                 </video>
+                                
                             </div>
                         </div>
+                    </div> -->
+
+                    <!-- Video Section -->
+                <div *ngIf="selectedVideo" class="propertyoverview propertyVideo">
+                    <div class="headings">
+                    <p>Video</p>
                     </div>
+                    <div class="body">
+                    <div class="video-container">
+                        <video width="100%" controls>
+                        <source [src]="selectedVideo" type="video/mp4">
+                        Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    </div>
+                </div>
+  
 
                     <!-- <div class="propertyoverview propertyfeatures">
                         <div class="headings">
@@ -532,15 +591,15 @@
                                     <div class="reviewdiv">
                                         <div class="form-group">
                                             <label for="contactname">Name</label>
-                                            <input type="text" id="contactname" class="form-control" formControlName="username" name="username" required placeholder="Enter Full Name">
+                                            <input type="text" id="contactname" class="form-control" formControlName="username" name="username" required placeholder="Enter Full Name" pattern="^[a-zA-Z\s]+$">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group"> 
                                             <label for="contactname">Email</label>
-                                            <input type="text" id="contactname" class="form-control" formControlName="useremail" name="useremail" required placeholder="Enter Email">
+                                            <input type="email" id="contactname" class="form-control" formControlName="useremail" name="useremail" required placeholder="Enter Email">
                                         </div>
                                         <div class="form-group">
                                             <label for="contactname">Mobile Number</label>
-                                            <input type="text" id="contactname" class="form-control" formControlName="usernumber" name="usernumber" required placeholder="Enter Mobile Number">
+                                            <input type="text" id="contactname" class="form-control" formControlName="usernumber" name="usernumber" required placeholder="Enter Mobile Number"  pattern="^[0-9]{10}$">
                                         </div>
                                     </div>
                                     <div class="reviewtextarea">
@@ -588,17 +647,27 @@
                         </div>
                     </div>
     
-                    <div class="propertyoverview">
+                    <!-- <div class="propertyoverview">
                         <div class="headings">
                             <p>Location</p>
                         </div>
                         <div class="body">
                             <div class="locationMap" [innerHTML]="iframeHtml"></div>
                         </div>
+                    </div> -->
+                    <!-- Location Section -->
+                <div *ngIf="iframeHtml" class="propertyoverview">
+                    <div class="headings">
+                    <p>Location</p>
                     </div>
+                    <div class="body">
+                    <div class="locationMap" [innerHTML]="iframeHtml"></div>
+                    </div>
+                </div>
+                
 
 
-                    <div class="propertyoverview">
+                    <!-- <div class="propertyoverview">
                         <div class="headings">
                             <p>Social Networks</p>
                         </div>
@@ -630,10 +699,65 @@
                             </div>
                         </div>
                     </div>
+                     -->
                     
                     
-                    
-    
+    <!-- Social Networks Section -->
+  <!-- Social Networks Section -->
+<!-- Social Networks Section -->
+<!-- Social Networks Section -->
+<!-- Social Networks Section -->
+<!-- Social Networks Section -->
+<!-- Social Networks Section -->
+<!-- Social Networks Section -->
+<div *ngIf="propertydetailsitem.websiteurl || propertydetailsitem.pinteresturl || propertydetailsitem.facebookurl || propertydetailsitem.twitterurl" class="propertyoverview">
+    <div class="headings">
+      <p>Social Networks</p>
+    </div>
+    <div class="body propSocialLinks">
+      
+      <!-- Website URL - Show only if the URL exists and is not null -->
+      <div *ngIf="propertydetailsitem.websiteurl?.trim()">
+        <a href="{{propertydetailsitem.websiteurl}}" target="_blank" class="social-icon website">
+          <i class="fas fa-link"></i> 
+          <p class="value">WEBSITE</p> 
+        </a>
+      </div>
+  
+      <!-- Pinterest URL - Show only if the URL exists and is not null -->
+      <div *ngIf="propertydetailsitem.pinteresturl?.trim()">
+        <a href="{{propertydetailsitem.pinteresturl}}" target="_blank" class="social-icon pinterest">
+          <i class="fab fa-pinterest"></i> 
+          <p class="value">PINTEREST</p> 
+        </a>
+      </div>
+  
+      <!-- Facebook URL - Show only if the URL exists and is not null -->
+      <div *ngIf="propertydetailsitem.facebookurl?.trim()">
+        <a href="{{propertydetailsitem.facebookurl}}" target="_blank" class="social-icon facebook">
+          <i class="fab fa-facebook"></i> 
+          <p class="value">FACEBOOK</p> 
+        </a>
+      </div>
+  
+      <!-- Twitter URL - Show only if the URL exists and is not null -->
+      <div *ngIf="propertydetailsitem.twitterurl?.trim()">
+        <a href="{{propertydetailsitem.twitterurl}}" target="_blank" class="social-icon twitter">
+          <i class="fab fa-twitter"></i> 
+          <p class="value">TWITTER</p> 
+        </a>
+      </div>
+  
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  
                     
                 </div>
                 <div class="AdvertisingPropertiesAdds">

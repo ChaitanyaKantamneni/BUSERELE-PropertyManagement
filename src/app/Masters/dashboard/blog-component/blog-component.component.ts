@@ -28,10 +28,12 @@ export class BlogComponentComponent {
   files: File[] = []; 
   showModal: boolean = false; 
   blogDate: Date | null = null;
+  files1: CustomFile[] = [];
 
 
   ngOnInit(): void {
     this.fetchBlogDetails();
+    
   }
 
   editorConfig = {
@@ -304,17 +306,17 @@ export class BlogComponentComponent {
   
 
   UpdateBlog():void{
-    // console.log('Form values:', this.propertytype.value);
+    console.log('Form values:', this.propertytype.value);
 
-    // if (this.propertytype.invalid) {
-    //   console.error('Form is invalid');
-    //   return;
-    // }
+    if (this.propertytype.invalid) {
+      console.error('Form is invalid');
+      return;
+    }
 
-    // const formData = new FormData();
-    // const blogContent = this.propertytype.value.Blog;
-    // formData.append('Description', blogContent);
-    // formData.append('title', this.propertytype.get('Name')?.value); // Blog title
+    const formData = new FormData();
+    const blogContent = this.propertytype.value.Blog;
+    formData.append('Description', blogContent);
+    formData.append('title', this.propertytype.get('Name')?.value); // Blog title
 
     // // Add files to FormData if available
     // if (this.files1.length > 0) {
@@ -323,21 +325,28 @@ export class BlogComponentComponent {
     //   });
     // }
 
-    // // Assuming the blog ID is available and being updated
-    // const blogId = this.propertyId; // Replace with the actual ID
-    // this.http.put<{ message: string, updatedBlog: any }>(`https://localhost:7190/api/Users/updateBlog/${blogId}`, formData)
-    //   .subscribe({
-    //     next: (response) => {
-    //       console.log(response.message);
-    //       this.isUpdateModalOpen = true;
-    //       this.propertyInsStatus = response.message;
-    //     },
-    //     error: (err) => {
-    //       console.error('Blog update failed', err);
-    //     },
-    //   });
+    this.files.forEach((file) => {
+      formData.append('files', file, file.name);
+    });
+    
+    // Assuming the blog ID is available and being updated
+    const blogId = this.propID;
+    
+
+    this.http.put<{ message: string, updatedBlog: any }>(`https://localhost:7190/api/Users/updateBlog/${blogId}`, formData)
+      .subscribe({
+        next: (response) => {
+          console.log(response.message);
+          this.isUpdateModalOpen = true;
+          this.propertyInsStatus = response.message;
+        },
+        error: (err) => {
+          console.error('Blog update failed', err);
+        },
+      });
   }
 
+  blogId: string | null = null;
 
 
       // fetchImage(id: string): void {
@@ -361,7 +370,7 @@ export class BlogComponentComponent {
       //       });
       // }
       
-      files1: CustomFile[] = [];
+    
 
       // fetchBlogDetailsById(id: string): void {
       //   this.http.get(`https://localhost:7190/api/Users/allUploadedBlogs/${id}`).subscribe({
@@ -411,6 +420,7 @@ export class BlogComponentComponent {
       //   });
       // }
       
+      blog: any;
       fetchBlogDetailsById(id: string): void {
         this.http.get(`https://localhost:7190/api/Users/allUploadedBlogs/${id}`).subscribe({
           next: (response: any) => {
@@ -651,5 +661,7 @@ export class BlogComponentComponent {
         this.propID = blogID;  
         this.fetchBlogDetailsById(blogID);
       }
+      
+
       
 }

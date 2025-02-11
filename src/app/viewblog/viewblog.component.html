@@ -1,0 +1,17 @@
+
+<div *ngIf="blog" class="card">
+    <h1 class="card-title">{{ blog.title }}</h1>
+  
+    <div *ngIf="blog.fileData">
+      <img [src]="files1[0]?.url" alt="Blog Image" class="card-image"/>
+    </div>
+  
+    <div [innerHTML]="blog.description" class="card-text"></div>
+  
+    <p class="date" *ngIf="blog.formattedDate">
+      <i class="fas fa-calendar-alt"></i> {{ blog.formattedDate }}
+    </p>
+  </div>
+  
+  <div *ngIf="!blog">Loading...</div>
+  

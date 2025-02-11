@@ -173,6 +173,10 @@
     display: flex;          /* Use flexbox for horizontal alignment */
     align-items: center;    /* Vertically center the radio button and label */
   }
+  ul.AvailabilityOptions-row label {
+    position: relative;   /* Ensure the label can be adjusted with the 'top' property */
+    top: 6px;             /* Move the label down by 6px */
+  }
   
   .availability-option {
     display: flex;          /* Align radio buttons and labels horizontally */

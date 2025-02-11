@@ -35,6 +35,7 @@ export class SearchPropertiesComponent implements OnInit {
   selectedPropertyType:string|null='';
   keyword: string | null = '';
   propID: string | null = '';
+  propertyFor: string | null = null; // Define propertyFor here
   isLoading: boolean = false;
   constructor(public apiurl:HttpClient,private route: ActivatedRoute,public router:Router){}
   ngOnInit(): void {
@@ -42,65 +43,55 @@ export class SearchPropertiesComponent implements OnInit {
       this.propertyType = params.get('propertyType');
       this.keyword = params.get('keyword');
       this.propID = params.get('propertyID');
+      this.propertyFor = params.get('propertyFor'); // Get propertyFor from route
       // Replace default values with null
       this.propertyType = this.propertyType === 'defaultType' ? null : this.propertyType;
       this.keyword = this.keyword === 'defaultKeyword' ? null : this.keyword;
+
+      this.propertyFor = this.propertyFor === 'defaultPropertyFor' ? null : this.propertyFor; // Handle default value for propertyFor
+
     });
   
     // Determine the API call based on the values
-    if (this.propertyType || this.keyword) {
-      this.loadPropertyDetailsByFilters(this.propertyType || '', this.keyword || '');
+    if (this.propertyType || this.keyword || this.propertyFor) {
+      this.loadPropertyDetailsByFilters(this.propertyType || '', this.keyword || '', this.propertyFor || '');
     } else {
       this.loadPropertyDetails();
     }
+
+    this.getPropertTypes();
   }
 
   //propertydetails: propertyDet[] = [];
   propertydetails: any[] = []
 
-  propertytypes:any[]=[{
-    icon:'fa-building',
-    name:'Apartments/Flats',
-    propertyType:'1',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-landmark',
-    name:'Villa',
-    propertyType:'2',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-home',
-    name:'Home',
-    propertyType:'3',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-hotel',
-    name:'Office Space',
-    propertyType:'4',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-city',
-    name:'Commercial Space',
-    propertyType:'5',
-    propertiesCount:''
-  },
-  {
-    icon:'fa-building',
-    name:'Studio Apartment',
-    propertyType:'6',
-    propertiesCount:''
+  propertytypes:any[]=[];
+
+  getPropertTypes(): void {
+    this.apiurl.get('https://localhost:7190/api/Users/GetAllPropertyTypes')
+      .subscribe((response: any) => {
+        console.log('API response:', response);
+        if (response && Array.isArray(response.data)) {
+          // Map the response data to the aminities array
+          this.propertytypes = response.data.map((data: any) => ({
+            propertyTypeID: data.propertyTypeID,
+            name: data.name,
+            description: data.description
+          }));
+        } else {
+          console.error('Unexpected response format or no reviews found');
+          this.propertytypes = [];
+        }
+      }, error => {
+        console.error('Error fetching reviews:', error);
+      });
   }
-  ]
 
   getPropertyTypeName(propertyTypeId: string): string {
     const propertyType = this.propertytypes.find(pt => pt.propertyType === propertyTypeId);
     return propertyType ? propertyType.name : 'Unknown Type';
   }
-
+  
   loadPropertyDetails() {
     this.isLoading=true;
     this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImages')
@@ -332,10 +323,11 @@ export class SearchPropertiesComponent implements OnInit {
               propertyimage: propertyImage,
               defaultPropImage:defaultPropImage,
               propertyparking:property.noOfParkings,
+              PropertyTypeName:property.propertyTypeName,
               propertyfacing:PropertyFacing,
               propertyAvailability:propertyBadge,
               propertyBadgeColor: propertyBadgeColor,
-              PropertyTypeName:property.propertyTypeName
+            
 
             };
           });
@@ -440,10 +432,14 @@ export class SearchPropertiesComponent implements OnInit {
                 propertyfor:property.propertyFor,
                 propertytypeName: this.getPropertyTypeName(property.propertyType),
                 propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
+                // propertyparking:property.noOfParkings,
+                // propertyfacing:PropertyFacing,
+                propertyAvailability:propertyBadge,
                 propertyparking:property.noOfParkings,
                 propertyfacing:PropertyFacing,
-                propertyAvailability:propertyBadge,
-                propertyBadgeColor: propertyBadgeColor
+                propertyBadgeColor: propertyBadgeColor, 
+                 PropertyTypeName:property.propertyTypeName
+                
               };
             });
           }
@@ -573,15 +569,16 @@ export class SearchPropertiesComponent implements OnInit {
   //   }
   // }
 
-  loadPropertyDetailsByFilters(finalPropertyType: string, finalKeyword: string) {
+  loadPropertyDetailsByFilters(finalPropertyType: string, finalKeyword: string, finalPropertyFor: string): void {
     this.isLoading = true;
     
     // Replace null/undefined values with empty strings for URL parameters
     finalPropertyType = finalPropertyType ?? '';
     finalKeyword = finalKeyword ?? '';
+    finalPropertyFor = finalPropertyFor ?? ''; 
     
-    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesWithFilters?keyword=${encodeURIComponent(finalKeyword)}&propertyType=${encodeURIComponent(finalPropertyType)}`)
-      .subscribe(
+    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesWithFilters?keyword=${encodeURIComponent(finalKeyword)}&propertyType=${encodeURIComponent(finalPropertyType)}&propertyFor=${encodeURIComponent(finalPropertyFor)}`)
+    .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
           
@@ -710,7 +707,7 @@ export class SearchPropertiesComponent implements OnInit {
                 propertyfacing: PropertyFacing,
                 propertyAvailability: propertyBadge,
                 propertyBadgeColor: propertyBadgeColor,
-                PropertyTypeName: property.propertyTypeName
+                PropertyTypeName:property.propertyTypeName
               };
             });
     

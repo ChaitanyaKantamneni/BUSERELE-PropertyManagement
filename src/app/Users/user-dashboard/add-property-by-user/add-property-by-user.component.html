@@ -1333,13 +1333,112 @@
                   <div>
                     <button (click)="propertyMediaBackClick()">Back</button>
                   </div>
+              
                   <div class="form-column upload-container col-md-6">
+                    <h5>Property Gallery:</h5>
+                    <label for="gallery-upload">Upload Property Images</label>
+                    <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
+                    <button class="btn btn-primary mt-2" [disabled]="propertyImagesUploadButtonClick" (click)="uploadPropertyImages()">
+                      <i class="fas fa-upload"></i> Upload
+                    </button>
+                  </div>
+              
+                  <div class="image-table mt-4">
+                    <h5>Uploaded Images:</h5>
+                    <table class="table">
+                      <!-- Table headers based on PropertyOnfileClicked -->
+                      <thead *ngIf="PropertyOnfileClicked">
+                        <tr>
+                          <th hidden="true">S.no</th>
+                          <th>Image</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+              
+                      <thead *ngIf="!PropertyOnfileClicked">
+                        <tr>
+                          <th hidden="true">S.no</th>
+                          <th>Image</th>
+                          <th>Order</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+              
+                      <tbody>
+                        <!-- Loop through uploadedImages1 to display images -->
+                        <ng-container *ngIf="!PropertyOnfileClicked">
+                          <tr *ngFor="let image of uploadedImages1">
+                            <td hidden="true">
+                              <h5>{{ image.id }}</h5>
+                            </td>
+                            <td>
+                              <img [src]="image.imageUrls" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrls)">
+                            </td>
+                            <td>
+                              <!-- Allow user to set image order -->
+                              <input 
+                                type="number" 
+                                class="form-control" 
+                                [(ngModel)]="image.customOrder" 
+                                placeholder="Set Order" 
+                                min="1" 
+                                [ngModelOptions]="{ standalone: true }">
+                            </td>
+                            <td>
+                              <!-- Delete Button -->
+                              <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
+                              <!-- Optionally add Default Image functionality -->
+                              <!-- <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button> -->
+                            </td>
+                          </tr>
+                        </ng-container>
+              
+                        <!-- Submit Order Button -->
+                        <button class="btn btn-primary mt-3" (click)="submitCustomOrder()">Submit Order</button>
+                      </tbody>
+                    </table>
+                  </div>
+              
+                  <!-- Modal for viewing image -->
+                  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'show': isModalOpen }" [style.display]="isModalOpen ? 'block' : 'none'">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">View Image</h5>
+                          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- <div *ngIf="propertyImagesClicked" class="propertyImagesUpload">
+                <div>
+                  <div>
+                    <button (click)="propertyMediaBackClick()">Back</button>
+                  </div>
+                  <!-- <div class="form-column upload-container col-md-6">
                       <h5>Property Gallery:</h5>
                       <label for="gallery-upload">Upload Property Images</label>
                       <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
                       <button class="btn btn-primary mt-2"  [disabled]="propertyImagesUploadButtonClick" (click)="uploadPropertyImages()">
                           <i class="fas fa-upload"></i> Upload
                       </button>
+                  </div> --
+
+                  <div class="form-column upload-container col-md-6">
+                    <h5>Property Gallery:</h5>
+                    <label for="gallery-upload">Upload Property Images</label>
+                    <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
+                    <button class="btn btn-primary mt-2" [disabled]="propertyImagesUploadButtonClick" (click)="uploadPropertyImages()">
+                      <i class="fas fa-upload"></i> Upload
+                    </button>
                   </div>
                   
                   <div class="image-table mt-4">
@@ -1370,7 +1469,7 @@
                                     <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
                                 </td>
                                 <td>
-                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> --
                                     <button class="btn btn-danger" (click)="deleteImage(image)">Delete</button>
                                 </td>
                               </tr>
@@ -1389,7 +1488,7 @@
                                     <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button>
                                 </td>
                               </tr>
-                            </ng-container> -->
+                            </ng-container> --
 
 
                             <ng-container *ngIf="!PropertyOnfileClicked">
@@ -1401,7 +1500,7 @@
                                     <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
                                 </td>
                                 <td>
-                                  <!-- Use ngModel with standalone option -->
+                                  <!-- Use ngModel with standalone option --
                                   <input 
                                     type="number" 
                                     class="form-control" 
@@ -1411,9 +1510,9 @@
                                     [ngModelOptions]="{standalone: true}">
                                 </td>
                                 <td>
-                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
+                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> --
                                     <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
-                                    <!-- <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button> -->
+                                    <!-- <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button> --
                                 </td>
                               </tr>
                             </ng-container>
@@ -1427,7 +1526,7 @@
                       </table>
                   </div>
               
-                  <!-- Modal for viewing image -->
+                  <!-- Modal for viewing image --
                   <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
                       <div class="modal-dialog" role="document">
                           <div class="modal-content">
@@ -1444,7 +1543,9 @@
                       </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
+
+
               <div *ngIf="propertyFloorImagesClicked" class="propertyFloorImagesUpload">
                 <div>
                   <div>
@@ -1484,7 +1585,7 @@
                                       <h5>{{image.id}}</h5>
                                   </td>
                                   <td>
-                                      <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
+                                      <img [src]="image.imageUrls" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrls)">
                                   </td>
                                   <td>
                                       <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
@@ -1498,7 +1599,7 @@
                                       <h5>{{image.id}}</h5>
                                   </td>
                                   <td>
-                                      <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                                      <img [src]="image.imageUrls" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrls)">
                                   </td>
                                   <td>
                                     <!-- Use ngModel with standalone option -->
@@ -1575,8 +1676,8 @@
                                 </td>
                                 <td>
                                     <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
-                                    <video width="75%" height="200" controls (click)="openModal(video.path)">
-                                      <source [src]="video.path" type="video/mp4">
+                                    <video width="75%" height="200" controls (click)="openModal(video.videoUrl)">
+                                      <source [src]="video.videoUrl" type="video/mp4">
                                       Your browser does not support the video tag.
                                     </video>                                    
                                 </td>
@@ -1633,7 +1734,7 @@
                     <button (click)="propertyMediaBackClick()">Back</button>
                   </div>
                   <div class="form-column upload-container col-md-6">
-                      <h5>Property Video Gallery:</h5>
+                      <h5>Property Documents Gallery:</h5>
                       <label for="gallery-upload">Upload Property Videos</label>
                       <input type="file" id="gallery-upload" accept="application/pdf" multiple class="form-control-file" (change)="onDocumentFileSelect($event)">
                       <button class="btn btn-primary mt-2" (click)="uploadPropertyDocuments()">
@@ -1666,8 +1767,10 @@
                                         height="200px">
                                         Your browser does not support the PDF viewer.
                                       </object> -->
-  
-                                      <iframe [src]="document.DocumentPath" width="25%" height="200px"></iframe>
+                                      <iframe *ngIf="document.mimeType === 'application/pdf'" 
+                                      [src]="document.safeDocumentUrl" width="25%" height="200px"></iframe>
+                              <!-- Add fallback or other types if needed -->
+                                      <!-- <iframe [src]="document.safeDocumentUrl " width="25%" height="200px"></iframe> -->
                                 </td>
                                 <td>
                                     <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
@@ -1689,8 +1792,9 @@
                                         height="200px">
                                         Your browser does not support the PDF viewer.
                                       </object> -->
-  
-                                      <iframe [src]="document.safeUrl" width="25%" height="200px"></iframe>
+                                      <iframe *ngIf="document.mimeType === 'application/pdf'"
+                                      [src]="document.safeDocumentUrl" width="25%" height="200px"></iframe>
+                                      <!-- <iframe [src]="document.safeDocumentUrl " width="25%" height="200px"></iframe> -->
                                 </td>
                                 <td>
                                     <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
@@ -1795,15 +1899,15 @@
               <ul class="list-unstyled AvailabilityOptions-row">
                 <li class="availability-option">
                   <input type="radio" id="available" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="1">
-                  <label for="available">Advertisement Property</label>
+                  <label for="available" style="top: 6px;">Advertisement Property</label>
                 </li>
                 <li class="availability-option">
                   <input type="radio" id="featured" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="2">
-                  <label for="featured">Featured Property</label>
+                  <label for="featured" style="top: 6px;">Featured Property</label>
                 </li>
                 <li class="availability-option">
                   <input type="radio" id="common" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="3">
-                  <label for="common">Common Property</label>
+                  <label for="common" style="top: 6px;">Common Property</label>
                 </li>
               </ul>
             </div>

@@ -92,13 +92,26 @@
                         <li><a routerLink="/about-us">About Us</a></li>
                         <li><a routerLink="/contact-us">Contact Us</a></li>
                         <li><a routerLink="/">Home</a></li>
+                        <li><a routerLink="/privacy">Privacy Policy</a></li>
+
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Get In Touch</h3>
                     <p><i class="fas fa-map-marker-alt"></i> Plot No. 3, 3rd Floor, Sri Sai Enclave, Opp: Tata Service Center, Old Bowenpally, HYDERABAD, INDIA</p>
-                    <p><i class="fas fa-phone-alt"></i> +91 8688802505</p>
-                    <p><i class="fas fa-envelope"></i> info&#64;buserele.com</p>
+                    <!-- <p><i class="fas fa-phone-alt"></i> +91 8688802505</p>
+                    <p><i class="fas fa-envelope"></i> info&#64;buserele.com</p> -->
+                    <p>
+                        <i class="fas fa-phone-alt" (click)="makeCall()"></i>
+                        <span>+91 8688802505</span> <!-- Display number here -->
+                      </p>
+                      
+                      <p>
+                        <i class="fas fa-envelope" (click)="openEmailClient()"></i>
+                        <span>info&#64;buserele.com</span> <!-- Display email here -->
+                      </p>
+                      
+                      
                     <div class="social-icons">
                         <a href="https://x.com/buserele" target="_blank"><i class="fab fa-twitter"></i></a>
                         <!-- <a routerLink="#"><i class="fab fa-facebook-f"></i></a> -->
