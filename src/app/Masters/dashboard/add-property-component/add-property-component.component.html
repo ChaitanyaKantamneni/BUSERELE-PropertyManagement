@@ -246,6 +246,7 @@
                 <div class="input-container">
                   <select formControlName="PropertyFor" (change)="onPropertyForChange($event)" id="PropertyFor" class="form-control">
                     <option value="" disabled selected>Select Property For</option>
+                    <option value="1">For Buy</option>
                     <option value="2">For Sale</option>
                     <option value="3">For Rent</option>
                     <option value="4">For Lease</option>
@@ -587,7 +588,8 @@
                                   <h5>{{image.id}}</h5>
                               </td>
                               <td>
-                                  <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                                  <!-- <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)"> -->
+                                  <img [src]="image.imageUrls" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrls)">
                               </td>
                               <td>
                                 <!-- Use ngModel with standalone option -->
@@ -1009,8 +1011,8 @@
           </div>
           <div class="updateProperty" *ngIf="!addnewPropertyclicked && editclicked">
             <div class="statusButtons">
-              <button class="decline" (click)="declineProperty()"><i class="fa fa-times-circle"></i>Decline</button>
-              <button class="approve" (click)="ApproveProperty()"><i class="fa fa-check-circle"></i>Approve</button>
+              <button *ngIf="propertyActiveStatus" class="decline" (click)="declineProperty()"><i class="fa fa-times-circle"></i>Decline</button>
+              <button *ngIf="!propertyActiveStatus" class="approve" (click)="ApproveProperty()"><i class="fa fa-check-circle"></i>Approve</button>
               <button *ngIf="SoldOutProperty" class="soldOut" (click)="SoldOutPropertyClick()">Sold Out</button>
             </div>
             <div>

@@ -264,24 +264,11 @@ export class DashboardcomponentComponent implements OnInit {
                 console.log('images property is missing, not an array, or empty.');
               }
   
-              if (property.image && property.image.fileData) {
+              if (property.image && property.image.filePath) {
                 const firstImage = property.image;
     
                 try {
-                  // Decode the Base64 string into raw binary data
-                  const byteCharacters = atob(firstImage.fileData);
-                  const byteArray = new Uint8Array(byteCharacters.length);
-    
-                  // Copy the binary data into the byteArray
-                  for (let i = 0; i < byteCharacters.length; i++) {
-                    byteArray[i] = byteCharacters.charCodeAt(i);
-                  }
-    
-                  // Create a Blob from the byteArray
-                  const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
-    
-                  // Create an object URL from the Blob
-                  defaultPropImage = URL.createObjectURL(blob);
+                  defaultPropImage=`https://localhost:7190${property.image.filePath}`;
     
                   // Log the URL for verification
                   console.log('Generated Default Image URL:', defaultPropImage);

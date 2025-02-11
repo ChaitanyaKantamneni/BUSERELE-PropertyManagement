@@ -219,7 +219,7 @@
                             <button class="btn deactivate" (click)="deactivateAccount()">Deactivate Account</button>
                         </div>
                         <div class="updatestatusbuttons2">
-                            <button class="btn" (click)="updatePassword()">Update Password</button>
+                            <button class="btn" (click)="updatePassword()" [disabled]="profilePasswordChangeform.invalid">Update Password</button>
                         </div>
                     </div>
                 </form>
