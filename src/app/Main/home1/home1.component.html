@@ -28,7 +28,7 @@
                         </div>
                         
                         <div class="row justify-content-center align-items-center h-100 m-0 bg-white rounded">
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-3">
                                 <input
                                 type="text"
                                 class="form-control"
@@ -44,7 +44,7 @@
                                 </ul>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-3">
                                 <select class="form-control" [(ngModel)]="selectedPropertyType">
                                 <option value="" disabled hidden>Property Type</option>
                                 <ng-container *ngFor="let property of propertytypes">
@@ -52,16 +52,17 @@
                                 </ng-container>
                                 </select>
                             </div>
-                            <!-- <div class="col-12 col-md-3">
-                                <select class="form-control">
-                                <option value="" disabled selected>Location</option>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
+                            <div class="col-12 col-md-3">
+                                <select class="form-control" [(ngModel)]="selectedPropertyFor">
+                                <option value="" disabled selected>Property For</option>
+                                <option value="1">Buy</option>
+                                <option value="2">Sale</option>
+                                <option value="3">Rent</option>
+                                <option value="4">Lease</option>
                                 </select>
-                            </div> -->
+                            </div>
                             
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-3">
                                 <button class="btn w-100" (click)="searchclick()">Search</button>
                             </div>
                             
