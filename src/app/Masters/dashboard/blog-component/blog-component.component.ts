@@ -8,7 +8,7 @@ import { QuillEditorComponent, QuillModule } from 'ngx-quill';
 interface CustomFile {
   name: string;
   url: string;
-  data: Blob;  // or use 'File' if you want to handle the file object itself
+  data: Blob;
 }
 
 
@@ -35,17 +35,19 @@ export class BlogComponentComponent {
     this.fetchBlogDetails();
     
   }
+  
 
   editorConfig = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
+      ['blockquote'],
       [{ header: 1 }, { header: 2 }],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ size: ['small', false, 'large', 'huge'] }],
       [{ color: [] }, { background: [] }],
-      ['image'],
-      ['clean'],
+      // ['image'],
+      // ['clean'],
+      // , 'code-block'
     ],
   };
 
@@ -71,18 +73,15 @@ export class BlogComponentComponent {
 
   viewImage1(file: CustomFile | File): void {
     if (file instanceof File) {
-      // If the input is a File object, read it as a Data URL using FileReader
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        // Once the file is loaded, set imageUrl to the base64 data URL
         this.imageUrl = e.target.result;
-        this.showModal = true;  // Show modal or perform the necessary action
+        this.showModal = true;  
       };
-      reader.readAsDataURL(file);  // Read the File as a data URL
+      reader.readAsDataURL(file); 
     } else {
-      // If it's a CustomFile object, use the `url` directly (assumed to be a Blob URL or base64)
       this.imageUrl = file.url;
-      this.showModal = true;  // Show modal or perform the necessary action
+      this.showModal = true; 
     }
   }
   
@@ -131,84 +130,10 @@ export class BlogComponentComponent {
       quillEditor.__quill.root.innerHTML = '';
     }
   }
-
-  // onFilesSelected(event: Event): void {
-  //   const fileInput = event.target as HTMLInputElement;
-  //   const BlogDescription = this.propertytype.get('Blog')?.value;
-  //   const name = this.propertytype.get('Name')?.value;
-  
-  //   if (fileInput?.files?.length) {
-  //     const file = fileInput.files[0];  // Get only the first file (in case multiple files are selected)
-  //     console.log('Selected file:', file);
-  
-  //     // Clear any previous files (if necessary)
-  //     this.files = [file];
-  
-  //     // Handle file upload to the server
-  //     const formData = new FormData();
-  //     formData.append('files', file);
-  //     formData.append('blogDescription', BlogDescription);
-  //     formData.append('name', name);
-  
-  //     this.http
-  //       .post<{ imageUrl: string }>(
-  //         'https://localhost:7075/api/Tables/uploadblogimg',
-  //         formData
-  //       )
-  //       .subscribe({
-  //         next: (response) => {
-  //           const imageUrl = response.imageUrl;
-  //           console.log('Image URL from response:', imageUrl);
-  //           if (imageUrl) {
-  //             this.imageUrl = imageUrl;  // Store the image URL
-  //           }
-  //         },
-  //         error: (err) => {
-  //           console.error('Image upload failed', err);
-  //         },
-  //       });
-  //   }
-  // }
-  
-
-
-  // onSubmit(): void {
-  //   console.log('Form values:', this.propertytype.value);
-  //   if (this.propertytype.invalid || !this.imageUrl) {
-  //     console.error('Form is invalid or image not uploaded');
-  //     return;
-  //   }
-
-  //   const blogContent = this.propertytype.value.Blog;
-  //   const formData = new FormData();
-  //   formData.append('blogDescription', blogContent);
-  //   formData.append('imageUrl', this.imageUrl);
-  //   formData.append('name', this.propertytype.get('Name')?.value);
-
-  //   // Add selected files to FormData
-  //   this.files.forEach((file) => {
-  //     formData.append('files', file, file.name);
-  //   });
-
-  //   this.http.post('https://localhost:7075/api/Tables/uploadblog', formData).subscribe({
-  //     next: (response) => {
-  //       console.log('Blog successfully submitted:', response);
-  //     },
-  //     error: (err) => {
-  //       console.error('Error submitting blog:', err);
-  //     },
-  //   });
-  // }
-
-
   onFilesSelected(event: Event): void {
     const fileInput = event.target as HTMLInputElement;
-  
-    // Clear any previous files (if necessary)
     this.files = [];
-  
     if (fileInput?.files?.length) {
-      // Push all selected files into the 'files' array
       for (let i = 0; i < fileInput.files.length; i++) {
         const file = fileInput.files[i];
         console.log('Selected file:', file);
@@ -218,249 +143,173 @@ export class BlogComponentComponent {
     }
   }
   
-  // onSubmit(): void {
-  //   // Make sure the form is valid and that files are selected
-  //   console.log('Form values:', this.propertytype.value);
 
-  //   // Check if the form is invalid or no files are selected
+  // onSubmit(): void {
+  //   console.log('Form values:', this.propertytype.value);
+  
   //   if (this.propertytype.invalid || this.files.length === 0) {
   //     console.error('Form is invalid or no files selected');
   //     return;
   //   }
-
-  //   // Initialize FormData to append all the necessary data
   //   const formData = new FormData();
-
-  //   // Get the Blog content and title
+  
   //   const blogContent = this.propertytype.value.Blog;
   //   formData.append('Description', blogContent);
-  //   formData.append('title', this.propertytype.get('Name')?.value); // Ensure 'Name' is your blog's title
-
-  //   // Add selected files to FormData
+  //   formData.append('title', this.propertytype.get('Name')?.value); 
+  
   //   this.files.forEach((file) => {
   //     formData.append('files', file, file.name);
   //   });
   //   this.http
-  //     .post<{ message: string, uploadedImage: any }>('https://localhost:7190/api/Users/uploadBlog', formData, {
-  //       headers: { 'Content-Type': 'application/json' }
-  //     })
+  //     .post<{ message: string, uploadedImage: any }>('https://localhost:7190/api/Users/uploadBlog', formData)
   //     .subscribe({
-  //       next: (response:any) => {
-  //        if(response.statusCode="200"){
-  //         this.isUpdateModalOpen=true;
-  //         this.propertyInsStatus=response.message;
-  //        }
-  //        else{
-  //         this.isUpdateModalOpen=true;
-  //         this.propertyInsStatus=response.message;
-  //        }
+  //       next: (response: any) => {
+  //         if (response.statusCode === 200) { 
+  //           this.isUpdateModalOpen = true;
+  //           this.propertyInsStatus = response.message;
+  //         } else {
+  //           this.isUpdateModalOpen = true;
+  //           this.propertyInsStatus = response.message;
+  //         }
   //       },
   //       error: (err) => {
   //         console.error('Blog upload failed', err);
   //       },
   //     });
   // }
+  
+
+  // UpdateBlog():void{
+  //   console.log('Form values:', this.propertytype.value);
+
+  //   if (this.propertytype.invalid) {
+  //     console.error('Form is invalid');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   const blogContent = this.propertytype.value.Blog;
+  //   formData.append('Description', blogContent);
+  //   formData.append('title', this.propertytype.get('Name')?.value);
+  //   this.files.forEach((file) => {
+  //     formData.append('files', file, file.name);
+  //   });
+    
+  //   const blogId = this.propID;
+    
+
+  //   this.http.put<{ message: string, updatedBlog: any }>(`https://localhost:7190/api/Users/updateBlog/${blogId}`, formData)
+  //     .subscribe({
+  //       next: (response) => {
+  //         console.log(response.message);
+  //         this.isUpdateModalOpen = true;
+  //         this.propertyInsStatus = response.message;
+  //       },
+  //       error: (err) => {
+  //         console.error('Blog update failed', err);
+  //       },
+  //     });
+  // }
 
 
   onSubmit(): void {
-    // Make sure the form is valid and that files are selected
     console.log('Form values:', this.propertytype.value);
   
-    // Check if the form is invalid or no files are selected
+    // Ensure form is valid and at least one file is selected
     if (this.propertytype.invalid || this.files.length === 0) {
       console.error('Form is invalid or no files selected');
       return;
     }
   
-    // Initialize FormData to append all the necessary data
     const formData = new FormData();
+    formData.append('Description', this.propertytype.value.Blog);
+    formData.append('title', this.propertytype.get('Name')?.value);
   
-    // Get the Blog content and title
-    const blogContent = this.propertytype.value.Blog;
-    formData.append('Description', blogContent);
-    formData.append('title', this.propertytype.get('Name')?.value); // Ensure 'Name' is your blog's title
-  
-    // Add selected files to FormData
     this.files.forEach((file) => {
       formData.append('files', file, file.name);
     });
   
-    // Send the request to the backend without 'Content-Type' header
-    this.http
-      .post<{ message: string, uploadedImage: any }>('https://localhost:7190/api/Users/uploadBlog', formData)
+    this.http.post<{ message: string; uploadedImage: any }>('https://localhost:7190/api/Users/uploadBlog', formData)
       .subscribe({
         next: (response: any) => {
-          if (response.statusCode === 200) {  // Fixed the comparison here
-            this.isUpdateModalOpen = true;
-            this.propertyInsStatus = response.message;
-          } else {
-            this.isUpdateModalOpen = true;
-            this.propertyInsStatus = response.message;
+          if (response.statusCode === 200) {
+            console.log('Blog uploaded successfully:', response);
           }
+          this.isUpdateModalOpen = true;
+          this.propertyInsStatus = response.message;
+          this.propertytype.markAsPristine(); // Reset form state after submit
         },
         error: (err) => {
           console.error('Blog upload failed', err);
+        }
+      });
+  }
+  
+  UpdateBlog(): void {
+    console.log('Form values:', this.propertytype.value);
+  
+    // Ensure form is valid before making update request
+    if (this.propertytype.invalid || !this.propID) {
+      console.error('Form is invalid or blog ID is missing');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('Description', this.propertytype.value.Blog);
+    formData.append('title', this.propertytype.get('Name')?.value);
+  
+    this.files.forEach((file) => {
+      formData.append('files', file, file.name);
+    });
+  
+    this.http.put<{ message: string; updatedBlog: any }>(`https://localhost:7190/api/Users/updateBlog/${this.propID}`, formData)
+      .subscribe({
+        next: (response) => {
+          console.log('Blog updated successfully:', response);
+          this.isUpdateModalOpen = true;
+          this.propertyInsStatus = response.message;
+          this.propertytype.markAsPristine(); // Reset form state after update
         },
+        error: (err) => {
+          console.error('Blog update failed', err);
+        }
       });
   }
   
 
-  UpdateBlog():void{
-    console.log('Form values:', this.propertytype.value);
-
-    if (this.propertytype.invalid) {
-      console.error('Form is invalid');
-      return;
-    }
-
-    const formData = new FormData();
-    const blogContent = this.propertytype.value.Blog;
-    formData.append('Description', blogContent);
-    formData.append('title', this.propertytype.get('Name')?.value); // Blog title
-
-    // // Add files to FormData if available
-    // if (this.files1.length > 0) {
-    //   this.files1.forEach((file) => {
-    //     formData.append('files', file, file.name);
-    //   });
-    // }
-
-    this.files.forEach((file) => {
-      formData.append('files', file, file.name);
-    });
-    
-    // Assuming the blog ID is available and being updated
-    const blogId = this.propID;
-    
-
-    this.http.put<{ message: string, updatedBlog: any }>(`https://localhost:7190/api/Users/updateBlog/${blogId}`, formData)
-      .subscribe({
-        next: (response) => {
-          console.log(response.message);
-          this.isUpdateModalOpen = true;
-          this.propertyInsStatus = response.message;
-        },
-        error: (err) => {
-          console.error('Blog update failed', err);
-        },
-      });
-  }
-
   blogId: string | null = null;
 
-
-      // fetchImage(id: string): void {
-      //   this.http
-      //       .get<{ imageUrl: string; blogDescription: string; date: string }>(
-      //           `https://localhost:7190/api/Users/allUploadedBlogs/${id}`
-      //       )
-      //       .subscribe({
-      //           next: (response) => {
-      //               const imageUrl = response.imageUrl;
-      //               const blogDescription = response.blogDescription;
-      //               const date = response.date;
-      //               const absoluteUrl = `https://localhost:7190${imageUrl}`;
-      //               this.imageUrl = absoluteUrl;
-      //               this.blogText = blogDescription;
-      //               this.blogDate = new Date(date); // Parse and store the date
-      //           },
-      //           error: (err) => {
-      //               console.error('Failed to fetch image and description:', err);
-      //           },
-      //       });
-      // }
-      
-    
-
-      // fetchBlogDetailsById(id: string): void {
-      //   this.http.get(`https://localhost:7190/api/Users/allUploadedBlogs/${id}`).subscribe({
-      //     next: (response: any) => {
-      //       if (response) {
-      //         // Set the blog details into a form or variable
-      //         this.propertytype.patchValue({
-      //           Blog: response.description,
-      //           Name: response.title,
-      //         });
-      
-      //         // Assuming `response.imageUrl` contains a Base64-encoded string for image data
-      //         if (response.imageUrl && response.fileData) {
-      //           const filename = response.imageUrl.split('/').pop(); // Extract the filename from the URL
-      
-      //           // Convert Base64 to binary (decoding it)
-      //           const byteCharacters = atob(response.imageData); // Decode base64 to raw binary
-      //           const byteArray = new Uint8Array(byteCharacters.length);
-      
-      //           // Copy the binary data into the byteArray
-      //           for (let i = 0; i < byteCharacters.length; i++) {
-      //             byteArray[i] = byteCharacters.charCodeAt(i);
-      //           }
-      
-      //           // Create a Blob from the byteArray
-      //           const blob = new Blob([byteArray], { type: response.mimeType });
-      
-      //           // Create an object URL from the Blob
-      //           const imageUrl = URL.createObjectURL(blob);
-      
-      //           // Push the file into the files1 array with filename, imageUrl, and file data
-      //           this.files1.push({
-      //             name: filename,  // File name extracted from the image URL
-      //             url: imageUrl,   // Blob URL for displaying the image
-      //             data: blob,      // The Blob object itself
-      //           });
-
-      //           console.log(this.files1);
-      //         }
-      //       } else {
-      //         console.error('Blog not found');
-      //       }
-      //     },
-      //     error: (err) => {
-      //       console.error('Error fetching blog details:', err);
-      //     }
-      //   });
-      // }
-      
-      blog: any;
+   blog: any;
       fetchBlogDetailsById(id: string): void {
         this.http.get(`https://localhost:7190/api/Users/allUploadedBlogs/${id}`).subscribe({
           next: (response: any) => {
             if (response) {
-              // Set the blog details into a form or variable
               this.propertytype.patchValue({
                 Blog: response.description,
                 Name: response.title,
               });
-      
-              // Check if fileData exists and is a non-empty string
               if (response.fileData && response.fileData.length > 0) {
                 let base64Data = response.fileData;
-      
-                // Remove the data URL prefix if it exists (optional step, depending on data)
                 const base64Prefix = 'data:image/jpeg;base64,';
                 if (base64Data.startsWith(base64Prefix)) {
                   base64Data = base64Data.slice(base64Prefix.length);
                 }
       
                 try {
-                  // Decode Base64 to binary (decoding it)
-                  const byteCharacters = atob(base64Data);  // Decoding Base64 to raw binary
+                  const byteCharacters = atob(base64Data); 
                   const byteArray = new Uint8Array(byteCharacters.length);
-      
-                  // Copy the binary data into the byteArray
                   for (let i = 0; i < byteCharacters.length; i++) {
                     byteArray[i] = byteCharacters.charCodeAt(i);
                   }
       
-                  // Create a Blob from the byteArray
-                  const blob = new Blob([byteArray], { type: 'image/jpeg' });  // Use correct MIME type
-                  const imageUrl = URL.createObjectURL(blob);  // Create an object URL from the Blob
+                  const blob = new Blob([byteArray], { type: 'image/jpeg' }); 
+                  const imageUrl = URL.createObjectURL(blob);
       
-                  // Push the file into the files1 array with filename, imageUrl, and file data
-                  const filename = response.fileName;  // Use fileName directly from the API response
+                  const filename = response.fileName;  
                   this.files1.push({
                     name: filename,
-                    url: imageUrl,  // Blob URL for displaying the image
-                    data: blob      // The Blob object itself
+                    url: imageUrl,  
+                    data: blob      
                   });
                 } catch (error) {
                   console.error('Error decoding Base64 image data:', error);
@@ -479,42 +328,32 @@ export class BlogComponentComponent {
       }
       
       
+  addnewBlogclicked: boolean = false;
 
-      // fetchBlogDetailsById(id: string): void {
-      //   this.http.get(`https://localhost:7190/api/Users/allUploadedBlogs/${id}`).subscribe({
-      //     next: (response: any) => {
-      //       // Assuming the response is a single blog object, not an array
-      //       if (response) {
-      //         // Set the blog details into a form or variable
-      //         this.propertytype.patchValue({
-      //           Blog: response.description,  // or any other property you want to set
-      //           Name: response.title,
-                
-      //         });
-      //         this.files = response.imageUrl;
-      //       } else {
-      //         console.error('Blog not found');
-      //       }
-      //     },
-      //     error: (err) => {
-      //       console.error('Error fetching blog details:', err);
-      //     }
-      //   });
-      // }
-      
+  backclick(event: Event): void {
+    event.preventDefault();
+  
+    if (this.editclicked || this.addnewBlogclicked) {
+      this.editclicked = false;
+      this.addnewBlogclicked = false;
+      this.propertytype.reset(); 
+      this.files = [];
+      this.files1 = [];
+  
+      this.fetchBlogDetails();  
+    }
+  }
+  
 
       currentPage = 1;
-      pageSize = 5; 
+      pageSize = 4; 
+
       searchQuery: string = "";
       selectedWhoseProperties: string = '0';
       selectedPropertyStatus1: string = '';
       selectedIsActiveStatus1:string='';
       userID: string = localStorage.getItem('email') || '';
-      get filteredProperties() {
-        return this.properties.filter(property => 
-          property.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
+     
 
       onWhosePropertySelectionChange(event: any): void {
         this.selectedWhoseProperties = event.target.value;
@@ -540,10 +379,8 @@ export class BlogComponentComponent {
                 PropertyStatus = "Pending";
               }
       
-              // For displaying the image from the base64 encoded data
               let imageUrl = '';
               if (property.fileData) {
-                // If fileData is a base64 string, you can display it directly in an <img> tag
                 imageUrl = `data:image/jpeg;base64,${property.fileData}`;
               }
       
@@ -551,7 +388,7 @@ export class BlogComponentComponent {
                 BlogID: property.id,
                 title: property.title,
                 status: PropertyStatus,
-                imageUrl: imageUrl,  // Include the base64 image URL for display
+                imageUrl: imageUrl,  
               };
             });
     
@@ -607,10 +444,8 @@ export class BlogComponentComponent {
                 PropertyStatus = "Pending";
               }
       
-              // For displaying the image from the base64 encoded data
               let imageUrl = '';
               if (property.fileData) {
-                // If fileData is a base64 string, you can display it directly in an <img> tag
                 imageUrl = `data:image/jpeg;base64,${property.fileData}`;
               }
       
@@ -618,7 +453,7 @@ export class BlogComponentComponent {
                 BlogID: property.id,
                 title: property.title,
                 status: PropertyStatus,
-                imageUrl: imageUrl,  // Include the base64 image URL for display
+                imageUrl: imageUrl,
               };
             });
       
@@ -627,22 +462,28 @@ export class BlogComponentComponent {
             console.error('Error fetching properties:', error);
           });
       }
-      
-
       editclicked: boolean = false;
-      addnewBlogclicked:boolean=false;
 
-      addNewBlog(){
-        this.addnewBlogclicked=true;
-        this.editclicked=false;
-      }
+      // addNewBlog(): void {
+      //   this.addnewBlogclicked = true;
+      //   this.editclicked = false;
+      //   this.propertytype.reset();  
+      //   this.files = [];  
+      //   this.files1 = []; 
+      // }
+      addNewBlog(): void {
+        this.addnewBlogclicked = true;
+        this.editclicked = false; 
+        this.propertytype.reset();  
+        this.files = [];  
+        this.files1 = []; 
+    }
 
       isUpdateModalOpen:boolean = false;
       UpdatecloseModal() {
         this.isUpdateModalOpen = false;
       }
 
-      // Handle "OK" button click
       handleOk() {
         this.UpdatecloseModal();    
       }
@@ -656,12 +497,52 @@ export class BlogComponentComponent {
 
       propID: string = '';
 
+      // editproperty(blogID: string): void {
+      //   this.editclicked = true;
+      //   this.propID = blogID;  
+      //   this.fetchBlogDetailsById(blogID);
+      // }
+      
+
       editproperty(blogID: string): void {
         this.editclicked = true;
+        this.addnewBlogclicked = false; 
         this.propID = blogID;  
         this.fetchBlogDetailsById(blogID);
       }
-      
 
+      get filteredProperties() {
+        return this.properties.filter(property => 
+          property.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      }
+    
+      get totalPages(): number {
+        return Math.ceil(this.filteredProperties.length / this.pageSize);
+      }
+    
+      getPaginatedReviews() {
+        const start = (this.currentPage - 1) * this.pageSize;
+        return this.filteredProperties.slice(start, start + this.pageSize);
+      }
+    
+      setPage(page: number): void {
+        if (page > 0 && page <= this.totalPages) {
+          this.currentPage = page;
+        }
+      }
+    
+      previousPage(): void {
+        if (this.currentPage > 1) {
+          this.currentPage--;
+        }
+      }
+    
+      nextPage(): void {
+        if (this.currentPage < this.totalPages) {
+          this.currentPage++;
+        }
+      }
+    
       
 }

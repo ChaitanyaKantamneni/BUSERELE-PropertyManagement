@@ -13,7 +13,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 export class AddAmenitiesComponent implements OnInit {
   aminities: Array<{ aminitieID: string, aminitieName: string}> = [];
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 4;
   searchQuery: string = '';
   reviewdetails: any = {};
 
@@ -76,6 +76,7 @@ export class AddAmenitiesComponent implements OnInit {
             AminitieID: data.aminitieID,
             AminitieName: data.name,
             Description: data.description,
+            
           }));
         } else {
           console.error('Unexpected response format or no Aminities found');

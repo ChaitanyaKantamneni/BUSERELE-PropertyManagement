@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class UserProfileComponent implements OnInit {
   constructor(private apihttp: HttpClient,private router: Router) {}
-
+  isFormChanged = false;
   ngOnInit(): void {
     // Initialize the form
     this.profileform.reset();
@@ -21,6 +21,9 @@ export class UserProfileComponent implements OnInit {
     this.ProfileDeactivatedSuccesful=false;
     this.getProfileDet(UserID);
     this.fetchProfileimage(UserID);
+    this.profileform.valueChanges.subscribe(() => {
+      this.isFormChanged = this.profileform.dirty;  
+    });
   }
 
   // Reactive form setup

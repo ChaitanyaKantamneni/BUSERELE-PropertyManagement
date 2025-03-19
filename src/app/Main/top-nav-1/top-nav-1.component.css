@@ -10,7 +10,7 @@
     color: #2495FD;
 }
 .navbar-brand{
-    height: 100px;
+    height: 70px;
 }
 .navbar-nav .nav-link.active{
     color: #2495FD;
@@ -18,7 +18,7 @@
 .btn{
     background-color:#2495FD;
     color: white;
-    padding: 10px 25px;
+    padding: 7px 25px;
     font-weight: 600;
 }
 .btn:hover{

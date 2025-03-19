@@ -18,7 +18,7 @@
     margin-left: 20px;
     line-height: 1.6;
     /* list-style-position: inside; */
-  padding-left: 0; /* Removes any left padding */
+  padding-left: 0; 
 
   }
   
@@ -46,15 +46,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* This ensures the content takes up at least the full viewport height */
-    background-color: #f4f4f4; /* Optional background color */
+    min-height: 100vh; 
+    /* background-color: #f4f4f4;  */
   }
   .list-details-wrap {
     width: 100%;
-    max-width: 1000px; /* Set a maximum width for the content */
+    max-width: 1000px; 
     padding: 20px;
     /* background-color: #fff; */
-    border-radius: 8px; /* Optional rounded corners */
+    border-radius: 8px; 
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  */
     font-family: Arial, sans-serif;
   }

@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FooterComponent } from "../../Main/footer/footer.component";
 
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, NgIf, HttpClientModule,RouterLink],
+  imports: [ReactiveFormsModule, NgClass, NgIf, HttpClientModule, RouterLink, FooterComponent],
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css']
 })
@@ -17,12 +18,11 @@ export class SignInComponent implements OnInit {
   constructor(public http: HttpClient, public routes: Router) {}
 
   ngOnInit(): void {
-    // Clear localStorage on component initialization
     localStorage.clear();
     console.log("Local storage cleared on component initialization.");
 
-    // Add session timeout listeners
     this.addSessionTimeoutListeners();
+    // this.checkSessionExpiration();
   }
 
   LoginForms: any = new FormGroup({
@@ -34,6 +34,8 @@ export class SignInComponent implements OnInit {
   public LoginStatus: string = "";
   public color = { red: false, green: false };
   public RollID:string="";
+
+  
 
   get form() {
     return this.LoginForms.controls;
@@ -58,16 +60,21 @@ export class SignInComponent implements OnInit {
             this.RollID="1";
             localStorage.setItem("email", this.LoginForms.get('email').value);
             localStorage.setItem("RollID",this.RollID);
-            setTimeout(() => {
+
               this.routes.navigate(['/dashboard']);
-            }, 3000);
+
+            // setTimeout(() => {
+            //   this.routes.navigate(['/dashboard']);
+            // }, 3000);
           } else if(result.user.rollId === "2"){
             this.RollID="2";
             localStorage.setItem("email", this.LoginForms.get('email').value);
             localStorage.setItem("RollID",this.RollID);
-            setTimeout(() => {
-              this.routes.navigate(['/UserDashboard']);
-            }, 3000);
+            this.routes.navigate(['/UserDashboard']);
+
+            // setTimeout(() => {
+            //   this.routes.navigate(['/UserDashboard']);
+            // }, 3000);
           }
           else {
             this.LoginStatus = "Login Failed. Please try again!";
@@ -88,7 +95,8 @@ export class SignInComponent implements OnInit {
 
   private addSessionTimeoutListeners(): void {
     let sessionTimeoutId: any;
-    const sessionTimeoutDuration = 30 * 60 * 1000; 
+    // const sessionTimeoutDuration = 30 * 60 * 1000; 
+    const sessionTimeoutDuration = 15 * 60 * 1000;
 
     const resetSessionTimeout = () => {
       clearTimeout(sessionTimeoutId);
@@ -105,7 +113,22 @@ export class SignInComponent implements OnInit {
 
   passwordVisible: boolean = false;
   togglePasswordVisibility() {
-    this.passwordVisible = !this.passwordVisible;  // Toggle the visibility
+    this.passwordVisible = !this.passwordVisible; 
   }
+
+  // private checkSessionExpiration(): void {
+  //   const expiration = localStorage.getItem("sessionExpiration");
+  //   if (expiration && Date.now() > parseInt(expiration, 10)) {
+  //     this.logoutUser();
+  //   }
+  // }
+
+
+//  private logoutUser(): void {
+//   localStorage.clear();
+//   console.log("Session expired. User logged out.");
+//   this.routes.navigate(['/signin']);
+// }
+
 }
 

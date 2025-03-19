@@ -65,8 +65,7 @@ export class Review1Component implements OnInit {
         if (response && Array.isArray(response.data)) {
           
           this.reviews = response.data.map((data: any) => {
-            // Determine the status string based on the value of data.status
-            let reviewStatusUpdated = 'N/A'; // Default value
+            let reviewStatusUpdated = 'N/A'; 
           
             if (data.status === '2') {
               reviewStatusUpdated = 'Declined';
@@ -76,14 +75,15 @@ export class Review1Component implements OnInit {
               reviewStatusUpdated = 'Pending';
             }
           
-            // Return the object with the desired values
             return {
               propID: data.propID,
               username: data.username,
               useremail: data.useremail,
               usermessage: data.usermessage,
-              reviewstatus: reviewStatusUpdated,  // Set the updated review status
+              rating:data.rating,
+              reviewstatus: reviewStatusUpdated,  
               reviewId: data.id
+
             };
           });
           
@@ -119,7 +119,6 @@ export class Review1Component implements OnInit {
   viewReviewClicked:boolean=false;
 
   updateReviewDet(ReviewID: string) {
-    // Create the data object containing only the properties you need to update
     const data = {
       id: this.reviewdetails.ID,
       propID: this.reviewdetails.propertyID,
@@ -128,6 +127,7 @@ export class Review1Component implements OnInit {
       useremail: this.reviewdetails.useremail,
       usernumber: this.reviewdetails.usernumber,
       usermessage: this.reviewdetails.usermessage,
+      rating:this.reviewdetails.rating,
       createdDate: this.reviewdetails.createdDate,
       status: this.updatedStatus,
       modifieddate: new Date().toISOString()
@@ -136,7 +136,6 @@ export class Review1Component implements OnInit {
     console.log('ReviewID:', ReviewID);
     console.log('Data being sent:', data);
   
-    // Send the PUT request to update the review status
     this.apihttp.put(`https://localhost:7190/api/Users/updateReviewStatus/${ReviewID}`, data, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
@@ -153,19 +152,20 @@ export class Review1Component implements OnInit {
         alert('There was an error with your request');
       },
       complete: () => {
-        // Additional logic can go here if needed when the request completes
       }
     });
   }
 
+  rating: number = 0; 
+  stars: number[] = [1, 2, 3, 4, 5]; 
+
   getReviewDet(ReviewID: string) {
     this.apihttp.get(`https://localhost:7190/api/Users/GetReviewDetailsById/${ReviewID}`).subscribe(
       (response: any) => {
-        // Ensure response is not null or undefined
         
         
         if (response) {
-          let reviewStatusUpdated = 'N/A'; // Default value
+          let reviewStatusUpdated = 'N/A';
           
             if (response.status === '2') {
               reviewStatusUpdated = 'Declined';
@@ -176,17 +176,20 @@ export class Review1Component implements OnInit {
             }
           
           this.reviewdetails = {
-            ID: response.id || 'N/A',  // Default value if undefined
-            propertyID: response.propID || 'N/A',  // Default value if undefined
-            userID: response.userID || 'N/A',  // Default value if undefined
-            username: response.username || 'Unknown User',  // Default value if undefined
-            useremail: response.useremail || 'Email not available',  // Default value if undefined
-            usernumber: response.usernumber || 'Phone number not available',  // Default value if undefined
-            usermessage: response.usermessage || 'Message not available',  // Default value if undefined
-            createdDate: response.createdDate ? new Date(response.createdDate) : new Date(),  // Convert to Date object
-            status: reviewStatusUpdated,  // Default value if undefined
-            modifiedDate: response.modifieddate ? new Date(response.modifieddate) : new Date(),  // Convert to Date object
+            ID: response.id || 'N/A',  
+            propertyID: response.propID || 'N/A',  
+            userID: response.userID || 'N/A',  
+            username: response.username || 'Unknown User',  
+            useremail: response.useremail || 'Email not available', 
+            usernumber: response.usernumber || 'Phone number not available',  
+            usermessage: response.usermessage || 'Message not available',  
+            rating:response.rating || 'rating not found',
+            createdDate: response.createdDate ? new Date(response.createdDate) : new Date(),  
+            status: reviewStatusUpdated,  
+            modifiedDate: response.modifieddate ? new Date(response.modifieddate) : new Date(), 
           };
+          console.log('Original Response:', response);
+          console.log('Response:', this.reviewdetails);
         } else {
           console.error('Error: Response is null or undefined');
         }
@@ -218,10 +221,10 @@ export class Review1Component implements OnInit {
   }
 
   backclick(event: Event): void {
-    event.preventDefault(); // Prevents the default anchor behavior (page reload)
+    event.preventDefault(); 
     
     if (this.viewReviewClicked) {
-      this.viewReviewClicked = false; // Hide the review approval section
+      this.viewReviewClicked = false; 
     }
   }
   

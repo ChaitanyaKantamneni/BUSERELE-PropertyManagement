@@ -1,7 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-aminities1',
@@ -28,7 +28,8 @@ export class AddAminities1Component implements OnInit {
 
   aminitiesform:FormGroup= new FormGroup({
     id: new FormControl(''),
-    name:new FormControl(''),
+    // name:new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     description:new FormControl(''),
     icon:new FormControl('')
   })
@@ -60,9 +61,7 @@ export class AddAminities1Component implements OnInit {
   getAminitieDet(aminitieID: string) {
     this.apihttp.get(`https://localhost:7190/api/Users/GetAminitieDetailsById/${aminitieID}`).subscribe(
       (response: any) => {
-        // Ensure response is not null or undefined
         if (response) {
-          // Directly patch the form with the response data
           this.aminitiesform.patchValue({
             id: response.aminitieID,
             name: response.name,
@@ -101,40 +100,18 @@ export class AddAminities1Component implements OnInit {
     }
   }
 
-  // getreviews(): void {
-  //   this.apihttp.get('https://localhost:7190/api/Users/GetAllAminities')
-  //     .subscribe((response: any) => {
-  //       console.log('API response:', response);
-  //       if (response && Array.isArray(response.data)) {
-  //         this.aminities = response.data.map((data: any) => ({
-  //           this.aminitiesform.patchValue({id: data.aminitieID}),
-  //           name: data.name,
-  //           description: data.description
-  //         }));
-  //       } else {
-  //         console.error('Unexpected response format or no reviews found');
-  //         this.aminities = [];
-  //       }
-  //     }, error => {
-  //       console.error('Error fetching reviews:', error);
-  //     });
-  // }
-
   getreviews(): void {
     this.apihttp.get('https://localhost:7190/api/Users/GetAllAminities')
       .subscribe((response: any) => {
         console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
-          // Map the response data to the aminities array
           this.aminities = response.data.map((data: any) => ({
             aminitieID: data.aminitieID,
             name: data.name,
             description: data.description
           }));
   
-          // If you want to patch the form with the first item from the response (example)
           if (this.aminities.length > 0) {
-            // Example: patch the form with the first aminitieID, name, and description
             this.aminitiesform.patchValue({
               id: this.aminities[0].aminitieID,
               name: this.aminities[0].name,
@@ -172,6 +149,8 @@ export class AddAminities1Component implements OnInit {
         if(response.StatusCode==200){
           this.AminityInsStatus = response.Message;
           this.isModalOpen = true;
+          this.aminitiesform.reset(); 
+          this.aminitiesform.markAsPristine();
         }
         this.aminitiesform.reset();
       },
@@ -195,17 +174,16 @@ export class AddAminities1Component implements OnInit {
 
   updateAminitie() {
     const data = {
-      AminitieID: this.aminitiesform.get('id')?.value, // Ensure AminitieID is included
+      AminitieID: this.aminitiesform.get('id')?.value, 
       name: this.aminitiesform.get('name')?.value,
       Description: this.aminitiesform.get('description')?.value || null,
       AminitieIcon:this.aminitiesform.get('icon')?.value || null,
-      // Optionally, you can pass null for non-modified fields or the current values
-      CreatedBy: 0,  // Example: pass a default value
-      CreatedIP: "", // Or current IP if needed
-      CreatedDate: null,  // If not needed, can be null
-      ModifiedBy: 0,  // Pass a default or current user ID
-      ModifiedIP: "",  // Pass current IP address or null
-      ModifiedDate: new Date().toISOString() // Current timestamp for update
+      CreatedBy: 0,  
+      CreatedIP: "", 
+      CreatedDate: null,  
+      ModifiedBy: 0,  
+      ModifiedIP: "",  
+      ModifiedDate: new Date().toISOString() 
     };
 
     const aminitieID: string = (this.aminitiesform.get('id')?.value).trim();
@@ -217,6 +195,7 @@ export class AddAminities1Component implements OnInit {
         if (response.statusCode === 200) {
           this.AminityInsStatus = response.message;
           this.isModalOpen = true;
+          this.aminitiesform.markAsPristine(); 
         }
       },
       error: (error) => {
@@ -236,6 +215,7 @@ backclick(event: Event): void {
   if (this.addnewclickClicked || this.viewAminitieClicked) {
     this.addnewclickClicked = false;
     this.viewAminitieClicked=false;
+    this.aminitiesform.markAsPristine();
   }
 }
 
@@ -244,10 +224,8 @@ closeModal() {
   this.isModalOpen = false;
 }
 
-// Handle "OK" button click
 handleOk() {
   this.closeModal();
-  // Execute your actions
   this.addnewclickClicked = false;
   this.viewAminitieClicked = false;
   this.getreviews();

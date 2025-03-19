@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './Main/home/home.component';
 import { ContactUsComponent } from './Main/contact-us/contact-us.component';
 import { AboutUsComponent } from './Main/about-us/about-us.component';
 import { SignInComponent } from './Common/sign-in/sign-in.component';
@@ -7,8 +6,6 @@ import { SignUpComponent } from './Common/sign-up/sign-up.component';
 import { DashboardComponent } from './Masters/dashboard/dashboard.component';
 import { ProfileComponent } from './Masters/dashboard/profile/profile.component';
 import { MembershipDetComponent } from './Masters/dashboard/membership-det/membership-det.component';
-import { AddAmenitiesComponent } from './Masters/dashboard/add-amenities/add-amenities.component';
-import { AddpropertysampleComponent } from './Masters/dashboard/addpropertysample/addpropertysample.component';
 import { SearchPropertiesComponent } from './Main/search-properties/search-properties.component';
 import { ViewPropertyComponent } from './Main/view-property/view-property.component';
 import { DashboardcomponentComponent } from './Masters/dashboard/dashboardcomponent/dashboardcomponent.component';
@@ -24,12 +21,15 @@ import { AddPropertyByUserComponent } from './Users/user-dashboard/add-property-
 import { authGuard } from './auth.guard';
 import { userAuthGuard } from './user-auth.guard';
 import { ForgotPasswordComponent } from './Common/forgot-password/forgot-password.component';
-import { DescriptionComponentComponent } from './Users/user-dashboard/description-component/description-component.component';
 import { UserProfileComponent } from './Users/user-dashboard/user-profile/user-profile.component';
 import { BlogComponentComponent } from './Masters/dashboard/blog-component/blog-component.component';
 import { PrivacyComponent } from './Common/privacy/privacy.component';
 import { ViewblogComponent } from './viewblog/viewblog.component';
-import { ViewreviewsComponent } from './viewreviews/viewreviews.component';
+import { WhichlistComponent } from './whichlist/whichlist.component';
+import { ViewpropertydashboardComponent } from './Masters/dashboard/viewpropertydashboard/viewpropertydashboard.component';
+import { ViewuserdashboardComponent } from './Users/user-dashboard/viewuserdashboard/viewuserdashboard.component';
+import { UserwhichlistComponent } from './Users/user-dashboard/userwhichlist/userwhichlist.component';
+import { UserpropertiesComponent } from './Masters/dashboard/userproperties/userproperties.component';
 
 
 export const routes: Routes = [
@@ -42,11 +42,19 @@ export const routes: Routes = [
     {path:'privacy',component:PrivacyComponent},
     {path:'forgot-password',component:ForgotPasswordComponent},
     {path:'search-properties',component:SearchPropertiesComponent},
+    {path:'search-properties/:propertyAvailabilityOptions',component:SearchPropertiesComponent},
     {path:'search-properties/:propertyType',component:SearchPropertiesComponent},
     {path: 'search-properties/:propertyType/:keyword', component: SearchPropertiesComponent},
     {path: 'search-properties/:propertyType/:propertyFor/:keyword', component: SearchPropertiesComponent},
+    {path: 'search-properties/:propertyType/:propertyFor/:CityName/:keyword', component: SearchPropertiesComponent},    
     {path:'view-property/:propertyID',component:ViewPropertyComponent},
+    
+    // {path:'viewpropertydashboard/:propertyID',component:ViewpropertydashboardComponent},
+    // {path:'viewuserdashboard/:propertyID',component:ViewuserdashboardComponent},
+
     {path:'view-reviews',component:ReviewsComponentComponent},
+    {path:'view-reviews/:reviewID',component:ReviewsComponentComponent},
+
     {path:'dashboard',component:DashboardComponent,
         canActivate:[authGuard],
         children:
@@ -60,7 +68,12 @@ export const routes: Routes = [
             {path:'dashboarddet',component:DashboardcomponentComponent},
             {path:'userReviews',component:Review1Component},
             {path:'addpropertytype',component:PropertyForComponent},
-            {path:'blog',component:BlogComponentComponent}
+            {path:'blog',component:BlogComponentComponent},
+            {path: 'whichlist', component: WhichlistComponent },
+            {path:'view-property/:propertyID',component:ViewpropertydashboardComponent},
+            {path: 'user-properties', component: UserpropertiesComponent },
+
+           
         ]
     },
     {path:'UserDashboard',component:UserDashboardComponent,
@@ -74,7 +87,10 @@ export const routes: Routes = [
             {path:'UserAddProperty',component:AddPropertyByUserComponent},
             {path:'UserDashboardDet',component:UserDashboardViewComponent},
             {path:'userReviews',component:Review1Component},
-            {path:'descriptions',component:DescriptionComponentComponent}
+            // {path:'descriptions',component:DescriptionComponentComponent}
+            {path:'userwhichlist',component:UserwhichlistComponent},
+            {path:'viewuserdashboard/:propertyID',component:ViewuserdashboardComponent}
+
         ]
     },
 
@@ -83,7 +99,7 @@ export const routes: Routes = [
     {path:'home',component:Home1Component},
     // {path:'blogviewpage',component:BlogComponentComponent},
     //  { path: 'viewblog', component: ViewblogComponent },
-     { path: 'viewblog/:id', component: ViewblogComponent },  // Route for a specific blog
-    // { path: 'view-reviews', component: ViewreviewsComponent } 
+     { path: 'viewblog/:id', component: ViewblogComponent },  
 
 ];
+

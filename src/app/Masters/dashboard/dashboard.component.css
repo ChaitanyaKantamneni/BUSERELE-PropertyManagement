@@ -1,5 +1,7 @@
 .sidenavbar {
-    background-color: #fff;
+    /* background-color: #fff; */
+    /* background-color: #1E3A5F; */
+    background-color: #21244e;
     color: black;
     position: fixed;
     top: 0;
@@ -12,6 +14,10 @@
     flex-direction: column;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
     padding: 0px;
+  }
+
+  .totalcard{
+    background-color: #F4F6F9;
   }
   
   .sidenavbar.collapsed {
@@ -102,28 +108,76 @@
   }
   
   
-  .menu li:hover {
-    background-color: #2495FD;
+  /* .menu li:hover {
+    /* background-color: #2495FD;
+    color:#fff; *
+    background-color: black;
     color:#fff;
   }
-  
+
+  .menu li i,.menu li span{
+    color: #fff;
+  } */
+
+  .menu li {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu li i,
+.menu li span {
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.menu li:hover {
+    /* background-color: black; */
+    background-color: #274B74;
+}
+
+.menu li:hover i,
+.menu li:hover span {
+    color: #fff; 
+}
+
   .menu li i {
     font-size: 20px;
+    /* color: #6eb1ee; */
+    color: #A3B8D9;
   }
   
   .menu li span {
     display: inline;
     margin-left: 10px;
+    /* color: #6eb1ee; */
+    color: #E0E6ED;
   }
 
   .maincontent {
     margin-left: 250px;
     transition: margin-left 0.3s;
+      min-height: 100vh; 
+      background-color: #F4F6F9;
   }
   
   .sidenavbar.collapsed + .maincontent {
     margin-left: 60px;
   }
+
+  /* .maincontent {
+   
+} */
+
+/* Adjust margin when sidebar is collapsed */
+/* .sidenavbar.collapsed + .maincontent {
+    margin-left: 60px;
+} */
+
+/* Ensure router content fills full height */
+.full-page-content {
+    min-height: 100vh;
+    background-color: inherit; 
+}
+
   
   @media (max-width: 768px) {
     .sidenavbar {

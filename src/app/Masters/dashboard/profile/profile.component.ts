@@ -13,16 +13,19 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 export class ProfileComponent implements OnInit {
 
   constructor(private apihttp: HttpClient) {}
+  isFormChanged = false;
 
   ngOnInit(): void {
-    // Initialize the form
     this.profileform.reset();
     const UserID = localStorage.getItem('email') as string;
     this.getProfileDet(UserID);
     this.fetchProfileimage(UserID);
+    this.profileform.valueChanges.subscribe(() => {
+      this.isFormChanged = this.profileform.dirty;  
+    });
+  
   }
 
-  // Reactive form setup
   profileform: FormGroup = new FormGroup({
     id: new FormControl(''),
     fname: new FormControl(''),
@@ -44,34 +47,29 @@ export class ProfileComponent implements OnInit {
   }
 
   isModalOpen = false;
-  ProfileUpdateStatus: boolean = false; // Flag to control modal status
+  ProfileUpdateStatus: boolean = false;
   updateStausMessage:string='';
 
-  // Image preview state
   imagePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
 
-  // Handle image selection
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagePreview = reader.result; // Set image preview
+        this.imagePreview = reader.result; 
       };
-      reader.readAsDataURL(file); // Convert file to base64 and set for preview
-      this.selectedFile = file; // Store the selected file
+      reader.readAsDataURL(file); 
+      this.selectedFile = file; 
     }
   }
 
   getProfileDet(UserID: string) {
     this.apihttp.get(`https://localhost:7190/api/Users/getUserDetailsByID/${UserID}`).subscribe(
       (response: any) => {
-        // Ensure response is not null or undefined
         if (response) {
-          // Directly patch the form with the response data
           this.profileform.patchValue({
-            // id: response.propertyTypeID,
             fname: response.name,
             lname: response.lastName,
             email:response.email,
@@ -87,7 +85,6 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  // Handle form submission and update profile
   updateProfileDet() {
     const updatedProfileData = {
       name: this.profileform.get('fname')?.value, 
@@ -136,7 +133,6 @@ export class ProfileComponent implements OnInit {
       this.updateProfileImage(formData);
     }
   }
-  // Handle image upload button click
   updateProfileImage(formData: FormData): void {
     const emailId: string = this.profileform.get('email')?.value;
     this.apihttp.put(`https://localhost:7190/api/Users/updateProfileimage/${emailId}`, formData).subscribe(
@@ -150,12 +146,10 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  // Close modal
   closeModal() {
     this.isModalOpen = false;
   }
 
-  // Handle "OK" button click
   handleOk() {
     this.closeModal();
   }

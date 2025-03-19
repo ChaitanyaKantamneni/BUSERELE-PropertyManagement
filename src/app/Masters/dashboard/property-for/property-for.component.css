@@ -55,18 +55,18 @@
     border-radius: 0px;
 }
 
-.viewbtn:hover{
+/* .viewbtn:hover{
     background-color: blue;
-}
+} */
 
 .checkbtn{
     padding: 0px 10px;
     border-radius: 0px;
 }
 
-.checkbtn:hover{
+/* .checkbtn:hover{
     background-color: green;
-}
+} */
 
 .table {
     width: 100%;
@@ -139,7 +139,8 @@
 
   .PageHeading{
     width: 100%;
-    background-color: #e8e8e8;
+    /* background-color: #e8e8e8; */
+    background-color: #8cc8ffd1;
     display: flex;
     align-items: center;
     padding: 10px;
@@ -258,6 +259,8 @@
 
   table thead tr th{
     text-align: center;
+    background-color: #1E3A5F;
+    color: white;
   }
 
   table tbody{
@@ -386,4 +389,70 @@
       .formrow .form-group{
         width:100%;
       }
+}
+
+
+.searchreview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+.search-input {
+  width: 75%;
+  padding: 3px 10px 10px 35px; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px; 
+  top: 50%;
+  transform: translateY(-50%);
+  color: black;
+  font-size: 15px;
+  pointer-events: none; 
+}
+
+.NoDataFound{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.NoDataFoundImg{
+  height: 180px;
+  width:250px;
+}
+
+
+button[data-tooltip] {
+  position: relative;
+}
+
+button[data-tooltip]:hover::after {
+  content: attr(data-tooltip);  
+  position: absolute;
+  top: -30px;  
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  visibility: hidden; 
+  pointer-events: none;
+}
+
+button[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
 }

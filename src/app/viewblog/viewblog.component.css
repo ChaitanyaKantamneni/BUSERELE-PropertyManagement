@@ -1,7 +1,15 @@
-
-.card {
+/* Container for both blog sections */
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin: 20px;
+  }
+  
+  /* Blog card styling */
+  .card {
     width: 100%;
-    max-width: 600px;
+    max-width: 815px;
     margin: 20px auto;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -13,6 +21,22 @@
     transition: all 0.3s ease-in-out;
     overflow: hidden;
     position: relative;
+  }
+  .card1{
+    width: 50%;
+    max-width: 815px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    position: relative;
+    height: 225px;
   }
   
   .card:hover {
@@ -28,10 +52,24 @@
   }
   
   .card-title {
+    /* font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 20px 20px 10px; */
     font-size: 1.5rem;
     font-weight: 600;
     color: #333;
-    margin: 20px 20px 10px;
+    margin: 0px 3px 5px;
+  }
+  .card-latesttitle {
+    /* font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 20px 20px 10px; */
+    font-size: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 4px 7px 5px;
   }
   
   .date {
@@ -53,16 +91,151 @@
     font-size: 1rem;
     line-height: 1.6;
     color: #333;
-    text-align: justify;
+    /* text-align: justify; */
   }
   
- .content-section {
+  .content-section {
     flex-grow: 1;
     max-height: 120px;
     overflow-y: auto;
   }
   
+  /* Latest Blogs Section */
+  .latest-blogs {
+    flex: 1;
+    max-width: 327px;
+    flex-direction: row
+  }
+  
+  .latest-blogs h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .latest-blogs .card {
+    max-width: 100%;
+    margin: 10px 0;
+  }
+  
+
+
+  
+
+
+
+/* Container for the Latest Blogs */
+.latest-blogs {
+    margin: 20px;
+  }
+  
+  /* Styling the blog card */
+  .blog-card {
+    /* display: flex;
+    align-items: center; */
+    background: white;
+    border-radius: 10px;
+    /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; */
+    margin-bottom: 20px;
+    padding: 15px;
+    /* cursor: pointer; */
+    transition: transform 0.3s ease-in-out;
+  }
+
+  
+.blog-cardlatest{
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    margin-bottom: 20px;
+    padding: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+  
+  /* .blog-card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+  } */
+  
+  /* Image Container Styling */
+  .blog-image-container {
+    width: 30%;
+    margin-right: 20px;
+  }
+  
+  .blog-image {
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  /* Blog Text Section */
+  .blog-details {
+    width: 70%;
+  }
+  
+  .blog-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .date {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+  }
+  
+  .date i {
+    margin-right: 5px;
+    font-size: 1.1rem;
+    color: #007bff;
+  }
+  
+  /* Responsive Design for smaller screens */
   @media (max-width: 768px) {
+    .blog-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .blog-image-container {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+  
+    .blog-details {
+      width: 100%;
+    }
+  
+    .blog-title {
+      font-size: 1.25rem;
+    }
+  
+    .date {
+      font-size: 0.8rem;
+    }
+  }
+  
+
+
+
+
+
+  
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .main-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
     .card {
       width: 90%;
     }
@@ -73,6 +246,15 @@
   
     .card-text {
       font-size: 0.9rem;
+    }
+  
+    .latest-blogs {
+      max-width: 100%;
+    }
+  
+    .latest-blogs .card {
+      max-width: 100%;
+      margin-bottom: 15px;
     }
   }
   
