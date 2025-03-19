@@ -1,0 +1,1112 @@
+.container{
+    max-width: 100%;
+    height: auto;
+    background-color: #f6f6f6;
+    margin-top: 0px;
+}
+
+/* app-top-nav-1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; 
+    background-color: #fff; 
+    box-shadow: 0 4px 2px -2px gray; 
+  } */
+
+  .modal-header{
+    justify-content: space-between;
+  }
+
+.propertyTitle{
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.preloader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+  
+.preloader img {
+    width: 100px; 
+}
+
+.maincontainer{
+    margin: 0px 30px;    
+}
+
+p{
+    margin: 0px;
+}
+
+.propertyimagecontainer {
+    height: 550px;
+    padding: 20px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagecon{
+    height: 100%;
+    width: 100%;
+}
+.imagecontainer {
+    height: 80%;
+    width: 100%;
+    /* margin-bottom: 20px; */
+}
+
+.imagecontainer img{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.property-image {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-list-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: auto; /* Prevent vertical scrolling */
+    padding: 10px 0;
+    width: 100%; /* Full width */
+    max-width: 100%; /* Ensures it doesn't exceed the screen width */
+    height: 100px; /* Adjust height as needed */
+    white-space: nowrap; /* Prevents line breaks */
+}
+
+.thumbnail {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: transform 0.2s, border-color 0.2s;
+    display: inline-block; /* Keeps the thumbnails inline */
+}
+
+.thumbnail:hover {
+    border-color: #007bff; /* Highlight border color on hover */
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+.thumbnail-image {
+    width: 100px; /* Set width for each thumbnail */
+    height: 75px; /* Set height for each thumbnail */
+    /* object-fit: cover; Maintain aspect ratio */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.thumbnail.selected {
+    border-color: #007bff; /* Border color for the selected thumbnail */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Blue glow effect */
+}
+
+/* Custom scroll bar styling */
+.image-list-container::-webkit-scrollbar {
+    height: 8px; /* Scrollbar height */
+}
+
+.image-list-container::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 4px;
+}
+
+.image-list-container::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+
+.enquiryform {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width:25%;
+    height: 80%;
+}
+
+.enquiryform {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.enquiryform .form-group {
+    margin-bottom: 8px;
+}
+
+.enquiryform .form-group label {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.enquiryform .form-control {
+    height: 30px;
+    font-size: 0.85rem;
+}
+
+.enquiryform textarea.form-control {
+    height: 60px; 
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+.enquiryform .btn , .reviewtextarea .btn {
+    padding: 8px;
+    font-size: 0.85rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.enquiryform .btn:hover,.reviewtextarea .btn:hover {
+    background-color: #0056b3;
+}
+
+.video-container {
+    margin-top: 20px;
+    border: 2px solid #e8e8e8;
+    border-radius: 10px; 
+    overflow: hidden; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+    width: 100%;
+    height:467px;
+}
+
+.video-container video {
+    width: 100%; 
+    height: 100%; 
+}
+
+
+.contactformcontent {
+    height: 100%;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.contactformdiv {
+    max-width: 400px; 
+    margin: auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.PropertyContentMain{
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+}
+
+.ExploreFeaturedProperties,.Testimonials{
+    margin: 80px 40px;
+}
+
+.propertydetails{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.AdvertisementProperties{
+    width: 25%;
+}
+
+.propertyoverview {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    padding: 15px;     
+    box-sizing: border-box; 
+}
+
+.propertyoverview .headings {
+    /* background-color: #e8e8e8; */
+    background-color:#8cc8ffd1;
+    /* color: black; */
+    color: black;
+    border-radius: 10px;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.propertyoverview .body {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    padding: 20px 40px 10px 40px;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
+.propertyoverview .body .propertytype {
+    /* width: 23%;  */
+    margin-bottom: 20px;
+}
+
+.propertyoverview .body .propertytype .heading{
+    text-align: center;
+    font-weight: 600;
+    color: #222222
+}
+
+.propertyoverview .body .value {
+    font-size: 14px;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+}
+
+
+.propertyoverview .body .value i {
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+    color: #222222
+}
+
+/* .PropertyDescriptionMain .body .PropertyDescriptionContent{
+    margin-top: 15px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    word-wrap: break-word;
+    text-align: justify;
+    flex-grow: 1;
+} */
+
+.PropertyDescriptionMain .body .PropertyDescriptionContent ,.PropertyDescriptionContent {
+    
+    overflow-wrap: break-word !important; 
+    white-space: normal !important;  
+    hyphens: none !important; 
+    line-height: 1.6 !important;
+    font-size: 1rem !important;
+    color: #333 !important;
+  }
+
+  .PropertyDescriptionContent {
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+    hyphens: none !important;
+    line-height: 1.6 !important;
+    font-size: 1rem !important;
+    color: #333 !important;
+    word-break: keep-all !important; 
+}
+
+.no-wrap-hyphen {
+    white-space: nowrap !important; 
+    display: inline !important;     
+}
+
+
+
+
+.propertyfeatures .body {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; 
+}
+
+
+.addressbody {
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-start;
+    width: 100%;
+    gap: 20px; 
+    flex-wrap: wrap; 
+}
+
+.addressbody .side1, .addressbody .side2 {
+    width: 48%; 
+}
+
+.addressbody .addpropertytype {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.addpropertytype {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.addressbody .addpropertytype .heading {
+    font-size: 14px;
+    font-weight: 400;
+    margin-right: 10px;
+    color: #222222
+}
+
+.addressbody .addpropertytype .value {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.propertyfeatures i{
+    background-color: white;
+    color: blue;
+    margin-right: 10px;
+}
+
+.reviewform{
+    width: 100%;
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+}
+
+.reviewform .reviewdiv, .reviewform .reviewtextarea{
+    width: 45%;
+}
+
+.propertyenquirys{
+    display: none;
+}
+
+.locationMap{
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    display: block;
+    
+}
+
+.locationMap iframe{
+    width: 100%;
+    height: 100%;
+}
+
+.propertyImage img {
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .propertyDetails {
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  
+  .propertyFooter .bottom-bar2 {
+    background-color: #000;
+    padding: 5px;
+    border-radius: 8px;
+  }
+  
+  .propertyname h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .propertyFulldet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 350px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.propertyImage {
+    position: relative;
+    width: 100%;
+    height: 60%;
+}
+
+.propertyDetails {
+    height: 40%;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bottom-bar {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+.bottom-bar1 {
+    background: linear-gradient(to right, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
+    width: 85%; 
+    color: white;
+    margin: 0 auto; 
+    padding: 10px; 
+    position: relative;
+    overflow: hidden;
+}
+
+.bottom-bar2 {
+    background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
+    color: white;
+    padding: 0px 10px;
+    text-align: center;
+}
+
+
+
+.propertyaddress i {
+    font-size: 1.2rem; 
+}
+
+.propertyspecifications {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.propertyDetails .price {
+    font-weight: bold;
+}
+
+.propertyDetails .cost {
+    color: #007bff; 
+}
+
+.smaller-text,.small-icon {
+    font-size: 12px; 
+}
+
+.propertyspecifications h5{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+
+.propertyaddress{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+.cost{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+}
+.fas.fa-heart {
+    font-size: 24px;
+    transition: color 0.3s ease;
+
+  }
+  .wishlist-container{
+    display: flex; 
+    align-items: center; 
+    justify-content: end; 
+    width: 72%; 
+    flex-wrap: nowrap; 
+    white-space: nowrap; 
+    position: relative;
+  }
+
+
+.share-icon {
+    background-color: #1877F2;
+    color: white;
+    padding: 1px;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    text-align: center;
+    width: 31px;
+    height: 27px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+    align-items: center;
+}
+
+.share-icon:hover {
+    background-color: #145A8A;
+}
+
+.share-container {
+    position: relative; 
+}
+.share-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 10px; 
+  }
+
+  
+
+.share-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    gap: 10px;
+}
+
+.share-container:hover .share-menu {
+    display: flex;
+    /* flex-direction: column;  */
+    height: 40px;
+}
+
+.share-menu a {
+    cursor: pointer;
+}
+
+.share-menu i {
+    width: 24px;
+    height: 24px;
+}
+
+
+.share-menu {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.social-icon {
+    display: inline-block;
+    font-size: 30px; 
+    padding: 10px;
+    text-decoration: none; 
+    color: black; 
+    text-align: center;
+    position: relative; 
+}
+
+
+.social-icon .value {
+    display: none;  
+    position: absolute; 
+    bottom: -20px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    font-size: 14px;
+    color: black; 
+}
+
+.social-icon:hover .value {
+    display: block;  
+}
+
+.social-icon.website:hover {
+    color: #0073e6;  
+}
+
+.social-icon.pinterest:hover {
+    color: #e60023;  
+}
+
+.social-icon.facebook:hover {
+    color: #1877f2;  
+}
+
+.social-icon.twitter:hover {
+    color: #1da1f2;  
+}
+
+.social-icon, .social-icon .value {
+    transition: color 0.3s ease, display 0.3s ease;
+    font-size: 18px;
+}
+.star {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc; 
+}
+
+.star.filled {
+    color: #ffcc00; 
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+}
+
+.propPriceDet{
+    display: flex; 
+    align-items: center; 
+    justify-content: end; 
+    width: 50%; 
+    flex-wrap: nowrap; 
+    white-space: nowrap; 
+    position: relative;
+}
+
+.propTitlePrice{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap;
+    /* width: 80%; */
+    padding: 20px 10px;
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(24%, 1fr)); 
+    gap: 10px; 
+    width: 100%; 
+    box-sizing: border-box; 
+  }
+  
+  .grid-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .propertytype {
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+
+.AdvertisingPropertiesAdds .ExploreFeaturedProperties .container{
+    width: 100%;
+    background-color: transparent;
+}
+.ExploreFeaturedProperties{
+    margin: 40px 20px;
+}
+
+.ExploreFeaturedProperties .propertyImage{
+    border-radius: 15px 0px 0px 15px;
+}
+
+.ExploreFeaturedProperties .properties{
+    width: 100%;
+    margin: 0 10px;
+}
+
+.ExploreFeaturedProperties .propertyImage{
+    border-radius: 15px 0px 0px 15px;
+}
+
+.propertyImage {
+    position: relative;
+    width: 100%;
+    height: 60%;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: transform 0.3s ease;
+}
+
+.propertyImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 2.3s ease; 
+}
+
+.propertyImage:hover img {
+    transform: scale(1.1); 
+}
+
+.propertyImage:hover {
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 15px; 
+}
+
+
+.propertyImage {
+    transition: box-shadow 0.3s ease; 
+}
+
+.AdvertisingPropertiesAdds{
+    height: 100%;
+    width: 25%;
+    /* border-left: 1px solid black; */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.AdvertisingPropertiesAdds .badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    color: white;
+    font-size: 11px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.AdvertisingPropertiesAdds .propertyFulldet{
+    border-radius: 15px;
+}
+
+.AdvertisingPropertiesAdds .propertyFulldet .propertyDetails{
+    border-radius: 0px 15px 15px 0px;
+}
+
+.AdvertisingPropertiesAdds .propertyImage{
+    height: 86px;
+    width: 30%;
+}
+
+.AdvertisingPropertiesAdds .propertyDetails{
+    height: 86px;
+    width: 70%;
+}
+
+.AdvertisingPropertiesAdds .propertyDetails i,.AdvertisingPropertiesAdds .propertyDetails .ms-2{
+    font-size: 11px;
+}
+.AdvertisingPropertiesAdds .propertyDetails p{
+    font-size: 10px;
+}
+.AdvertisingPropertiesAdds .propertyDetails .price p{
+    font-size: 12px;
+}
+
+.AdvertisingPropertiesAdds .propertyFulldet{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    height: auto;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+  
+  
+
+@media (min-width: 1200px) {
+    .properties .col-lg-3,.row .col-lg-4{
+        width: 22%;
+        margin: 0 10px;
+    }
+    .browsemoreproperties .btn{
+        width: 25%;
+    }
+    .Testimonials .browsemoreproperties{
+        width: 100%;
+    }
+    .ServiceDiv{
+        padding: 30px;
+    }
+
+    .contactformcontent {
+        width: 65%;
+    }
+
+    .contactformdiv {
+        width: 30%;
+    }
+
+
+}
+
+
+
+@media (max-width: 767px) {
+    .maincontainer{
+        margin: 0px 10px;
+    }
+    .propertyimagecontainer{
+        height: auto;
+        padding: 20px 0px;
+    }
+    
+    .imagecontainer{
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .enquiryform{
+        width: 100%;
+    }
+
+    .propertyoverview .body {
+        flex-direction: column;
+        padding: 20px 10px;
+    }
+
+    .propertyoverview .propSocialLinks{
+        flex-direction: row;
+    }
+    
+
+    .propertyoverview .body .propertytype {
+        width: 100%;
+    }
+
+    .propertyoverview .body .heading{
+        font-size: 10px;
+    }
+
+    .propertyoverview .body .value{
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .propertyoverview .body .value i{
+        font-size: 10px;
+        font-weight:600;
+        margin-right: 5px;
+    }
+
+    .addressbody .side1, .addressbody .side2 {
+        width: 100%; 
+    }
+
+    .body .addressbody{
+        width: 100%;
+    }
+
+    .addressbody{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .reviewform .reviewdiv, .reviewform .reviewtextarea {
+        width: 100%;
+    }
+
+    .reviewform{
+        width: 100%;
+        display: flex;
+        justify-content:space-around;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .imagecon{
+        height: 100%;
+        width: 100%;
+    }
+    .imagecontainer {
+        height: 80%;
+        width: 100%;
+        /* margin-bottom: 20px; */
+    }
+
+    .enquiryform{
+        display: none;
+    }
+
+    .propertyenquirys{
+        display: block;
+    }
+
+    .image-list-container {
+        height: 120px; 
+    }
+
+    .thumbnail-image {
+        width: 80px; 
+        height: 60px;
+    }
+
+    .video-container {
+        margin-top: 20px;
+        border: 2px solid #e8e8e8; 
+        border-radius: 10px;
+        overflow: hidden; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height:auto;
+    }
+
+    .propertydetails{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .propPriceDet{
+        display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            flex-wrap:wrap;
+            white-space: nowrap;
+            position: relative;
+            margin: 15px 0px;
+    }
+
+    .propTitlePrice{
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        flex-wrap: wrap;
+        width: 100%;
+        
+    }
+
+}
+
+
+
+
+.propertyoverview {
+    padding: 20px;
+    /* background-color: #f9f9f9; */
+    border-radius: 8px;
+}
+
+.map{
+    width: 100%;
+}
+
+.propertyreviews .headings p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.propertyreviews .body {
+    margin-top: 20px;
+}
+
+.reviewform {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.reviewdiv, .reviewtextarea {
+    width: 100%;
+    flex: 1;
+    min-width: 300px;
+    
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+}
+
+input.form-control, textarea.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+input.form-control:focus, textarea.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+}
+
+.star {
+    font-size: 24px;
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.2s ease;
+}
+
+.star.filled {
+    color: #ffb400;
+}
+
+.btn {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .reviewform {
+        flex-direction: column;
+    }
+
+    .reviewdiv, .reviewtextarea {
+        width: 100%;
+    }
+}
+
+
+
+
+.imagecon {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.property-for {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 10; 
+}

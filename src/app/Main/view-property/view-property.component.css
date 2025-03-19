@@ -4,6 +4,11 @@
     background-color: #f6f6f6;
 }
 
+.error-message {
+    color: red;
+    font-size: 12px;
+  }
+  
 .propertyTitle{
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
@@ -98,17 +103,16 @@ p{
 
 
 
-/* Thumbnail container styling */
 .image-list-container {
     display: flex;
     gap: 10px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    overflow-y: auto; /* Prevent vertical scrolling */
+    overflow-x: auto; 
+    overflow-y: auto; 
     padding: 10px 0;
-    width: 100%; /* Full width */
-    max-width: 100%; /* Ensures it doesn't exceed the screen width */
-    height: 100px; /* Adjust height as needed */
-    white-space: nowrap; /* Prevents line breaks */
+    width: 100%; 
+    max-width: 100%; 
+    height: 100px; 
+    white-space: nowrap;
 }
 
 .thumbnail {
@@ -116,29 +120,27 @@ p{
     border: 2px solid transparent;
     border-radius: 5px;
     transition: transform 0.2s, border-color 0.2s;
-    display: inline-block; /* Keeps the thumbnails inline */
+    display: inline-block; 
 }
 
 .thumbnail:hover {
-    border-color: #007bff; /* Highlight border color on hover */
-    transform: scale(1.05); /* Zoom effect on hover */
+    border-color: #007bff; 
+    transform: scale(1.05);
 }
 
 .thumbnail-image {
-    width: 100px; /* Set width for each thumbnail */
-    height: 75px; /* Set height for each thumbnail */
-    /* object-fit: cover; Maintain aspect ratio */
-    border-radius: 5px; /* Rounded corners */
+    width: 100px; 
+    height: 75px; 
+    border-radius: 5px; 
 }
 
 .thumbnail.selected {
-    border-color: #007bff; /* Border color for the selected thumbnail */
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Blue glow effect */
+    border-color: #007bff; 
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); 
 }
 
-/* Custom scroll bar styling */
 .image-list-container::-webkit-scrollbar {
-    height: 8px; /* Scrollbar height */
+    height: 8px; 
 }
 
 .image-list-container::-webkit-scrollbar-thumb {
@@ -201,18 +203,18 @@ p{
 }
 
 .video-container {
-    margin-top: 20px; /* Adjust spacing as needed */
-    border: 2px solid #e8e8e8; /* Optional border */
-    border-radius: 10px; /* Rounded corners */
-    overflow: hidden; /* Ensure content doesn't overflow */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    margin-top: 20px; 
+    border: 2px solid #e8e8e8;
+    border-radius: 10px; 
+    overflow: hidden; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 80%;
     height:400px;
 }
 
 .video-container video {
-    width: 100%; /* Make the video responsive */
-    height: 100%; /* Maintain aspect ratio */
+    width: 100%; 
+    height: 100%; 
 }
 
 
@@ -264,10 +266,16 @@ p{
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
+
+    padding: 15px;     
+    box-sizing: border-box; 
 }
 
 .propertyoverview .headings {
-    background-color: #e8e8e8;
+    /* background-color: #e8e8e8; */
+    /* background-color: #007bff; */
+    background-color:#8cc8ffd1;
+    /* color: black; */
     color: black;
     border-radius: 10px;
     width: 100%;
@@ -293,12 +301,12 @@ p{
 
 .propertyoverview .body .propertytype .heading{
     text-align: center;
-    font-weight: 400;
+    font-weight: 600;
     color: #222222
 }
 
 .propertyoverview .body .value {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 400;
     display: flex;
     justify-content: center;
@@ -324,53 +332,53 @@ p{
     flex-grow: 1;
 } */
 
-.PropertyDescriptionMain .body .PropertyDescriptionContent {
+.PropertyDescriptionMain .body .PropertyDescriptionContent ,.PropertyDescriptionContent {
     
-    overflow-wrap: break-word !important; /* Better browser compatibility for wrapping */
-    white-space: normal !important;  /* Ensure normal word spacing */
-    hyphens: none !important; /* Prevent automatic hyphenation */
+    overflow-wrap: break-word !important; 
+    white-space: normal !important; 
+    hyphens: none !important;
     line-height: 1.6 !important;
     font-size: 1rem !important;
     color: #333 !important;
   }
 
   .PropertyDescriptionContent {
-   
-    overflow-wrap: break-word;        /* Cross-browser compatibility for word wrap */
-    white-space: normal;              /* Allow normal wrapping without unnecessary spaces */
-    line-height: 1.6;                 /* Maintain consistent line spacing */
-    font-size: 1rem;                  /* Standard font size */
-    color: #333;                      /* Text color */
-    hyphens: none;                    /* Prevent automatic hyphenation */
-    word-break: break-all;           /* Prevent words like 'Rohith-Reddy' from breaking across lines */
-  }
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+    hyphens: none !important;
+    line-height: 1.6 !important;
+    font-size: 1rem !important;
+    color: #333 !important;
+    /* word-break: keep-all !important; */
+    word-break: break-all;
+}
 
-  .no-wrap-hyphen {
-    white-space: nowrap;              /* Prevent word from breaking across lines */
-    display: inline;                  /* Keeps words in a continuous inline flow */
-  }
+.no-wrap-hyphen {
+    white-space: nowrap !important; 
+    display: inline !important;    
+}
 
 
 
 
 .propertyfeatures .body {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* This sets 3 items per row */
-    gap: 10px; /* Adjust the gap between the items if needed */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px; 
 }
 
 
 .addressbody {
     display: flex;
-    justify-content: space-between; /* Ensure spacing between side1 and side2 */
+    justify-content: space-between; 
     align-items: flex-start;
     width: 100%;
-    gap: 20px; /* Add gap between the sides */
-    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 20px; 
+    flex-wrap: wrap; 
 }
 
 .addressbody .side1, .addressbody .side2 {
-    width: 48%; /* Make both sides 48% of the width */
+    width: 48%; 
 }
 
 .addressbody .addpropertytype {
@@ -423,6 +431,7 @@ p{
     height: 300px;
     overflow: hidden;
     display: block;
+    
 }
 
 .locationMap iframe{
@@ -484,10 +493,10 @@ p{
 
 .bottom-bar1 {
     background: linear-gradient(to right, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
-    width: 85%; /* Adjust the width as needed */
+    width: 85%; 
     color: white;
-    margin: 0 auto; /* Centers the element */
-    padding: 10px; /* Adds some internal spacing */
+    margin: 0 auto; 
+    padding: 10px; 
     position: relative;
     overflow: hidden;
 }
@@ -502,7 +511,7 @@ p{
 
 
 .propertyaddress i {
-    font-size: 1.2rem; /* Adjust as needed */
+    font-size: 1.2rem; 
 }
 
 .propertyspecifications {
@@ -516,11 +525,11 @@ p{
 }
 
 .propertyDetails .cost {
-    color: #007bff; /* Or use a color that fits your design */
+    color: #007bff; 
 }
 
 .smaller-text,.small-icon {
-    font-size: 12px; /* Adjust as needed */
+    font-size: 12px;
 }
 
 .propertyspecifications h5{
@@ -545,6 +554,20 @@ p{
 
 
 
+.fas.fa-heart {
+    font-size: 24px;
+    transition: color 0.3s ease;
+
+  }
+  .wishlist-container{
+    display: flex; 
+    align-items: center; 
+    justify-content: end; 
+    width: 72%; 
+    flex-wrap: nowrap; 
+    white-space: nowrap; 
+    position: relative;
+  }
 
 
 .share-icon {
@@ -555,8 +578,8 @@ p{
     font-size: 18px;
     display: flex;
     text-align: center;
-    width: 35px;
-    height: 29px;
+    width: 31px;
+    height: 27px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     justify-content: center;
@@ -570,6 +593,25 @@ p{
 .share-container {
     position: relative; 
 }
+.share-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 10px; 
+  }
+
+  .share-menu {
+    position: absolute;  
+    top: 100%;          
+    left: 0;          
+    padding: 10px;      
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;       
+  }
+  
+/*   
 
 .share-menu {
     display: none;
@@ -580,7 +622,7 @@ p{
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 10;
     gap: 10px;
-}
+} */
 
 .share-container:hover .share-menu {
     display: flex;
@@ -651,14 +693,45 @@ p{
 
 .social-icon, .social-icon .value {
     transition: color 0.3s ease, display 0.3s ease;
+    font-size: 18px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.star {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc;  
+}
+
+.star.filled {
+    color: #ffcc00; 
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+}
+
+
+
+
 
 
 .propPriceDet{
     display: flex; 
     align-items: center; 
     justify-content: end; 
-    width: 72%; 
+    width: 50%; 
     flex-wrap: nowrap; 
     white-space: nowrap; 
     position: relative;
@@ -671,15 +744,16 @@ p{
     flex-wrap: wrap;
     width: 70%;
     padding: 20px 0px;
+    /* margin: 0px 35px; */
 }
 
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(24%, 1fr)); /* Ensures each item takes 24% width */
-    gap: 10px; /* Adjusts space between items */
-    width: 100%; /* Ensure grid container takes 100% width */
-    box-sizing: border-box; /* Includes padding and border in width calculation */
+    grid-template-columns: repeat(auto-fill, minmax(24%, 1fr));
+    gap: 10px; 
+    width: 100%; 
+    box-sizing: border-box; 
   }
   
   .grid-item {
@@ -688,7 +762,6 @@ p{
   }
   
   .propertytype {
-    /* Optionally, add some padding or styling */
     padding: 5px;
     background-color: #f9f9f9;
     border-radius: 5px;
@@ -741,7 +814,7 @@ p{
 
 
 .propertyImage {
-    transition: box-shadow 0.3s ease; /* Smooth transition on hover */
+    transition: box-shadow 0.3s ease; 
 }
 
 .AdvertisingPropertiesAdds{
@@ -811,6 +884,14 @@ p{
 }
   
   
+
+
+
+
+
+
+
+
 
 @media (min-width: 1200px) {
     .properties .col-lg-3,.row .col-lg-4{
@@ -892,7 +973,7 @@ p{
     }
 
     .addressbody .side1, .addressbody .side2 {
-        width: 100%; /* Stack items vertically on small screens */
+        width: 100%; 
     }
 
     .body .addressbody{
@@ -938,20 +1019,20 @@ p{
     }
 
     .image-list-container {
-        height: 120px; /* Adjust height for smaller screens */
+        height: 120px; 
     }
 
     .thumbnail-image {
-        width: 80px; /* Adjust thumbnail size for smaller screens */
+        width: 80px; 
         height: 60px;
     }
 
     .video-container {
-        margin-top: 20px; /* Adjust spacing as needed */
-        border: 2px solid #e8e8e8; /* Optional border */
-        border-radius: 10px; /* Rounded corners */
-        overflow: hidden; /* Ensure content doesn't overflow */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+        margin-top: 20px;
+        border: 2px solid #e8e8e8; 
+        border-radius: 10px; 
+        overflow: hidden; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
         width: 100%;
         height:auto;
     }
@@ -985,3 +1066,128 @@ p{
     }
 
 }
+
+
+
+
+.propertyoverview {
+    padding: 20px;
+    /* background-color: #f9f9f9; */
+    border-radius: 8px;
+}
+
+.propertyreviews .headings p {
+    font-size: 15px;
+    /* font-weight: bold; */
+    /* color: #333; */
+    color: black;
+}
+
+.propertyreviews .body {
+    margin-top: 20px;
+}
+
+.reviewform {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.reviewdiv, .reviewtextarea {
+    width: 100%;
+    flex: 1;
+    min-width: 300px;
+    
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+}
+
+input.form-control, textarea.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+input.form-control:focus, textarea.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+}
+
+.star {
+    font-size: 24px;
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.2s ease;
+}
+
+.star.filled {
+    color: #ffb400;
+}
+
+.btn {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .reviewform {
+        flex-direction: column;
+    }
+
+    .reviewdiv, .reviewtextarea {
+        width: 100%;
+    }
+}
+
+
+.imagecon {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.property-for {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 1.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 10; 
+}
+
+

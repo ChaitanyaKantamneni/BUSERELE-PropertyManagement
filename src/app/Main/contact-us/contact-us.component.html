@@ -25,7 +25,7 @@
                 <div>
                     <h4 style="font-weight: bold;">Contact</h4>
                     <p style="font-weight: lighter;">
-                        <strong>Phone:</strong> +91 8309611126<br>
+                        <strong>Phone:</strong> +91  8688802505<br>
                         <strong>Email:</strong>  info&#64;buserele.com<br>
                         <strong>Website:</strong> www.gvrinfosystems.com
                     </p>
@@ -54,7 +54,7 @@
     </div>
 
 
-        <div class="email-form">
+        <!-- <div class="email-form">
             <h3>Send Us An Email</h3>
             <form [formGroup]="userEnquiryform" (submit)="enquiryformsubmit()">
                 <div class="form-group">
@@ -90,8 +90,105 @@
                 </div>
                 <button type="submit">Submit</button>
             </form>
-        </div>
-       
+        </div> -->
+
+
+        <div class="email-form">
+            <h3>Send Us An Email</h3>
+            <form [formGroup]="userEnquiryform" (ngSubmit)="enquiryformsubmit()">
+              <div class="form-group">
+                <div class="input-container">
+                  <input
+                    type="text"
+                    id="Name"
+                    name="name"
+                    formControlName="name"
+                    placeholder=" "
+                    required
+                  />
+                  <label for="Name">Name</label>
+                  <div *ngIf="userEnquiryform.get('name')?.touched && userEnquiryform.get('name')?.invalid" class="error-message">
+                    <small *ngIf="userEnquiryform.get('name')?.hasError('required')">Name is required.</small>
+                    <small *ngIf="userEnquiryform.get('name')?.hasError('minlength')">Name should be at least 3 characters long.</small>
+                  </div>
+                </div>
+                <!-- <div class="input-container">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    formControlName="email"
+                    placeholder=" "
+                    required  
+                    [class.invalid]="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid"/>
+                    
+                  <label for="email">Email</label>
+                  <div *ngIf="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid" class="error-message">
+                    <small *ngIf="userEnquiryform.get('email')?.hasError('required')">Email is required.</small>
+                    <small *ngIf="userEnquiryform.get('email')?.hasError('email')">Please enter a valid email.</small>
+                  </div>
+                 
+                </div> -->
+                <div class="input-container">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    formControlName="email"
+                    placeholder=" "
+                    required
+                    (input)="restrictGmail($event)"
+                    [class.invalid]="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid"
+                  />
+                  <label for="email">Email</label>
+                  <div *ngIf="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid" class="error-message">
+                    <small *ngIf="userEnquiryform.get('email')?.hasError('required')">Email is required.</small>
+                    <small *ngIf="userEnquiryform.get('email')?.hasError('pattern')">Please enter a valid Gmail address.</small>
+                  </div>
+                </div>
+                
+                
+              </div>
+              <div class="input-container full-width">
+                <textarea
+                  formControlName="message"
+                  name="message"
+                  rows="3"
+                  placeholder=" "
+                  required
+                ></textarea>
+                <label>Enter Your Message</label>
+                <div *ngIf="userEnquiryform.get('message')?.touched && userEnquiryform.get('message')?.invalid" class="error-message">
+                  <small *ngIf="userEnquiryform.get('message')?.hasError('required')">Message is required.</small>
+                  <small *ngIf="userEnquiryform.get('message')?.hasError('minlength')">Message should be at least 10 characters long.</small>
+                </div>
+              </div>
+              <button type="submit" [disabled]="userEnquiryform.invalid">Submit</button>
+            </form>
+            
+          </div>
+          
+         
+          <div class="modal" tabindex="-1" role="dialog"[style.display]="isUpdateModalOpen ? 'block' : 'none'">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Status</h5>
+                  <button type="button" class="close" aria-label="Close"   style="cursor: pointer;
+                  border-radius: 5px;
+                  color: red;margin-left: 82%;"(click)="UpdatecloseModal()">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>{{ propertyInsStatus }}</p> 
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
 </div>
 <app-footer></app-footer>
 

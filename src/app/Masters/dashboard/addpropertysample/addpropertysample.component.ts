@@ -649,7 +649,7 @@ export class AddpropertysampleComponent implements OnInit {
   }
 
   currentPage = 1;
-  pageSize = 5; // Fixed page size (5 items per page)
+  pageSize = 4; // Fixed page size (5 items per page)
   searchQuery: string = ''; // Variable to hold the search query
 
 

@@ -1,708 +1,686 @@
-<div *ngIf="isLoadingAdvProperty" class="preloader">
-    <img src="assets/images/load.gif" alt="Loading...">
-</div>
-<div *ngIf="!isLoadingFeaProperty && !isLoadingAdvProperty">
-    <app-top-nav-1></app-top-nav-1>
-    <div class="container p-0 m-0">
+    <div *ngIf="isLoadingAdvProperty" class="preloader">
+        <img src="assets/images/load.gif" alt="Loading...">
+    </div>
+    <div *ngIf="!isLoadingFeaProperty && !isLoadingAdvProperty" class="pagestartContainer">
+      <section class="maincontainerSection">
+        <app-top-nav-1 class="w-100"></app-top-nav-1>
         <div class="maincontainer">
-            <div class="overlay"></div>
-            <div class="content-wrapper">
-                <div class="d-flex justify-content-center align-items-center flex-column h-100 w-100">
-                    <div class="content">
-                        <h5 class="bold-text text-white">YOUR DREAM HOME</h5>
-                        <p class="p-text text-white d-flex justify-content-center align-items-center">IS ONE CLICK AWAY</p>
-                    </div>
-                    <div class="search-content w-75">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <ul class="nav nav-pills flex-nowrap">
-                                <li class="nav-item">
-                                    <button class="nav-link" (click)="selectOption('')" [class.active]="propertyFor === ''" [ngClass]="{'bg-white text-primary': propertyFor === '', 'bg-primary text-white': propertyFor !== ''}">ALL UNITS</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link" (click)="selectOption('2')" [class.active]="propertyFor === '2'" [ngClass]="{'bg-white text-primary': propertyFor === '2', 'bg-primary text-white': propertyFor !== '2'}">FOR RENT</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link" (click)="selectOption('1')" [class.active]="propertyFor === '1'" [ngClass]="{'bg-white text-primary': propertyFor === '1', 'bg-primary text-white': propertyFor !== '1'}">FOR SALE</button>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="row justify-content-center align-items-center h-100 m-0 bg-white rounded">
-                            <div class="col-12 col-md-3">
-                                <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Search KeyWord"
-                                [(ngModel)]="keyword"
-                                (keyup)="onKeywordChange()"
-                                />
-                                <div *ngIf="suggestions.length > 0" class="suggestions-dropdown">
-                                <ul>
-                                    <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
-                                    {{ suggestion }}
-                                    </li>
-                                </ul>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <select class="form-control" [(ngModel)]="selectedPropertyType">
-                                <option value="" disabled hidden>Property Type</option>
-                                <ng-container *ngFor="let property of propertytypes">
-                                    <option [value]="property.propertyTypeID">{{ property.name }}</option>
-                                </ng-container>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <select class="form-control" [(ngModel)]="selectedPropertyFor">
-                                <option value="" disabled selected>Property For</option>
-                                <option value="1">Buy</option>
-                                <option value="2">Sale</option>
-                                <option value="3">Rent</option>
-                                <option value="4">Lease</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-12 col-md-3">
-                                <button class="btn w-100" (click)="searchclick()">Search</button>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="ExploreAdertisingProperties">
-            <div class="container">
-                <div class="headding">
-                    <h5 class="bold-text d-flex justify-content-center align-items-center">Explore Our Properties</h5>
-                    <p class="p-text d-flex justify-content-center align-items-center">Enjoy the variety of 100+ Different properties in the market!</p>
-                </div>
-                <div class="PropertiesList">
-                    <!-- <div class="properties row g-3 justify-content-center align-items-center m-0">
-                        <ng-container *ngFor="let propertyitem of propertydetails; let i = index">
-                            <div *ngIf="i < 6" class="col-lg-3 col-md-6 col-sm-12 p-0 mb-3 rounded-2">
-                                <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
-                                    <!-- <div class="propimg rounded-2 position-relative">
-                                        <img [src]="propertyitem.propertyimage" class="img-fluid h-100 w-100" alt="Property Image">
-                                        <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                        <div class="bottom-bar position-absolute bottom-0 start-0 w-100">
-                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0">
-                                                    <i class="fa fa-ruler-combined text-white me-2"></i>
-                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertyarea}} Sqft</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bed text-white me-2"></i>
-                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybeds}}</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bathtub text-white me-2"></i>
-                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybathrooms}}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                    <div class="PropertyDet">
-                                        <div class="propertyname d-flex justify-content-between align-items-center mt-2">
-                                            <h5 class="mb-0">{{propertyitem.propertyname}}</h5>
-                                            <p class="mb-0">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                        </div>
-                                        <div class="propertyaddress d-flex align-items-center mt-1">
-                                            <i class="fa fa-location"></i>
-                                            <p class="mb-0 ms-2">{{propertyitem.propertyaddress}}</p>
-                                        </div>
-                                    </div> --
-                                    <div class="propertyFulldet d-flex">
-                                        <!-- Property Image Section --
-                                        <div class="propertyImage position-relative">
-                                            <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
-                                            <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                            <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
-                                                <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
-                                                    <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    
-                                        <!-- Property Details Section --
-                                        <div class="propertyDetails">
-                                            <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
-                                                <i class="fa fa-location"></i>
-                                                <p class="mb-0 ms-2">
-                                                    {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
-                                                </p>
-                                                  
-                                            </div>
-                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-1">
-                                                <div class="col-4 d-flex align-items-center p-0">
-                                                    <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bed text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
-                                                </div>
-                                            </div>
-                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center">
-                                                <div class="col-4 d-flex align-items-center p-0">
-                                                    <i class="fa fa-home text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 07 ? (propertyitem.PropertyTypeName | slice:0:07) + '...' : propertyitem.PropertyTypeName }}</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-compass text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-car text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
-                                                </div>
-                                            </div>
-                                            <div class="propertyFooter position-relative mt-2">
-                                                <div class="bottom-bar2 d-flex justify-content-end align-items-center">
-                                                    
-                                                    <div class="cost d-flex justify-content-end">
-                                                        <div class="price">
-                                                            <p class="mb-0 text-white m-lg-1">Price: </p>
-                                                        </div>
-                                                        <p class="mb-0 text-white m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        
-                                    </div>
-                                </a>
-                            </div>
-                        </ng-container>  
-                    </div>                     -->
-                    <div class="property-container">
-                        <div class="scrollable-properties">
-                          <ng-container *ngFor="let propertyitem of propertydetails; let i = index">
-                            <div *ngIf="i < 6" class="property-card">
-                              <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
-                                <div class="propertyFulldet d-flex">
-                                  <!-- Property Image Section -->
-                                  <div class="propertyImage position-relative">
-                                    <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
-                                    <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                    <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
-                                      <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
-                                        <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
-                                      </div>
-                                    </div>
-                                  </div>
-                      
-                                  <!-- Property Details Section -->
-                                  <div class="propertyDetails">
-                                    <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
-                                      <i class="fa fa-location"></i>
-                                      <p class="mb-0 ms-2">
-                                        {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
-                                      </p>
-                                    </div>
-                                    <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-1">
-                                      <div class="col-4 d-flex align-items-center p-0">
-                                        <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
-                                        <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
-                                      </div>
-                                      <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                        <i class="fa fa-bed text-dark me-2 small-icon"></i>
-                                        <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
-                                      </div>
-                                      <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                        <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
-                                        <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
-                                      </div>
-                                    </div>
-                                    <div class="propertyspecifications row m-0 justify-content-center align-items-center">
-                                        <div class="col-4 d-flex align-items-center p-0">
-                                            <i class="fa fa-home text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 07 ? (propertyitem.PropertyTypeName | slice:0:07) + '...' : propertyitem.PropertyTypeName }}</p>
-                                        </div>
-                                        <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                            <i class="fa fa-compass text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
-                                        </div>
-                                        <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                            <i class="fa fa-car text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="propertyFooter position-relative mt-2">
-                                      
-                                        <div class="bottom-bar2 d-flex justify-content-between align-items-center w-100">
-                                            <div class="contact d-flex align-items-center">
-                                              <a [routerLink]="['/contact-us', propertyitem.propertyID]" class="text-decoration-none text-primary fw-bold">
-                                                Contact
-                                              </a>
-                                              <!-- <a [routerLink]="['/contact-us']" class="text-decoration-none text-primary fw-bold">
-                                                Contact
-                                              </a> -->
-                                              <i class="fa fa-phone-alt me-2 text-primary"></i>
-                                            </div>
-                                          
-                                            <div class="cost d-flex justify-content-end">
-                                              <div class="price">
-                                                <p class="mb-0 text-white m-lg-1">Price: </p>
-                                              </div>
-                                              <p class="mb-0 text-white m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                            </div>
-                                        </div>
-                                          
-                                    </div>
-                                  </div>
-                                </div>
-                              </a>
-                            </div>
-                          </ng-container>
-                        </div>
-                      
-                        <!-- Scroll Buttons -->
-                        <div class="scroll-buttons text-end">
-                            <button class="scroll-btn left" (click)="scrollLeft()">&#8592;</button>
-                            <button class="scroll-btn right" (click)="scrollRight()">&#8594;</button>
-                        </div>
+          <div class="overlay"></div>
+          <div class="content-wrapper">
+              <div class="d-flex justify-content-center align-items-center flex-column h-100 w-100">
+                  <div class="content">
+                      <h5 class="bold-text text-white">YOUR DREAM HOME</h5>
+                      <p class="p-text text-white d-flex justify-content-center align-items-center">IS ONE CLICK AWAY</p>
+                  </div>
+                  <div class="search-content w-75">
+                      <div class="d-flex justify-content-center align-items-center">
+                          <ul class="nav nav-pills flex-nowrap">
+                              <li class="nav-item">
+                                  <button class="nav-link" (click)="selectOption('')" [class.active]="propertyFor === ''" [ngClass]="{'bg-white text-primary': propertyFor === '', 'bg-primary text-white': propertyFor !== ''}">ALL UNITS</button>
+                              </li>
+                              <!-- <li class="nav-item">
+                                  <button class="nav-link" (click)="selectOption('2')" [class.active]="propertyFor === '2'" [ngClass]="{'bg-white text-primary': propertyFor === '2', 'bg-primary text-white': propertyFor !== '2'}">FOR RENT</button>
+                              </li>
+                              <li class="nav-item">
+                                  <button class="nav-link" (click)="selectOption('1')" [class.active]="propertyFor === '1'" [ngClass]="{'bg-white text-primary': propertyFor === '1', 'bg-primary text-white': propertyFor !== '1'}">FOR SALE</button>
+                              </li> -->
+                          </ul>
                       </div>
                       
-                    <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                        <button class="btn" routerLink="/search-properties">Browse More Properties</button>
-                    </div>                    
-                </div>
-            </div>
-            <div class="AdvertisingPropertiesAdds">
-                <div class="ExploreFeaturedProperties">
-                    <div class="container">
-                        <div class="headding">
-                            <h5 class="bold-text d-flex justify-content-center align-items-center">Featured Listings</h5>
-                            <!-- <p class="p-text d-flex justify-content-center align-items-center">Browse our wide range of featured properties.</p> -->
-                        </div>
-                        <div class="PropertiesList">
-                            <!-- <div class="properties row g-3 justify-content-center align-items-center m-0">
-                                <ng-container *ngFor="let propertyitem of FeaturedProperties; let i = index">
-                                    <div *ngIf="i < 3" class="p-0 mb-3 rounded-2">
-                                        <!-- col-lg-4 col-md-6 col-sm-12 --
-                                        <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
-                                            <div class="propertyFulldet">
-                                                <!-- Property Image Section --
-                                                <div class="propertyImage position-relative">
-                                                    <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
-                                                    <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                                </div>
-                                            
-                                                <!-- Property Details Section --
-                                                <div class="propertyDetails">
-                                                    <div>
-                                                        <h5 class="mb-0" [ngStyle]="{'font-size': propertyitem.propertyname.length > 12 ? '15px' : '17px'}">{{propertyitem.propertyname}}</h5>
-                                                    </div>
-                                                    <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
-                                                        <i class="fa fa-location"></i>
-                                                        <p class="mb-0 ms-2">
-                                                            {{ propertyitem.propertyNearBy.length > 10 ? (propertyitem.propertyNearBy | slice:0:10) + '...' : propertyitem.propertyNearBy }}
-                                                        </p>
-                                                        <!-- <p class="mb-0 ms-2">{{propertyitem.propertyNearBy}}</p> --
-                                                    </div>
-                                                    <div class="d-flex justify-content-end">
-                                                        <div class="price">
-                                                            <p class="mb-0 m-lg-1">Price: </p>
-                                                        </div>
-                                                        <p class="mb-0 m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                                    </div>
-                                                </div>
+                      <div class="row justify-content-center align-items-center h-100 m-0 bg-white rounded">
+                          <div class="col-12 col-md-2">
+                              <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Search KeyWord"
+                              [(ngModel)]="keyword"
+                              (keyup)="onKeywordChange()"
+                              />
+                              <div *ngIf="suggestions.length > 0" class="suggestions-dropdown">
+                              <ul>
+                                  <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                                  {{ suggestion }}
+                                  </li>
+                              </ul>
+                              </div>
+                          </div>
+                          <div class="col-12 col-md-2 position-relative input-container">
+                              
+                              <select class="form-control" [(ngModel)]="selectedPropertyType">
+                              <option value="">Property Type</option>
+                              <ng-container *ngFor="let property of propertytypes">
+                                  <option [value]="property.propertyTypeID">{{ property.name }}</option>
+                              </ng-container>
+                              </select>
+                              <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+                              <!-- <i class="fa fa-caret-down position-absolute" style="right: 24px; top: 50%; transform: translateY(-50%);"></i> -->
+
+                          </div>
+                          
+                            <div class="col-12 col-md-2 position-relative input-container">
+                              <select class="form-control" [(ngModel)]="selectedcityName">
+                              <option value="" >City Name</option>
+                              <ng-container *ngFor="let city of cities">
+                                  <option [value]="city.cityID">{{ city.CityName }}</option>
+                              </ng-container>
+                              </select>
+                              <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+
+                              <!-- <i class="fa fa-caret-down position-absolute" style="right: 24px; top: 50%; transform: translateY(-50%);"></i> -->
+                            </div>
+    
+                        
+                          <div class="col-12 col-md-2 position-relative input-container">
+                              <select class="form-control" [(ngModel)]="selectedPropertyFor">
+                                <option value="" >Property For</option>
+                                <option value="1">For Buy</option>
+                                <option value="2">For sale</option>
+                                <option value="3">For Rent</option>
+                                <option value="4">For lease</option>                                      
+                              </select>
+                              <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+
+                              <!-- <i class="fa fa-caret-down position-absolute" style="right: 24px; top: 50%; transform: translateY(-50%);"></i> -->
+
+                          </div>
+                    
+                          <div class="col-12 col-md-2">
+                            <button class="btn w-100" (click)="searchclick()" 
+                                    style="border: none; background-color: #2495FD; color: white; padding: 6px;">
+                              <i class="fa fa-search"></i> Search
+                            </button>
+                          </div>
+                          
+
+
+                          <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title">Status</h5>
+                                    <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p>{{ propertyInsStatus }}</p> <!-- Success/Failure message -->
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </section>
+        <div class="container p-0 m-0">
+            
+            <section class="FeaturedUserAdertisingPropertiesSection">
+              <div class="FeaturedUserAdertisingProperties">
+                <div class="container">
+                    <div class="headding">
+                        <h5 class="bold-text d-flex justify-content-center align-items-center">Explore Our Featured Properties</h5>
+                        <p class="p-text d-flex justify-content-center align-items-center">Enjoy the variety of 100+ Different properties in the market!</p>
+                    </div>
+                    <div class="PropertiesList">
+                          <div class="property-container">
+                            <div class="fscrollable-properties">
+                              <ng-container *ngFor="let propertyitem of FeaturedProperties; let i = index">
+                                <div *ngIf="i < 6" class="property-card">
+                                  <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                                    <div class="propertyFulldet d-flex">
+                                      <div class="propertyImage position-relative">
+                                        <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
+                                        <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">
+                                          {{ propertyitem.propertyAvailability }}
+                                        </span>
+                                        <!-- <div class="wishlist-container position-absolute end-0 top-0 m-2">
+                                          <i id="heartIcon" class="fas fa-heart"
+                                            [ngStyle]="{ 'color': likedProperties[propertyitem.propertyID] ? 'red' : 'grey' }"
+                                            title="Add to Wishlist"
+                                            (click)="toggleHeart($event, propertyitem.propertyID)"
+                                            style="cursor: pointer;">
+                                          </i>
+                                        </div>
+                                        -->
+                                      </div>
+                                      
+                                      <div class="propertyDetails">
+                                        <div class="propertyTitle d-flex align-items-center mt-1">                                          
+                                          <p class="mb-0">
+                                            {{ propertyitem.propertyname.length > 20 ? (propertyitem.propertyname | slice:0:20) + '...' : propertyitem.propertyname }}
+                                          </p>
+                                        </div>
+                                        <div class="propertyaddress d-flex align-items-center mt-1 mb-2">
+                                          <i class="fa fa-location"></i>
+                                          <p class="mb-0 ms-2">
+                                            {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
+                                          </p>
+                                        </div>
+                                        <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-2">
+                                          <div class="col-4 d-flex align-items-center p-0">
+                                            <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
+                                          </div>
+                                          <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                            <i class="fa fa-bed text-dark me-2 small-icon"></i>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
+                                          </div>
+                                          <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                            <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
+                                          </div>
+                                        </div>
+                                        <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-2">
+                                          <div class="col-4 d-flex align-items-center p-0">
+                                            <i class="fa fa-home text-dark me-2 small-icon"></i>
+                                            <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 07 ? (propertyitem.PropertyTypeName | slice:0:07) + '...' : propertyitem.PropertyTypeName }}</p>
+                                          </div>
+                                          <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                            <i class="fa fa-compass text-dark me-2 small-icon"></i>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
+                                          </div>
+                                          <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                            <i class="fa fa-car text-dark me-2 small-icon"></i>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
+                                          </div>
+                                        </div>
+                                        <div class="propertyFooter position-relative mt-2">
+                                          <div class="bottom-bar2 d-flex justify-content-between align-items-center w-100">
+                                            <div class="contact d-flex align-items-center">
+                                              <a [routerLink]="['/contact-us', propertyitem.propertyID]" class="text-decoration-none text-black fw-bold">
+                                                Contact
+                                              </a>
+                                              <i class="fa fa-phone-alt me-2 text-black"></i>
                                             </div>
-                                        </a>
+                                            <div class="cost d-flex justify-content-end">
+                                              <div class="price">
+                                                <p class="mb-0 text-black m-lg-1">Price: </p>
+                                                <p class="mb-0 text-black m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
+
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
-                                </ng-container>  
-                            </div>                     -->
-                            <div class="properties row g-3 justify-content-center align-items-center m-0">
-                                <ng-container *ngFor="let propertyitem of displayedProperties; let i = index">
-                                  <div *ngIf="i < 3" class="p-0 mb-3 rounded-2">
-                                    <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
-                                      <div class="propertyFulldet">
-                                        <!-- Property Image Section -->
+                                  </a>
+                                </div>
+                              </ng-container>
+                            </div>
+                        
+                            <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
+                              <button class="scroll-btn left" (click)="fscrollLeft()">&#8592;</button>
+                              <button class="scroll-btn right" (click)="fscrollRight()">&#8594;</button>
+                            </div>
+                            
+                          </div>
+                                                    
+                        <div class="browsemoreproperties row justify-content-center align-items-center m-0">
+                          <!-- routerLink="/search-properties" -->
+                            <button class="btn" [routerLink]="['/search-properties', '2']" routerLinkActive="router-link-active">Browse More Properties</button>
+                        </div>              
+                    </div>
+                </div>  
+              </div>
+            </section>
+
+            <section class="ExploreAdertisingPropertiesSection">
+              <div class="ExploreAdertisingProperties">
+                  <div class="container">
+                      <div class="headding">
+                          <h5 class="bold-text d-flex justify-content-center align-items-center">Explore Our Properties</h5>
+                          <p class="p-text d-flex justify-content-center align-items-center">Enjoy the variety of 100+ Different properties in the market!</p>
+                      </div>
+                      <div class="PropertiesList">
+                            <div class="property-container">
+                              <div class="scrollable-properties">
+                                <ng-container *ngFor="let propertyitem of propertydetails; let i = index">
+                                  <div *ngIf="i < 6" class="property-card">
+                                    <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                                      <div class="propertyFulldet d-flex">
                                         <div class="propertyImage position-relative">
                                           <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
-                                          <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                        </div>
-                                      
-                                        <!-- Property Details Section -->
-                                        <div class="propertyDetails">
-                                          <div>
-                                            <h5 class="mb-0" [ngStyle]="{'font-size': propertyitem.propertyname.length > 12 ? '15px' : '17px'}">{{propertyitem.propertyname}}</h5>
+                                          <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">
+                                            {{ propertyitem.propertyAvailability }}
+                                          </span>
+                                          
+                                        
+                                          <!-- <div class="wishlist-container position-absolute end-0 top-0 m-2">
+                                            <i id="heartIcon" class="fas fa-heart"
+                                              [ngStyle]="{ 'color': likedProperties[propertyitem.propertyID] ? 'red' : 'grey' }"
+                                              title="Add to Wishlist"
+                                              (click)="toggleHeart($event, propertyitem.propertyID)"
+                                              style="cursor: pointer;">
+                                            </i>
                                           </div>
-                                          <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
-                                            <i class="fa fa-location"></i>
-                                            <p class="mb-0 ms-2">
-                                              {{ propertyitem.propertyNearBy.length > 10 ? (propertyitem.propertyNearBy | slice:0:10) + '...' : propertyitem.propertyNearBy }}
+                                          -->
+                                          
+                                        </div>
+                                        
+                                        <div class="propertyDetails">
+                                          <div class="propertyTitle d-flex align-items-center mt-1">                                          
+                                            <p class="mb-0">
+                                              {{ propertyitem.propertyname.length > 20 ? (propertyitem.propertyname | slice:0:20) + '...' : propertyitem.propertyname }}
                                             </p>
                                           </div>
-                                          <div class="d-flex justify-content-end align-items-center">
-                                            <div class="price">
-                                              <p class="mb-0 m-lg-1">Price: </p>
+                                          <div class="propertyaddress d-flex align-items-center mt-1 mb-2">
+                                            <i class="fa fa-location"></i>
+                                            <p class="mb-0 ms-2">
+                                              {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
+                                            </p>
+                                          </div>
+                                          <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-2">
+                                            <div class="col-4 d-flex align-items-center p-0">
+                                              <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
+                                              <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
                                             </div>
-                                            <p class="mb-0 m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
+                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                              <i class="fa fa-bed text-dark me-2 small-icon"></i>
+                                              <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
+                                            </div>
+                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                              <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
+                                              <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
+                                            </div>
+                                          </div>
+                                          <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-2">
+                                            <div class="col-4 d-flex align-items-center p-0">
+                                              <i class="fa fa-home text-dark me-2 small-icon"></i>
+                                              <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 07 ? (propertyitem.PropertyTypeName | slice:0:07) + '...' : propertyitem.PropertyTypeName }}</p>
+                                            </div>
+                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                              <i class="fa fa-compass text-dark me-2 small-icon"></i>
+                                              <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
+                                            </div>
+                                            <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
+                                              <i class="fa fa-car text-dark me-2 small-icon"></i>
+                                              <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
+                                            </div>
+                                          </div>
+
+                                          <div class="propertyFooter position-relative mt-2">
+                                            <div class="bottom-bar2 d-flex justify-content-between align-items-center w-100">
+                                              <div class="contact d-flex align-items-center">
+                                                <a [routerLink]="['/contact-us', propertyitem.propertyID]" class="text-decoration-none text-black fw-bold">
+                                                  Contact
+                                                </a>
+                                                <i class="fa fa-phone-alt me-2 text-black"></i>
+                                              </div>
+                                              <div class="cost d-flex justify-content-end">
+                                                <div class="price">
+                                                  <p class="mb-0 text-black m-lg-1">Price: </p>
+                                                  <p class="mb-0 text-black m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
+
+                                                </div>
+                                              </div>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
                                     </a>
                                   </div>
-                                </ng-container>  
-                            </div>
+                                </ng-container>
+                              </div>
+                          
+                              <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
+                                <button class="scroll-btn left" (click)="scrollLeft()">&#8592;</button>
+                                <button class="scroll-btn right" (click)="scrollRight()">&#8594;</button>
+                              </div>
                               
-                            <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                                <button class="btn" routerLink="/search-properties">Browse More Properties</button>
-                            </div>                    
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="ServiceDiv d-flex justify-content-center align-items-center">
-            <div class="overlay"></div>
-            <div class="content-wrapper">
-                <!-- <div class="d-flex justify-content-between align-items-start w-100 h-auto">
-
-                    <div class="contactformcontent d-flex justify-content-center align-items-center">
-                        <div class="content">
-                            <div class="d-flex justify-content-center align-items-center">
-                                <div class="heading mb-3 w-50">
-                                    <h4 class="bold-text text-white">Why Our Service Is The Perfect Choice?</h4>
-                                </div>
-                                <div class="steps w-50">
-                                    <h5 class="bold-text1 text-white">Personalized Service</h5>
-                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
-                                </div>
                             </div>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <div class="steps w-50">
-                                    <h5 class="bold-text1 text-white">Financing made easy.</h5>
-                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
-                                </div>
-                                <div class="steps w-50">
-                                    <h5 class="bold-text1 text-white">24/7 support</h5>
-                                    <p class="text-white">We are supporting digital marketing also.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="contactformdiv">
-                        <div class="contactform">
-                            <p class="p-text">Real Estate Inquiry Form</p>
-                            <form>
-                                <div class="form-group">
-                                    <label for="contactname">Name</label>
-                                    <input type="text" id="contactname" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contactEmail">Email</label>
-                                    <input type="email" id="contactEmail" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contactphone">Phone (Optional)</label>
-                                    <input type="text" id="contactphone" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contactMessage">Message</label>
-                                    <textarea id="contactMessage" class="form-control" rows="4"></textarea>
-                                </div>
-                                <button class="btn w-100">Submit</button>
-                            </form>
-                        </div>
-                        
-                    </div>
-                </div> -->
-                <div class="d-flex flex-wrap justify-content-between align-items-start w-100 h-100">
-                    <div class="contactformcontent d-flex justify-content-center align-items-center m-0 h-100">
-                        <div class="content">
-                            <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                <div class="heading mb-3">
-                                    <h4 class="bold-text text-white">Why Our Service Is The Perfect Choice?</h4>
-                                </div>
-                                <div class="steps">
-                                    <h5 class="bold-text1 text-white">Personalized Service</h5>
-                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
-                                </div>     
-                            </div>
-                            <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                <div class="steps mb-3">
-                                    <h5 class="bold-text1 text-white">Financing made easy.</h5>
-                                    <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
-                                </div>
-                                <div class="steps mb-3">
-                                    <h5 class="bold-text1 text-white">24/7 support</h5>
-                                    <p class="text-white">We are supporting digital marketing also.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="contactformdiv">
-                        <div class="contactform">
-                            <p class="p-text">Real Estate Inquiry Form</p>
-                            <form [formGroup]="userEnquiryform">
-                                <div class="form-group">
-                                  <label for="contactname">Name</label>
-                                  <input type="text" id="contactname" class="form-control" formControlName="name" name="name" required>
-                                </div>
-                                <div class="form-group">
-                                  <label for="contactEmail">Email</label>
-                                  <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" required>
-                                </div>
-                                <div class="form-group">
-                                  <label for="contactphone">Phone (Optional)</label>
-                                  <input type="text" id="contactphone" class="form-control" formControlName="phone" name="phone">
-                                </div>
-                                <div class="form-group">
-                                  <label for="contactMessage">Message</label>
-                                  <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
-                                </div>
-                                <button class="btn w-100" (click)="enquiryformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                    
-                </div>                
-            </div>
-        </div>
-        <!-- <div class="ExploreFeaturedProperties">
-            <div class="container">
-                <div class="headding">
-                    <h5 class="bold-text d-flex justify-content-center align-items-center">Featured Listings</h5>
-                    <p class="p-text d-flex justify-content-center align-items-center">Browse our wide range of featured properties.</p>
-                </div>
-                <div class="PropertiesList">
-                    <div class="properties row g-3 justify-content-center align-items-center m-0">
-                        <ng-container *ngFor="let propertyitem of FeaturedProperties; let i = index">
-                            <div *ngIf="i < 3" class="col-lg-4 col-md-6 col-sm-12 p-0 mb-3 rounded-2">
-                                <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
-                                    <!-- <div class="propimg rounded-2 position-relative">
-                                        <img [src]="propertyitem.propertyimage" class="img-fluid h-100 w-100" alt="Property Image">
-                                        <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                        <div class="bottom-bar position-absolute bottom-0 start-0 w-100">
-                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0">
-                                                    <i class="fa fa-ruler-combined text-white me-2"></i>
-                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertyarea}} Sqft</p>
+                                                      
+                          <div class="browsemoreproperties row justify-content-center align-items-center m-0">
+                              <button class="btn" [routerLink]="['/search-properties', '1']" routerLinkActive="router-link-active">Browse More Properties</button>
+                          </div>  
+                                            
+                      </div>
+                  </div>                
+                  <!-- Featured Properties -->
+                  <!-- <div class="AdvertisingPropertiesAdds">
+                      <div class="ExploreFeaturedProperties">
+                          <div class="container">
+                              <div class="headding">
+                                  <h5 class="bold-text d-flex justify-content-center align-items-center">Featured Listings</h5>
+                              </div>
+                              <div class="PropertiesList">
+                                <div class="properties row g-2 justify-content-center align-items-center m-0">
+                                      <ng-container *ngFor="let propertyitem of displayedProperties; let i = index">
+                                        <div *ngIf="i < 4" class="p-0 mb-3 rounded-2">
+                                          <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
+                                            <div class="propertyFulldet">
+                                              <div class="propertyImage position-relative">
+                                                <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
+                                                <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
+                                              </div>
+                                            
+                                              <div class="propertyDetails">
+                                                <div>
+                                                  <h5 class="mb-0" [ngStyle]="{'font-size': propertyitem.propertyname.length > 12 ? '13px' : '15px','font-weight':'bold'}">{{propertyitem.propertyname}}</h5>
                                                 </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bed text-white me-2"></i>
-                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybeds}}</p>
+                                                <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
+                                                  <i class="fa fa-location"></i>
+                                                  <p class="mb-0 ms-2">
+                                                    {{ propertyitem.propertyNearBy.length > 10 ? (propertyitem.propertyNearBy | slice:0:10) + '...' : propertyitem.propertyNearBy }}
+                                                  </p>
                                                 </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-white" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bathtub text-white me-2"></i>
-                                                    <p style="font-size: smaller;" class="mb-0 text-white">{{propertyitem.propertybathrooms}}</p>
+                                                <div class="d-flex justify-content-end align-items-center">
+                                                  <div class="price">
+                                                    <p class="mb-0 m-lg-1">Price: </p>
+                                                  </div>
+                                                  <p class="mb-0 m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
                                                 </div>
+                                              </div>
                                             </div>
+                                          </a>
                                         </div>
-                                    </div> 
-                                    <div class="PropertyDet">
-                                        <div class="propertyname d-flex justify-content-between align-items-center mt-2">
-                                            <h5 class="mb-0">{{propertyitem.propertyname}}</h5>
-                                            <p class="mb-0">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                        </div>
-                                        <div class="propertyaddress d-flex align-items-center mt-1">
-                                            <i class="fa fa-location"></i>
-                                            <p class="mb-0 ms-2">{{propertyitem.propertyaddress}}</p>
-                                        </div>
-                                    </div> --
-
-                                    <div class="propertyFulldet d-flex">
-                                        <!-- Property Image Section --
-                                        <div class="propertyImage position-relative">
-                                            <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
-                                            <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                            <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
-                                                <div class="propertyspecifications row m-0 justify-content-center align-items-center h-100">
-                                                    <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
+                                      </ng-container>  
+                                  </div>
                                     
-                                        <!-- Property Details Section --
-                                        <div class="propertyDetails">
-                                            <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
-                                                <i class="fa fa-location"></i>
-                                                <p class="mb-0 ms-2">
-                                                    {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
-                                                </p>
-                                            </div>
-                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-1">
-                                                <div class="col-4 d-flex align-items-center p-0">
-                                                    <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bed text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
-                                                </div>
-                                            </div>
-                                            <div class="propertyspecifications row m-0 justify-content-center align-items-center">
-                                                <div class="col-4 d-flex align-items-center p-0">
-                                                    <i class="fa fa-home text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{ propertyitem.propertytypeName.length > 07 ? (propertyitem.propertytypeName | slice:0:07) + '...' : propertyitem.propertytypeName }}</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-compass text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
-                                                </div>
-                                                <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
-                                                    <i class="fa fa-car text-dark me-2 small-icon"></i>
-                                                    <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
-                                                </div>
-                                            </div>
-                                            <div class="propertyFooter position-relative mt-2">
-                                                <div class="bottom-bar2 d-flex justify-content-end align-items-center">
-                                                    
-                                                    <div class="cost d-flex justify-content-end">
-                                                        <div class="price">
-                                                            <p class="mb-0 text-white m-lg-1">Price: </p>
-                                                        </div>
-                                                        <p class="mb-0 text-white m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                  <div class="browsemoreproperties row justify-content-center align-items-center m-0">
+                                      <button class="btn" routerLink="/search-properties">Browse More Properties</button>
+                                  </div>                    
+                              </div>
+                          </div>
+                      </div>
+                  </div> -->
+              </div>
+            </section>
+
+            
+
+            <section class="ServiceDivSection">
+              <div class="ServiceDiv d-flex justify-content-center align-items-center">
+                  <div class="overlay"></div>
+                  <div class="content-wrapper">
+                      <div class="d-flex flex-wrap justify-content-between align-items-start w-100 h-100">
+                          <div class="contactformcontent d-flex justify-content-center align-items-center m-0 h-100">
+                              <div class="content">
+                                  <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                      <div class="heading mb-3">
+                                          <h4 class="bold-text text-white">Why Our Service Is The Perfect Choice?</h4>
+                                      </div>
+                                      <div class="steps">
+                                          <h5 class="bold-text1 text-white">Personalized Service</h5>
+                                          <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
+                                      </div>     
+                                  </div>
+                                  <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                      <div class="steps mb-3">
+                                          <h5 class="bold-text1 text-white">Financing made easy.</h5>
+                                          <p class="text-white">We assist you with home loans, legal services and property registrations. Buying a home is an important investment – turn it into your safest and best deal at BUSERELE.</p>
+                                      </div>
+                                      <div class="steps mb-3">
+                                          <h5 class="bold-text1 text-white">24/7 support</h5>
+                                          <p class="text-white">We are supporting digital marketing also.</p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="contactformdiv">
+                              <div class="contactform">
+                                  <p class="p-text">Real Estate Enquiry Form</p>
+                                  <form [formGroup]="userEnquiryform">
+                                      <div class="form-group">
+                                        <label for="contactname">Name</label>
+                                        <input type="text" id="contactname" class="form-control"   (keypress)="OnlyAlphabetsAndSpacesAllowed($event)" formControlName="name" name="name"   pattern="^[a-zA-Z\s]+$" required>
+                                        <div *ngIf="userEnquiryform.get('name')?.touched && userEnquiryform.get('name')?.invalid" class="error-message">
+                                          <small *ngIf="userEnquiryform.get('name')?.hasError('required')">Name is required.</small>
+                                          <small *ngIf="userEnquiryform.get('name')?.hasError('pattern')">Name should only contain letters and spaces.</small>
+                                          <small *ngIf="userEnquiryform.get('name')?.hasError('minlength')">Name should be at least 3 characters long.</small>
                                         </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="contactEmail">Email</label>
+                                        <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" required>
                                         
-                                        
+                                        <div *ngIf="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid" class="error-message">
+                                          <!-- <small *ngIf="userEnquiryform.get('email')?.hasError('required')">Email is required.</small> -->
+                                          <small *ngIf="userEnquiryform.get('email')?.hasError('email')">Please enter a valid email address.</small>
+                                          <p class="error-message" [ngClass]="clr">Email is required and should be valid.</p>
+
+                                        </div>
+
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="contactphone">Phone (Optional)</label>
+                                        <input type="text" id="contactphone" class="form-control" formControlName="phone"  (keypress)="OnlyNumbersAllowed($event)"  pattern="^[0-9]{10}$" maxlength="10" name="phone">
+                                        <div *ngIf="userEnquiryform.get('phone')?.touched && userEnquiryform.get('phone')?.invalid" class="error-message">
+                                          <small *ngIf="userEnquiryform.get('phone')?.hasError('pattern')">Phone number must be 10 digits long.</small>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="contactMessage">Message</label>
+                                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
+                                        <div *ngIf="userEnquiryform.get('message')?.touched && userEnquiryform.get('message')?.invalid" class="error-message">
+                                          <small *ngIf="userEnquiryform.get('message')?.hasError('required')">Message is required.</small>
+                                          <small *ngIf="userEnquiryform.get('message')?.hasError('minlength')">Message should be at least 10 characters long.</small>
+                                        </div>
+                                      </div>
+                                      <button class="btn w-100" (click)="enquiryformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
+                                  </form>
+                              </div>
+                              <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title">Status</h5>
+                                      <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
                                     </div>
-                                    
-                                </a>
-                            </div>
-                        </ng-container>  
-                    </div>                    
-                    <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                        <button class="btn" routerLink="/search-properties">Browse More Properties</button>
-                    </div>                    
-                </div>
-            </div>
-        </div> -->
-        <div class="blog">
-            <div class="container">
-                <div class="headding">
+                                    <div class="modal-body">
+                                      <p>{{ propertyInsStatus }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
+
+                          
+                      </div>                
+                  </div>
+              </div>
+            </section>
+            <!-- <div class="blog">
+                <div class="container">
+                  <div class="headding">
                     <h5 class="bold-text d-flex justify-content-center align-items-center">Latest Blogs</h5>
-                    <!-- <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p> -->
-                </div>
-                <div class="row">
-                    <div *ngFor="let blog of blogdetails; let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <div class="card">
-                        <!-- (click)="goToBlogDetail(blog)" -->
-                        <div class="image-container" >
-                            <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
+                  </div>
+              
+                  <div class="row">
+                    <div *ngFor="let blog of getDisplayedBlogs(); let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
+                      <div class="card">
+                        <div class="image-container propertyImage">
+                          <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
                         </div>
-                        
+              
                         <div class="card-body">
-                            <div class="info-section">
-                                <!-- <i class="fas fa-user"></i> -->
-                                <h5 class="card-title">
-                                    {{ blog.BlogTitle | slice:0:50 }}
-                                </h5>
+                          <div class="info-section">
+                            <h5 class="card-title">{{ blog.BlogTitle | slice:0:50 }}</h5>
+                          </div>
+              
+                          <div class="content-section">
+                            <div class="card-text">
+                              <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
+              
+                              <p *ngIf="expandedContent[i]">{{ blog.BlogDescription }}</p>
                             </div>
-                        
-                            <div class="content-section">
-                                <div class="card-text">
-                                    <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
-  
-    <!-- Toggle button to expand/collapse content -->
-    <button *ngIf="blog.BlogDescription.length > 120" (click)="toggleExpand(i)" class="btn btn-link read-more-btn">
-      {{ expandedContent[i] ? 'Read Less' : 'Read More' }}
-    </button>
-                                </div>
-                                  
-                                  
-                                  
-                                <!-- <p class="card-text">
-                                <!-- <span *ngIf="!expandedContent[i]">{{ truncateContent(stripHtmlTags(blog.BlogDescription), 120) }}</span>
-                                <span *ngIf="expandedContent[i]">{{ stripHtmlTags(blog.BlogDescription) }}</span> --
-                                
-
-                                
-                                <!-- <button *ngIf="blog.BlogDescription.length > 120" (click)="toggleContent(i)" class="btn btn-link read-more-btn">
-                                    {{ expandedContent[i] ? 'Read Less' : 'Read More' }}
-                                </button> --
-                                </p> -->
-                            </div>
-                            <div class="blogposteddate">
-                                <button>Read More</button>
-                                <p class="date" *ngIf="blog.BlogCreatedDate">
-                                    <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
-                                    </p>
-                            </div>
+                          </div>
+                          <div class="blogposteddate">
+                            <button  [routerLink]="'/viewblog/' + blog.BlogID">Read More</button>
+                            <p class="date" *ngIf="blog.BlogCreatedDate">
+                              <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
+                            </p>
+                          </div>
                         </div>
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div class="scrollbtn text-end" style="    display: flex;justify-content: flex-end;gap: 5px;">
+                    <button class="scrollbtn-left" (click)="scrollLeftblog()">&#8592;</button>
+                    <button  class="scrollbtn-right" (click)="scrollRightblog()">&#8594;</button>
+                </div>
+            </div> -->
+            <section class="blogSection">
+              <div class="blog">
+                <div class="container">
+                  <div class="headding">
+                    <h5 class="bold-text d-flex justify-content-center align-items-center">Latest Blogs</h5>
+                  </div>
+              
+                  <div class="row">
+                    <div *ngFor="let blog of getDisplayedBlogs(); let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
+                      <div class="card">
+                        <div class="image-container propertyImage">
+                          <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
+                        </div>
+              
+                        <div class="card-body">
+                          <div class="info-section">
+                            <h5 class="card-title">{{ blog.BlogTitle | slice:0:50 }}</h5>
+                          </div>
+              
+                          <div class="content-section">
+                            <div class="card-text">
+                              <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
+              
+                              <p *ngIf="expandedContent[i]">{{ blog.BlogDescription }}</p>
+                            </div>
+                          </div>
+                          <div class="blogposteddate">
+                            <button class="button" [routerLink]="'/viewblog/' + blog.BlogID">Read More</button>
+                            <p class="date" *ngIf="blog.BlogCreatedDate">
+                              <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-            </div>
               
-              
-              
-              <!-- <div class="pagination">
-                <button (click)="scrollToPrev()" [disabled]="currentPage === 1">&larr;</button>
-                <button (click)="scrollToNext()" [disabled]="currentPage === totalPages">&rarr;</button>
-              </div> -->
-        </div>
-        <div class="Testimonials">
-            <div class="container">
-                <div class="headding">
-                    <h5 class="bold-text d-flex justify-content-center align-items-center">Testimonials</h5>
-                    <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p>
+                <!-- Scroll buttons for carousel -->
+                <div class="scrollbtn text-end" style="display: flex;justify-content: flex-end;gap: 5px;">
+                  <button class="scrollbtn-left btn" (click)="scrollLeftblog()">&#8592;</button>
+                  <button class="scrollbtn-right btn" (click)="scrollRightblog()">&#8594;</button>
                 </div>
-                <div class="reviewsList d-flex justify-content-center align-items-center flex-column">
-                    <div class="review-container">
-                        <div class="review-content">
-                            <ng-container *ngFor="let reviewitem of Reviews">
-                                <div class="review-card d-flex flex-column justify-content-center align-items-center">
-                                    <div class="image">
-                                        <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
-                                    </div>
-                                    <div class="review-text w-100">
-                                        <div class="username w-100 d-flex justify-content-center align-items-center">
-                                            <h5>{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</h5>
-                                        </div>
-                                        <div class="date w-100 d-flex justify-content-center align-items-center">
-                                            <p>{{ reviewitem.posteddate }}</p>
-                                        </div>
-                                        <div class="content w-100 d-flex justify-content-center align-items-center">
-                                            <p class="review-text-content">“{{ truncateText(reviewitem.review, 60) }}”</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-container>
-                            <!-- Clone the content to create the looping effect -->
-                            <ng-container *ngFor="let reviewitem of Reviews">
-                                <div class="review-card d-flex flex-column justify-content-center align-items-center">
-                                    <div class="image">
-                                        <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
-                                    </div>
-                                    <div class="review-text w-100">
-                                        <div class="username w-100 d-flex justify-content-center align-items-center">
-                                            <h5>{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</h5>
-                                        </div>
-                                        <div class="date w-100 d-flex justify-content-center align-items-center">
-                                            <p>{{ reviewitem.posteddate }}</p>
-                                        </div>
-                                        <div class="content w-100 d-flex justify-content-center align-items-center">
-                                            <p class="review-text-content">“{{ truncateText(reviewitem.review, 60) }}”</p>
-                                        </div>                                          
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>                        
-                    </div>
-                    <div class="browsemoreproperties row justify-content-center align-items-center mt-5">
-                        <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
-                    </div>                    
-                </div>
+              </div>
+            </section>
 
+            <section class="TestimonialsSection">
+              <div class="Testimonials">
+                  <div class="container">
+                    <div class="headding">
+                      <h5 class="bold-text d-flex justify-content-center align-items-center">Testimonials</h5>
+                      <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p>
+                    </div>
                 
+                    <div *ngIf="selectedReview" class="selected-review">
+                      
+                        <div class="review-card d-flex flex-column justify-content-center align-items-center">
+                          <div class="image">
+                            <img [src]="selectedReview.imageurl" alt="userimage" class="img-fluid rounded-circle">
+                          </div>
+                          <div class="review-text w-100">
+                            <div class="username w-100 d-flex justify-content-center align-items-center">
+                              <h5>{{ selectedReview.username ? selectedReview.username.toUpperCase() : 'N/A' }}</h5>
+                            </div>
+                            <div class="date w-100 d-flex justify-content-center align-items-center">
+                              <p>{{ selectedReview.posteddate }}</p>
+                            </div>
+                            <div class="content w-100 d-flex justify-content-center align-items-center">
+                              <p class="review-text-content">“{{ selectedReview.review }}”</p>
+                            </div>
+                            <div class="rating w-100 d-flex justify-content-center align-items-center">
+                              <p>Rating:
+                                <span *ngFor="let star of stars; let i = index" [class.filled]="i < selectedReview.rating" class="star">
+                                  <i class="fa fa-star"></i>
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      
+                    </div>
+                
+                    <div class="reviewsList d-flex justify-content-center align-items-center flex-column">
+                      <div class="review-container">
+                        <div class="review-content">
+                          <ng-container *ngFor="let reviewitem of Reviews">
+                            <a [routerLink]="['/view-reviews', reviewitem.reviewID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                            <div class="review-card d-flex flex-column justify-content-center align-items-center" (click)="openReview(reviewitem)">
+                              <div class="image">
+                                <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
+                              </div>
+                              <div class="review-text w-100">
+                                <div class="username w-100 d-flex justify-content-center align-items-center">
+                                  <h5>{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</h5>
+                                </div>
+                                <div class="date w-100 d-flex justify-content-center align-items-center">
+                                  <p>{{ reviewitem.posteddate }}</p>
+                                </div>
+                                <div class="rating w-100 d-flex justify-content-center align-items-center">
+                                  <div class="stars">
+                                    <p>
+                                      <span *ngFor="let star of stars; let i = index" [class.filled]="i < reviewitem.rating" class="star">
+                                        <i class="fa fa-star"></i>
+                                      </span>
+                                    </p>
+                                  </div>
+                                </div>
+                                <div class="content w-100 d-flex justify-content-center align-items-center">
+                                  <p class="review-text-content">“{{ truncateText(reviewitem.review, 20) }}”</p>
+                                </div>
+                                
+                              </div>
+                            </div>
+                          </a>
+                          </ng-container>
+                        </div>
+                      </div>
+                
+                      <div class="browsemoreproperties row justify-content-center align-items-center mt-5">
+                        <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
+                      </div>
+                    </div>
+
+                  </div>
+
+              </div>
+            </section>
+
+            <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Status</h5>
+                      <button type="button" class="close" aria-label="Close" style="cursor: pointer;
+                      border-radius: 5px;
+                      color: red;margin-left: 82%;"  (click)="UpdatecloseModal()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body ">
+                      <p>{{ propertyInsStatus  }}</p> 
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                    </div>
+                  </div>
+                </div>
             </div>
-        </div>
+      <section>
+        <app-footer class="w-100"></app-footer>
+      </section>
     </div>
-    <app-footer></app-footer>
-</div>

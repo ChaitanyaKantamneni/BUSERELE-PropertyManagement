@@ -6,23 +6,39 @@
           <p>Ready to jump back in?</p>
         </a>
       </div>
-  
-      <div *ngIf="!viewAminitieClicked && !addnewclickClicked" class="reviewcard">
+      <!-- class="reviewcard" -->
+      <div *ngIf="!viewAminitieClicked && !addnewclickClicked" >
         <div class="PageHeading">
           <h5 class="text-center m-0"><b>UPLOADED PROPERTY TYPE</b></h5>
         </div>
         <!-- Search Input -->
         <div class="filtersSearch">
-          <div class="searchreview">
-            <input type="text" class="form-control" placeholder="Search PropertyTypes..." [(ngModel)]="searchQuery">
-          </div>
+          <!-- <div class="searchreview">
+            <i class="fas fa-search search-icon"></i>
+            <input 
+              type="text" 
+              class="form-control search-input" 
+              placeholder="Search PropertyTypes..." 
+              [(ngModel)]="searchQuery"
+            />
+          </div> -->
+          
+        <div class="searchreview input-container" >
+          <input type="text" id="searchQuery" class="form-control floating-input" 
+            [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search PropertyTypes... "style="padding-left: 30px;"  />
+          <label for="searchQuery">Search PropertyTypes</label>
+          <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
+
+        </div>
+          
+
           <div class="reviewStatus">
             <button (click)="addnewclick()">Add New</button>
           </div>
         </div>
     
         <div class="reviewstable">
-          <table class="table table-bordered">
+          <table   *ngIf="filteredAminities.length != 0" class="table table-bordered">
             <thead>
               <tr>
                 <th class="visually-hidden">PropertyType ID</th>
@@ -37,7 +53,7 @@
                 <!-- <td data-label="Review">{{ truncateText(aminitie.description, 20) }}</td> -->
                 <td data-label="Actions">
                   <div class="d-flex justify-content-center align-items-center h-100">
-                    <button class="btn checkbtn" (click)="editreview(aminitie.aminitieID)">
+                    <button class="btn checkbtn" (click)="editreview(aminitie.propertyTypeID)" data-tooltip="Edit">
                       <i class="fa fa-edit"></i>
                     </button>
                   </div>
@@ -47,8 +63,14 @@
           </table>
         
           <!-- No Reviews Message -->
-          <div *ngIf="filteredAminities.length === 0">
+          <!-- <div *ngIf="filteredAminities.length === 0">
             <p>No reviews found for the given search or filter criteria.</p>
+          </div> -->
+          <div *ngIf="filteredAminities.length === 0" class="NoDataFound">
+            <div class="NoDataFoundImg">
+              <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
+            </div>
+            <p>No properties found for the given search or filter criteria.</p>
           </div>
         </div>
         
@@ -150,9 +172,24 @@
               </div>
   
               <div class="updatestatusbuttons">
-                  <button *ngIf="viewAminitieClicked" class="btn btn-primary" (click)="updateAminitie(aminitiesdetails?.aminitieID)">Update</button>
-                  <button *ngIf="addnewclickClicked" class="btn btn-primary" (click)="submitAminitieDet()">Submit</button>
+                  <button *ngIf="viewAminitieClicked" class="btn btn-primary" (click)="updatePropertyFor(aminitiesdetails?.aminitieID)" [disabled]="!aminitiesform.dirty">Update</button>
+                  <button *ngIf="addnewclickClicked" class="btn btn-primary" (click)="submitAminitieDet()" [disabled]="!aminitiesform.get('name')?.value">Submit</button>
               </div>
+              <!-- <div class="updatestatusbuttons">
+                <button *ngIf="viewAminitieClicked" 
+                        class="btn btn-primary" 
+                        (click)="updatePropertyFor(aminitiesform.get('id')?.value)" 
+                        [disabled]="!aminitiesform.dirty">
+                    Update
+                </button>
+                <button *ngIf="addnewclickClicked" 
+                        class="btn btn-primary" 
+                        (click)="submitAminitieDet()" 
+                        [disabled]="!aminitiesform.get('name')?.value">
+                    Submit
+                </button>
+              </div> -->
+            
             </form>
   
             <!-- <div><p>{{AminityInsStatus}}</p></div> -->

@@ -1,6 +1,6 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QuillModule,QuillEditorComponent } from 'ngx-quill';
@@ -9,6 +9,7 @@ import { QuillModule,QuillEditorComponent } from 'ngx-quill';
 interface Amenity {
   id: string;
   name: string;
+  icon:string;
 }
 
 @Component({
@@ -21,6 +22,7 @@ interface Amenity {
 export class AddPropertyComponentComponent implements OnInit {
   isModalOpen: any;
   isVideoModalOpen:any;
+  isDocumnetModalOpen:any;
   PropertyInsUpdateStatus:string="";
   @ViewChild(QuillEditorComponent) quillEditor!: QuillEditorComponent;
 
@@ -29,18 +31,35 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyform.get('TotalArea')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.propertyform.get('PriceFor')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.fetchProperties();
-  }
 
+    this.propertyform.valueChanges.subscribe(() => {
+      this.isUpdateButtonEnabled = this.propertyform.dirty;
+    });
+
+    if(this.isUpdateButtonEnabled=true){
+      this.isUpdateButtonEnabled=false;
+    }
+    else{
+      this.isUpdateButtonEnabled=false;
+    }
+  }
+  initialFormData: any;
+  isUpdateButtonEnabled: boolean = false;
+  isFormModified() {
+    return JSON.stringify(this.initialFormData) !== JSON.stringify(this.propertyform.value);
+  }
   generatePropertyID(){
     this.http.get("https://localhost:7190/api/Users/getautopropertyID", { responseType: 'text' }).subscribe((response: string) => {
       this.propID = response;
       this.propertyform.patchValue({ id: response });
-      console.log('Generated Property ID:', response);
+      //console.log('Generated Property ID:', response);
     }, error => {
       console.error('Error fetching property ID:', error);
     });
   }
 
+
+  
   fetchProperties(): void {
     this.http.get('https://localhost:7190/api/Users/GetAllPropertyDetails')
       .subscribe((response: any) => {
@@ -58,11 +77,9 @@ export class AddPropertyComponentComponent implements OnInit {
           if (property.propActiveStatus === "1") {
             PropertyIsActiveStatus = "Active";
           } else if (property.propActiveStatus === "0") {
-            PropertyIsActiveStatus = "Not Active";
+            PropertyIsActiveStatus = "InActive";
           }
 
-          console.log("property Status:",property.propActiveStatus);
-  
           return {
             propID: property.propID,
             propname: property.propname,
@@ -72,8 +89,6 @@ export class AddPropertyComponentComponent implements OnInit {
             IsActiveStatusBoolean:property.propActiveStatus
           };
         });
-  
-        console.log('Mapped properties:', this.properties);
       }, error => {
         console.error('Error fetching properties:', error);
       });
@@ -103,7 +118,7 @@ export class AddPropertyComponentComponent implements OnInit {
     PropertyStatus: new FormControl(''),
     PropertyFacing: new FormControl(''),
     TotalBlocks: new FormControl(''),
-    TotalFloors: new FormControl(''),
+    TotalFloors: new FormControl('',[Validators.required, Validators.min(1), Validators.max(10)]),
     TotalNoOfFlats: new FormControl(''),
     BlockName: new FormControl(''),
     PropertyOnWhichFloor: new FormControl(''),
@@ -113,6 +128,7 @@ export class AddPropertyComponentComponent implements OnInit {
     NumberofParkings: new FormControl(''),
     AreaType: new FormControl('', [Validators.required]),
     TotalArea: new FormControl('', [Validators.required, Validators.min(1),this.areaValidator]),
+    
     CarpetArea: new FormControl(''),
     PriceFor: new FormControl('', [Validators.required, Validators.min(1),this.priceForValidator]),
     PropertyTotalPrice: new FormControl({ value: '', disabled: true }),
@@ -190,19 +206,10 @@ export class AddPropertyComponentComponent implements OnInit {
     imageData: Blob; 
     imageUrl: string; 
     DefaultImage: string; 
-    ImageOrder: number;     // New property for internal image order
-    customOrder: number;    // New property for custom order input
+    ImageOrder: number;    
+    customOrder: number; 
   }> = [];
   
-
-  // uploadedFloorImages1:Array<{ 
-  //   id: number, 
-  //   propID: string, 
-  //   fileName: string, 
-  //   mimeType: string, 
-  //   imageData: Blob, 
-  //   imageUrl: string 
-  // }> = [];
 
   uploadedFloorImages1: Array<{ 
     id: number; 
@@ -212,8 +219,8 @@ export class AddPropertyComponentComponent implements OnInit {
     imageData: Blob; 
     imageUrl: string; 
     DefaultImage: string; 
-    ImageOrder: number;     // New property for internal image order
-    customOrder: number;    // New property for custom order input
+    ImageOrder: number;     
+    customOrder: number;    
   }> = [];
 
   uploadedVideos1:Array<{ 
@@ -240,19 +247,8 @@ export class AddPropertyComponentComponent implements OnInit {
   uploadedDocuments:Array<{ path: string,DocumentPath:SafeResourceUrl }> = [];
   selectedImage: string = '';
   seletedVideo:string='';
-  // selectedFloorImage:string = '';
+  selecteddocumnet:string='';
 
-  // calculateTotalPrice(): void {
-  //   const totalArea = this.propertyform.get('TotalArea')?.value;
-  //   const priceFor = this.propertyform.get('PriceFor')?.value;
-
-  //   if (totalArea && priceFor) {
-  //     const totalPrice = totalArea * priceFor;
-  //     this.propertyform.get('PropertyTotalPrice')?.setValue(totalPrice, { emitEvent: false });
-  //   } else {
-  //     this.propertyform.get('PropertyTotalPrice')?.setValue('', { emitEvent: false });
-  //   }
-  // }
 
   loadCountries(): void {
     this.http.get<any[]>('https://localhost:7190/api/Users/Countries')
@@ -273,7 +269,7 @@ export class AddPropertyComponentComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.states = data; 
-            console.log(data); 
+           
           },
           error: (err) => {
             console.error('Failed to load states:', err);
@@ -288,7 +284,6 @@ export class AddPropertyComponentComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.cities = data;  
-            console.log(data);
           },
           error: (err) => {
             console.error('Failed to load cities:', err);
@@ -297,77 +292,66 @@ export class AddPropertyComponentComponent implements OnInit {
     }
   }
 
+  selectedCountryId: string="";
+
+  
   onCountryChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
+      this.selectedCountryId = selectElement.value; 
       const countryId = selectElement.value;
       this.selectedCountry = Number(countryId);
       const selectedCountry = this.countries.find(country => country.id === this.selectedCountry);
       if (selectedCountry) {
         this.SelectedCountryName = selectedCountry.name;
-        console.log(this.SelectedCountryName);
       }
       this.loadStates();  
     }
   }
 
-  onStateChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement; 
-    if (selectElement) {
-      const stateId = selectElement.value;
-      this.selectedState = Number(stateId);
+  selectedStateId: string="";
+  
+ onStateChange(event: Event): void {
+  const selectElement = event.target as HTMLSelectElement;
+  if (selectElement) {
+    this.selectedStateId = selectElement.value;
+    const stateId = selectElement.value;
+    this.selectedState = Number(stateId);
+    const selectedState = this.states.find(state => state.id === this.selectedState);
+    if (selectedState) {
+      this.SelectedStateName = selectedState.name;
+    }
+    this.loadCities();
+  }
+}
 
-      const selectedState = this.states.find(state => state.id === this.selectedState);
-      if (selectedState) {
-        this.SelectedStateName = selectedState.name;
-        console.log(this.SelectedStateName);
-        console.log(this.selectedState);
-      }
-      this.loadCities();  
+ 
+  selectedCityId: string = "";
+ onCityChange(event: Event): void {
+  const selectElement = event.target as HTMLSelectElement;
+  if (selectElement) {
+    this.selectedCityId = selectElement.value;
+
+    const CityId = selectElement.value;
+    this.selectedCity = Number(CityId);
+    const selectedCity = this.cities.find(city => city.id === this.selectedCity);
+    if (selectedCity) {
+      this.SelectedCityName = selectedCity.name;
+    } else {
+      console.error('City not found');
     }
   }
-
-  // oncityChange(event: Event): void {
-  //   const selectElement = event.target as HTMLSelectElement; 
-  //   if (selectElement) {
-  //     const CityId = selectElement.value;
-  //     this.selectedCity = Number(CityId); 
-
-  //     const selectedCity = this.cities.find(city => city.id === this.selectedCity);
-  //     if (selectedCity) {
-  //       this.SelectedCityName = selectedCity.name;
-  //       console.log(this.SelectedCityName);
-  //     }
-  //   }
-  // }
-
-  onCityChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    if (selectElement) {
-      const CityId = selectElement.value;
-      this.selectedCity = Number(CityId);
-
-      const selectedCity = this.cities.find(city => city.id === this.selectedCity);
-      if (selectedCity) {
-        this.SelectedCityName = selectedCity.name;
-      } else {
-        console.error('City not found');
-      }
-    }
-  }
+}
 
   getPropertTypes(): void {
     this.http.get('https://localhost:7190/api/Users/GetAllPropertyTypes')
       .subscribe((response: any) => {
-        console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
-          // Map the response data to the aminities array
           this.propertytypes = response.data.map((data: any) => ({
             id: data.propertyTypeID,
             name: data.name,
             description: data.description
           }));
-          console.log(this.propertytypes);
         } else {
           console.error('Unexpected response format or no reviews found');
           this.propertytypes = [];
@@ -376,64 +360,98 @@ export class AddPropertyComponentComponent implements OnInit {
         console.error('Error fetching reviews:', error);
       });
   }
+
+
+   selectedPropertyTypeId: string = "";
+
   onPropertyTypeChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
+      this.selectedPropertyTypeId = selectElement.value;
+
       const PropertyTypeId = selectElement.value;
       this.selectedPropertyType = String(PropertyTypeId); 
 
       const selectedPropTypeName = this.propertytypes.find(propertytype => propertytype.id === this.selectedPropertyType);
       if (selectedPropTypeName) {
         this.SelectedPropertyTypeName = selectedPropTypeName.name;
-        console.log(this.SelectedPropertyTypeName);
       }
     }
   }
 
-
+  selectedPropertyForId: string = "";
 
   onPropertyForChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
+      this.selectedPropertyForId = selectElement.value;
+
       const PropertyForId = selectElement.value;
       this.selectedPropertyFor = String(PropertyForId); 
     }
   }
-
+  selectedPropertystatusId:string="";
   onPropertyStatusChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
+      this.selectedPropertystatusId = selectElement.value;
+
       const PropertyStatus = selectElement.value;
       this.selectedPropertyStatus = String(PropertyStatus); 
     }
   }
-
+  selectedPropertyFacingId:string="";
   onPropertyFacingChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
+      this.selectedPropertyFacingId = selectElement.value;
+
       const PropertyFacing = selectElement.value;
       this.selectedPropertyFacing = String(PropertyFacing); 
     }
   }
-
+  selectedPropertyAreaId:string="";
+  
   onAreaTypeChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
+      this.selectedPropertyAreaId = selectElement.value;
+
       const Areatype = selectElement.value;
       this.selectedAreaType = String(Areatype); 
     }
   }
 
+
+  
+  @ViewChild('PossessionDateInput')
+  possessionDateInput!: ElementRef;
+  @ViewChild('ListDateInput')
+  listDateInput!: ElementRef;
+  
+
+    onFocus(inputId: string): void {
+      const inputElement = inputId === 'PossessionDate' ? this.possessionDateInput.nativeElement : this.listDateInput.nativeElement;
+      inputElement.setAttribute('type', 'date');
+    }
+  
+    onBlur(inputId: string): void {
+      const inputElement = inputId === 'PossessionDate' ? this.possessionDateInput.nativeElement : this.listDateInput.nativeElement;
+  
+      if (!inputElement.value) {
+        inputElement.setAttribute('type', 'text');
+      }
+    }
+  
   fetchAminities(): void {
     this.http.get<any[]>('https://localhost:7190/api/Users/GetAllAminities')
       .subscribe((response: any) => {
-        console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
-          // Map the response data to the aminities array
           this.amenities = response.data.map((data: any) => ({
             aminitieID: data.aminitieID,
             name: data.name,
-            description: data.description
+            description: data.description,
+            icon:data.aminitieIcon
           }));
         } else {
           console.error('Unexpected response format or no reviews found');
@@ -451,26 +469,21 @@ export class AddPropertyComponentComponent implements OnInit {
   onAmenityChange(event: any, amenity: any): void {
     if (!amenity || !event || !event.target) return;
   
-    // Add to selectedAmenities if checked and not already selected
     if (event.target.checked) {
-      if (amenity.aminitieID && amenity.name) {
-        // Only push valid amenity (non-empty id and name) to selectedAmenities
+      if (amenity.aminitieID && amenity.name && amenity.icon) {
         if (!this.selectedAmenities.some(item => item.id === amenity.aminitieID)) {
-          this.selectedAmenities.push({ id: amenity.aminitieID, name: amenity.name });
+          this.selectedAmenities.push({ id: amenity.aminitieID, name: amenity.name,icon:amenity.icon });
         }
       }
     } else {
-      // Remove from selectedAmenities if unchecked
       const index = this.selectedAmenities.findIndex(item => item.id === amenity.aminitieID);
       if (index > -1) {
         this.selectedAmenities.splice(index, 1);
       }
     }
   
-    // Filter out any empty or invalid items (optional, to be extra cautious)
-    this.selectedAmenities = this.selectedAmenities.filter(item => item.id && item.name);
-  
-    console.log(this.selectedAmenities);  // Log the selected amenities
+    this.selectedAmenities = this.selectedAmenities.filter(item => item.id && item.name && item.icon);
+    console.log(this.selectedAmenities);
   }
 
   propertyImagesClick(){
@@ -480,6 +493,7 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyDocumentsClicked=false;
     const propID:string=(this.propertyform.get('id')?.value).toString();
     this.getPropertyImagesForProperty(propID);
+    
   }
   
   propertyFloorImagesClick(){
@@ -524,39 +538,39 @@ export class AddPropertyComponentComponent implements OnInit {
   uploadPropertyImages(): void {
 
     this.propertyImagesUploadButtonClick=true;
-    console.log(this.propID);
     if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
       alert('Property ID is required and you must select images.');
+      this.propertyImagesUploadButtonClick = false; 
       return;
     }
 
     const formData = new FormData();
     formData.append('propID', this.propID);
 
-    // Append each selected file to formData
     Array.from(this.selectedPropertyFiles).forEach((file: File) => {
       formData.append('images', file, file.name);
     });
 
-    // Make HTTP request to upload the files
     this.http.post('https://localhost:7190/api/Users/upload', formData).subscribe(
       response => {
-        console.log('Images uploaded successfully:', response);
         this.PropertyOnfileClicked=false;
         this.propertyImagesUploadButtonClick=false;
-        this.getPropertyImagesForProperty(this.propID);  // Refresh the images after upload
+        this.getPropertyImagesForProperty(this.propID); 
+        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';  
+    }
       },
       
       error => {
         console.error('Upload failed:', error);
+        this.propertyImagesUploadButtonClick = false;
       }
     );
   }
 
   uploadPropertyFloorImages(): void {
     this.propertyfloorImagesUploadButtonClick=true;
-
-    console.log(this.propID);
     if (!this.propID || !this.selectedPropertyFloorFiles || this.selectedPropertyFloorFiles.length === 0) {
       alert('Property ID is required and you must select images.');
       return;
@@ -565,18 +579,19 @@ export class AddPropertyComponentComponent implements OnInit {
     const formData = new FormData();
     formData.append('propID', this.propID);
 
-    // Append each selected file to formData
     Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
       formData.append('images', file, file.name);
     });
 
-    // Make HTTP request to upload the files
     this.http.post('https://localhost:7190/api/Users/uploadFloorImages', formData).subscribe(
       response => {
-        console.log('Floor Images uploaded successfully:', response);
         this.PropertyFloorImageOnFileClicked=false;
         this.propertyfloorImagesUploadButtonClick=false;
-        this.getPropertyFloorImagesForProperty(this.propID);  // Refresh the images after upload
+        this.getPropertyFloorImagesForProperty(this.propID); 
+        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
       },
       
       error => {
@@ -585,41 +600,41 @@ export class AddPropertyComponentComponent implements OnInit {
     );
   }
 
-  uploadPropertyVideos(): void {
-    this.propertyVideoUploadButtonClick=true;
 
-    console.log(this.propID);
+
+  uploadPropertyVideos(): void {
+    this.propertyVideoUploadButtonClick = true;
     if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
-      alert('Property ID is required and you must select video.');
-      return;
+        alert('Property ID is required and you must select a video.');
+        return;
     }
 
     const formData = new FormData();
     formData.append('propID', this.propID);
 
-    // Append each selected file to formData
     Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-      formData.append('videos', file, file.name);
+        formData.append('videos', file, file.name);
     });
 
-    // Make HTTP request to upload the files
     this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
-      response => {
-        console.log('Property Video uploaded successfully:', response);
-        this.PropertyVideoOnFileClicked=false;
-        this.propertyVideoUploadButtonClick=false;
-        this.getPropertyVideo(this.propID);  // Refresh the images after upload
-      },
-      
-      error => {
-        console.error('Upload failed:', error);
-      }
+        response => {
+            this.PropertyVideoOnFileClicked = false;
+            this.propertyVideoUploadButtonClick = false;
+            this.getPropertyVideo(this.propID);  
+            const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+            if (fileInput) {
+              fileInput.value = '';  
+            }
+        },
+        error => {
+            console.error('Upload failed:', error);
+        }
     );
-  }
+ }
+
 
   uploadPropertyDocuments(): void {
     this.propertydocumenetUploadButtonClick=true;
-    console.log(this.propID);
     if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
       alert('Property ID is required and you must select Document.');
       return;
@@ -628,18 +643,19 @@ export class AddPropertyComponentComponent implements OnInit {
     const formData = new FormData();
     formData.append('propID', this.propID);
 
-    // Append each selected file to formData
     Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
       formData.append('documents', file, file.name);
     });
 
-    // Make HTTP request to upload the files
     this.http.post('https://localhost:7190/api/Users/uploadPropertyDocument', formData).subscribe(
       response => {
-        console.log('Property Document uploaded successfully:', response);
         this.PropertyDocumentOnFileClicked=false;
         this.propertydocumenetUploadButtonClick=false;
         this.getPropertyDocument(this.propID); 
+        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';  
+        }
       },
       
       error => {
@@ -649,196 +665,121 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
 
-  // getPropertyImagesForProperty(propID: string): void {
-  //   this.http.get(`https://localhost:7190/api/Users/get-images/${propID}`).subscribe((response: any) => {
-  //     // Process response and convert imageData to Blob URL
-  //     this.uploadedImages1 = response.map((image: any) => {
-  //       const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
-  //       const byteArray = new Uint8Array(byteCharacters.length);
   
-  //       // Copy the binary data into the byteArray
-  //       for (let i = 0; i < byteCharacters.length; i++) {
-  //         byteArray[i] = byteCharacters.charCodeAt(i);
-  //       }
-  
-  //       // Create a Blob from the byteArray
-  //       const blob = new Blob([byteArray], { type: image.mimeType });
-  
-  //       // Create an object URL from the Blob
-  //       const imageUrl = URL.createObjectURL(blob);
-  
-  //       // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
-  //       const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
-  
-  //       // Return the updated image object
-  //       return {
-  //         ...image,
-  //         propID: propID,
-  //         imageUrl,           // Add the Blob URL to the image object
-  //         ImageOrder: image.imageOrder, // Include the ImageOrder
-  //         customOrder         // Add the customOrder field
-  //       };
-  //     });
-  
-  //     console.log('Processed image array:', this.uploadedImages1);
-  //   }, error => {
-  //     console.error('Error fetching images:', error);
-  //   });
-  // }
 
   getPropertyImagesForProperty(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/getimages/${propID}`).subscribe((response: any) => {
-      // Map the response to properly format image URLs
       this.uploadedImages1 = response.map((image: any) => {
-        const imageUrls = `https://localhost:7190${image.url}`; // Assuming the backend URL is relative, prepend the base URL
-        console.log("Image URL:", imageUrls);  // Check the image URL
+        const imageUrls = `https://localhost:7190${image.url}`; 
   
-        // Add the customOrder property, defaulting to ImageOrder or 0 if not provided
         const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
       
-        // Return the updated image object
         return {
           ...image,
           propID: propID,
-          imageUrls,           // Correctly assign the image URL here
-          ImageOrder: image.imageOrder, // Include the ImageOrder
-          customOrder         // Add the customOrder field
+          imageUrls,     
+          ImageOrder: image.imageOrder, 
+          customOrder        
         };
       });
   
-      console.log('Processed image array:', this.uploadedImages1);
     }, error => {
       console.error('Error fetching images:', error);
     });
   }
   
-
-  getPropertyFloorImagesForProperty(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-Floorimages/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
-      this.uploadedFloorImages1 = response.map((image: any) => {
-        const byteCharacters = atob(image.imageData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
-
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
+    getPropertyFloorImagesForProperty(propID: string): void {
+    this.http.get(`https://localhost:7190/api/Users/get-Floorimages/${propID}`).subscribe(
+      (response: any) => {
+  
+        if (!Array.isArray(response)) {
+          return;
         }
-
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: image.mimeType });
-
-        const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
-
-        // Create an object URL from the Blob
-        const imageUrl = URL.createObjectURL(blob);
-        console.log(imageUrl);
-        return {
-          ...image,
-          propID: propID,
-          imageUrl, // Add the Blob URL to the image object
-          ImageOrder: image.imageOrder, // Include the ImageOrder
-          customOrder         // Add the customOrder field
-        };
-      });
-
-      console.log('Processed image array:', this.uploadedFloorImages1);
-    }, error => {
-      console.error('Error fetching images:', error);
-    });
+  
+        this.uploadedFloorImages1 = response.map((image: any) => {
+      
+  
+          const imageUrls = image.imageUrl ? `https://localhost:7190${image.imageUrl}` : '';  
+  
+          const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+  
+          return {
+            ...image,
+            propID: propID,
+            imageUrls,  
+            ImageOrder: image.imageOrder,
+            customOrder,
+          };
+        });
+  
+      },
+      (error) => {
+        console.error('Error fetching floor images:', error);
+      }
+    );
   }
 
   getPropertyVideo(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-PropertyVideo/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
-      this.uploadedVideos1 = response.map((video: any) => {
-        const byteCharacters = atob(video.videoData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
-
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
+    this.http.get(`https://localhost:7190/api/Users/get-PropertyVideo/${propID}`).subscribe(
+      (response: any) => {
+  
+        if (!Array.isArray(response)) {
+          return;
         }
+  
+        this.uploadedVideos1 = response.map((video: any) => {
+  
+          const videoUrl = video.videoUrl ? `https://localhost:7190${video.videoUrl}` : '';
+          return {
+            ...video,
+            propID: propID,
+            videoUrl,  
+          
+          };
+        });
+  
+      },
+      (error) => {
+        console.error('Error fetching video images:', error);
+      }
+    );
+}
 
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: video.mimeType });
 
-        // Create an object URL from the Blob
-        const videosUrl = URL.createObjectURL(blob);
-        console.log("VideoUrl:", videosUrl);
-        return {
-          ...video,
-          propID: propID,
-          videosUrl // Add the Blob URL to the image object
-        };
-      });
 
-      console.log('Processed Video array:', this.uploadedVideos1);
-    }, error => {
-      console.error('Error fetching images:', error);
-    });
+ getPropertyDocument(propID: string): void {
+    this.http.get(`https://localhost:7190/api/Users/get-Documents/${propID}`).subscribe(
+      (response: any) => {
+          this.uploadedDocuments1 = response.map((document: any) => {
+            const documentUrl = document.documentUrl ?`https://localhost:7190${document.documentUrl}` : ''; 
+  
+          const safeDocumentUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentUrl);
+  
+          return {
+            ...document,  
+            propID: propID,
+            documentUrl,   
+            safeDocumentUrl,  
+          };
+        });
+      },
+      error => {
+        console.error('Error fetching documents:', error);
+      }
+    );
   }
-
-  getPropertyDocument(propID: string): void {
-    this.http.get(`https://localhost:7190/api/Users/get-PropertyDocument/${propID}`).subscribe((response: any) => {
-      // Process response and convert imageData to Blob URL
-      this.uploadedDocuments1 = response.map((document: any) => {
-        const byteCharacters = atob(document.documentData); // Decoding base64 to raw binary
-        const byteArray = new Uint8Array(byteCharacters.length);
-
-        // Copy the binary data into the byteArray
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
-        }
-
-        // Create a Blob from the byteArray
-        const blob = new Blob([byteArray], { type: document.mimeType });
-
-        // Create an object URL from the Blob
-        const documentsUrl = URL.createObjectURL(blob);
-
-        const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentsUrl);
-        console.log("documentUrl:", documentsUrl);
-        return {
-          ...document,
-          propID: propID,
-          safeUrl // Add the Blob URL to the image object
-        };
-      });
-
-      console.log('Processed Video array:', this.uploadedVideos1);
-    }, error => {
-      console.error('Error fetching images:', error);
-    });
-  }
-
-
-  // deleteImage(image: any): void {
-  //   const index = this.uploadedImages.indexOf(image);
-
-  //   console.log(index);
-  //   if (index !== -1) {
-  //     this.uploadedImages.splice(index, 1); // Remove image from table
-  //   }
-  // }
 
   deleteImage(image: any): void {
     const index = this.uploadedImages.indexOf(image);
 
     if (index !== -1) {
-      // Remove image preview from the array
       this.uploadedImages.splice(index, 1);
 
-      // Update the selected files list by filtering out the deleted image's file
       if (this.selectedPropertyFiles) {
         const filesArray = Array.from(this.selectedPropertyFiles);
         const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
-
-        // Create a new DataTransfer object and add the remaining files to it
         const dataTransfer = new DataTransfer();
         updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
-
-        // Update selectedPropertyFiles with the new FileList
         this.selectedPropertyFiles = dataTransfer.files;
       }
     }
@@ -848,19 +789,12 @@ export class AddPropertyComponentComponent implements OnInit {
     const index = this.uploadedFloorImages.indexOf(image);
 
     if (index !== -1) {
-      // Remove image preview from the array
       this.uploadedFloorImages.splice(index, 1);
-
-      // Update the selected files list by filtering out the deleted image's file
       if (this.selectedPropertyFloorFiles) {
         const filesArray = Array.from(this.selectedPropertyFloorFiles);
         const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
-
-        // Create a new DataTransfer object and add the remaining files to it
         const dataTransfer = new DataTransfer();
         updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
-
-        // Update selectedPropertyFiles with the new FileList
         this.selectedPropertyFloorFiles = dataTransfer.files;
       }
     }
@@ -868,21 +802,13 @@ export class AddPropertyComponentComponent implements OnInit {
 
   deleteVideoSelected(video: any): void {
     const index = this.uploadedVideos.indexOf(video);
-
     if (index !== -1) {
-      // Remove image preview from the array
       this.uploadedVideos.splice(index, 1);
-
-      // Update the selected files list by filtering out the deleted image's file
       if (this.selectedPropertyVideoFiles) {
         const filesArray = Array.from(this.selectedPropertyVideoFiles);
         const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
-
-        // Create a new DataTransfer object and add the remaining files to it
         const dataTransfer = new DataTransfer();
         updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
-
-        // Update selectedPropertyFiles with the new FileList
         this.selectedPropertyVideoFiles = dataTransfer.files;
       }
     }
@@ -890,21 +816,13 @@ export class AddPropertyComponentComponent implements OnInit {
 
   deletePropertyDocumentSelected(document: any): void {
     const index = this.uploadedDocuments.indexOf(document);
-
     if (index !== -1) {
-      // Remove image preview from the array
       this.uploadedDocuments.splice(index, 1);
-
-      // Update the selected files list by filtering out the deleted image's file
       if (this.selectedPropertyDocumentFiles) {
         const filesArray = Array.from(this.selectedPropertyDocumentFiles);
         const updatedFilesArray = filesArray.filter((file: File, i: number) => i !== index);
-
-        // Create a new DataTransfer object and add the remaining files to it
         const dataTransfer = new DataTransfer();
         updatedFilesArray.forEach((file: File) => dataTransfer.items.add(file));
-
-        // Update selectedPropertyFiles with the new FileList
         this.selectedPropertyDocumentFiles = dataTransfer.files;
       }
     }
@@ -914,18 +832,13 @@ export class AddPropertyComponentComponent implements OnInit {
   deleteImage1(propertyId: string, imageId: number): void {
     this.http.delete(`https://localhost:7190/api/Users/delete-image/${propertyId}/${imageId}`, {
       headers: { 'Content-Type': 'application/json' },
-      responseType: 'text' // Explicitly set the response type as 'text'
+      responseType: 'text' 
     }).subscribe({
       next: (response: string) => {
-        console.log('Image deleted from database:', response);  // 'Image deleted successfully'
-        
-        // Now remove the image from the frontend list
         const index = this.uploadedImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
         if (index !== -1) {
-          this.uploadedImages1.splice(index, 1); // Remove image from the UI list
+          this.uploadedImages1.splice(index, 1); 
         }
-    
-        // Optionally, refresh the image list from the server
         this.getPropertyImagesForProperty(this.propID);
       },
       error: (error) => {
@@ -937,25 +850,21 @@ export class AddPropertyComponentComponent implements OnInit {
       }
     });
     
-    console.log(propertyId),
-    console.log(imageId)
+   
   }
 
   deleteFloorImage1(propertyId: string, imageId: number): void {
     this.http.delete(`https://localhost:7190/api/Users/delete-Floorimage/${propertyId}/${imageId}`, {
       headers: { 'Content-Type': 'application/json' },
-      responseType: 'text' // Explicitly set the response type as 'text'
+      responseType: 'text' 
     }).subscribe({
       next: (response: string) => {
-        console.log('Image deleted from database:', response);  // 'Image deleted successfully'
         
-        // Now remove the image from the frontend list
         const index = this.uploadedFloorImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
         if (index !== -1) {
-          this.uploadedFloorImages1.splice(index, 1); // Remove image from the UI list
+          this.uploadedFloorImages1.splice(index, 1); 
         }
     
-        // Optionally, refresh the image list from the server
         this.getPropertyFloorImagesForProperty(this.propID);
       },
       error: (error) => {
@@ -967,25 +876,22 @@ export class AddPropertyComponentComponent implements OnInit {
       }
     });
     
-    console.log(propertyId),
-    console.log(imageId)
+   
   }
 
   deleteVideo(propertyId: string, VideoId: number): void {
     this.http.delete(`https://localhost:7190/api/Users/delete-PropertyVideo/${propertyId}/${VideoId}`, {
       headers: { 'Content-Type': 'application/json' },
-      responseType: 'text' // Explicitly set the response type as 'text'
+      responseType: 'text' 
     }).subscribe({
       next: (response: string) => {
-        console.log('Video deleted from database:', response);  // 'Image deleted successfully'
+        console.log('Video deleted from database:', response);  
         
-        // Now remove the image from the frontend list
         const index = this.uploadedVideos1.findIndex(video => video.id === VideoId && video.propID === propertyId);
         if (index !== -1) {
-          this.uploadedVideos1.splice(index, 1); // Remove image from the UI list
+          this.uploadedVideos1.splice(index, 1); 
         }
     
-        // Optionally, refresh the image list from the server
         this.getPropertyVideo(this.propID);
       },
       error: (error) => {
@@ -998,7 +904,7 @@ export class AddPropertyComponentComponent implements OnInit {
     });
   }
 
-  deleteDocument(propertyId: string, DocumentID: number): void {
+  deleteDocument(propertyId:string, DocumentID: number): void {
     this.http.delete(`https://localhost:7190/api/Users/delete-PropertyDocument/${propertyId}/${DocumentID}`, {
       headers: { 'Content-Type': 'application/json' },
       responseType: 'text'
@@ -1006,7 +912,7 @@ export class AddPropertyComponentComponent implements OnInit {
       next: (response: string) => {
         console.log('Document deleted from database:', response);
         
-        // Now remove the image from the frontend list
+     
         const index = this.uploadedDocuments1.findIndex(document => document.id === DocumentID && document.propID === propertyId);
         if (index !== -1) {
           this.uploadedDocuments1.splice(index, 1);
@@ -1027,8 +933,8 @@ export class AddPropertyComponentComponent implements OnInit {
   
 
   openModal(imagePath: string): void {
-    this.selectedImage = imagePath;  // Set the selected image path
-    this.isModalOpen = true;  // Show the modal
+    this.selectedImage = imagePath;  
+    this.isModalOpen = true;  
   }
 
   openVideoModal(videoPath:string):void{
@@ -1036,74 +942,48 @@ export class AddPropertyComponentComponent implements OnInit {
     this.isVideoModalOpen=true;
   }
 
-  // Close the modal
+  openModaldocumnet(DocumentPath:string): void{
+    this.selecteddocumnet=DocumentPath;
+    this.isDocumnetModalOpen=true;
+  }
+ 
+
+  closeModaldocumnet(): void {
+    this.isDocumnetModalOpen = false;  
+    this.selecteddocumnet = ''; 
+  }
   closeModal(): void {
-    this.isModalOpen = false;  // Hide the modal
-    this.selectedImage = '';  // Clear the selected image path
+    this.isModalOpen = false; 
+    this.selectedImage = ''; 
   }
 
   closeVideoModal(): void {
-    this.isVideoModalOpen = false;  // Hide the modal
-    this.seletedVideo = '';  // Clear the selected image path
+    this.isVideoModalOpen = false; 
+    this.seletedVideo = '';
   }
 
   PropertyOnfileClicked:boolean=false;
   PropertyFloorImageOnFileClicked:boolean=false;
   PropertyVideoOnFileClicked:boolean=false;
   PropertyDocumentOnFileClicked:boolean=false;
-  // onFileSelect(event: any): void {
-  //   this.PropertyOnfileClicked=true;
-  //   if (event?.target?.files) {
-  //     this.selectedPropertyFiles = event.target.files;
-  //     console.log(this.selectedPropertyFiles);
-
-  //     if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
-  //       this.uploadedImages = [];  // Clear previous images
-
-  //       // Convert FileList to an array and create image previews
-  //       Array.from(this.selectedPropertyFiles).forEach((file: File) => {
-  //         const reader = new FileReader();
-  //         reader.onload = () => {
-  //           // Push the data URL (base64 string) into the uploadedImages array
-  //           this.uploadedImages.push({ path: reader.result as string });
-  //         };
-  //         reader.readAsDataURL(file);  // Read file as data URL for preview
-  //       });
-  //     } else {
-  //       console.error('No files selected');
-  //     }
-  //   } else {
-  //     console.error('No files in the input');
-  //   }
-  // }
+ 
 
   onFileSelect(event: any): void {
     this.PropertyOnfileClicked = true;
   
     if (event?.target?.files) {
       this.selectedPropertyFiles = event.target.files;
-      console.log(this.selectedPropertyFiles);
   
       if (this.selectedPropertyFiles && this.selectedPropertyFiles.length > 0) {
-        this.uploadedImages = [];  // Clear previous images
-  
-        // Convert FileList to an array and create image previews
+        this.uploadedImages = [];  
         Array.from(this.selectedPropertyFiles).forEach((file: File) => {
-          // Check if the file size is less than 1024KB (1MB = 1024KB)
-          const fileSizeKB = file.size / 1024; // Convert bytes to KB
-  
-          // if (fileSizeKB < 1024) { // 1MB = 1024KB
+          const fileSizeKB = file.size / 1024; 
             const reader = new FileReader();
             reader.onload = () => {
-              // Push the data URL (base64 string) into the uploadedImages array
               this.uploadedImages.push({ path: reader.result as string });
             };
-            reader.readAsDataURL(file);  // Read file as data URL for preview
-          // } else {
-          //   // Show a popup alert when the file size is too large
-          //   this.PropertyOnfileClicked=false;
-          //   alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 1MB.`);
-          // }
+            reader.readAsDataURL(file);  
+          this.propertyImagesUploadButtonClick = false;
         });
       } else {
         console.error('No files selected');
@@ -1113,34 +993,6 @@ export class AddPropertyComponentComponent implements OnInit {
     }
   }
   
-  
-  
-
-  // onFloorFileSelect(event: any): void {
-  //   this.PropertyFloorImageOnFileClicked=true;
-  //   if (event?.target?.files) {
-  //     this.selectedPropertyFloorFiles = event.target.files;
-
-  //     if (this.selectedPropertyFloorFiles && this.selectedPropertyFloorFiles.length > 0) {
-  //       this.uploadedFloorImages = [];  // Clear previous images
-
-  //       // Convert FileList to an array and create image previews
-  //       Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
-  //         const reader = new FileReader();
-  //         reader.onload = () => {
-  //           // Push the data URL (base64 string) into the uploadedImages array
-  //           this.uploadedFloorImages.push({ path: reader.result as string });
-  //         };
-  //         reader.readAsDataURL(file);  // Read file as data URL for preview
-  //       });
-  //     } else {
-  //       console.error('No files selected');
-  //     }
-  //   } else {
-  //     console.error('No files in the input');
-  //   }
-  // }
-
   onFloorFileSelect(event: any): void {
     this.PropertyFloorImageOnFileClicked = true;
   
@@ -1148,22 +1000,17 @@ export class AddPropertyComponentComponent implements OnInit {
       this.selectedPropertyFloorFiles = event.target.files;
   
       if (this.selectedPropertyFloorFiles && this.selectedPropertyFloorFiles.length > 0) {
-        this.uploadedFloorImages = [];  // Clear previous images
+        this.uploadedFloorImages = []; 
   
-        // Convert FileList to an array and create image previews
         Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
-          // Check if the file size is less than 1024KB (1MB = 1024KB)
-          const fileSizeKB = file.size / 1024; // Convert bytes to KB
-  
-          if (fileSizeKB < 1024) { // 1MB = 1024KB
+          const fileSizeKB = file.size / 1024; 
+          if (fileSizeKB < 1024) {
             const reader = new FileReader();
             reader.onload = () => {
-              // Push the data URL (base64 string) into the uploadedImages array
               this.uploadedFloorImages.push({ path: reader.result as string });
             };
-            reader.readAsDataURL(file);  // Read file as data URL for preview
+            reader.readAsDataURL(file);
           } else {
-            // Show a popup alert when the file size is too large
             this.PropertyFloorImageOnFileClicked=false;
             alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 1MB.`);
           }
@@ -1175,34 +1022,6 @@ export class AddPropertyComponentComponent implements OnInit {
       console.error('No files in the input');
     }
   }
-  
-
-  // onVideoFileSelect(event: any): void {
-  //   this.PropertyVideoOnFileClicked=true;
-  //   if (event?.target?.files) {
-  //     this.selectedPropertyVideoFiles = event.target.files;
-
-  //     if (this.selectedPropertyVideoFiles && this.selectedPropertyVideoFiles.length > 0) {
-  //       this.uploadedVideos = [];  // Clear previous images
-
-  //       // Convert FileList to an array and create image previews
-  //       Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-  //         const reader = new FileReader();
-  //         reader.onload = () => {
-  //           // Push the data URL (base64 string) into the uploadedImages array
-  //           this.uploadedVideos.push({ path: reader.result as string });
-  //         };
-  //         reader.readAsDataURL(file);  // Read file as data URL for preview
-  //       });
-  //     } else {
-  //       console.error('No files selected');
-  //     }
-  //   } else {
-  //     console.error('No files in the input');
-  //   }
-  // }
-
-
   onVideoFileSelect(event: any): void {
     this.PropertyVideoOnFileClicked = true;
   
@@ -1210,22 +1029,18 @@ export class AddPropertyComponentComponent implements OnInit {
       this.selectedPropertyVideoFiles = event.target.files;
   
       if (this.selectedPropertyVideoFiles && this.selectedPropertyVideoFiles.length > 0) {
-        this.uploadedVideos = [];  // Clear previous videos
+        this.uploadedVideos = []; 
   
-        // Convert FileList to an array and process each file
         Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-          // Check if the file size is less than 2048KB (2MB = 2048KB)
-          const fileSizeKB = file.size / 1024; // Convert bytes to KB
+          const fileSizeKB = file.size / 1024; 
   
-          if (fileSizeKB < 2048) { // 2MB = 2048KB
+          if (fileSizeKB < 2048) { 
             const reader = new FileReader();
             reader.onload = () => {
-              // Push the data URL (base64 string) into the uploadedVideos array
               this.uploadedVideos.push({ path: reader.result as string });
             };
-            reader.readAsDataURL(file);  // Read file as data URL for preview
+            reader.readAsDataURL(file); 
           } else {
-            // Show a popup alert when the file size is too large
             this.PropertyVideoOnFileClicked = false;
             alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 2MB.`);
           }
@@ -1238,34 +1053,6 @@ export class AddPropertyComponentComponent implements OnInit {
     }
   }
   
-  // onDocumentFileSelect(event: any): void {
-  //   this.PropertyDocumentOnFileClicked=true;
-  //   if (event?.target?.files) {
-  //     this.selectedPropertyDocumentFiles = event.target.files;
-
-  //     if (this.selectedPropertyDocumentFiles && this.selectedPropertyDocumentFiles.length > 0) {
-  //       this.uploadedDocuments = [];  // Clear previous images
-
-  //       // Convert FileList to an array and create image previews
-  //       Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
-  //         const reader = new FileReader();
-  //         reader.onload = () => {
-  //           const unsafeUrl = reader.result as string;  // Base64 data URL
-  //           const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);  // Sanitize URL
-  
-  //           // Push the sanitized URL (SafeResourceUrl) and the File object
-  //           this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
-  //         };
-  //         reader.readAsDataURL(file);  // Read file as data URL for preview
-  //       });
-  //     } else {
-  //       console.error('No files selected');
-  //     }
-  //   } else {
-  //     console.error('No files in the input');
-  //   }
-  // }
-
   onDocumentFileSelect(event: any): void {
     this.PropertyDocumentOnFileClicked = true;
   
@@ -1273,25 +1060,19 @@ export class AddPropertyComponentComponent implements OnInit {
       this.selectedPropertyDocumentFiles = event.target.files;
   
       if (this.selectedPropertyDocumentFiles && this.selectedPropertyDocumentFiles.length > 0) {
-        this.uploadedDocuments = [];  // Clear previous documents
-  
-        // Convert FileList to an array and process each file
+        this.uploadedDocuments = []; 
         Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
-          // Check if the file size is less than 2048KB (2MB = 2048KB)
-          const fileSizeKB = file.size / 1024; // Convert bytes to KB
+          const fileSizeKB = file.size / 1024; 
   
-          if (fileSizeKB < 2048) { // 2MB = 2048KB
+          if (fileSizeKB < 2048) { 
             const reader = new FileReader();
             reader.onload = () => {
-              const unsafeUrl = reader.result as string;  // Base64 data URL
-              const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);  // Sanitize URL
-  
-              // Push the sanitized URL (SafeResourceUrl) and the File object
+              const unsafeUrl = reader.result as string; 
+              const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);
               this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
             };
-            reader.readAsDataURL(file);  // Read file as data URL for preview
+            reader.readAsDataURL(file);  
           } else {
-            // Show a popup alert when the file size is too large
             this.PropertyDocumentOnFileClicked = false;
             this.propertyInsStatus = `Document file ${file.name} is too large and will not be uploaded. Maximum size allowed is 2MB.`;
             this.isUpdateModalOpen = true;
@@ -1318,7 +1099,14 @@ export class AddPropertyComponentComponent implements OnInit {
     this.fetchAminities();
     this.loadCountries();
     this.getPropertTypes();
+    if(this.isUpdateButtonEnabled=true){
+      this.isUpdateButtonEnabled=false;
+    }
+    else{
+      this.isUpdateButtonEnabled=false;
+    }
   }
+
 
   DeActivateproperty(propertyID: string): void {
     this.propID = propertyID;
@@ -1356,12 +1144,6 @@ export class AddPropertyComponentComponent implements OnInit {
   getTotalPropertyDet(propID: string): void {
     this.http.get(`https://localhost:7190/api/Users/GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
       this.UserIDDb=response.userID;
-      // if(response.propertySaleStatus=true){
-      //   this.SoldOutProperty=true;
-      // }
-      // else{
-      //   this.SoldOutProperty=false;
-      // }
       const convertToDDMMYYYY = (dateStr: string): string => {
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -1373,24 +1155,24 @@ export class AddPropertyComponentComponent implements OnInit {
       const convertToYYYYMMDD = (dateStr: string): string => {
         const date = new Date(dateStr);
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;  // yyyy-MM-dd format
+        return `${year}-${month}-${day}`;  
       };
   
       const formattedPossessionDate = convertToDDMMYYYY(response.possessionDate);
       const formattedListDate = convertToDDMMYYYY(response.listDate);
 
-      const formattedPossessionDateForInput = convertToYYYYMMDD(response.possessionDate); // For input type="date"
-      const formattedListDateForInput = convertToYYYYMMDD(response.listDate); // For input type="date"
+      const formattedPossessionDateForInput = convertToYYYYMMDD(response.possessionDate); 
+      const formattedListDateForInput = convertToYYYYMMDD(response.listDate); 
 
       const selectedAmenitiesString = response.aminities || '';
       this.selectedAmenities = selectedAmenitiesString.split(',')
   .map((amenity: string): Amenity => {
-    const [id, name] = amenity.trim().split(' - ');  // Split by " - " to get id and name
-    return { id, name };  // Return as an object of type Amenity
+    const [id, name,icon] = amenity.trim().split(' - ');  
+    return { id, name,icon };  
   })
-  .filter((amenity: Amenity) => amenity.id && amenity.name);
+  .filter((amenity: Amenity) => amenity.id && amenity.name&& amenity.icon);
       this.propertyform.patchValue({
         id: response.propID,
         PropertyTitle: response.propname,
@@ -1440,14 +1222,12 @@ export class AddPropertyComponentComponent implements OnInit {
         AvailabilityOptions: response.availabilityOptions
       });
 
-      // Set the selected country, state, and city
       this.selectedCountry = response.country;
       this.selectedState = response.state;
       this.selectedCity = response.city;
 
-      // Now load the states and cities for the selected country/state
-      this.loadStates();  // Load states based on the selected country
-      this.loadCities();  // Load cities based on the selected state
+      this.loadStates();  
+      this.loadCities();  
 
       if(response.activeStatus=="1"){
         this.propertyActiveStatus=true;
@@ -1470,15 +1250,21 @@ export class AddPropertyComponentComponent implements OnInit {
   convertBlobToBase64(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);  // Resolve with Base64 string
-      reader.onerror = reject;  // Reject on error
-      reader.readAsDataURL(blob);  // Convert the Blob to Base64
+      reader.onloadend = () => resolve(reader.result as string);  
+      reader.onerror = reject;  
+      reader.readAsDataURL(blob);  
     });
   }
 
+
   submitpropertyDet(){
+
+    if (this.propertyform.invalid) {
+      // Optionally, you can show a message here if needed
+      return;
+    }
     const selectedAmenitiesString = this.selectedAmenities
-  .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
+  .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
   .join(',');
     const data = {
       id: 0,
@@ -1523,7 +1309,7 @@ export class AddPropertyComponentComponent implements OnInit {
 
       description:new String(this.propertyform.get('Description')?.value).toString(),
       specificDescription:new String(this.propertyform.get('SpecificDescription')?.value).toString(),
-      aminities:selectedAmenitiesString,
+      aminities: selectedAmenitiesString,
 
       websiteurl:new String(this.propertyform.get('WebsiteUrl')?.value).toString() || null,
       Pinteresturl:new String(this.propertyform.get('Pinteresturl')?.value).toString() || null,
@@ -1541,7 +1327,6 @@ export class AddPropertyComponentComponent implements OnInit {
       propertySaleStatus:"0"
     };
 
-    console.log(data);
     this.http.post("https://localhost:7190/api/Users/inspropertysample", data, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
@@ -1558,18 +1343,21 @@ export class AddPropertyComponentComponent implements OnInit {
         this.isUpdateModalOpen = true;
         console.error("Error details:", error);
       }
-      // complete: () => {
-      //   // Log when the request completes
-      //   console.log("Request completed");
-      // }
     });
   }
 
   UserIDDb:any='';
 
+
+  
+  checkForChanges() {
+    this.isUpdateButtonEnabled = this.propertyform.dirty;
+  }
+  
+
   updatePropertyDet() {
     const selectedAmenitiesString = this.selectedAmenities
-  .map(amenity => `${amenity.id} - ${amenity.name}`)  // Convert each object to "id - name"
+  .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
   .join(',');
     const data = {
       id: 0,
@@ -1629,8 +1417,11 @@ export class AddPropertyComponentComponent implements OnInit {
       StateName:(this.SelectedStateName).toString(),
       CityName:(this.SelectedCityName).toString(),
       PropActiveStatus:"",
-      PropertyTypeName:(this.SelectedPropertyTypeName).toString()
+      PropertyTypeName:(this.SelectedPropertyTypeName).toString()     
+      
     };
+    console.log(this.SelectedPropertyTypeName)
+    
   
     if (!this.propID || this.propID.trim() === '') {
       console.error("Invalid propID");
@@ -1655,36 +1446,44 @@ export class AddPropertyComponentComponent implements OnInit {
       }
     });
   }
+  isEditing = false;
 
   addNewProperty(){
     this.addnewPropertyclicked=true;
     this.editclicked=false;
+    this.propertyform.reset();
+    this.selectedCountryId="";
+    this.selectedPropertyAreaId="";
+    this.selectedPropertyFacingId="";
+    this.selectedPropertystatusId="";
+    this.selectedPropertyForId="";
+    this.selectedPropertyTypeId="";
+    this.selectedCityId="";
+    this.selectedStateId="";
     this.generatePropertyID();
     this.loadCountries();
     this.loadStates();
     this.loadCities();
     this.fetchAminities();
     this.getPropertTypes();
-  }
+    this.clearSelections(); 
+    this.uploadedImages1=[];
+    this.uploadedFloorImages1=[];
+    this.uploadedDocuments1=[];
+    this.uploadedVideos1=[]; 
+}
 
+
+  clearSelections(): void {
+    this.selectedAmenities = [];
+    this.uploadedImages1=[];
+    this.uploadedFloorImages1=[];
+    this.uploadedDocuments1=[];
+    this.uploadedVideos1=[];
+  }
+  
   getownProperties(){
-    this.http.get(`https://localhost:7190/api/Users/GetAllPropertyDetailsWithUserID?userID=${this.userID}`)  // Adjust the API endpoint accordingly
-    .subscribe((response: any) => {
-      // Map the response to extract only the propID, propname, and developedby fields
-      this.properties = response.map((property: any) => ({
-        propID: property.propID,
-        propname: property.propname,  // Adjust field names if necessary
-        developedby: property.developedby
-      }));
-
-      console.log('Mapped properties:', this.properties);
-    }, error => {
-      console.error('Error fetching properties:', error);
-    });
-    
-  }
-  getUserProperties(){
-    this.http.get(`https://localhost:7190/api/Users/GetAllUsersPropertyDetails?userID=${this.userID}`)  // Adjust the API endpoint accordingly
+    this.http.get(`https://localhost:7190/api/Users/GetAllPropertyDetailsWithUserID?userID=${this.userID}`)
     .subscribe((response: any) => {
       this.properties = response.map((property: any) => ({
         propID: property.propID,
@@ -1692,7 +1491,20 @@ export class AddPropertyComponentComponent implements OnInit {
         developedby: property.developedby
       }));
 
-      console.log('Mapped properties:', this.properties);
+    }, error => {
+      console.error('Error fetching properties:', error);
+    });
+    
+  }
+  getUserProperties(){
+    this.http.get(`https://localhost:7190/api/Users/GetAllUsersPropertyDetails?userID=${this.userID}`) 
+    .subscribe((response: any) => {
+      this.properties = response.map((property: any) => ({
+        propID: property.propID,
+        propname: property.propname,
+        developedby: property.developedby
+      }));
+
     }, error => {
       console.error('Error fetching properties:', error);
     });
@@ -1700,26 +1512,25 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   currentPage = 1;
-  pageSize = 5; // Fixed page size (5 items per page)
-  searchQuery: string = ""; // Variable to hold the search query
+  pageSize = 5; 
+  searchQuery: string = ""; 
 
-
-  // Filter properties based on the search query
+  
+  
   get filteredProperties() {
     return this.properties.filter(property => 
       property.propID.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       property.propname.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       property.developedby.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
+    console.log(this.searchQuery.toLowerCase());
   }
 
-  // Get the total number of pages after filtering
   get totalPages(): number {
     const filteredProperties = this.filteredProperties;
     return Math.ceil(filteredProperties.length / this.pageSize);
   }
 
-  // Get the properties for the current page after filtering
   getPaginatedProperties() {
     const filteredProperties = this.filteredProperties;
     const start = (this.currentPage - 1) * this.pageSize;
@@ -1727,21 +1538,18 @@ export class AddPropertyComponentComponent implements OnInit {
     return filteredProperties.slice(start, end);
   }
 
-  // Set the current page, ensuring it's within the valid range
   setPage(page: number): void {
     if (page > 0 && page <= this.totalPages) {
       this.currentPage = page;
     }
   }
 
-  // Go to the previous page
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
   }
 
-  // Go to the next page
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -1758,7 +1566,14 @@ export class AddPropertyComponentComponent implements OnInit {
     if (this.editclicked || this.addnewPropertyclicked) {
       this.editclicked = false;
       this.addnewPropertyclicked=false;
+      this.propertyform.reset();
       this.fetchProperties();
+      if(this.isUpdateButtonEnabled=true){
+        this.isUpdateButtonEnabled=false;
+      }
+      else{
+        this.isUpdateButtonEnabled=false;
+      }
     }
   }
 
@@ -1778,13 +1593,14 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
 
-    // Select all amenities
     selectAll(): void {
       this.selectedAmenities = this.amenities.map(amenity => ({
         id: amenity.aminitieID,
-        name: amenity.name
+        name: amenity.name,
+        icon: amenity.icon
       }));
-      console.log('All amenities selected:', this.selectedAmenities);
+      // console.log("aminities list",this.amenities);
+      // console.log(this.selectedAmenities);
     }
   
     deselectAll(): void {
@@ -1835,9 +1651,7 @@ export class AddPropertyComponentComponent implements OnInit {
     this.http.get(`https://localhost:7190/api/Users/GetPropertiesByStatus?status=${status}`)
       .subscribe((response: any) => {
   
-        // Map the response to extract only the propID, propname, developedby, and status fields
         this.properties = response.map((property: any) => {
-          // Determine the PropertyStatus based on the activeStatus of the property
           let PropertyStatus: string = '';
   
           if (property.activeStatus === "2") {
@@ -1852,14 +1666,13 @@ export class AddPropertyComponentComponent implements OnInit {
           }
   
           return {
-            propID: property.propID,            // Adjust field names if necessary
+            propID: property.propID,          
             propname: property.propname,
             developedby: property.developedby,
-            status: PropertyStatus              // Add the computed status
+            status: PropertyStatus             
           };
         });
   
-        console.log('Mapped properties:', this.properties);
       }, error => {
         console.error('Error fetching properties:', error);
       });
@@ -1867,7 +1680,7 @@ export class AddPropertyComponentComponent implements OnInit {
   
 
   
-  selectedWhoseProperties: string = '0';
+  selectedWhoseProperties: string = '';
   selectedPropertyStatus1: string = '';
   selectedIsActiveStatus1:string='';
   propertySoldOutStatus1:string='';
@@ -1876,161 +1689,276 @@ export class AddPropertyComponentComponent implements OnInit {
 
 
   PropertyIsActiveStatusNotActive:boolean=false;
-  // Method to fetch filtered properties
-  fetchFilteredProperties(whose: string, status: string,IsActivestatus:string,SoldOutstatus:string, search: string): void {
-    const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&IsActivestatus=${IsActivestatus}&SoldOutstatus=${SoldOutstatus}&search=${search}&UserID=${this.userID}`;
-    this.http.get(url).subscribe((response: any) => {
-      if (response.statusCode === 200) {
-        this.properties = response.data.map((property: any) => ({
-          propID: property.propID,
-          propname: property.propname,
-          developedby: property.developedby,
-          status: this.getPropertyStatus(property.activeStatus),
-          IsActiveStatus:this.getPropertyIsActiveStatus(property.propActiveStatus),
-          IsActiveStatusBoolean:property.propActiveStatus
+  // fetchFilteredProperties(whose: string, status: string,IsActivestatus:string,SoldOutstatus:string, search: string): void {
+  //   const url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&IsActivestatus=${IsActivestatus}&SoldOutstatus=${SoldOutstatus}&search=${search}&UserID=${this.userID}`;
+  //   this.http.get(url).subscribe((response: any) => {
+  //     if (response.statusCode === 200) {
+  //       this.properties = response.data.map((property: any) => ({
+  //         propID: property.propID,
+  //         propname: property.propname,
+  //         developedby: property.developedby,
+  //         status: this.getPropertyStatus(property.activeStatus),
+  //         IsActiveStatus:this.getPropertyIsActiveStatus(property.propActiveStatus),
+  //         IsActiveStatusBoolean:property.propActiveStatus
           
-        }));
-        this.properties.forEach(property => {
-          console.log(property.IsActiveStatusBoolean); 
-        });
-        //this.PropertyIsActiveStatusNotActive = this.properties.some(property => property.IsActiveStatus === "1");
+  //       }));
+  //       this.properties.forEach(property => {
+  //       });
+  //       //this.PropertyIsActiveStatusNotActive = this.properties.some(property => property.IsActiveStatus === "1");
 
-        console.log(this.PropertyIsActiveStatusNotActive);
-        this.filteredPropertiesNotNull=false;
-      } else if (response.statusCode === 404) {
-        console.log(response);
-        this.filteredPropertiesNotNull=true;
-        console.error(response.Message);
-      } else {
-        console.error('Unexpected response status:', response.StatusCode);
-        this.properties = [];
-      }
-    }, error => {
-      console.error('Error fetching properties:', error);
-      this.filteredPropertiesNotNull = true;
-      this.properties = [];
-    });
-  }
-
-  // fetchFilteredProperties(whose: string, status: string, search: string): void {
-  //   let url = `https://localhost:7190/api/Users/GetFilteredProperties?whose=${whose}&status=${status}&UserID=${this.userID}`;
-  
-  //   // Only append search if it's not an empty string
-  //   if (search) {
-  //     url += `&search=${encodeURIComponent(search)}`;
-  //   }
-  
-  //   this.http.get(url).subscribe({
-  //     next: (response: any) => {
-  //       console.log('API Response:', response);  // Log the full response to inspect it
-  
-  //       if (response.statusCode === 200) {
-  //         // Successfully retrieved properties
-  //         this.properties = response.data.map((property: any) => ({
-  //           propID: property.propID,
-  //           propname: property.propname,
-  //           developedby: property.developedby,
-  //           status: this.getPropertyStatus(property.ActiveStatus)  // Ensure ActiveStatus is handled correctly
-  //         }));
-  //         this.filteredPropertiesNotNull = false;
-  //       } else {
-  //         console.error('Unexpected response status:', response.statusCode);
-  //         this.properties = [];
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Error fetching properties:', error);
-        
-  //       console.error('Error Message:', error.message);
-  //       console.error('Error Status:', error.status);
-  //       console.error('Error StatusText:', error.statusText);
-  //       console.error('Error Response:', error.error);
+  //       this.filteredPropertiesNotNull=false;
+  //     } else if (response.statusCode === 404) {
+  //       this.filteredPropertiesNotNull=true;
+  //     } else {
+  //       this.properties = [];
   //     }
+  //   }, error => {
+  //     console.error('Error fetching properties:', error);
+  //     this.filteredPropertiesNotNull = true;
+  //     this.properties = [];
   //   });
   // }
-  
-  
 
-  // Handle whose properties filter
-  onWhosePropertySelectionChange(event: any): void {
-    this.selectedWhoseProperties = event.target.value;
-    this.applyFilters();
-  }
+  fetchFilteredProperties(whose: string, status: string, IsActivestatus: string, SoldOutstatus: string, search: string): void {
+    // Construct query parameters dynamically to avoid undefined values
+    let params = new HttpParams()
+        .set('whose', whose)
+        .set('UserID', this.userID || '') // Ensure UserID is included
+        .set('status', status || '')
+        .set('IsActivestatus', IsActivestatus || '')
+        .set('SoldOutstatus', SoldOutstatus || '')
+        .set('search', search || '');
 
-  // Handle status filter
-  // onWhosePropertyStatusSelectionChange(event: any): void {
-  //   let selectedStatus='';
-  //   selectedStatus = event.target.value;
-  //   console.log(selectedStatus);
-  //   if(selectedStatus=="1"){
-  //     this.selectedPropertyStatus1==selectedStatus;
+    const url = `https://localhost:7190/api/Users/GetFilteredProperties?${params.toString()}`;
+
+    this.http.get(url).subscribe(
+        (response: any) => {
+            console.log('API Response:', response); // Debugging: Log API response
+            if (response.statusCode === 200) {
+                this.properties = response.data.map((property: any) => ({
+                    propID: property.propID,
+                    propname: property.propname,
+                    developedby: property.developedby,
+                    status: this.getPropertyStatus(property.activeStatus),
+                    IsActiveStatus: this.getPropertyIsActiveStatus(property.propActiveStatus),
+                    IsActiveStatusBoolean: property.propActiveStatus
+                }));
+                this.filteredPropertiesNotNull = false;
+                this.currentPage = 1;
+            } else if (response.statusCode === 404) {
+                this.filteredPropertiesNotNull = true;
+            } else {
+                this.properties = [];
+            }
+        },
+        error => {
+            console.error('Error fetching properties:', error);
+            this.filteredPropertiesNotNull = true;
+            this.properties = [];
+        }
+    );
+}
+
+
+
+ // onWhosePropertyStatusSelectionChange(event: any): void {
+  //   let selectedStatus = event.target.value;
+  
+  //   // Clear both property status and active/inactive status if "Latest" is selected
+  //   if (selectedStatus == "0") {
+  //     // this.selectedPropertyStatus1 = '0';  // Latest status
+  //     // this.selectedIsActiveStatus1 = '';  // Reset Active/Inactive filter
+  //     // this.propertySoldOutStatus1='';
+  //     this.fetchProperties();
+  //   } 
+  //   // Handle Approved (1) and Declined (2) statuses
+  //   else if (selectedStatus == "1" || selectedStatus == "2") {
+  //     this.selectedPropertyStatus1 = selectedStatus;  // Set to Approved or Declined
+  //     this.selectedIsActiveStatus1 = '';  // Clear Active/Inactive filter
+  //     this.propertySoldOutStatus1='';
+  //   } 
+  //   // Handle Active (3) and InActive (4) statuses
+  //   else if (selectedStatus == "3") {
+  //     this.selectedIsActiveStatus1 = "1";  // Set Active/Inactive
+  //     this.selectedPropertyStatus1 = '';  // Clear general property status
+  //     this.propertySoldOutStatus1='';
   //   }
-  //   else if(selectedStatus=="2"){
-  //     this.selectedPropertyStatus1==selectedStatus;
+
+  //   else if (selectedStatus == "4") {
+  //     this.selectedIsActiveStatus1 = "0";  // Set Active/Inactive
+  //     this.selectedPropertyStatus1 = '';  // Clear general property status
+  //     this.propertySoldOutStatus1='';
   //   }
-  //   else if(selectedStatus=="3"){
-  //     this.selectedIsActiveStatus1==selectedStatus;
+
+  //   else if(selectedStatus == "5"){
+  //     this.selectedIsActiveStatus1 = '';
+  //     this.selectedPropertyStatus1 = '';
+  //     this.propertySoldOutStatus1="1";
   //   }
-  //   else if(selectedStatus=="4"){
-  //     this.selectedIsActiveStatus1==selectedStatus;
-  //   }
-  //   else{
-  //     this.selectedPropertyStatus1=='0';
-  //   }
+  
   //   this.applyFilters();
   // }
 
+
+
+ 
+  onWhosePropertySelectionChange(event: any): void {
+    this.selectedWhoseProperties = event.target.value;
+    this.applyFilters();
+    this.currentPage = 1;
+  }
   onWhosePropertyStatusSelectionChange(event: any): void {
     let selectedStatus = event.target.value;
-  
-    // Clear both property status and active/inactive status if "Latest" is selected
-    if (selectedStatus == "0") {
-      // this.selectedPropertyStatus1 = '0';  // Latest status
-      // this.selectedIsActiveStatus1 = '';  // Reset Active/Inactive filter
-      // this.propertySoldOutStatus1='';
-      this.fetchProperties();
-    } 
-    // Handle Approved (1) and Declined (2) statuses
-    else if (selectedStatus == "1" || selectedStatus == "2") {
-      this.selectedPropertyStatus1 = selectedStatus;  // Set to Approved or Declined
-      this.selectedIsActiveStatus1 = '';  // Clear Active/Inactive filter
-      this.propertySoldOutStatus1='';
-    } 
-    // Handle Active (3) and InActive (4) statuses
-    else if (selectedStatus == "3") {
-      this.selectedIsActiveStatus1 = "1";  // Set Active/Inactive
-      this.selectedPropertyStatus1 = '';  // Clear general property status
-      this.propertySoldOutStatus1='';
-    }
+    // this.selectedPropertyStatus1 = event.target.value;
 
-    else if (selectedStatus == "4") {
-      this.selectedIsActiveStatus1 = "0";  // Set Active/Inactive
-      this.selectedPropertyStatus1 = '';  // Clear general property status
-      this.propertySoldOutStatus1='';
-    }
+    // this.selectedIsActiveStatus1 = '';
+    // this.selectedPropertyStatus1 = '';
+    // this.propertySoldOutStatus1 = '';
 
-    else if(selectedStatus == "5"){
-      this.selectedIsActiveStatus1 = '';
-      this.selectedPropertyStatus1 = '';
-      this.propertySoldOutStatus1="1";
+    console.log("Selected Status:", selectedStatus);
+    console.log("Selected Whose Properties:", this.selectedWhoseProperties);
+
+    if (selectedStatus == "0") {        
+        if (this.selectedWhoseProperties && this.selectedWhoseProperties !== "0") {
+            this.applyFilters();
+            this.currentPage = 1;
+        } else {
+            this.fetchProperties();
+        }
+    } else if (selectedStatus == "1") {
+        // this.selectedPropertyStatus1 = "1"; 
+        this.selectedPropertyStatus1 = "1"; 
+         this.selectedIsActiveStatus1 = ''; 
+         this.propertySoldOutStatus1='';
+        this.applyFilters();
+        this.currentPage = 1;
+    } else if (selectedStatus == "2") {
+        this.selectedPropertyStatus1 = "2"; 
+        this.selectedIsActiveStatus1 = ''; 
+        this.propertySoldOutStatus1='';
+        this.applyFilters();
+        this.currentPage = 1;
+    } else if (selectedStatus == "3") {
+        this.selectedPropertyStatus1 = ""; 
+        this.selectedIsActiveStatus1 = '1'; 
+        this.propertySoldOutStatus1=''; 
+        this.applyFilters();
+        this.currentPage = 1;
+    } else if (selectedStatus == "4") {
+      this.selectedPropertyStatus1 = ""; 
+          this.selectedIsActiveStatus1 = '0'; 
+        this.propertySoldOutStatus1='';
+        this.applyFilters();
+        this.currentPage = 1;
+    } else if (selectedStatus == "5") {
+      this.selectedPropertyStatus1 = ""; 
+        this.selectedIsActiveStatus1 = ''; 
+         this.propertySoldOutStatus1='1';
+        this.applyFilters();
+        this.currentPage = 1;
     }
-  
-    // After setting the correct values, apply filters to fetch filtered properties
-    this.applyFilters();
   }
-  
 
-  // Apply all filters together
+  // onWhosePropertyStatusSelectionChange(event: any): void {
+  //   let selectedStatus = event.target.value;
+  //   this.selectedIsActiveStatus1 = '';
+  //   this.selectedPropertyStatus1 = '';
+  //   this.propertySoldOutStatus1 = '';
+  //   if (selectedStatus == "0") {
+  //     this.fetchProperties();
+  //   } 
+  //   else if (selectedStatus == "1") {
+  //     this.selectedPropertyStatus1 = "1"; 
+  //     this.selectedIsActiveStatus1 = ''; 
+  //     this.propertySoldOutStatus1='';
+  //     this.applyFilters();
+  //   } 
+  //   else if (selectedStatus == "2") {
+  //     this.selectedPropertyStatus1 = "2"; 
+  //     this.selectedIsActiveStatus1 = ''; 
+  //     this.propertySoldOutStatus1='';
+  //     this.applyFilters();
+  //   } 
+  //   else if (selectedStatus == "3") {
+  //     this.selectedPropertyStatus1 = ""; 
+  //     this.selectedIsActiveStatus1 = '1'; 
+  //     this.propertySoldOutStatus1=''; 
+  //     this.applyFilters();
+  //   }
+  //   else if (selectedStatus == "4") {
+  //     this.selectedPropertyStatus1 = ""; 
+  //     this.selectedIsActiveStatus1 = '0'; 
+  //     this.propertySoldOutStatus1='';
+  //     this.applyFilters();
+  //   }
+  //   else if (selectedStatus == "5") {
+  //     this.selectedPropertyStatus1 = ""; 
+  //     this.selectedIsActiveStatus1 = ''; 
+  //     this.propertySoldOutStatus1='1';
+  //     this.applyFilters();
+  //   }
+ 
+    
+  // }
+  
   applyFilters(): void {
     this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.selectedIsActiveStatus1,this.propertySoldOutStatus1, this.searchQuery);
   }
 
-  // Handle search query change
   onSearchChange(): void {
     this.applyFilters();
   }
 
-  // Convert active status to a readable status
+
+
+    // onWhosePropertyStatusSelectionChange(event: any): void {
+  //   let selectedStatus = event.target.value;
+  
+  //   if (selectedStatus == "0") {
+      
+  //     this.fetchProperties();
+  //   } 
+  //   // else if (selectedStatus == "1" || selectedStatus == "2") {
+  //   //   this.selectedPropertyStatus1 = selectedStatus; 
+  //   //   this.selectedIsActiveStatus1 = ''; 
+  //   //   this.propertySoldOutStatus1='';
+  //   // } 
+
+  //   else if (selectedStatus == "1") {
+  //     this.selectedPropertyStatus1 = "1"; 
+  //     this.selectedIsActiveStatus1 = ''; 
+  //     this.propertySoldOutStatus1='';
+  //   } 
+  //   else if (selectedStatus == "2") {
+  //     this.selectedIsActiveStatus1 = "1";  
+  //     this.selectedPropertyStatus1 = '';  
+  //     this.propertySoldOutStatus1='';
+  //   }
+  //   else if (selectedStatus == "3") {
+  //     this.selectedIsActiveStatus1 = "1";  
+  //     this.selectedPropertyStatus1 = '';  
+  //     this.propertySoldOutStatus1='';
+  //   }
+
+  //   else if (selectedStatus == "4") {
+  //     this.selectedIsActiveStatus1 = "0";  
+  //     this.selectedPropertyStatus1 = '';  
+  //     this.propertySoldOutStatus1='';
+  //   }
+
+  //   else if(selectedStatus == "5"){
+  //     this.selectedIsActiveStatus1 = '';
+  //     this.selectedPropertyStatus1 = '';
+  //     this.propertySoldOutStatus1="1";
+  //   }
+
+  //   console.log("selectedActiveStatus",this.selectedIsActiveStatus1);
+  //   console.log("soldStatus",this.propertySoldOutStatus1);
+  //   console.log("selectedStatus",this.selectedPropertyStatus1);
+  //   console.log("selectedWhose", this.selectedWhoseProperties);
+  
+  //   this.applyFilters();
+  // }
   getPropertyStatus(activeStatus: string): string {
     switch (activeStatus) {
       case '1': return 'Approved';
@@ -2043,37 +1971,53 @@ export class AddPropertyComponentComponent implements OnInit {
   getPropertyIsActiveStatus(IsActiveStatus: string): string {
     switch (IsActiveStatus) {
       case '1': return 'Active';
-      case '0': return 'Not Active';
+      case '0': return 'InActive';
       default: return 'Unknown';
     }
   }
+
+  
 
   isUpdateModalOpen:boolean = false;
   UpdatecloseModal() {
     this.isUpdateModalOpen = false;
   }
 
-  // Handle "OK" button click
   handleOk() {
     this.UpdatecloseModal();
-    // Execute your actions
     if(!this.propertyImagesClicked && !this.propertyFloorImagesClicked && !this.propertyVideosClicked && !this.propertyDocumentsClicked){
       this.editclicked = false;
       this.addnewPropertyclicked = false;
+      this.propertyform.reset();
       this.fetchProperties();
+      if(this.isUpdateButtonEnabled=true){
+        this.isUpdateButtonEnabled=false;
+      }
+      else{
+        this.isUpdateButtonEnabled=false;
+      }
     }
     
   }
 
-  // clearContent(editorId: string): void {
-  //   this.propertyform.get('Description')?.setValue('');
-  //   this.propertyform.get('SpecificDescription')?.setValue('');
+ 
 
-  //   const quillEditor = document.getElementById(editorId) as any;
-  //   if (quillEditor && quillEditor.__quill) {
-  //     quillEditor.__quill.root.innerHTML = '';
-  //   }
-  // }
+  
+editorConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote'],
+      [{ header: 1 }, { header: 2 }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ color: [] }, { background: [] }],
+      // ['image'],
+      // ['clean'],
+      
+      //  'code-block'
+    ],
+  };
+  
 
   
 
@@ -2097,71 +2041,29 @@ export class AddPropertyComponentComponent implements OnInit {
 
 
 
-  // makeImageDefault(propID: string, imageID: number) {
-  //   // Find the image by matching imageID with the image id in the array
-  //   const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
-  
-  //   if (selectedImage) {
-  //     // Set the selected image as default
-  //     selectedImage.DefaultImage = "1"; // "1" means default image
-  
-  //     // Set all other images' DefaultImage to "0"
-  //     this.uploadedImages1.forEach(img => {
-  //       if (img.id !== imageID) {
-  //         img.DefaultImage = "0"; // "0" means not a default image
-  //       }
-  //     });
-  
-  //     // Reorder the array to ensure the default image appears first
-  //     this.uploadedImages1 = [
-  //       selectedImage, 
-  //       ...this.uploadedImages1.filter(img => img.id !== imageID)
-  //     ];
-  
-  //     // Update the database to reflect the change (update the default image)
-  //     this.updateDefaultImageInDatabase(propID, imageID);
-  //   }
-  // }
-  
-  // updateDefaultImageInDatabase(propID: string, imageID: number) {
-  //   console.log("selected ImageID:",imageID);
-  //   this.http.put(`https://localhost:7190/api/Users/update-default-image/${propID}/${imageID}`, {})
-  //     .subscribe(response => {
-  //       console.log('Default image updated successfully');
-  //     }, error => {
-  //       console.error('Error updating default image:', error);
-  //     });
-  // }
-
 
   makeImageDefault(propID: string, imageID: number) {
-    // Find the image by matching imageID with the image id in the array
     const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
   
     if (selectedImage) {
-      // Set the selected image as default
-      selectedImage.DefaultImage = "1"; // "1" means default image
+      selectedImage.DefaultImage = "1"; 
   
-      // Set all other images' DefaultImage to "0"
       this.uploadedImages1.forEach(img => {
         if (img.id !== imageID) {
-          img.DefaultImage = "0"; // "0" means not a default image
+          img.DefaultImage = "0"; 
         }
       });
   
-      // Reorder the array to ensure the default image appears first (if required)
       this.uploadedImages1 = [
         selectedImage, 
         ...this.uploadedImages1.filter(img => img.id !== imageID)
       ];
   
-      // Update the database to reflect the change (update the default image)
       this.updateDefaultImageInDatabase(propID, imageID);
     }
   }
   
   updateDefaultImageInDatabase(propID: string, imageID: number) {
-    console.log("selected ImageID:", imageID);
     this.http.put(`https://localhost:7190/api/Users/update-default-image/${propID}/${imageID}`, {})
       .subscribe(response => {
         console.log('Default image updated successfully');
@@ -2171,28 +2073,23 @@ export class AddPropertyComponentComponent implements OnInit {
   }
 
   submitCustomOrder() {
-    // Check for duplicate and sequence validity
     const validationError = this.validateOrders();
-  
     if (validationError) {
-      alert(validationError);  // Show the error message if validation fails
-      return;  // Prevent further execution if validation fails
+      alert(validationError); 
+      return; 
     }
-  
-    // Prepare the payload with the custom order and default image info
     const updatedImages = this.uploadedImages1.map(image => ({
       id: image.id,
-      imageOrder: image.customOrder.toString(),  // Ensure it's a string
-      defaultImage: image.DefaultImage === "1" ? "1" : "0"  // Set default to "1" or "0"
+      imageOrder: image.customOrder.toString(),  
+      defaultImage: image.DefaultImage === "1" ? "1" : "0" 
     }));
   
-    console.log('Updated images payload:', updatedImages);  // Verify the payload before sending
-  
+    this.propertyInsStatus = "order submitted successfully!";
+    this.isUpdateModalOpen = true;
     this.updateImageOrderInDatabase(updatedImages);
   }
   
   validateOrders(): string | null {
-    // Check for duplicates and sequence
     const seenOrders = new Set<number>();
     const orderNumbers = this.uploadedImages1.map(image => image.customOrder).sort((a, b) => a - b);
   
@@ -2208,29 +2105,242 @@ export class AddPropertyComponentComponent implements OnInit {
       seenOrders.add(orderNumbers[i]);
     }
   
-    return null;  // Return null if everything is valid
+    return null;  
   }
   
   
-  // submitCustomOrder() {
-  //   // Prepare the payload with the custom order and default image info
-  //   const updatedImages = this.uploadedImages1.map(image => ({
-  //     id: image.id,
-  //     imageOrder: image.customOrder.toString(),  // Ensure it's a string
-  //     defaultImage: image.DefaultImage === "1" ? "1" : "0"  // Set default to "1" or "0"
-  //   }));
 
-  //   console.log('Updated images payload:', updatedImages);  // Verify the payload before sending
+  
+  validateOrdersfloor(): string | null {
+    const seenOrders = new Set<number>();
+    const orderNumbers = this.uploadedFloorImages1.map(image => image.customOrder).sort((a, b) => a - b);
+    let hasDuplicate = false;  
+  
+    for (let i = 0; i < orderNumbers.length; i++) {
+      if (seenOrders.has(orderNumbers[i])) {
+        hasDuplicate = true;  
+      }
+  
+      if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
+        return 'Order numbers must be in sequence (no gaps). Please correct the sequence.';
+      }
+  
+      seenOrders.add(orderNumbers[i]);
+    }
+  
+    if (hasDuplicate) {
+      return 'There are duplicate order numbers. Please ensure all order numbers are unique.';
+    }
+  
+    return null;  
+  }
+  
+  OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (
+      (charCode >= 48 && charCode <= 57) || 
+      (charCode >= 65 && charCode <= 90) || 
+      (charCode >= 97 && charCode <= 122) ||
+      charCode === 32 
+    ) {
+      return true;
+    }
+  
+    return false;
+  }
+  
 
-  //   this.updateImageOrderInDatabase(updatedImages);
+
+  // OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
+  //   const charCode = event.which ? event.which : event.keyCode;
+  
+  //   if (charCode !== 32 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
+  //     return false; 
+  //   }
+    
+  //   return true; 
   // }
+
+  
+  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
+  //   const charCode = event.which ? event.which : event.keyCode;
+  //   const inputElement = event.target as HTMLInputElement;
+    
+  //   if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+  //     return false;
+  //   }
+    
+  //   if (inputElement.value.length >= 10) {
+  //     return false; 
+  //   }
+  //   return true;
+  // }
+
+  OnlyNumbersAllowed(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    const inputElement = event.target as HTMLInputElement;
+    let value = inputElement.value;
+    if ((charCode >= 48 && charCode <= 57) || charCode === 44 || charCode === 8) {
+      let numbersOnly = value.replace(/,/g, ''); 
+      let lastChar = value.charAt(value.length - 1);
+      if (numbersOnly.length >= 10 && charCode !== 8) {
+        return false;
+      }
+      if (charCode === 44 && (lastChar === ',' || value === '')) {
+        return false;
+      }
+  
+      return true;
+    }
+  
+    return false;
+  }
+  
+
+  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
+  //   const charCode = event.which ? event.which : event.keyCode;
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const value = inputElement.value;
+  
+  //   if (
+  //     (charCode >= 48 && charCode <= 57) ||   
+  //     charCode === 44 ||                     
+  //     charCode === 46                       
+  //   ) {
+  //     if (value.length >= 10) {
+  //       return false;
+  //     }
+  //     if (charCode === 44 || charCode === 46) {
+  //       if (value.includes(',') || value.includes('.')) {
+  //         return false;
+  //       }
+  //     }
+  
+  //     return true;
+  //   }
+  //   return false;
+  // }
+  
+
+  OnlypostelNumbersAllowed(event: KeyboardEvent): void {
+    const inputChar = event.key;
+    const inputElement = event.target as HTMLInputElement;
+
+    if (inputElement.value.length >= 6 && inputChar !== 'Backspace') {
+      event.preventDefault(); 
+      return;
+    }
+
+    if (!/[0-9]/.test(inputChar) && inputChar !== 'Backspace') {
+      event.preventDefault(); 
+    }
+  }
+  
+
+  OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
+    const inputChar = event.key;
+    const currentValue = (event.target as HTMLInputElement).value;
+    if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+        return;
+    }
+    if (inputChar >= '0' && inputChar <= '9') {
+        const parts = currentValue.split('-');
+
+        if (parts.length === 1) {
+            if (parts[0].length >= 6) {
+                event.preventDefault();
+            }
+        }
+        if (parts.length === 2) {
+            if (parts[1].length >= 7) {
+                event.preventDefault();
+            }
+        }
+        return;
+    }
+    if (inputChar === '-') {
+        const parts = currentValue.split('-');
+        if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
+            return;
+        }
+    }
+    event.preventDefault();
+ }
+
+
+ OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
+  const inputChar = event.key;
+  const currentValue = (event.target as HTMLInputElement).value;
+  if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+      return;
+  }
+  if (inputChar >= '0' && inputChar <= '9') {
+      const parts = currentValue.split('-');
+      if (parts.length === 1) {
+          if (parts[0].length >= 7) {
+              event.preventDefault();
+          }
+      }
+      if (parts.length === 2) {
+          if (parts[1].length >= 8) {
+              event.preventDefault();
+          }
+      }
+      return;
+  }
+
+  // Handle hyphen entry
+  if (inputChar === '-') {
+      const parts = currentValue.split('-');
+
+      // Allow the hyphen only if it's not already present and exactly 7 digits exist before it
+      if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 7) {
+          return;
+      }
+  }
+
+  // Prevent any other character input
+  event.preventDefault();
+}
+  
+  
+  
+  
+  // OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
+  //   const inputChar = event.key;
+  //   if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(inputChar)) {
+  //     return;
+  //   }
+  //   if (inputChar >= '0' && inputChar <= '9') {
+  //     return;
+  //   }
+  //   const currentValue = (event.target as HTMLInputElement).value;
+  //   if (inputChar === '-' && !currentValue.includes('-') && currentValue.length > 0) {
+  //     return;
+  //   }
+  //   event.preventDefault();
+  // }
+
+  
+  OnlyValidEmailChars(event: KeyboardEvent): boolean {
+    const charCode = event.key;
+    const allowedCharsRegex = /^[a-zA-Z0-9@._+-]$/;
+    if (!allowedCharsRegex.test(charCode)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+ 
   
   
   updateImageOrderInDatabase(updatedImages: any[]) {
     this.http.put(`https://localhost:7190/api/Users/update-image-order-and-default/${this.propID}`, updatedImages)
       .subscribe(
         response => {
-          console.log('Image order and default image updated successfully');
+          this.propertyInsStatus = "order updated successfully!";
+          this.isUpdateModalOpen = true;
         },
         error => {
           console.error('Error updating image order and default image:', error);
@@ -2240,17 +2350,28 @@ export class AddPropertyComponentComponent implements OnInit {
 
 
   submitFloorImagesCustomOrder() {
-    // Prepare the payload with the custom order and default image info
+    const validationError = this.validateOrdersfloor();
+  
+    if (validationError) {
+
+    
+
+      alert(validationError); 
+      return; 
+    }
+  
     const updatedImages = this.uploadedFloorImages1.map(image => ({
       id: image.id,
-      imageOrder: image.customOrder.toString(),  // Ensure it's a string
-      defaultImage: image.DefaultImage === "1" ? "1" : "0"  // Set default to "1" or "0"
+      imageOrder: image.customOrder.toString(),  
+      defaultImage: image.DefaultImage === "1" ? "1" : "0"  
     }));
-
-    console.log('Updated images payload:', updatedImages);  // Verify the payload before sending
-
+  
+    this.propertyInsStatus = "order submitted successfully!";
+      this.isUpdateModalOpen = true;
     this.updateFloorImageOrderInDatabase(updatedImages);
   }
+  
+ 
   
   
   updateFloorImageOrderInDatabase(updatedImages: any[]) {
@@ -2258,157 +2379,78 @@ export class AddPropertyComponentComponent implements OnInit {
       .subscribe(
         response => {
           console.log('Image order and default image updated successfully');
+          
+          this.propertyInsStatus = "Property updated successfully!";
+          this.isUpdateModalOpen = true;
         },
         error => {
           console.error('Error updating image order and default image:', error);
         }
       );
   }
-  
-  
-  
-  
-  
-  
-  
+
 
   areaValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (typeof value === 'number' && value >= 1500 && value <= 3500) {
-      return null; // Valid area if between 1500 and 3500
+      return null; 
     }
-    return { invalidArea: true }; // Invalid area value
+    return { invalidArea: true };
   }
 
-  // Custom validator for PriceFor field to handle single value or range
   priceForValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     
-    // Check if it's a single number
     if (typeof value === 'number') {
-      return null; // Valid single price
+      return null; 
     }
 
-    // Check if it's a valid range like '5000-7000'
-    const priceRangePattern = /^\d{4,5}-\d{4,5}$/; // Regex for price range (e.g., 5000-7000)
+    const priceRangePattern = /^\d{4,5}-\d{4,5}$/; 
     if (priceRangePattern.test(value)) {
-      return null; // Valid price range
+      return null; 
     }
 
-    return { invalidPrice: true }; // Invalid price value
+    return { invalidPrice: true };
   }
 
   calculateTotalPrice() {
     const totalArea = this.propertyform.get('TotalArea')?.value;
     const priceFor = this.propertyform.get('PriceFor')?.value;
 
-    // Initializing variables for minimum and maximum values.
     let totalAreaMin = 0;
     let totalAreaMax = 0;
     let priceForMin = 0;
     let priceForMax = 0;
 
-    // Handle TotalArea: Check if it's a range (e.g., "1500-3500") or a single number
     if (totalArea && typeof totalArea === 'string' && totalArea.includes('-')) {
-        // Split the range by '-' and convert to numbers
         const [minArea, maxArea] = totalArea.split('-').map(Number);
         totalAreaMin = minArea;
         totalAreaMax = maxArea;
     } else if (totalArea && !isNaN(totalArea)) {
-        totalAreaMin = totalArea;       // If it's a single value, use it for both min and max
+        totalAreaMin = totalArea;       
         totalAreaMax = totalArea;
     }
 
-    // Handle PriceFor: Check if it's a range (e.g., "4500-5000") or a single number
     if (priceFor && typeof priceFor === 'string' && priceFor.includes('-')) {
-        // Split the range by '-' and convert to numbers
         const [minPrice, maxPrice] = priceFor.split('-').map(Number);
         priceForMin = minPrice;
         priceForMax = maxPrice;
     } else if (priceFor && !isNaN(priceFor)) {
-        priceForMin = priceFor;        // If it's a single value, use it for both min and max
+        priceForMin = priceFor;        
         priceForMax = priceFor;
     }
 
-    // If the total area and price range is valid, calculate the total price
     if (!isNaN(totalAreaMin) && !isNaN(priceForMin) && totalAreaMin > 0 && priceForMin > 0) {
         const totalPriceMin = totalAreaMin * priceForMin;
         const totalPriceMax = totalAreaMax * priceForMax;
 
-        // If both min and max prices are valid, show the range
         if (totalPriceMin !== totalPriceMax) {
             this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}-${totalPriceMax}`);
         } else {
             this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}`);
         }
     } else {
-        this.propertyform.get('PropertyTotalPrice')?.setValue(''); // Show empty if invalid
+        this.propertyform.get('PropertyTotalPrice')?.setValue('');
     }
 }
-
-// checkForDuplicateOrder(newOrder: any, currentImageId: string): boolean {
-//   // Convert newOrder to a number to ensure the comparison is valid
-//   const newOrderNumber = Number(newOrder);  // Convert the input (which may be a string) to a number
-//   return this.uploadedImages1.some(image => 
-//     image.customOrder === newOrderNumber && image.id !== currentImageId
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-// calculateTotalPrice() {
-//   const totalArea = this.propertyform.get('TotalArea')?.value;
-//   const priceFor = this.propertyform.get('PriceFor')?.value;
-
-//   let totalAreaMin = 0;
-//   let totalAreaMax = 0;
-//   let priceForMin = 0;
-//   let priceForMax = 0;
-
-//   // Handle TotalArea: Check if it's a range (e.g., "1230-1500") or a single number
-//   if (totalArea && typeof totalArea === 'string' && totalArea.includes('-')) {
-//       // Split the range by '-' and convert to numbers
-//       const [minArea, maxArea] = totalArea.split('-').map(Number);
-//       totalAreaMin = minArea;
-//       totalAreaMax = maxArea;
-//   } else if (totalArea && typeof totalArea === 'number') {
-//       totalAreaMin = totalArea;
-//       totalAreaMax = totalArea; // If it's a single value, use it for both min and max
-//   }
-
-//   // Handle PriceFor: Check if it's a range (e.g., "5000-7000") or a single number
-//   if (priceFor && typeof priceFor === 'string' && priceFor.includes('-')) {
-//       // Split the range by '-' and convert to numbers
-//       const [minPrice, maxPrice] = priceFor.split('-').map(Number);
-//       priceForMin = minPrice;
-//       priceForMax = maxPrice;
-//   } else if (priceFor && typeof priceFor === 'number') {
-//       priceForMin = priceFor;
-//       priceForMax = priceFor; // If it's a single value, use it for both min and max
-//   }
-
-//   // Calculate the minimum and maximum total prices
-//   const minTotalPrice = totalAreaMin * priceForMin;
-//   const maxTotalPrice = totalAreaMax * priceForMax;
-
-//   // Set the PropertyTotalPrice as a range
-//   if (minTotalPrice > 0 && maxTotalPrice > 0) {
-//       this.propertyform.get('PropertyTotalPrice')?.setValue(`${minTotalPrice}-${maxTotalPrice}`);
-//   } else {
-//       this.propertyform.get('PropertyTotalPrice')?.setValue('');
-//   }
-// }
-
-
-  
-  // get formControls() {
-  //   return this.propertyform.controls;
-  // }
 }

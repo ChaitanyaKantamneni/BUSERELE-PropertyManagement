@@ -20,6 +20,7 @@
     width: 100%;
     height: 350px;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border: 0.5px solid #e5dddd;
 }
 
 .propertyImage {
@@ -44,9 +45,27 @@
     transform: scale(1.1); 
 }
 
-.propertyImage:hover {
+/* .propertyImage:hover {
     box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 15px; 
+} */
+
+
+.propertyTitle{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: 600;
 }
+.pricesize{
+    font-size: 12px;
+    /* text-align: center; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
 
 
 
@@ -54,10 +73,8 @@
 
 
 .propertyDetails {
-    height: 40%;
+    height: 50%;
     padding: 10px;
-    /* padding: 0px; */
-    background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
@@ -65,27 +82,37 @@
     justify-content: space-between;
 }
 
+
+.bottom-bar {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+
 .bottom-bar1 {
     background: linear-gradient(to right, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
-    width: 85%; /* Adjust the width as needed */
+    width: 85%; 
     color: white;
-    margin: 0 auto; /* Centers the element */
-    padding: 10px; /* Adds some internal spacing */
+    margin: 0 auto; 
+    padding: 10px; 
     position: relative;
     overflow: hidden;
 }
 
+
 .bottom-bar2 {
-    background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
-    color: white;
+    /* background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%); */
+    /* color: white; */
+    color: black;
     padding: 0px 10px;
     text-align: center;
 }
 
-.propertyaddress i {
-    font-size: 1.2rem; /* Adjust as needed */
+.propertyaddress{
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    /* text-transform: uppercase; */
 }
-
 .propertyspecifications {
     display: flex;
     flex-wrap: wrap;
@@ -149,9 +176,10 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    /* border-radius: 10px; Rounded corners */
-    overflow: hidden;
+    height: 350px;
+    /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; */
+    border: 0.5px solid #e5dddd;
+    
 }
 
 .properties{
@@ -231,27 +259,26 @@
 
 
 
-
 .contact i {
     font-size: 8px;
     padding-left: 4px;
   }
   
   .contact a {
-    font-size: 14px; /* Match link size */
+    font-size: 12px; /* Match link size */
   }
   
   .bottom-bar2 {
-    /* padding: 5px 10px; */
-    padding: 0px 0px 0px 0px;
-    background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent background */
-    border-radius: 5px;
-    width: 100%;  /* Ensure it takes full width */
-    display: flex;
-    justify-content: space-between;  /* Space between the contact and price sections */
-    align-items: center; 
-  }
+    /* background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%); */
+    /* color: white; */
+    color: black;
+    padding: 0px 10px;
+    text-align: center;
+}
 
+
+
+  
   
   
   
@@ -335,4 +362,8 @@
         flex: 0 0 100%;
         max-width: 100%;
     }
+}
+
+.propertyFooter{
+    border-top: 0.5px solid #e5dddd;
 }

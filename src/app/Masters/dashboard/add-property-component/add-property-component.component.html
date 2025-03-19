@@ -3,15 +3,19 @@
   'mainReview': editclicked || addnewPropertyclicked
 }">
   <div class="w-100">
-    <div *ngIf="!editclicked && !addnewPropertyclicked" class="reviewcard">
+    <!-- class="reviewcard" -->
+    <div *ngIf="!editclicked && !addnewPropertyclicked">
       <div class="PageHeading">
         <h5 class="text-center m-0"><b>UPLOADED PROPERTIES</b></h5>
       </div>
-      <!-- Search Input -->
+      <!--   
       <div class="filtersSearch">
-        <div class="searchreview">
-          <input type="text" class="form-control" [(ngModel)]="searchQuery" placeholder="Search properties..." />
+        <div class="searchreview" style="position: relative;">
+          <input type="text" class="form-control" [(ngModel)]="searchQuery" 
+          (ngModelChange)="onSearchChange()" placeholder="Search properties..." style="padding-left: 30px;"  />
+          <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
         </div>
+      
         <div class="reviewStatus">
           <select id="pageSize" class="form-control" (change)="onWhosePropertySelectionChange($event)">
             <option value="0">Select Whose Properties</option>
@@ -23,8 +27,8 @@
       <div class="filtersSearch">
         <div class="reviewStatus">
           <select id="pageSize" class="form-control" (change)="onWhosePropertyStatusSelectionChange($event)">
-            <!-- <option value="">Select Property Status</option> -->
-            <option value="0">Latest</option>
+            <option value="">Select Property Status</option>
+            <option value="0">All</option>
             <option value="1">Approved</option>
             <option value="2">Declined</option>
             <option value="3">Active</option>
@@ -35,7 +39,83 @@
         <div class="addnewButton">
           <button (click)="addNewProperty()">Add New</button>
         </div>
+      </div> -->
+
+      <div class="filtersSearch">
+        <div class="searchreview input-container" >
+          <input type="text" id="searchQuery" class="form-control floating-input" 
+            [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search properties... "style="padding-left: 30px;"  />
+          <!-- <label for="searchQuery">Search properties...</label> -->
+          <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
+
+        </div>
+        <!-- [(ngModel)]="selectedWhoseProperties"  -->
+        <div class="reviewStatus input-container">
+          <select id="pageSize" class="form-control floating-select"   
+            [ngClass]="{'filled': selectedWhoseProperties !== ''}" 
+            (change)="onWhosePropertySelectionChange($event)">
+            
+            <option value="" disabled selected>Select Whose Properties</option>  
+            <option value="0">All</option>
+            <option value="1">Own Properties</option>
+            <option value="2">Users Properties</option>
+          </select>
+        
+          <label for="pageSize" [class.filled]="selectedWhoseProperties !== ''">
+            Whose Properties
+          </label>
+        
+          <i class="fa fa-caret-down dropdown-icons"></i>
+        </div>        
       </div>
+      
+      <!-- <div class="filtersSearch">
+        <div class="reviewStatus input-container">
+          <select id="pageSize" class="form-control  floating-select" (change)="onWhosePropertyStatusSelectionChange($event)">
+            <option value="">Select Property Status</option>
+            <option value="0">All</option>
+            <option value="1">Approved</option>
+            <option value="2">Declined</option>
+            <option value="3">Active</option>
+            <option value="4">InActive</option>
+            <option value="5">Sold Out</option>
+          </select>
+          <label for="propertyStatus">Property Status</label>
+          <i class="fa fa-caret-down dropdown-icons"></i>
+        </div>
+
+        <div class="addnewButton">
+          <button (click)="addNewProperty()">Add New</button>
+        </div>
+      </div> -->
+      
+
+      <div class="filtersSearch" > 
+        <div class="reviewStatus input-container" style="margin-top: 10px;">
+          <select id="pageSize" class="form-control floating-select"             
+            [ngClass]="{'filled': selectedPropertyStatus1 !== ''|| selectedIsActiveStatus1!==''||propertySoldOutStatus1!==''}" 
+            (change)="onWhosePropertyStatusSelectionChange($event)">
+            <option value="" disabled selected>Select Property Status</option> 
+            <option value="0">All</option>
+            <option value="1">Approved</option>
+            <option value="2">Declined</option>
+            <option value="3">Active</option>
+            <option value="4">InActive</option>
+            <option value="5">Sold Out</option>
+          </select>
+          
+          <label for="propertyStatus" [class.filled]="selectedPropertyStatus1 !== ''|| selectedIsActiveStatus1!==''||propertySoldOutStatus1!==''">
+            Property Status
+          </label>
+      
+          <i class="fa fa-caret-down dropdown-icons"></i>
+        </div>
+      
+        <div class="addnewButton">
+          <button (click)="addNewProperty()">Add New</button>
+        </div>
+      </div>
+      
     
       <div class="reviewstable">
         <table *ngIf="!filteredPropertiesNotNull" class="table table-bordered">
@@ -57,13 +137,13 @@
               <td class="text-center">{{ property.status }}</td>
               <td class="text-center">{{ property.IsActiveStatus }}</td>
               <td class="text-center">
-                <button class="btn" (click)="editproperty(property.propID)">
+                <button class="btn" (click)="editproperty(property.propID)" data-tooltip="Edit">
                   <i class="fa fa-edit"></i>
                 </button>
-                <button *ngIf="property.IsActiveStatusBoolean==='1'" class="btn editPropbtn" (click)="DeActivateproperty(property.propID)">
+                <button *ngIf="property.IsActiveStatusBoolean==='1'" class="btn editPropbtn" (click)="DeActivateproperty(property.propID)" data-tooltip="De-Activate">
                   <i class="fa fa-trash"></i>
                 </button>
-                <button *ngIf="property.IsActiveStatusBoolean==='0'" class="btn editPropbtn" (click)="Activateproperty(property.propID)">
+                <button *ngIf="property.IsActiveStatusBoolean==='0'" class="btn editPropbtn" (click)="Activateproperty(property.propID)" data-tooltip="Activate">
                   <i class="fa fa-check"></i>
                 </button>
               </td>
@@ -71,7 +151,6 @@
           </tbody>
           
         </table>
-        <!-- filteredProperties.length === 0 -->
         <div *ngIf="filteredPropertiesNotNull" class="NoDataFound">
           <div class="NoDataFoundImg">
             <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
@@ -80,7 +159,6 @@
         </div>
       </div>
       
-      <!-- Bootstrap Pagination with Page Number Buttons -->
       <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="currentPage === 1">
@@ -120,266 +198,353 @@
               <h5 class="text-center m-0"><b>PROPERTY DETAILS</b></h5>
             </div>
             <div class="formrow">
-              <div class="form-group">
+              <div class="form-group" style="display: none;">
                 <div class="input-container">
-                  <input id="id" type="text" placeholder="Property ID" formControlName="id" class="form-control" readonly />
-                  <label for="id">Property ID</label>
+                  <input id="id" type="text" placeholder="Property ID" formControlName="id" class="form-control" readonly style="display: none;" />
+                  <label for="id" style="display: none;">Property ID</label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-container">
-                  <input id="PropertyTitle" type="text" placeholder="Property Title" formControlName="PropertyTitle" class="form-control" />
+                  <input id="PropertyTitle" type="text" placeholder="Property Title" (keypress)="OnlyAlphabetsAndSpacesAllowed($event)"  pattern="^[a-zA-Z\s]+$" formControlName="PropertyTitle" class="form-control" />
                   <label for="PropertyTitle">Property Title</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="DevelopedBy" type="text" placeholder="Developed By" formControlName="DevelopedBy" class="form-control" />
+                  <input id="DevelopedBy" type="text" placeholder="Developed By"  formControlName="DevelopedBy" class="form-control" (keypress)="OnlyAlphabetsAndSpacesAllowed($event)" pattern="^[a-zA-Z\s]+$" />
                   <label for="DevelopedBy">Developed By</label>
                 </div>
               </div>
-            </div>
-  
-            <div class="formrow">
+              
               <div class="form-group">
                 <div class="input-container">
-                  <input id="MobileNumber" type="text" placeholder="Mobile Number" formControlName="MobileNumber" class="form-control" />
+                  <input id="MobileNumber" type="text" placeholder="Mobile Number" formControlName="MobileNumber" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" maxlength="10" />
                   <label for="MobileNumber">Mobile Number</label>
                 </div>
               </div>
+            </div>
+  
+            <div class="formrow">
+             
               <div class="form-group">
                 <div class="input-container">
-                  <input id="EmailID" type="email" placeholder="Email" formControlName="EmailID" class="form-control" />
+                  <input id="EmailID" type="email" placeholder="Email" formControlName="EmailID" class="form-control"  (keypress)="OnlyValidEmailChars($event)" pattern=""/>
                   <label for="EmailID">Email</label>
+
+                  <div *ngIf="email?.invalid && email?.touched" class="error-message">
+                    <div *ngIf="email?.hasError('required')">Email is required.</div>
+                    <div *ngIf="email?.hasError('email')">Please enter a valid email address.</div>
+                    <div *ngIf="email?.hasError('invalidEmailStructure')">Please enter a valid email address without consecutive dots (..).</div>
+                  </div>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="Address" type="text" placeholder="Address" formControlName="Address" class="form-control" />
+                  <input id="Address" type="text" placeholder="Address" formControlName="Address" class="form-control"  />
                   <label for="Address">Address</label>
                 </div>
               </div>
-            </div>
-  
-            <div class="formrow">
               <div class="form-group">
                 <div class="input-container">
-                  <input id="LandMark" type="text" placeholder="Land Mark" formControlName="LandMark" class="form-control" />
+                  <input id="LandMark" type="text" placeholder="Land Mark" formControlName="LandMark" class="form-control" (keypress)="OnlyAlphabetsAndSpacesAllowed($event)"/>
                   <label for="LandMark">Land Mark</label>
                 </div>
               </div>
-              <div class="form-group">
-                <div class="input-container">
-                  <select formControlName="Country" (change)="onCountryChange($event)" id="Country" class="form-control">
-                    <option value="" disabled selected>Select Country</option>
-                    <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-                  </select>
-                  <label for="Country">Country</label>
-                </div>
-              </div>
-  
-              <div class="form-group">
-                <div class="input-container">
-                  <select formControlName="State" (change)="onStateChange($event)" id="State" class="form-control">
-                    <option value="" disabled selected>Select State</option>
-                    <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
-                  </select>
-                  <label for="State">State</label>
-                </div>
-              </div>
             </div>
   
             <div class="formrow">
-              <div class="form-group">
+             
+            
+              <div class="form-group position-relative selectcountry">
                 <div class="input-container">
-                  <select formControlName="City" (change)="onCityChange($event)" id="City" class="form-control">
-                    <option value="" disabled selected>Select City</option>
+                  <select
+                    formControlName="Country"
+                    (change)="onCountryChange($event)"
+                    id="Country"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedCountryId !== null && selectedCountryId !== ''}"
+                    [(ngModel)]="selectedCountryId" >
+                    <option value="" disabled>Select Country</option>
+                
+                    <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+                  </select>
+                
+                  <label for="Country" [class.filled]="selectedCountryId !== null && selectedCountryId !== ''">Country</label>
+                
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+                </div>
+                
+              </div>
+              
+              <div class="form-group position-relative">
+                <div class="input-container">
+                  <select
+                    formControlName="State"
+                    (change)="onStateChange($event)"
+                    id="State"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedStateId !== null && selectedStateId !== ''}"
+                    [(ngModel)]="selectedStateId">
+                    <option value="" disabled>Select State</option>
+                    <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
+                  </select>
+                  <label for="State" [class.filled]="selectedStateId !== null && selectedStateId !== ''">State</label>
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+                </div>
+
+              </div>
+              <div class="form-group position-relative">
+                <div class="input-container">
+                  <select
+                    formControlName="City"
+                    (change)="onCityChange($event)"
+                    id="City"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedCityId !== null && selectedCityId !== ''}"
+                    [(ngModel)]="selectedCityId">
+                    <option value="" disabled>Select City</option>
                     <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
                   </select>
-                  <label for="City">City</label>
+                  <label for="City" [class.filled]="selectedCityId !== null && selectedCityId !== ''">City</label>
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
                 </div>
+
               </div>
+
+            </div>
+  
+            <div class="formrow">
+          
+
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NearBy" type="text" placeholder="Near By" formControlName="NearBy" class="form-control" />
+                  <input id="NearBy" type="text" placeholder="Near By" formControlName="NearBy" class="form-control"  (keypress)="OnlyAlphabetsAndSpacesAllowed($event)"/>
                   <label for="NearBy">Near By</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="PostalCode" type="text" placeholder="Postal Code" formControlName="PostalCode" class="form-control" />
+                  <input id="PostalCode" type="text" placeholder="Postal Code" formControlName="PostalCode" class="form-control" (keydown)="OnlypostelNumbersAllowed($event)" maxlength="6" />
                   <label for="PostalCode">Postal Code</label>
                 </div>
               </div>
-            </div>
-  
-            <div class="formrow">
               <div class="form-group">
                 <div class="input-container">
                   <input id="CertificateNumber" type="text" placeholder="Certificate Number" formControlName="CertificateNumber" class="form-control" />
                   <label for="CertificateNumber">Certificate Number</label>
                 </div>
               </div>
+            </div>
+  
+            <div class="formrow">
+              
               <div class="form-group">
                 <div class="input-container">
-                  <input id="PropertyApprovedBy" type="text" placeholder="Property ApprovedBy" formControlName="PropertyApprovedBy" class="form-control" />
+                  <input id="PropertyApprovedBy" type="text" placeholder="Property ApprovedBy" formControlName="PropertyApprovedBy" class="form-control"  (keypress)="OnlyAlphabetsAndSpacesAllowed($event)"/>
                   <label for="PropertyApprovedBy">Property ApprovedBy</label>
                 </div>
               </div>
   
-              <div class="form-group">
+              <div class="form-group position-relative">
                 <div class="input-container">
-                  <select formControlName="PropertyType" (change)="onPropertyTypeChange($event)" id="PropertyType" class="form-control">
-                    <option value="" disabled selected>Select Property Type</option>
+                  <select
+                    formControlName="PropertyType"
+                    (change)="onPropertyTypeChange($event)"
+                    id="PropertyType"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedPropertyTypeId !== null && selectedPropertyTypeId !== ''}"
+                    [(ngModel)]="selectedPropertyTypeId">
+                    <option value="" disabled>Select Property Type</option>
                     <option *ngFor="let propertytype of propertytypes" [value]="propertytype.id">{{ propertytype.name }}</option>
                   </select>
-                  <label for="PropertyType">Property Type</label>
+                  <label for="PropertyType" [class.filled]="selectedPropertyTypeId !== null && selectedPropertyTypeId !== ''">Property Type</label>
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
                 </div>
+
               </div>
-            </div>
-  
-            <div class="formrow">
-              <div class="form-group">
+
+              <div class="form-group position-relative">
                 <div class="input-container">
-                  <select formControlName="PropertyFor" (change)="onPropertyForChange($event)" id="PropertyFor" class="form-control">
-                    <option value="" disabled selected>Select Property For</option>
-                    <option value="1">For Buy</option>
+                  <select
+                    formControlName="PropertyFor"
+                    (change)="onPropertyForChange($event)"
+                    id="PropertyFor"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedPropertyForId !== null && selectedPropertyForId !== ''}"
+                    [(ngModel)]="selectedPropertyForId">
+                    <option value="" disabled>Select Property For</option>
                     <option value="2">For Sale</option>
                     <option value="3">For Rent</option>
                     <option value="4">For Lease</option>
                   </select>
-                  <label for="PropertyFor">Property For</label>
+                  <label for="PropertyFor" [class.filled]="selectedPropertyForId !== null && selectedPropertyForId !== ''">Property For</label>
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
                 </div>
+
               </div>
-              <div class="form-group">
+
+            </div>
+  
+            <div class="formrow">
+           
+
+              <div class="form-group position-relative">
                 <div class="input-container">
-                  <select formControlName="PropertyStatus" (change)="onPropertyStatusChange($event)" id="PropertyStatus" class="form-control">
-                    <option value="" disabled selected>Select Property Status</option>
-                    <!-- <option value="1">Furnished</option>
-                      <option value="2">Semi Furnished</option>
-                      <option value="3">Not Furnished</option> -->
-                      <option value="1">Completed</option>
-                      <option value="2">Under Construction</option>
+                  <select
+                    formControlName="PropertyStatus"
+                    (change)="onPropertyStatusChange($event)"
+                    id="PropertyStatus"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedPropertystatusId !== null && selectedPropertystatusId !== ''}"
+                    [(ngModel)]="selectedPropertystatusId">
+                    <option value="" disabled>Select Property Status</option>
+                    <option value="1">Completed</option>
+                    <option value="2">Under Construction</option>
                   </select>
-                  <label for="PropertyStatus">Property Status</label>
+                  <label for="PropertyStatus" [class.filled]="selectedPropertystatusId !== null && selectedPropertystatusId !== ''">Property Status</label>
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
                 </div>
+
               </div>
   
-              <div class="form-group">
+              <div class="form-group position-relative">
                 <div class="input-container">
-                  <select formControlName="PropertyFacing" (change)="onPropertyFacingChange($event)" id="PropertyFacing" class="form-control">
-                    <option value="" disabled selected>Select Property Facing</option>
+                  <select
+                    formControlName="PropertyFacing"
+                    (change)="onPropertyFacingChange($event)"
+                    id="PropertyFacing"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedPropertyFacingId !== null && selectedPropertyFacingId !== ''}"
+                    [(ngModel)]="selectedPropertyFacingId">
+                    <option value="" disabled>Select Property Facing</option>
                     <option value="1">North</option>
                     <option value="2">South</option>
                     <option value="3">East</option>
                     <option value="4">West</option>
                   </select>
-                  <label for="PropertyFacing">Property Facing</label>
+                  <label for="PropertyFacing" [class.filled]="selectedPropertyFacingId !== null && selectedPropertyFacingId !== ''">Property Facing</label>
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
                 </div>
+
               </div>
-            </div>
-  
-            <div class="formrow">
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalBlocks" type="text" placeholder="Total Blocks" formControlName="TotalBlocks" class="form-control" />
+                  <input id="TotalBlocks" type="text" placeholder="Total Blocks" formControlName="TotalBlocks" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
                   <label for="TotalBlocks">Total Blocks</label>
                 </div>
               </div>
+
+            </div>
+  
+            <div class="formrow">
+             
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalFloors" type="text" placeholder="Total Floors" formControlName="TotalFloors" class="form-control" />
+                  <input id="TotalFloors" type="text" placeholder="Total Floors" formControlName="TotalFloors" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
                   <label for="TotalFloors">Total Floors</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalNoOfFlats" type="text" placeholder="Total No Of Flats" formControlName="TotalNoOfFlats" class="form-control" />
+                  <input id="TotalNoOfFlats" type="text" placeholder="Total No Of Flats" formControlName="TotalNoOfFlats" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
                   <label for="TotalNoOfFlats">Total No Of Flats</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-container">
+                  <input id="BlockName" type="text" placeholder="Block Name" formControlName="BlockName" class="form-control"  (keypress)="OnlyAlphabetsAndSpacesAllowed($event)"/>
+                  <label for="BlockName">Block Name</label>
                 </div>
               </div>
             </div>
   
             <div class="formrow">
+             
               <div class="form-group">
                 <div class="input-container">
-                  <input id="BlockName" type="text" placeholder="Block Name" formControlName="BlockName" class="form-control" />
-                  <label for="BlockName">Block Name</label>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="input-container">
-                  <input id="PropertyOnWhichFloor" type="text" placeholder="Property On Which Floor" formControlName="PropertyOnWhichFloor" class="form-control" />
+                  <input id="PropertyOnWhichFloor" type="text" placeholder="Property On Which Floor" formControlName="PropertyOnWhichFloor" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
                   <label for="PropertyOnWhichFloor">Property On Which Floor</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NumberofBedrooms" type="text" placeholder="Number of Bedrooms" formControlName="NumberofBedrooms" class="form-control" />
+                  <input id="NumberofBedrooms" type="text" placeholder="Number of Bedrooms" formControlName="NumberofBedrooms" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
                   <label for="NumberofBedrooms">Number of Bedrooms</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-container">
+                  <input id="NumberofBathrooms" type="text" placeholder="Number of Bathrooms" formControlName="NumberofBathrooms" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <label for="NumberofBathrooms">Number of Bathrooms</label>
                 </div>
               </div>
             </div>
   
             <div class="formrow">
+             
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NumberofBathrooms" type="text" placeholder="Number of Bathrooms" formControlName="NumberofBathrooms" class="form-control" />
-                  <label for="NumberofBathrooms">Number of Bathrooms</label>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="input-container">
-                  <input id="NumberofBalconies" type="text" placeholder="Number of Balconies" formControlName="NumberofBalconies" class="form-control" />
+                  <input id="NumberofBalconies" type="text" placeholder="Number of Balconies" formControlName="NumberofBalconies" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
                   <label for="NumberofBalconies">Number of Balconies</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NumberofParkings" type="text" placeholder="Number of Parkings" formControlName="NumberofParkings" class="form-control" />
+                  <input id="NumberofParkings" type="text" placeholder="Number of Parkings" formControlName="NumberofParkings" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
                   <label for="NumberofParkings">Number of Parkings</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-container">
+                  <select
+                    formControlName="AreaType"
+                    (change)="onAreaTypeChange($event)"
+                    id="AreaType"
+                    class="form-control"
+                    [ngClass]="{'filled': selectedPropertyAreaId !== null && selectedPropertyAreaId !== ''}"
+                    [(ngModel)]="selectedPropertyAreaId">
+                    <option value="" disabled>Select Area Type</option>
+                    <option value="1">SqFt</option>
+                  </select>
+                  <label for="AreaType" [class.filled]="selectedPropertyAreaId !== null && selectedPropertyAreaId !== ''">Area Type</label>
+                  <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
                 </div>
               </div>
             </div>
   
             <div class="formrow">
+              
+
               <div class="form-group">
                 <div class="input-container">
-                  <select formControlName="AreaType" (change)="onAreaTypeChange($event)" id="AreaType" class="form-control">
-                    <option value="" disabled selected>Select Area Type</option>
-                    <option value="1">SqFt</option>
-                  </select>
-                  <label for="AreaType">Area Type</label>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="input-container">
-                  <input id="TotalArea" type="text" placeholder="Total Area" formControlName="TotalArea" class="form-control" />
+                  <input id="TotalArea" type="text" placeholder="Total Area" formControlName="TotalArea" class="form-control"  (keypress)="OnlyNumbersAllowedforrange($event)" />
                   <label for="TotalArea">Total Area</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="CarpetArea" type="text" placeholder="Carpet Area" formControlName="CarpetArea" class="form-control" />
+                  <input id="CarpetArea" type="text" placeholder="Carpet Area" formControlName="CarpetArea" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"  />
                   <label for="CarpetArea">Carpet Area</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-container">
+                  <input id="PriceFor" type="text" placeholder="Price For SqFt" formControlName="PriceFor" class="form-control"  maxlength="17" (keypress)="OnlyNumbersAllowedforrangeforprice($event)"  />
+                  <label for="PriceFor">Price For SqFt</label>
                 </div>
               </div>
             </div>
   
             <div class="formrow">
-              <div class="form-group">
-                <div class="input-container">
-                  <input id="PriceFor" type="text" placeholder="Price For SqFt" formControlName="PriceFor" class="form-control" />
-                  <label for="PriceFor">Price For SqFt</label>
-                </div>
-              </div>
+              
               <div class="form-group">
                 <div class="input-container">
                   <input id="PropertyTotalPrice" type="text" placeholder="Total Price" formControlName="PropertyTotalPrice" class="form-control" readonly />
@@ -389,48 +554,78 @@
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="AmenitiesCharges" type="text" placeholder="Amenities Charges" formControlName="AmenitiesCharges" class="form-control" />
+                  <input id="AmenitiesCharges" type="text" placeholder="Amenities Charges" formControlName="AmenitiesCharges" class="form-control"   (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
                   <label for="AmenitiesCharges">Amenities Charges</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-container">
+                  <input id="MaintenanceCharges" type="text" placeholder="Maintenance Charges" formControlName="MaintenanceCharges" class="form-control"   (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <label for="MaintenanceCharges">Maintenance Charges</label>
                 </div>
               </div>
             </div>
   
             <div class="formrow">
+              
               <div class="form-group">
                 <div class="input-container">
-                  <input id="MaintenanceCharges" type="text" placeholder="Maintenance Charges" formControlName="MaintenanceCharges" class="form-control" />
-                  <label for="MaintenanceCharges">Maintenance Charges</label>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="input-container">
-                  <input id="CorpusFund" type="text" placeholder="Corpus Fund" formControlName="CorpusFund" class="form-control" />
+                  <input id="CorpusFund" type="text" placeholder="Corpus Fund" formControlName="CorpusFund" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
                   <label for="CorpusFund">Corpus Fund</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control" />
+                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"  />
                   <label for="BuildYear">Build Year</label>
                 </div>
               </div>
-            </div>
-  
-            <div class="formrow">
-              <div class="form-group">
-                <div class="input-container">
-                  <input id="PossessionDate" type="date" placeholder="Possession Date" formControlName="PossessionDate" class="form-control" />
+              <div class="form-group date">
+                <!-- <div class="input-container">
+                  <input id="PossessionDate" type="date" placeholder="Possession Date" formControlName="PossessionDate" class="form-control"  />
                   <label for="PossessionDate">Possession Date</label>
-                </div>
-              </div>
-              <div class="form-group">
+                </div> -->
                 <div class="input-container">
-                  <input id="ListDate" type="date" placeholder="List Date" formControlName="ListDate" class="form-control" />
-                  <label for="ListDate">List Date</label>
+                  <input #PossessionDateInput 
+                  id="PossessionDate" 
+                  type="text" 
+                  placeholder="Possession Date" 
+                  formControlName="PossessionDate" 
+                  class="form-control" 
+                  (focus)="onFocus('PossessionDate')" 
+                  (blur)="onBlur('PossessionDate')"/>
+                   <label for="PossessionDate">Possession Date</label>
+                 
                 </div>
+                
               </div>
             </div>
+           
+            <div class="formrow">
+             
+              <div class="form-group">
+                <div class="input-container">
+                  <input #ListDateInput 
+                id="ListDate" 
+                type="text" 
+                placeholder="List Date" 
+                formControlName="ListDate" 
+                class="form-control" 
+                (focus)="onFocus('ListDate')" 
+                (blur)="onBlur('ListDate')"/>
+                <label for="ListDate">List Date</label>
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <!-- <div class="input-container">
+                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control" />
+                  <label for="BuildYear">Build Year</label>
+                </div> -->
+              </div>
+            </div>
+            
           </div>
 
           <div class="propertyAminities reviewcardPropertyView mt-4">
@@ -448,18 +643,7 @@
             </div>
 
             <div class="amenity-row">
-              <!-- <ng-container *ngFor="let amenity of amenities">
-                <div class="singleaminity">
-                  <label>
-                    <input 
-                      type="checkbox" 
-                      [value]="amenity.aminitieID" 
-                      (change)="onAmenityChange($event, amenity.aminitieID)" 
-                      [checked]="selectedAmenities.includes(amenity.aminitieID)">
-                    {{ amenity.name }}
-                  </label>
-                </div>
-              </ng-container> -->
+            
             
               <div class="amenity-row">
                 <ng-container *ngFor="let amenity of amenities">
@@ -471,6 +655,8 @@
                         (change)="onAmenityChange($event, amenity)" 
                         [checked]="isSelected(amenity)">
                       {{ amenity.name }}
+                      <!-- <i *ngIf="amenity.icon" [ngClass]="amenity.icon"></i> -->
+                      
                     </label>
                   </div>
                 </ng-container>
@@ -478,6 +664,10 @@
               
             </div>
           </div>
+
+
+
+
           
           <div class="formDescriptions reviewcardPropertyView mt-4">
             <div class="PageHeading mb-3">
@@ -535,18 +725,20 @@
             </div>
             <div *ngIf="propertyImagesClicked" class="propertyImagesUpload">
               <div>
-                <div>
-                  <button (click)="propertyMediaBackClick()">Back</button>
+               
+                <div class="back-button-container">
+                  <button class="back-button" (click)="propertyMediaBackClick()">
+                    <i class="fas fa-arrow-left"></i> Back
+                  </button>
                 </div>
+                
                 <div class="form-column upload-container col-md-6">
                     <h5>Property Gallery:</h5>
                     <label for="gallery-upload">Upload Property Images</label>
                     <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
-                    <!-- <button class="btn btn-primary mt-2" (click)="uploadPropertyImages()">
-                        <i class="fas fa-upload"></i> Upload
-                    </button> -->
-                    <button class="btn btn-primary mt-2" [disabled]="propertyImagesUploadButtonClick" (click)="uploadPropertyImages()"><i class="fas fa-upload"></i> Upload</button>
-
+                      
+                    <p *ngIf="compressedImageSize" class="mt-2 text-info">{{ compressedImageSize }}</p>
+                    <button class="btn btn-primary mt-2" id="refresh" [disabled]="propertyImagesUploadButtonClick" (click)="uploadPropertyImages()"><i class="fas fa-upload"></i> Upload</button>
                 </div>
                 
                 <div class="image-table mt-4">
@@ -573,9 +765,12 @@
                               <td hidden="true">
                                   <h5>{{image.id}}</h5>
                               </td>
+                              
                               <td>
                                   <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
                               </td>
+
+                              
                               <td>
                                   <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                   <button class="btn btn-danger" (click)="deleteImage(image)">Delete</button>
@@ -592,7 +787,7 @@
                                   <img [src]="image.imageUrls" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrls)">
                               </td>
                               <td>
-                                <!-- Use ngModel with standalone option -->
+                              
                                 <input 
                                   type="number" 
                                   class="form-control" 
@@ -602,9 +797,7 @@
                                   [ngModelOptions]="{standalone: true}">
                               </td>
                               <td>
-                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                   <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
-                                  <!-- <button class="btn btn-primary" (click)="makeImageDefault(image.propID, image.id)">Default Image</button> -->
                               </td>
                             </tr>
                           </ng-container>
@@ -614,12 +807,32 @@
                             (click)="submitCustomOrder()">
                             Submit Order
                           </button>
-                                                  
+                                       
+                          <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Status</h5>
+                                  <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <p>{{ propertyInsStatus }}</p> 
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        
+              
                         </tbody>
                     </table>
                 </div>
             
-                <!-- Modal for viewing image -->
+              
                 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -639,13 +852,17 @@
             </div>
             <div *ngIf="propertyFloorImagesClicked" class="propertyFloorImagesUpload">
               <div>
-                <div>
-                  <button (click)="propertyMediaBackClick()">Back</button>
+               
+                <div class="back-button-container">
+                  <button class="back-button" (click)="propertyMediaBackClick()">
+                    <i class="fas fa-arrow-left"></i> Back
+                  </button>
                 </div>
                 <div class="form-column upload-container col-md-6">
                     <h5>Property Floor Gallery:</h5>
                     <label for="gallery-upload">Upload Property Floor Images</label>
                     <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFloorFileSelect($event)">
+                    <p *ngIf="compressedImageSize" class="mt-2 text-info">{{ compressedImageSize }}</p>
                     <button class="btn btn-primary mt-2" [disabled]="propertyfloorImagesUploadButtonClick" (click)="uploadPropertyFloorImages()">
                         <i class="fas fa-upload"></i> Upload
                     </button>
@@ -679,7 +896,6 @@
                                     <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
                                 </td>
                                 <td>
-                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                     <button class="btn btn-danger" (click)="deleteFloorImage(image)">Delete</button>
                                 </td>
                             </tr>
@@ -690,10 +906,9 @@
                                     <h5>{{image.id}}</h5>
                                 </td>
                                 <td>
-                                    <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)">
+                                    <img [src]="image.imageUrls" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrls)">
                                 </td>
                                 <td>
-                                  <!-- Use ngModel with standalone option -->
                                   <input 
                                     type="number" 
                                     class="form-control" 
@@ -703,7 +918,6 @@
                                     [ngModelOptions]="{standalone: true}">
                                 </td>
                                 <td>
-                                    <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                     <button class="btn btn-danger" (click)="deleteFloorImage1(image.propID, image.id)">Delete</button>
                                 </td>
                             </tr>
@@ -713,11 +927,31 @@
                             (click)="submitFloorImagesCustomOrder()">
                             Submit Order
                           </button>
+
+                          <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Status</h5>
+                                  <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <p>{{ propertyInsStatus }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        
+
                         </tbody>
                     </table>
                 </div>
             
-                <!-- Modal for viewing image -->
                 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -737,8 +971,11 @@
             </div>
             <div *ngIf="propertyVideosClicked" class="propertyVideosUpload">
               <div>
-                <div>
-                  <button (click)="propertyMediaBackClick()">Back</button>
+              
+                <div class="back-button-container">
+                  <button class="back-button" (click)="propertyMediaBackClick()">
+                    <i class="fas fa-arrow-left"></i> Back
+                  </button>
                 </div>
                 <div class="form-column upload-container col-md-6">
                     <h5>Property Video Gallery:</h5>
@@ -766,14 +1003,12 @@
                                   <h5>{{video.id}}</h5>
                               </td>
                               <td>
-                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
                                   <video width="75%" height="200" controls (click)="openModal(video.path)">
                                     <source [src]="video.path" type="video/mp4">
                                     Your browser does not support the video tag.
                                   </video>                                    
                               </td>
                               <td>
-                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                   <button class="btn btn-danger" (click)="deleteVideoSelected(video)">Delete</button>
                               </td>
                             </tr>
@@ -784,14 +1019,12 @@
                                   <h5>{{video.id}}</h5>
                               </td>
                               <td>
-                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
-                                  <video width="75%" height="200" controls (click)="openModal(video.videosUrl)">
-                                    <source [src]="video.videosUrl" type="video/mp4">
+                                  <video width="75%" height="200" controls (click)="openModal(video.videoUrl)">
+                                    <source [src]="video.videoUrl" type="video/mp4">
                                     Your browser does not support the video tag.
                                   </video>                                    
                               </td>
                               <td>
-                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                   <button class="btn btn-danger" (click)="deleteVideo(video.propID, video.id)">Delete</button>
                               </td>
                             </tr>
@@ -801,7 +1034,6 @@
                     </table>
                 </div>
             
-                <!-- Modal for viewing image -->
                 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -812,7 +1044,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                                <img [src]="selectedvideo" class="img-fluid" alt="Selected Image">
                             </div>
                         </div>
                     </div>
@@ -821,8 +1053,11 @@
             </div>
             <div *ngIf="propertyDocumentsClicked" class="propertyDocumentsUpload">
               <div>
-                <div>
-                  <button (click)="propertyMediaBackClick()">Back</button>
+             
+                <div class="back-button-container">
+                  <button class="back-button" (click)="propertyMediaBackClick()">
+                    <i class="fas fa-arrow-left"></i> Back
+                  </button>
                 </div>
                 <div class="form-column upload-container col-md-6">
                     <h5>Property Documents:</h5>
@@ -850,19 +1085,11 @@
                                   <h5>{{document.id}}</h5>
                               </td>
                               <td>
-                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
-                                  <!-- <object *ngIf="document.mimeType === 'application/pdf'"
-                                      [data]="document.documentsUrl"
-                                      type="application/pdf"
-                                      width="25%" 
-                                      height="200px">
-                                      Your browser does not support the PDF viewer.
-                                    </object> -->
+                                 
 
                                     <iframe [src]="document.DocumentPath" width="25%" height="200px"></iframe>
                               </td>
                               <td>
-                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                   <button class="btn btn-danger" (click)="deletePropertyDocumentSelected(document)">Delete</button>
                               </td>
                             </tr>
@@ -873,20 +1100,12 @@
                                   <h5>{{document.id}}</h5>
                               </td>
                               <td>
-                                  <!-- <img [src]="video.videosUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(video.videosUrl)"> -->
-                                  <!-- <object *ngIf="document.mimeType === 'application/pdf'"
-                                      [data]="document.documentsUrl"
-                                      type="application/pdf"
-                                      width="25%" 
-                                      height="200px">
-                                      Your browser does not support the PDF viewer.
-                                    </object> -->
+                               
 
-                                    <iframe [src]="document.safeUrl" width="25%" height="200px"></iframe>
+                                    <iframe [src]="document.safeDocumentUrl" width="25%" height="200px"  (click)="openModaldocumnet(document.safeDocumentUrl)"></iframe>
                               </td>
                               <td>
-                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
-                                  <button class="btn btn-danger" (click)="deleteDocument(document.propID, document.id)">Delete</button>
+                                  <button class="btn btn-danger" (click)="deleteDocument(document.propID,document.id)">Delete</button>
                               </td>
                             </tr>
                           </ng-container>
@@ -895,7 +1114,6 @@
                     </table>
                 </div>
             
-                <!-- Modal for viewing image -->
                 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -906,7 +1124,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <img [src]="selectedImage" class="img-fluid" alt="Selected Image">
+                                <img [src]="selecteddocumnet" class="img-fluid" alt="Selected Image">
                             </div>
                         </div>
                     </div>
@@ -959,42 +1177,23 @@
             </div>
           </div>
 
-          <!-- <div class="AvailabilityOptions reviewcardPropertyView mt-4">
-            <div class="PageHeading mb-3">
-              <h5 class="text-center m-0"><b>AVAILABILITY OPTIONS</b></h5>
-            </div>
-            <ul class="list-unstyled AvailabilityOptions-row">
-              <li class="availability-option">
-                <input type="radio" id="available" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="1">
-                <label for="available">Advertisement Property</label>
-              </li>
-              <li class="availability-option">
-                <input type="radio" id="featured" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="2">
-                <label for="featured">Featured Property</label>
-              </li>
-              <li class="availability-option">
-                <input type="radio" id="common" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="3">
-                <label for="common">Common Property</label>
-              </li>
-            </ul>
-          </div> -->
         
           <div class="AvailabilityOptions reviewcardPropertyView mt-4">
             <div class="PageHeading mb-3">
               <h5 class="text-center m-0"><b>AVAILABILITY OPTIONS</b></h5>
             </div>
             <ul class="list-unstyled AvailabilityOptions-row">
-              <li class="availability-option">
-                <input type="radio" id="available" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="1">
-                <label for="available">Advertisement Property</label>
+              <li class="availability-option" >
+                <input type="radio" id="available" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="1" >
+                <label for="available" style="top: 8px;">Advertisement Property</label>
               </li>
               <li class="availability-option">
                 <input type="radio" id="featured" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="2">
-                <label for="featured">Featured Property</label>
+                <label for="featured" style="top: 8px;">Featured Property</label>
               </li>
               <li class="availability-option">
                 <input type="radio" id="common" name="AvailabilityOptions" formControlName="AvailabilityOptions" value="3">
-                <label for="common">Common Property</label>
+                <label for="common" style="top: 8px;">Common Property</label>
               </li>
             </ul>
           </div>
@@ -1003,9 +1202,6 @@
         </form>
 
         <div class="SubmitAndUpdateButtons">
-          <!-- <div class="submitButtonDiv" *ngIf="!editclicked && addnewPropertyclicked">
-            <button type="submit" class="SubmitButton" (click)="submitpropertyDet()" [disabled]="propertyform.invalid"><i class="fa fa-paper-plane" aria-hidden="true"></i>Submit</button>
-          </div> -->
            <div class="submitButtonDiv" *ngIf="!editclicked && addnewPropertyclicked">
             <button type="submit" class="SubmitButton" [disabled]="propertyform.invalid" (click)="submitpropertyDet()"><i class="fa fa-paper-plane" aria-hidden="true"></i>Submit</button>
           </div>
@@ -1016,32 +1212,33 @@
               <button *ngIf="SoldOutProperty" class="soldOut" (click)="SoldOutPropertyClick()">Sold Out</button>
             </div>
             <div>
-              <button class="updateButton" (click)="updatePropertyDet()"><i class="fa fa-refresh" aria-hidden="true"></i>Update</button>
+              <button class="updateButton"  [disabled]="!isUpdateButtonEnabled" (click)="updatePropertyDet()"><i class="fa fa-refresh" aria-hidden="true"></i>Update</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal for Success/Failure -->
-    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Status</h5>
-            <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>{{ propertyInsStatus }}</p> <!-- Success/Failure message -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+      <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Status</h5>
+              <button type="button" class="close" aria-label="Close"  style="cursor: pointer;
+              border-radius: 5px;
+              color: red; "(click)="UpdatecloseModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>{{ propertyInsStatus }}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
   </div>
 </div>
