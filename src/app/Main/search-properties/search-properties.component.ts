@@ -1,32 +1,16 @@
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { HttpClientModule,HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { TopNavComponent } from "../top-nav/top-nav.component";
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FooterComponent } from "../footer/footer.component";
 import { TopNav1Component } from "../top-nav-1/top-nav-1.component";
 import { FormsModule } from '@angular/forms';
-interface propertyDet{
-  propertyID:string,
-  propertyimage:string,
-  propertyprice:string,
-  propertyname:string,
-  propertyaddress:string,
-  propertyarea:string,
-  propertybeds:string,
-  propertybathrooms:string,
-  propertytype:string,
-  propertytypeName:string,
-  propertyfacing:string,
-  propertyAvailability:string,
-  propertyBadgeColor:string,
-  propertyparking:string
-}
 
 @Component({
   selector: 'app-search-properties',
   standalone: true,
-  imports: [NgFor, HttpClientModule, CommonModule, FooterComponent, RouterModule, TopNav1Component,FormsModule],
+  imports: [HttpClientModule, CommonModule, FooterComponent, RouterModule, TopNav1Component,FormsModule,NgIf,NgFor],
   templateUrl: './search-properties.component.html',
   styleUrl: './search-properties.component.css'
 })
@@ -475,147 +459,134 @@ export class SearchPropertiesComponent implements OnInit {
       .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
-          
-          if (response.length > 0) {
-            this.propertydetails = response.map((property: any) => {
-              let propertyImage: string = 'assets/images/img1.png';  // Default image if no valid image found
-              let defaultPropImage: string = '';
-    
-              // Log the whole property object for inspection
-              console.log('Full Property:', property);
-    
-              // Check if 'images' exists and is an array
-              if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-                console.log('Property Images:', property.images);
-    
-                // Process the first image in the array
-                const firstImage = property.images[0];
-    
-                if (firstImage.fileData) {
-                  console.log('First Image File Data:', firstImage.fileData);
-    
-                  try {
-                    // Decode the Base64 string into raw binary data
-                    const byteCharacters = atob(firstImage.fileData);
-                    const byteArray = new Uint8Array(byteCharacters.length);
-    
-                    // Copy the binary data into the byteArray
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                      byteArray[i] = byteCharacters.charCodeAt(i);
-                    }
-    
-                    // Create a Blob from the byteArray
-                    const blob = new Blob([byteArray], { type: firstImage.mimeType });
-    
-                    // Create an object URL from the Blob
-                    propertyImage = URL.createObjectURL(blob);
-    
-                    // Log the URL for verification
-                    console.log('Generated Image URL:', propertyImage);
-                  } catch (error) {
-                    console.error('Error decoding first image data:', error);
-                  }
-                } else {
-                  propertyImage = 'assets/images/img1.png';
-                }
-              } else {
-                console.log('images property is missing, not an array, or empty.');
-              }
-    
-              // Default image handling for `defaultPropImage`
-              if (property.image && property.image.filePath) {
-                const firstImage = property.image;
-    
-                try {
-                  defaultPropImage=`https://localhost:7190${property.image.filePath}`;
-    
-                  // Log the URL for verification
-                  console.log('Generated Default Image URL:', defaultPropImage);
-                } catch (error) {
-                  console.error('Error decoding default image data:', error);
-                }
-              } else {
-                defaultPropImage = 'assets/images/img1.png';
-                console.log('images property is missing, not an array, or empty.');
-              }
   
-              // Define the property badge and color
-              let propertyBadge = '';
-              let propertyBadgeColor = '';
-    
-              if (property.propertyFor === '1') {
-                propertyBadge = 'For Buy';
-                propertyBadgeColor = 'green';
-              } else if (property.propertyFor === '2') {
-                propertyBadge = 'For Sale';
-                propertyBadgeColor = 'red';
-              } else if (property.propertyFor === '3') {
-                propertyBadge = 'For Rent';
-                propertyBadgeColor = 'blue';
-              } else if (property.propertyFor === '4') {
-                propertyBadge = 'For Lease';
-                propertyBadgeColor = 'orange';
-              }
-    
-              // Determine property facing direction
-              let PropertyFacing = '';
-              if (property.propertyFacing === '1') {
-                PropertyFacing = 'North';
-              } else if (property.propertyFacing === '2') {
-                PropertyFacing = 'South';
-              } else if (property.propertyFacing === '3') {
-                PropertyFacing = 'East';
-              } else if (property.propertyFacing === '4') {
-                PropertyFacing = 'West';
+          // Map the API response to the propertydetails array
+          this.propertydetails = response.map((property: any) => {
+            let propertyImage: string = 'assets/images/img2.jpg'; // Default image if no valid image found
+            let defaultPropImage: string = '';
+  
+            // Log the whole property object for inspection
+            console.log('Full Property:', property);
+  
+            // Check if 'images' exists and is an array
+            if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+              console.log('Property Images:', property.images);
+  
+              // Process the first image in the array
+              const firstImage = property.images[0];
+  
+              if (firstImage.fileData) {
+                console.log('First Image File Data:', firstImage.fileData);
+  
+                try {
+                  // Decode the Base64 string into raw binary data
+                  const byteCharacters = atob(firstImage.fileData);
+                  const byteArray = new Uint8Array(byteCharacters.length);
+  
+                  // Copy the binary data into the byteArray
+                  for (let i = 0; i < byteCharacters.length; i++) {
+                    byteArray[i] = byteCharacters.charCodeAt(i);
+                  }
+  
+                  // Create a Blob from the byteArray
+                  const blob = new Blob([byteArray], { type: firstImage.mimeType });
+  
+                  // Create an object URL from the Blob
+                  propertyImage = URL.createObjectURL(blob);
+  
+                  // Log the URL for verification
+                  console.log('Generated Image URL:', propertyImage);
+                } catch (error) {
+                  console.error('Error decoding first image data:', error);
+                }
               } else {
-                PropertyFacing = 'N/A';
+                propertyImage='assets/images/img2.jpg';
               }
-    
-              // Return the final object for each property
-              return {
-                // propertyID: property.propID || 'N/A',
-                // propertyname: property.propname || 'Unknown Property',
-                // propertyprice: property.propertyTotalPrice || 'Price not available',
-                // propertyaddress: property.landMark || 'Address not available',
-                // propertyarea: property.totalArea || 'Area not available',
-                // propertybeds: property.noOfBedrooms || 'Beds not available',
-                // propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
-                // propertytype: property.propertyType || 'Unknown Type',
-                // propertytypeName: this.getPropertyTypeName(property.propertyType),
-                // propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
-                // defaultPropImage: defaultPropImage,
-                // propertyparking: property.noOfParkings,
-                // propertyfacing: PropertyFacing,
-                // propertyAvailability: propertyBadge,
-                // propertyBadgeColor: propertyBadgeColor,
-                // PropertyTypeName: property.propertyTypeName
-                propertyID: property.propID || 'N/A',  // Default value if undefined
-                propertyname: property.propname || 'Unknown Property',  // Default value if undefined
-                propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
-                propertyaddress: property.address || 'Address not available',  // Default value if undefined
-                propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
-                propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
-                propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
-                propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
-                propertyfor:property.propertyFor,
-                propertytypeName: this.getPropertyTypeName(property.propertyType),
-                propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
-                propertyparking:property.noOfParkings,
-                propertyfacing:PropertyFacing,
-                propertyAvailability:propertyBadge,
-                propertyBadgeColor: propertyBadgeColor
-              };
-            });
-            console.log(this.propertydetails);
-            this.isLoading = false;
-          } else {
-            alert("No Properties Available with this Property Type.");
-            this.router.navigate(['/home']);
-          }
+            } else {
+              defaultPropImage='assets/images/img2.jpg';
+              console.log('images property is missing, not an array, or empty.');
+            }
+
+            if (property.image && property.image.filePath) {
+              const firstImage = property.image;
+  
+              try {
+                
+                defaultPropImage=`https://localhost:7190${property.image.filePath}`;
+  
+                // Log the URL for verification
+                console.log('Generated Default Image URL:', defaultPropImage);
+              } catch (error) {
+                console.error('Error decoding default image data:', error);
+              }
+            }
+            else {
+              defaultPropImage='assets/images/img2.jpg';
+              console.log('images property is missing, not an array, or empty.');
+            }
+
+            let propertyBadge = '';
+            let propertyBadgeColor = '';
+            
+            if (property.propertyFor === '1') {
+              propertyBadge = 'For Buy';
+              propertyBadgeColor = 'green';
+            } else if (property.propertyFor === '2') {
+              propertyBadge = 'For Sale';
+              propertyBadgeColor = 'red';
+            }
+            else if(property.propertyFor === '3') {
+              propertyBadge = 'For Rent';
+              propertyBadgeColor = 'blue';
+            }
+            else if(property.propertyFor === '4') {
+              propertyBadge = 'For Lease';
+              propertyBadgeColor = 'orange';
+            }
+
+            let PropertyFacing='';
+            if(property.propertyFacing === '1'){
+              PropertyFacing='North';
+            }
+            else if (property.propertyFacing === '2') {
+              PropertyFacing='South';
+            }
+            else if (property.propertyFacing === '3') {
+              PropertyFacing='East';
+            }
+            else if (property.propertyFacing === '4') {
+              PropertyFacing='West';
+            }
+            else{
+              PropertyFacing='N/A';
+            }
+            
+            return {
+              propertyID: property.propID || 'N/A', 
+              propertyname: property.propname || 'Unknown Property', 
+              propertyprice: property.propertyTotalPrice || 'Price not available',
+              propertyaddress: property.landMark || 'Address not available', 
+              propertyarea: property.totalArea || 'Area not available', 
+              propertybeds: property.noOfBedrooms || 'Beds not available', 
+              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+              propertytype: property.propertyType || 'Unknown Type', 
+              propertytypeName: this.getPropertyTypeName(property.propertyType),
+              propertyimage: propertyImage,
+              defaultPropImage:defaultPropImage,
+              propertyparking:property.noOfParkings,
+              propertyfacing:PropertyFacing,
+              propertyAvailability:propertyBadge,
+              propertyBadgeColor: propertyBadgeColor,
+              PropertyTypeName:property.propertyTypeName
+
+            };
+          });
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching property details:', error);
-          alert("An error occurred while fetching property details.");
+          this.propertydetails=[];
+          this.isLoading = false;
         }
       );
   }

@@ -563,33 +563,64 @@ selectMainVideo(video: string) {
   console.log(this.selectedVideo)
 }
 
+// enquiryformsubmit() {
+//   const data = {
+//     name: this.userEnquiryform.get('name')?.value.toString(),
+//     email: this.userEnquiryform.get('email')?.value.toString(),
+//     phone: this.userEnquiryform.get('phone')?.value.toString(),
+//     message: this.userEnquiryform.get('message')?.value.toString()
+//   };
+
+//   this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
+//     headers: { 'Content-Type': 'application/json' }
+//   }).subscribe({
+//     next: (response: any) => {
+//       alert('We have received your enquiry. Our team will contact you soon...!');
+//       this.router.navigate(['/home']);
+//       // this.sendEmail();
+//     },
+//     error: (error) => {
+//       console.error("Error details:", error);
+//       alert('Failed to submit enquiry. Try again later...!');
+//       this.router.navigate(['/home']);
+//     },
+//     complete: () => {
+//       console.log("Request completed");
+//     }
+//   });
+// }
+
+isUpdateModalOpen: boolean = false;
+propertyInsStatus: string = '';
 enquiryformsubmit() {
   const data = {
     name: this.userEnquiryform.get('name')?.value.toString(),
     email: this.userEnquiryform.get('email')?.value.toString(),
     phone: this.userEnquiryform.get('phone')?.value.toString(),
-    message: this.userEnquiryform.get('message')?.value.toString()
+    message: this.userEnquiryform.get('message')?.value.toString(),
+    propID: this.propertydetails.length > 0 ? this.propertydetails[0].propertyID : '', 
+    propName: this.propertydetails.length > 0 ? this.propertydetails[0].propertyName : '',
+    propLocation: this.propertydetails.length > 0 ? this.propertydetails[0].landMark : ''
+    
   };
 
-  this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
+  this.apiurl.post('https://localhost:7190/api/Users/UsersEnquiryForProperty', data, {
     headers: { 'Content-Type': 'application/json' }
   }).subscribe({
     next: (response: any) => {
-      alert('We have received your enquiry. Our team will contact you soon...!');
-      this.router.navigate(['/home']);
-      // this.sendEmail();
+      this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
+      this.isUpdateModalOpen = true;
     },
     error: (error) => {
       console.error("Error details:", error);
-      alert('Failed to submit enquiry. Try again later...!');
-      this.router.navigate(['/home']);
+      this.propertyInsStatus = 'Failed to submit enquiry. Try again later...!';
+      this.isUpdateModalOpen = true;
     },
     complete: () => {
       console.log("Request completed");
     }
   });
 }
-
 sendEmail() {
   const templateParams = {
     to_name: this.userEnquiryform.get('name')?.value, // Change to actual recipient name or use a form value
