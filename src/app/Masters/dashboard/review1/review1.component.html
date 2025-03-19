@@ -6,26 +6,49 @@
         <p>Ready to jump back in?</p>
       </a>
     </div>
-    <div *ngIf="!viewReviewClicked" class="reviewcard">
+    <div *ngIf="!viewReviewClicked" >
       <div class="PageHeading">
         <h5 class="text-center m-0"><b>UPLOADED REVIEWS</b></h5>
       </div>
-      <!-- Search Input -->
       <div class="filtersSearch">
-        <div class="searchreview">
-          <input type="text" class="form-control" placeholder="Search reviews..." [(ngModel)]="searchQuery">
+        <div class="input-container" >
+          <div class="searchreview">
+            <i class="fas fa-search search-icon"></i>
+            <input  style="width: 100%;"
+              type="text" 
+              class="form-control search-input" 
+              placeholder="Search reviews..." 
+              [(ngModel)]="searchQuery"
+            />
+          </div>
         </div>
-        <div class="reviewStatus">
-          <select id="pageSize" class="form-control" (change)="onWhosePropertySelectionChange($event)">
-            <option value="0">Latest</option>
-            <option value="1">Approved</option>
-            <option value="2">Declined</option>
-          </select>
+        
+        <!-- <div class="input-container">
+          <div class="reviewStatus" style="width: 100%;">
+            <select id="pageSize" class="form-control" (change)="onWhosePropertySelectionChange($event)">
+              <option value="0">Latest</option>
+              <option value="1">Approved</option>
+              <option value="2">Declined</option>
+            </select>
+          </div>
+        </div> -->
+
+        <div class="input-container">
+          <div class="reviewStatus" style="width: 100%; position: relative;">
+            <select id="pageSize" class="form-control dropdown-with-icon" (change)="onWhosePropertySelectionChange($event)">
+              <option value="0">Latest</option>
+              <option value="1">Approved</option>
+              <option value="2">Declined</option>
+            </select>
+            <i class="fa fa-caret-down dropdown-icon"></i>
+          </div>
         </div>
+        
+        
       </div>
   
       <div class="reviewstable">
-        <table class="table table-bordered">
+        <table  *ngIf="filteredreviews.length != 0"  class="table table-bordered">
           <thead>
             <tr>
               <th class="visually-hidden">PropertyID</th>
@@ -44,14 +67,15 @@
               <td data-label="User Email">{{ reviews.useremail }}</td>
               <td data-label="Review">{{ truncateText(reviews.usermessage, 20) }}</td>
               <td data-label="Status">{{reviews.reviewstatus}}</td>
+              
               <td data-label="Actions">
                 <div class="d-flex justify-content-center align-items-center h-100">
-                  <button class="btn viewbtn" (click)="viewReview(reviews.reviewId)">
+                  <button class="btn viewbtn" (click)="viewReview(reviews.reviewId)"  data-tooltip="view">
                     <i class="fa fa-eye"></i>
                   </button>
-                  <button class="btn checkbtn" (click)="editreview(reviews.reviewId)">
+                  <!-- <button class="btn checkbtn" (click)="editreview(reviews.reviewId)"  data-tooltip="Edit" >
                     <i class="fa fa-check"></i>
-                  </button>
+                  </button> -->
                 </div>
               </td>
               <td class="visually-hidden">{{reviews.reviewId}}</td>
@@ -60,9 +84,17 @@
         </table>
       
         <!-- No Reviews Message -->
-        <div *ngIf="filteredreviews.length === 0">
+        <!-- <div *ngIf="filteredreviews.length === 0">
           <p>No reviews found for the given search or filter criteria.</p>
+        </div> -->
+
+        <div *ngIf="filteredreviews.length === 0" class="NoDataFound">
+          <div class="NoDataFoundImg">
+            <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
+          </div>
+          <p>No properties found for the given search or filter criteria.</p>
         </div>
+        
       </div>
       
       <!-- Pagination Controls -->
@@ -130,6 +162,7 @@
             <label for="contactphone">Phone</label>
             <input type="text" id="contactphone" class="form-control" [value]="reviewdetails?.usernumber" readonly>
           </div>
+
         </div>
   
         <div class="formrow">
@@ -137,8 +170,32 @@
             <label for="contactphone">Status</label>
             <input type="text" id="contactphone" class="form-control" [value]="reviewdetails?.status" readonly>
           </div>
+          <!-- <div class="form-group">
+            <label for="contactphone">Rating</label>
+            <input type="text" id="contactphone" class="form-control" [value]="reviewdetails?.rating" readonly>
+          </div> -->
+          <!-- <div class="rating">
+            <p><strong>Rating:</strong> {{ reviewdetails?.rating }} / 5</p> 
+            <div class="stars">
+              <span *ngFor="let star of stars; let i = index" [class.filled]="i < reviewdetails.rating">
+                <i class="fa fa-star"></i>
+              </span>
+            </div>
+          </div> -->
+          <div class="stars">
+            <p><strong>Rating:</strong>
+            <span *ngFor="let star of stars; let i = index" 
+                  [class.filled]="i < reviewdetails.rating" 
+                  class="star">
+                <i class="fa fa-star"></i>
+            </span>
+            </p>
         </div>
-    
+        </div>
+
+
+        
+        
         <div class="form-group">
           <label for="contactMessage">Message</label>
           <textarea id="contactMessage" class="form-control" rows="4" [value]="reviewdetails?.usermessage" readonly></textarea>

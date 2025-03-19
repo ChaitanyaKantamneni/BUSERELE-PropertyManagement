@@ -155,7 +155,6 @@
     background-color: #2495FD;
     color: white;
     border: none;
-    /* padding: 10px 20px; */
     margin: 5px;
     border-radius: 5px;
     cursor: pointer;
@@ -165,48 +164,48 @@
     background-color: #0056b3;
   }
   
-  /* General reset to ensure no unexpected margins or paddings */
   ul.AvailabilityOptions-row {
     padding: 0;
     margin: 0;
     list-style-type: none;
-    display: flex;          /* Use flexbox for horizontal alignment */
-    align-items: center;    /* Vertically center the radio button and label */
+    display: flex;        
+    align-items: center;    
+  }
+  ul.AvailabilityOptions-row label {
+    position: relative; 
+    top: 6px;            
   }
   
   .availability-option {
-    display: flex;          /* Align radio buttons and labels horizontally */
-    align-items: center;    /* Vertically center the radio button and label */
-    margin-right: 20px;     /* Space between the radio buttons */
+    display: flex;          
+    align-items: center;   
+    margin-right: 20px;    
   }
   
   .availability-option input[type="radio"] {
-    margin-right: 8px;      /* Space between the radio button and the label */
-    cursor: pointer;       /* Make the radio button clickable */
+    margin-right: -7px;   
+    cursor: pointer;      
   }
   
   .availability-option label {
     position: relative;
-    font-size: 16px;        /* Default font size */
-    color: #333;            /* Default color for labels */
-    opacity: 1;             /* Make sure label is visible */
-    pointer-events: auto;   /* Allow interaction with the label */
-    transition: none;       /* Disable any transitions */
-    margin: 0;              /* Remove any default margin */
+    font-size: 16px;      
+    color: #333;           
+    opacity: 1;             
+    pointer-events: auto;  
+    transition: none;       
+    margin: 0;              
   }
-  
-  
-  
+
   .amenity-row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;  /* Ensure the checkboxes are evenly distributed */
-    gap: 10px; /* Add space between items */
+    justify-content: space-evenly;  
+    gap: 10px; 
   }
   .singleamenity {
     flex: 1 1 30%;  
     min-width: 200px; 
-    /* margin-bottom: 10px; */
     box-sizing: border-box;
   }
   
@@ -224,9 +223,6 @@
   .propertyAminities .singleaminity{
     width: 32%;
   }
-  
-  
-  
   .updatestatusbuttons{
     display: flex;
     justify-content: center;
@@ -258,7 +254,8 @@
   
   .PageHeading{
     width: 100%;
-    background-color: #e8e8e8;
+    /* background-color: #e8e8e8; */
+    background-color: #8cc8ffd1;
     display: flex;
     align-items: center;
     padding: 10px;
@@ -272,43 +269,32 @@
   form{
     padding: 20px 30px;
   }
-  /* .form-group label{
-    font-family: 'Roboto', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  
-  
-  .form-group input,.form-group textarea{
-    border: none;
-    border-bottom: 1px solid gray;
-    font-family: 'Roboto', sans-serif;
-    font-size: 11px;
-    border-radius: 0px;
-  }
-  
-  .form-group input:focus{
-    border-bottom: 1px solid blue;
-    outline: none; 
-  } */
-  
   .input-container {
     position: relative;
     margin-top: 20px;
   }
-  
+
+  .input-container{
+    position: relative; 
+  }
+
+  .select {
+    width: 100%;
+    padding-right: 30px;
+  }
+
+  .dropdown-icon {
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #999; 
+    font-size: 18px; 
+  }
   
   
   .form-group input,.form-group textarea,.form-group select{
-    /* width: 100%;
-    padding: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid gray; */
+   
     border: none;
     border-bottom: 1px solid gray;
     font-family: 'Roboto', sans-serif;
@@ -332,14 +318,13 @@
     transition: 0.2s ease-in-out;
     opacity: 0;
   }
-  
-  /* Label animation when focused or the input has content */
+  /* select:focus+label,
+  select:not(:placeholder-shown) + label */
   input:focus + label,
   input:not(:placeholder-shown) + label,
   textarea:focus+label,
-  textarea:not(:placeholder-shown) + label,
-  select:focus+label,
-  select:not(:placeholder-shown) + label{
+  textarea:not(:placeholder-shown) + label
+  {
       top: -10px;
       font-family: 'Roboto', sans-serif;
       font-size: 11px;
@@ -347,27 +332,66 @@
       color: black;
       opacity: 1;
   }
-  
-  /* Make label hidden when input is empty and not focused */
   input:placeholder-shown + label,
-  textarea:placeholder-shown + label,
-  select:placeholder-shown+label {
+  textarea:placeholder-shown + label
+  {
       opacity: 0;
   }
+
+  select.filled + label,
+  select:focus + label {
+  top: -10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: black;
+  opacity: 1; 
+}
+
+select:not(:focus):not(.filled) + label {
+  opacity: 0;
+}
+
   
-  input[type="date"] {
-    padding: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-  }
+
+
+input[type="date"] {
+  padding: .375rem .75rem;
+  font-size: 16px;
+  color: #333;
   
-  input[type="date"]:focus + label,
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  top: -10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: black;
+  opacity: 1;
+}
+input:placeholder-shown + label {
+  opacity: 0;
+}
+
+input[type="date"]:valid + label {
+  top: -10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: black;
+  opacity: 1;
+}
+  /* input[type="date"]:focus + label,
   input[type="date"]:valid + label {
     top: -10px;
     font-size: 12px;
     color: black;
     opacity: 1;
-  }
+  } */
+  
+
   
   a{
     text-decoration: none;
@@ -395,8 +419,10 @@
   
   table thead tr th{
     text-align: center;
-  }
+    background-color: #1E3A5F;
+    color: white;
   
+  }
   table tbody{
     font-family:'Roboto', sans-serif;
     font-size: 10px;
@@ -528,47 +554,47 @@
 
   .custom-quill-editor {
     width: 100%;
-    height: auto !important; /* Ensure height adjusts dynamically */
-    padding: 10px !important; /* Ensure consistent padding */
+    height: auto !important;
+    padding: 10px !important; 
     border-radius: 8px;
     background-color: #fff;
-    font-size: 1.1em !important; /* Set font size */
+    font-size: 1.1em !important; 
     box-sizing: border-box;
-    overflow: hidden !important; /* Avoid unnecessary scrollbars */
+    overflow: hidden !important;
 }
 
 .custom-quill-editor .ql-editor {
-  white-space: normal; /* Allow word wrapping */
-  word-wrap: break-word; /* Prevent breaking words unnecessarily */
-  overflow-wrap: break-word; /* Cross-browser compatibility */
+  white-space: normal; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
   line-height: 1.6;
   font-size: 14px;
-  hyphens: none; /* Prevent automatic hyphenation */
+  hyphens: none; 
 }
 
 
 .ql-container {
-    height: auto !important; /* Automatically resize container */
+    height: auto !important;
     box-sizing: border-box;
-    padding: 0 !important; /* Avoid extra padding */
+    padding: 0 !important; 
 }
 
 .ql-container .ql-editor {
-    line-height: 1.5 !important; /* Consistent line spacing */
-    white-space: pre-wrap !important; /* Preserve text formatting and spacing */
-    word-break: break-word !important; /* Prevent unnecessary word breaking */
-    word-wrap: break-word !important; /* Handle wrapping of long words */
-    outline: none !important; /* Remove focus outline */
-    height: auto !important; /* Dynamic height adjustment */
+    line-height: 1.5 !important; 
+    white-space: pre-wrap !important; 
+    word-break: break-word !important; 
+    word-wrap: break-word !important;
+    outline: none !important;
+    height: auto !important;
 }
 
 .custom-quill-editor .ql-editor span {
-  white-space: nowrap; /* Ensure no breaking for specific parts */
-  display: inline; /* Keep elements inline */
+  white-space: nowrap; 
+  display: inline; 
 }
 
 .no-wrap {
-  white-space: nowrap; /* Add this class to prevent word breaks on certain phrases */
+  white-space: nowrap;
 }
   
   @media (max-width: 768px){
@@ -589,7 +615,7 @@
     }
   
     .table thead {
-        display: none;  /* Hide the header on small screens */
+        display: none;  
       }
     
       .table tbody {
@@ -602,8 +628,8 @@
       }
     
       .table tbody td {
-        width: 100%; /* Make each cell take full width */
-        padding: 15px 8px 8px 8px; /* Add more top padding for spacing */
+        width: 100%; 
+        padding: 15px 8px 8px 8px; 
         box-sizing: border-box;
         position: relative;
         display: block;
@@ -611,7 +637,6 @@
       }
     
       .table tbody td::before {
-        /* Add labels to the cell for small screens */
         content: attr(data-label);
         font-weight: bold;
         position: absolute;
@@ -620,14 +645,13 @@
         color: #555;
         margin-right: 10px;
         text-transform: uppercase;
-        font-size: 12px;  /* Smaller font size for labels */
-        z-index: 1; /* Ensure the label stays on top */
+        font-size: 12px;  
+        z-index: 1; 
       }
     
-      /* Ensure content doesn't overlap */
       .table tbody td {
-        padding-left: 20px; /* Give more space for the label */
-        padding-top: 25px; /* Adjust padding for better content display */
+        padding-left: 20px;
+        padding-top: 25px; 
       }
     
       .table tbody td .btn {
@@ -646,11 +670,103 @@
       }
 
       .singleamenity {
-        flex: 1 1 45%;  /* Adjust for smaller screens */
+        flex: 1 1 45%; 
         min-width: 150px;
       }
     
       .amenity-row {
-        justify-content: center; /* Center align on smaller screens */
+        justify-content: center; 
       }
   }
+
+
+  .back-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .back-button {
+    background-color: #007bff; 
+    color: #fff; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease; 
+  }
+  
+  .back-button i {
+    margin-right: 8px;
+    font-size: 18px;
+  }
+  
+  .back-button:hover {
+    background-color: #0056b3; 
+    transform: translateY(-2px); 
+  }
+  
+  .back-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); 
+  }
+  
+  
+  .back-button:active {
+    background-color: #004085; 
+    transform: translateY(0); 
+  }
+  
+
+
+.clear-btn {
+  background-color :red; 
+  color: white; 
+  padding: 6px 7px; 
+  font-size: 13px; 
+  border: none; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+  margin-left: 11px;
+}
+
+
+
+.clear-btn:active {
+  background-color: red; 
+  transform: scale(0.98); 
+}
+
+
+
+
+button[data-tooltip] {
+  position: relative;
+}
+
+button[data-tooltip]:hover::after {
+  content: attr(data-tooltip);  
+  position: absolute;
+  top: -30px;  
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  visibility: hidden; 
+  pointer-events: none;
+}
+
+button[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+}

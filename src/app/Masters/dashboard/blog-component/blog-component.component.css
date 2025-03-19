@@ -2,20 +2,43 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    /* height: 100vh; */
+    margin-top: 30px;
 }
 
 .cardmain{
     width: 100%;
     height: auto;
+    
 }
+
+.statusButtons .decline{
+  margin-right: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.statusButtons .approve{
+  margin-right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+
 
 .PageHeading{
     width: 100%;
-    background-color: #e8e8e8;
+    /* background-color: #e8e8e8; */
+    background-color: #8cc8ffd1;
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 1px;
     border-radius: 10px;
   }
   
@@ -24,9 +47,32 @@
   }
   
   
+a {
+  color: black;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+}
+
+a h5 {
+  font-family: 'FangSong', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0px;
+  color: black;
+}
+
+a p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+  color: black;
+}
   .editor-container {
-    height: 500px;
-    max-width: 800px;
+    /* height: 500px;
+    max-width: 800px; */
+
+    height: 380px;
+    max-width: 775px;
     margin: 40px auto;  
     padding: 30px;
     border-radius: 10px;
@@ -34,19 +80,26 @@
     transition: all 0.3s ease-in-out;
     box-sizing: border-box;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    position: relative;
 }
   
   .editor-label {
     position: absolute;
     top: 50%; 
-    left: 0;
+    left: 7px;
     font-size: 1.1em;
     color: #444;
     font-weight: 600;
     transition: top 0.3s ease, font-size 0.3s ease;
     pointer-events: none;
     transform: translateY(-50%); 
+    
   }
+
+  .backLabel{
+    width: fit-content;
+  }
+  
   
   .editorblog-label {
     position: absolute;
@@ -68,27 +121,15 @@
   }
   
   .form-control {
-    /* width: 100%;
-    padding: 12px;
-    padding-left: 0;
-    padding-top: 0px;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    background-color: transparent;
-    font-size: 1.1em;
-    transition: border-color 0.3s ease, padding-top 0.3s ease; */
     width: 100%;
-    /* padding: 12px; */
-    /* padding-left: 0; */
-    /* padding-top: 0px; */
-    border: none;
     border-bottom: 1px solid #ccc;
-    /* background-color: transparent; */
     font-size: 1.1em;
     transition: border-color 0.3s ease, padding-top 0.3s ease;
-    border-radius: 0px;
+    border-radius: 10px;
     margin-bottom: 20px;
   }
+
+  
   
   .form-control:focus {
     border-color: #42a5f5;
@@ -104,10 +145,10 @@
   
   .custom-quill-editor {
     width: 100%;
-    height: 150px;
+    height: 110px;
     padding: 2px;
     border-radius: 8px;
-    background-color: #fff;
+    /* background-color: #fff; */
     font-size: 1.1em;
     box-sizing: border-box;
   }
@@ -153,7 +194,7 @@
   }
   
   .submit-btn {
-    padding: 12px 0px;
+    padding: 8px 0px;
     background-color: #3f51b5;
     color: white;
     border: none;
@@ -161,15 +202,20 @@
     cursor: pointer;
     /* font-size: 1.1em; */
     margin-top: 0px;
-    width: 21%;
+    width: 15%;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s, cursor 0.3s;
   }
   
   .submit-btn:hover {
     background-color: #303f9f;
     transform: scale(1.05);
   }
-  
+  .submit-btn:disabled,
+.submit-btn.disabled-btn {
+  opacity: 0.5; 
+  cursor: not-allowed; /* Change cursor to default */
+}
   input[type="file"] {
     margin-top: 10px;
     padding: 12px;
@@ -199,14 +245,14 @@
   .card-body {
     display: flex;
     width: 100%;
-    height: 79%;
+    height: 82%;
     /* padding: 20px; */
   }
   
   .left-side,
   .right-side {
     width: 50%; 
-    padding: 10px;
+    padding: 18px;
   }
   
   .card-img-top {
@@ -228,6 +274,7 @@
         justify-content: end;
         align-items: center;
         flex-direction: column;
+        height: fit-content;
   }
   
   
@@ -382,17 +429,43 @@
     align-items: center;
   }
 
-  .filtersSearch{
-    display: flex;
+  /* .filtersSearch{
+    /* display: flex; *
     justify-content:space-between;
     align-items: center;
     margin: 10px 0px;
+    flex-direction: row-reverse;
   }
   
   .searchreview,.reviewStatus{
     width: 49%;
     margin: 0px;
+  } */
+  .filtersSearch {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
   }
+  
+  .searchreview,
+  .addnewButton {
+    margin-right: 15px; 
+    width: 100%;
+  }
+  
+  /* button {
+    background-color: #2495FD;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+   */
+  /* button:hover {
+    background-color: #1f7cdb;
+  } */
+  
+  
   
   .reviewStatus{
   display: flex;
@@ -456,6 +529,8 @@
   
   .table th {
     font-weight: bold;
+    background-color: #1E3A5F;
+    color: white;
   }
   
   .reviewcard,.reviewview{
@@ -465,18 +540,20 @@
     background-color: white;
     border-radius: 20px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+    
   }
 
-  .addnewButton button{
+  .addnewButton {
+    display: flex;
+    justify-content: flex-end;  
+  }
+  
+  .addnewButton button {
     background-color: #2495FD;
     color: white;
     border: none;
   }
-  
-  .addnewButton button:hover{
-    background-color: #0056b3;
-  }
-  
   .NoDataFound{
     display: flex;
     justify-content: center;
@@ -497,10 +574,6 @@
   
   @media (max-width: 768px) {
    
-    /* .editor-container {
-      width: 100%;
-      padding: 15px; 
-    } */
 
     .editor-container {
         height: auto;
@@ -604,3 +677,167 @@
       font-size: 1em; 
     }
   }
+
+  .txt-blog
+  {
+    width: 100%;
+    background-color: #e8e8e8;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  
+
+  .searchreview {
+    position: relative;
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 0px 0px 8px 33px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 10px; 
+    top: 30%;
+    transform: translateY(-50%);
+    color: black;
+    font-size: 15px;
+    pointer-events: none;
+  }
+  
+  .NoDataFound{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .NoDataFoundImg{
+    height: 180px;
+    width:250px;
+  }
+  
+
+  a{
+    text-decoration: none;
+    color:black
+  }
+  a h5{
+    font-family: fangsong;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0px;
+  }
+  a p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+  }
+
+  .backLabel{
+    width: fit-content;
+  }
+
+  table thead{
+   font-family:'Roboto', sans-serif;
+   font-size: 12px;
+  }
+
+  table thead tr th{
+    text-align: center;
+    background-color: #1E3A5F;
+    color: white;
+  }
+
+  table tbody{
+    font-family:'Roboto', sans-serif;
+    font-size: 10px;
+   }
+ 
+   table tbody tr td{
+     text-align: center;
+   }
+
+
+    .PageHeading h5{
+    padding-left: 10px;
+  }
+
+  /* form{
+    padding: 20px 30px;
+  }
+  .form-group label{
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+
+  .form-group input,.form-group textarea{
+    border: none;
+    border-bottom: 1px solid gray;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    border-radius: 0px;
+  }
+
+  .form-group input:focus{
+    border-bottom: 1px solid blue;
+    outline: none; 
+  } */
+
+/*   
+  .form-group input,.form-group textarea{
+    border: none;
+    border-bottom: 1px solid gray;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    border-radius: 0px;
+  } */
+
+  /* a h5{
+    font-family: fangsong;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0px;
+  }
+  a p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+  } */
+
+
+
+button[data-tooltip] {
+  position: relative;
+}
+
+button[data-tooltip]:hover::after {
+  content: attr(data-tooltip);  
+  position: absolute;
+  top: -30px;  
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  visibility: hidden; 
+  pointer-events: none;
+}
+
+button[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+}

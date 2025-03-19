@@ -162,9 +162,12 @@
                             <button class="btn changepswd" (click)="changepassword()">Change Password</button>
                             <button class="btn deactivate" (click)="deactivateAccount()">Deactivate Account</button>
                         </div>
-                        <div [ngClass]="changePasswordClicked ? 'w-100 text-align-end' : 'w-none'" class="updatestatusbuttons2">
+                        <!-- <div [ngClass]="changePasswordClicked ? 'w-100 text-align-end' : 'w-none'" class="updatestatusbuttons2">
                             <button class="btn" (click)="updateProfileDet()">Update Details</button>
-                        </div>
+                        </div> -->
+                        <div [ngClass]="changePasswordClicked ? 'w-100 text-align-end' : 'w-none'" class="updatestatusbuttons2">
+                            <button class="btn" [disabled]="!isFormChanged" (click)="updateProfileDet()">Update Details</button>
+                          </div>
                     </div>
                 </form>
                 <form *ngIf="changePasswordClicked" [formGroup]="profilePasswordChangeform">
@@ -181,12 +184,7 @@
                                 <label for="fname">Old Password</label>
                             </div>
                         </div>
-                        <!-- <div class="form-group">
-                            <div class="input-container">
-                                <input id="lname" type="text" placeholder="Last Name" formControlName="lname" class="form-control" />
-                                <label for="lname">Last Name</label>
-                            </div>
-                        </div> -->
+                      
                     </div>
 
                     <div class="formrow">

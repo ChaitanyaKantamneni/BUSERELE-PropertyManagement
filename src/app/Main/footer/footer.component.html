@@ -1,80 +1,35 @@
-<!-- <footer class="footer">
-    <div class="container">
-        <div class="footernewsletter d-flex justify-content-between align-items-center m-0">
-            <h5 class="w-50">Newletter Signup</h5>
-            <div class="d-flex justify-content-end align-items-center w-50">
-                <input class="w-50" type="text" placeholder="Enter your email">
-                <button class="w-25">SignUp</button>
-            </div>
-        </div>
-        <div class="footer-content d-flex justify-content-between align-items-center">
-            <div class="footerlogo">
-                <div class="logo">
-                    <img class="w-100" src="assets/images/logo_1.png" alt="Company Logo">
-                </div>
-                <div class="companyDescription">
-                    <p>BUSERELE PROPERTY MANAGEMENT SYSTEM works with landlords, investors, real estate agents, and institutional investors to manage their Properties and real estate portfolios.</p>
-                </div>
-            </div>
-            <div class="footernavs d-flex justify-content-center">
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a routerLink="/about">About Us</a></li>
-                        <li><a routerLink="/contact">Contact Us</a></li>
-                        <li><a routerLink="/">Home</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Get In Touch</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Plot No. 3, 3rd Floor, Sri Sai Enclave,
-                    Opp: Tata Service Center, Old Bowenpally, HYDERABAD, INDIA</p>
-                    <p><i class="fas fa-phone-alt"></i> 000-000-0000</p>
-                    <p><i class="fas fa-envelope"></i> info.gvrinfosystem.com</p>
-                    <div class="social-icons">
-                        <a routerLink="#"><i class="fab fa-twitter"></i></a>
-                        <a routerLink="#"><i class="fab fa-facebook-f"></i></a>
-                        <a routerLink="#"><i class="fab fa-youtube"></i></a>
-                        <a routerLink="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!-- <div class="footer-section">
-            <h3>Photo Gallery</h3>
-            <div class="photo-gallery">
-                <img src="assets/images/villa1.avif" alt="">
-                <img src="assets/images/villa2.avif" alt="">
-                <img src="assets/images/villa3.avif" alt="">
-                <img src="assets/images/villa4.jpg" alt="">
-                <img src="../assets/images1/about US.png" alt="">
-                <img src="../assets/images1/about US.png" alt="">
-            </div>
-            </div> -->
-
-<!--             
-            <div class="footer-section">
-            <h3>Newsletter</h3>
-            <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
-            <div class="newsletter">
-                <input type="email" placeholder="Your email">
-                <button>SignUp</button>
-            </div>
-            </div> --
-        </div>
-        <div class="footer-bottom d-flex justify-content-center align-items-center">
-            <p>© gvrinfosystems, All Right Reserved. Designed By </p>
-        </div>
-    </div>
-</footer> -->
 
 <footer class="footer">
     <div class="container">
         <div class="footernewsletter d-flex flex-wrap justify-content-between align-items-center m-0">
             <h5 class="w-sm-50 mb-3 mb-sm-0">Newsletter Signup</h5>
             <div class="d-flex justify-content-end align-items-center w-sm-auto">
-                <input type="email" placeholder="Enter your email">
-                <button>SUBSCRIBE</button>
-            </div>
+                <input type="email" id="email" [(ngModel)]="email" placeholder="Enter your email" required />
+                <button (click)="subscribeMail()">SUBSCRIBE</button>
+                <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Status</h5>
+                          <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>{{ subscriptionStatus }}</p> 
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <img src="assets/images/buserelelog.jpg" alt="Buserele Logo" class="modal-image" /> -->
+                          <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                          
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              
+              
+              
         </div>
         <div class="footer-content d-flex flex-wrap justify-content-between align-items-start">
             <div class="footerlogo">
@@ -92,13 +47,31 @@
                         <li><a routerLink="/about-us">About Us</a></li>
                         <li><a routerLink="/contact-us">Contact Us</a></li>
                         <li><a routerLink="/">Home</a></li>
+                        <li><a routerLink="/privacy">Privacy Policy</a></li>
+
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Get In Touch</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Plot No. 3, 3rd Floor, Sri Sai Enclave, Opp: Tata Service Center, Old Bowenpally, HYDERABAD, INDIA</p>
-                    <p><i class="fas fa-phone-alt"></i> +91 8688802505</p>
-                    <p><i class="fas fa-envelope"></i> info&#64;buserele.com</p>
+                    <p>
+                        <i class="fas fa-map-marker-alt" (click)="openGoogleMaps()"></i>
+                        Plot No. 3, 3rd Floor, Sri Sai Enclave, Opp: Tata Service Center, Old Bowenpally, HYDERABAD, INDIA
+                      </p>
+                      
+                    <!-- <p><i class="fas fa-map-marker-alt"></i> Plot No. 3, 3rd Floor, Sri Sai Enclave, Opp: Tata Service Center, Old Bowenpally, HYDERABAD, INDIA</p> -->
+                    <!-- <p><i class="fas fa-phone-alt"></i> +91 8688802505</p>
+                    <p><i class="fas fa-envelope"></i> info&#64;buserele.com</p> -->
+                    <p>
+                        <i class="fas fa-phone-alt" (click)="makeCall()"></i>
+                        <span>+91 8688802505</span> <!-- Display number here -->
+                      </p>
+                      
+                      <p>
+                        <i class="fas fa-envelope" style="padding: 0px 4px 0px 0px;" (click)="openEmailClient()"></i>
+                        <span>info&#64;buserele.com</span> <!-- Display email here -->
+                      </p>
+                      
+                      
                     <div class="social-icons">
                         <a href="https://x.com/buserele" target="_blank"><i class="fab fa-twitter"></i></a>
                         <!-- <a routerLink="#"><i class="fab fa-facebook-f"></i></a> -->
@@ -113,9 +86,36 @@
                 </div>
             </div>
         </div>
-        <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
+        <!-- <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
             <p>© GVR INFOSYSTEMS PVT LTD 2025, All Rights Reserved.</p>
+        </div> -->
+
+        
+        <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
+    <p>© <a href="https://www.gvrinfosystems.com/" target="_blank" rel="noopener noreferrer">GVR INFOSYSTEMS PVT LTD</a> 2025, All Rights Reserved.</p>
+
+  </div>
+  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" style="color: black;">Status</h5>
+          <button type="button" class="close" aria-label="Close" style="cursor: pointer;
+          border-radius: 5px;
+          color: red;margin-left: 82%;" (click)="UpdatecloseModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body "  style="color: black">
+          <p>{{ subscriptionStatus }}</p> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+        </div>
+      </div>
     </div>
+  </div>
+    </div>
+    
 </footer>
 

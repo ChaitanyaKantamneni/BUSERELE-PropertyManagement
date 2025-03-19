@@ -70,17 +70,6 @@ export class HomeComponent implements OnInit {
     propertiesCount:''
   }
 ]
-// propertydetails:any[]=[{
-//     propertyID:'',
-//     propertyimage:'',
-//     propertyprice:'',
-//     propertyname:'',
-//     propertyaddress:'',
-//     propertyarea:'',
-//     propertybeds:'',
-//     propertybathrooms:'',
-//     propertytype:''
-// }]
 
 propertydetails: any[] = [];
 
@@ -108,17 +97,13 @@ showMore(review: any): void {
 
 loadPropertiesCount(): void {
   this.apiurl.get("https://localhost:7190/api/Users/getPropertiesCount").subscribe(
-    (data: any) => {  // Use `any` here instead of `Object`
-      // Check if `data` is an array and process it accordingly
+    (data: any) => {  
       if (Array.isArray(data)) {
-        // Iterate through propertytypes and update the propertiesCount based on the API response
         this.propertytypes.forEach(type => {
           const foundType = data.find(item => item.propertyType === type.propertyType);
           if (foundType) {
-            // If the propertyType exists in the API response, update the propertiesCount
             type.propertiesCount = foundType.count;
           } else {
-            // If no count is found for this propertyType, optionally set it to 0 or leave it as is
             type.propertiesCount = 0;
           }
         });
@@ -135,11 +120,9 @@ loadPropertiesCount(): void {
 
 onKeywordChange() {
   if (this.keyword && this.keyword.length > 2) {
-    // Make an HTTP GET request to your API endpoint with the keyword as a query parameter
     this.apiurl.get<string[]>(`https://localhost:7190/api/Users/GetKeywordSuggestions?keyword=${encodeURIComponent(this.keyword)}`)
       .subscribe(
         (response) => {
-          // Directly assign the response as suggestions
           this.suggestions = response;
         },
         (error) => {
@@ -148,7 +131,6 @@ onKeywordChange() {
         }
       );
   } else {
-    // Clear suggestions if the keyword is less than or equal to 2 characters
     this.suggestions = [];
   }
 }
@@ -156,15 +138,13 @@ onKeywordChange() {
 
 selectSuggestion(suggestion: string) {
   this.keyword = suggestion;
-  this.suggestions = []; // Hide suggestions after selection
+  this.suggestions = []; 
 }
 
 searchclick(){
   if (this.selectedPropertyType && this.keyword) {
-    // Navigate if both selected property type and keyword are provided
     this.routes.navigate(['/search-properties', this.selectedPropertyType, this.keyword]);
   } else if (this.selectedPropertyType || this.keyword) {
-    // Navigate if at least one is provided
     this.routes.navigate(['/search-properties', this.selectedPropertyType || 'defaultType', this.keyword || 'defaultKeyword']);
   } else {
     alert('Please select a property type or enter a keyword.');
@@ -178,18 +158,14 @@ loadPropertyDetails() {
       (response: any[]) => {
         console.log('API Response:', response);
 
-        // Map the API response to the propertydetails array
         this.propertydetails = response.map((property: any) => {
-          let propertyImage: string = ''; // Default image if no valid image found
+          let propertyImage: string = '';
 
-          // Log the whole property object for inspection
           console.log('Full Property:', property);
 
-          // Check if 'images' exists and is an array
           if (property.images && Array.isArray(property.images) && property.images.length > 0) {
             console.log('Property Images:', property.images);
 
-            // Process the first image in the array
             const firstImage = property.images[0];
 
             if (firstImage.fileData) {
@@ -203,13 +179,10 @@ loadPropertyDetails() {
                   byteArray[i] = byteCharacters.charCodeAt(i);
                 }
 
-                // Create a Blob from the byteArray
                 const blob = new Blob([byteArray], { type: firstImage.mimeType });
 
-                // Create an object URL from the Blob
                 propertyImage = URL.createObjectURL(blob);
 
-                // Log the URL for verification
                 console.log('Generated Image URL:', propertyImage);
               } catch (error) {
                 console.error('Error decoding first image data:', error);
@@ -221,17 +194,16 @@ loadPropertyDetails() {
             console.log('images property is missing, not an array, or empty.');
           }
 
-          // Return the final object for each property
           return {
-            propertyID: property.propID || 'N/A',  // Default value if undefined
-            propertyname: property.propname || 'Unknown Property',  // Default value if undefined
-            propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
-            propertyaddress: property.address || 'Address not available',  // Default value if undefined
-            propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
-            propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
-            propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
-            propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
-            propertyimage: propertyImage  // Set the first converted Blob URL or default image URL
+            propertyID: property.propID || 'N/A',  
+            propertyname: property.propname || 'Unknown Property', 
+            propertyprice: property.propertyTotalPrice || 'Price not available',
+            propertyaddress: property.address || 'Address not available', 
+            propertyarea: property.totalArea || 'Area not available',  
+            propertybeds: property.noOfBedrooms || 'Beds not available',  
+            propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  
+            propertytype: property.propertyType || 'Unknown Type', 
+            propertyimage: propertyImage  
           };
         });
 

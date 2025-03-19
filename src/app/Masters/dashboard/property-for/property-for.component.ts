@@ -1,7 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-property-for',
@@ -28,7 +28,8 @@ export class PropertyForComponent implements OnInit {
 
   aminitiesform:FormGroup= new FormGroup({
     id: new FormControl(''),
-    name:new FormControl(''),
+    // name:new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     description:new FormControl('')
   })
 
@@ -169,6 +170,8 @@ export class PropertyForComponent implements OnInit {
         if(response.StatusCode==200){
           this.AminityInsStatus = response.Message;
           this.isModalOpen = true;
+          this.aminitiesform.reset(); 
+          this.aminitiesform.markAsPristine();
         }
         this.aminitiesform.reset();
       },
@@ -190,29 +193,17 @@ export class PropertyForComponent implements OnInit {
     });
   }
 
-  updateAminitie() {
-    const data = {
-      PropertyTypeID: this.aminitiesform.get('id')?.value,
-      Name: this.aminitiesform.get('name')?.value,
-      Description: this.aminitiesform.get('description')?.value || null,
-      AminitieIcon:this.aminitiesform.get('icon')?.value || null,
-      CreatedBy: 0,  // Example: pass a default value
-      CreatedIP: "", // Or current IP if needed
-      CreatedDate: null,  // If not needed, can be null
-      ModifiedBy: 0,  // Pass a default or current user ID
-      ModifiedIP: "",  // Pass current IP address or null
-      ModifiedDate: new Date().toISOString() // Current timestamp for update
-    };
 
+  updatePropertyFor() {
     const propertyTypeID: string = (this.aminitiesform.get('id')?.value).trim();
-
-    this.apihttp.put(`https://localhost:7190/api/Users/GetPropertyTypeById/${propertyTypeID}`, data, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
+    const Name:string= this.aminitiesform.get('name')?.value;
+    const Description:string= new String(this.aminitiesform.get('description')?.value).toString();
+    this.apihttp.put(`https://localhost:7190/api/Users/updatePropertyTypes/${propertyTypeID}?Name=${encodeURIComponent(Name)}&Description=${encodeURIComponent(Description)}`, {}).subscribe({
       next: (response: any) => {
         if (response.statusCode === 200) {
           this.AminityInsStatus = response.message;
           this.isModalOpen = true;
+          this.aminitiesform.markAsPristine(); 
         }
       },
       error: (error) => {
@@ -224,7 +215,7 @@ export class PropertyForComponent implements OnInit {
         console.log('Request completed.');
       }
     });
-}
+ }
 
 backclick(event: Event): void {
   event.preventDefault();
@@ -232,6 +223,8 @@ backclick(event: Event): void {
   if (this.addnewclickClicked || this.viewAminitieClicked) {
     this.addnewclickClicked = false;
     this.viewAminitieClicked=false;
+    //this.aminitiesform.markAsPristine(); 
+    this.aminitiesform.reset();
   }
 }
 
@@ -240,10 +233,8 @@ closeModal() {
   this.isModalOpen = false;
 }
 
-// Handle "OK" button click
 handleOk() {
   this.closeModal();
-  // Execute your actions
   this.addnewclickClicked = false;
   this.viewAminitieClicked = false;
   this.getreviews();
