@@ -34,7 +34,9 @@ export class InactivityService {
 
   private logout() {
     localStorage.clear();
-    this.router.navigate(['/signin']);
+    // this.router.navigate(['/signin']); 
+    this.router.navigate(['/home']);
+
   }
 }
 

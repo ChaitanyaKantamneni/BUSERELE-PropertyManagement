@@ -4,10 +4,12 @@ import { Component } from '@angular/core';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
+import { ApiServicesService } from '../../api-services.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  providers: [ApiServicesService],
   imports: [CommonModule, RouterModule,HttpClientModule,FormsModule,ReactiveFormsModule],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
@@ -15,32 +17,20 @@ import { filter } from 'rxjs';
 export class FooterComponent {
   
 
-  constructor(private router: Router,private http: HttpClient) {
+  constructor(private router: Router,private http: HttpClient,private apiurls: ApiServicesService) {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd)
       )
       .subscribe(() => {
-        window.scrollTo(0, 0);  // Scroll to top after navigation
+        window.scrollTo(0, 0);
       });
   }
   showEmailSelector = false;
-  // makeCall() {
-  //   const phoneNumber = "+918688802505";
-  //   window.location.href = `tel:${phoneNumber}`;
-  // }
-
-  // openEmailClient() {
-  //   const email = "info@buserele.com";
-  //   window.location.href = `mailto:${email}`;
-  // }
-
   makeCall() {
     const phoneNumber = "+918688802505";
     window.location.href = `tel:${phoneNumber}`;
   }
-
-
   openEmailClient() {
     const email = "info@buserele.com";
     window.location.href = `mailto:${email}`;
@@ -57,27 +47,9 @@ export class FooterComponent {
     
     window.open(googleMapsUrl, '_blank');
   }
-  // email: string = '';
   email: string = '';
   isUpdateModalOpen: boolean = false;
   subscriptionStatus: string = '';
-  // subscribeMail() {
-  //   const requestBody = {
-  //     email: this.email
-  //   };
-
-  //   this.http.post(`https://localhost:7190/api/Users/subscribe`, requestBody)
-  //     .subscribe({
-  //       next: (response) => {
-  //         console.log('Subscription successful!', response);
-  //         // Show a success message or redirect the user if needed
-  //       },
-  //       error: (err) => {
-  //         console.error('Subscription failed!', err);
-  //         // Handle the error (show a user-friendly message)
-  //       }
-  //     });
-  // }
 
   subscribeMail(): void {
     if (!this.email) {
@@ -86,15 +58,30 @@ export class FooterComponent {
       return;
     }
 
-    const requestBody = { email: this.email };
+    // const requestBody = { email: this.email };
     
-    this.http.post(`https://localhost:7190/api/Users/subscribe`, requestBody).subscribe({
-      next: (response) => {
-        console.log('Subscription successful!', response);
-        this.subscriptionStatus = 'Subscription successful!';
-        this.isUpdateModalOpen = true;
-        this.email = '';
-      },
+    // this.http.post(`https://localhost:7190/api/Users/subscribe`, requestBody).subscribe({
+    //   next: (response) => {
+    //     console.log('Subscription successful!', response);
+    //     this.subscriptionStatus = 'Subscription successful!';
+    //     this.isUpdateModalOpen = true;
+    //     this.email = '';
+    //   },
+    const createdBy = localStorage.getItem('email') || 'Unknown User';  // ✅ Get from localStorage
+
+    const requestBody = {
+      email: this.email,
+      createdBy: createdBy  
+    };
+    // const requestBody = { email: this.email };
+
+  this.apiurls.post('subscribe', requestBody).subscribe({
+    next: (response) => {
+      console.log('Subscription successful!', response);
+      this.subscriptionStatus = 'Subscription successful!';
+      this.isUpdateModalOpen = true;
+      this.email = '';
+    },
       error: (err) => {
         console.error('Subscription failed!', err);
         this.subscriptionStatus = 'Subscription failed. Please try again.';

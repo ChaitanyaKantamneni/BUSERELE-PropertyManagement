@@ -33,15 +33,33 @@
 }
 
 .reviewStatus button{
+  /* background-color: #2495FD;
+  color: white;
+  border: none; */
   background-color: #2495FD;
   color: white;
   border: none;
+  border-radius: 8px; 
+  padding: 10px 20px;
+  font-size: 15px; 
+  font-weight: bold;    
+  text-transform: uppercase; 
+  cursor: pointer;   
+  transition: all 0.3s ease; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 .reviewStatus button:hover{
+  /* background-color: #0056b3; */
   background-color: #0056b3;
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
 
+.reviewStatus button:focus {
+  outline: none; 
+  box-shadow: 0 0 0 4px rgba(37, 123, 255, 0.5); 
+}
 .reviewstable{
   height: auto;
   width: 100%;
@@ -54,19 +72,12 @@
     border-right: 0.5px solid black;
     border-radius: 0px;
 }
-/* 
-.viewbtn:hover{
-    background-color: blue;
-} */
 
 .checkbtn{
     padding: 0px 10px;
     border-radius: 0px;
 }
 
-/* .checkbtn:hover{
-    background-color: green;
-} */
 
 .table {
     width: 100%;
@@ -160,43 +171,17 @@
   form{
     padding: 20px 30px;
   }
-  /* .form-group label{
-    font-family: 'Roboto', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-  }
   
-
-  .form-group input,.form-group textarea{
-    border: none;
-    border-bottom: 1px solid gray;
-    font-family: 'Roboto', sans-serif;
-    font-size: 11px;
-    border-radius: 0px;
-  }
-
-  .form-group input:focus{
-    border-bottom: 1px solid blue;
-    outline: none; 
-  } */
 
   .input-container {
     position: relative;
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
   
   
   
   .form-group input,.form-group textarea{
-    /* width: 100%;
-    padding: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid gray; */
+   
     border: none;
     border-bottom: 1px solid gray;
     font-family: 'Roboto', sans-serif;
@@ -221,12 +206,11 @@
     opacity: 0;
   }
   
-  /* Label animation when focused or the input has content */
   input:focus + label,
   input:not(:placeholder-shown) + label,
   textarea:focus+label,
   textarea:not(:placeholder-shown) + label {
-      top: -10px;
+      top: 4px;
       font-family: 'Roboto', sans-serif;
       font-size: 11px;
       font-weight: 600;
@@ -234,7 +218,6 @@
       opacity: 1;
   }
   
-  /* Make label hidden when input is empty and not focused */
   input:placeholder-shown + label,
   textarea:placeholder-shown + label {
       opacity: 0;
@@ -334,7 +317,7 @@
     }
 
     .table thead {
-        display: none;  /* Hide the header on small screens */
+        display: none;  
       }
     
       .table tbody {
@@ -347,8 +330,8 @@
       }
     
       .table tbody td {
-        width: 100%; /* Make each cell take full width */
-        padding: 15px 8px 8px 8px; /* Add more top padding for spacing */
+        width: 100%; 
+        padding: 15px 8px 8px 8px; 
         box-sizing: border-box;
         position: relative;
         display: block;
@@ -356,7 +339,6 @@
       }
     
       .table tbody td::before {
-        /* Add labels to the cell for small screens */
         content: attr(data-label);
         font-weight: bold;
         position: absolute;
@@ -365,14 +347,13 @@
         color: #555;
         margin-right: 10px;
         text-transform: uppercase;
-        font-size: 12px;  /* Smaller font size for labels */
-        z-index: 1; /* Ensure the label stays on top */
+        font-size: 12px;  
+        z-index: 1; 
       }
     
-      /* Ensure content doesn't overlap */
       .table tbody td {
-        padding-left: 20px; /* Give more space for the label */
-        padding-top: 25px; /* Adjust padding for better content display */
+        padding-left: 20px; 
+        padding-top: 25px; 
       }
     
       .table tbody td .btn {
@@ -495,4 +476,90 @@ button[data-tooltip]:hover::after {
   opacity: 1;
   visibility: visible;
   z-index: 20; 
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);  
+  z-index: 1040;  
+}
+
+.modal-content {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1050;  
+}
+
+@media (max-width: 768px) {
+  .mainReview {
+      height: 90vh;
+  }
+
+  .filtersSearch {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+  }
+
+  .searchreview, .reviewStatus {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .table thead {
+      display: block;
+  }
+
+  .table tbody {
+      display: block;
+  }
+
+  .table tbody tr {
+      /* display: block; */
+      margin-bottom: 10px;
+  }
+
+  .table tbody td {
+      width: 100%;
+      padding: 15px 8px 8px 8px;
+      box-sizing: border-box;
+      position: relative;
+      display: block;
+      border: 1px solid #ddd;
+  }
+
+  .table tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      color: #555;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-size: 12px;
+      z-index: 1;
+  }
+
+  .table tbody td {
+      padding-left: 20px;
+      padding-top: 25px;
+  }
+
+  .formrow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+
+  .formrow .form-group {
+      width: 100%;
+  }
 }

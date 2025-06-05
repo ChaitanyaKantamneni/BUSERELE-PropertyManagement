@@ -5,7 +5,7 @@
 .preloader {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 60%;
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
@@ -65,13 +65,6 @@
 }
 
 
-
-
-
-
-
-
-
 .propertyDetails {
     height: 50%;
     padding: 10px;
@@ -124,11 +117,11 @@
 }
 
 .propertyDetails .cost {
-    color: #007bff; /* Or use a color that fits your design */
+    color: #007bff; 
 }
 
 .smaller-text,.small-icon {
-    font-size: 9px; /* Adjust as needed */
+    font-size: 9px; 
 }
 
 .properties .col-lg-3,.row .col-lg-4{
@@ -146,11 +139,10 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: calc(100vh - 60px); /* Adjust for header/footer height */
+    height: calc(100vh - 60px); 
     overflow: hidden;
 }
 
-/* Properties container */
 .properties-container {
     flex-grow: 1;
     overflow-y: auto;
@@ -159,14 +151,13 @@
     height: calc(100vh - 60px);
 }
 
-/* Mortgage section */
 .Mortgage {
     position: sticky;
     height: calc(100vh - 60px);
-    width: 25%; /* Fixed width */
+    width: 25%; 
     background-color: #f7f7f7;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
-    border-left: 2px solid #ccc; /* Optional border */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    border-left: 2px solid #ccc; 
     padding: 1rem;
     overflow-y: hidden;
     z-index: 100;
@@ -251,21 +242,13 @@
 
 
 
-
-
-
-
-
-
-
-
 .contact i {
     font-size: 8px;
     padding-left: 4px;
   }
   
   .contact a {
-    font-size: 12px; /* Match link size */
+    font-size: 12px; 
   }
   
   .bottom-bar2 {
@@ -277,10 +260,6 @@
 }
 
 
-
-  
-  
-  
   
   .cost .price p {
     margin: 0;
@@ -288,28 +267,13 @@
   }
   
   .text-primary {
-    color: white !important; /* Adjust the color for Contact */
+    color: white !important; 
   }
   
   .text-primary:hover {
     color: white !important; 
   }
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @media (max-width: 768px) {
@@ -342,6 +306,7 @@
         box-shadow: none;
         border-left: none;
     }
+    
 
     .properties{
         margin: 10px;
@@ -366,4 +331,111 @@
 
 .propertyFooter{
     border-top: 0.5px solid #e5dddd;
+}
+
+
+.wishlist-container i {
+    font-size: 20px;
+    transition: color 0.3s ease;
+  }
+  
+  .wishlist-container i:hover {
+    color: #dc3545;
+  }
+  
+
+
+  @media (max-width: 1200px) {
+    .properties .col-lg-3, .row .col-lg-4 {
+        width: 45%; 
+        margin: 0 10px;
+    }
+
+    .main-content {
+        flex-direction: column; 
+    }
+
+    .properties-container {
+        width: 100%;
+    }
+
+    .Mortgage {
+        width: 100%;
+        box-shadow: none;
+        border-left: none;
+    }
+}
+
+@media (max-width: 992px) {
+    .properties .col-lg-3, .row .col-lg-4 {
+        width: 48%;
+        margin: 0 10px;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .properties-container {
+        width: 100%;
+    }
+
+    .Mortgage {
+        width: 100%;
+        box-shadow: none;
+        border-left: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .propertyFulldet {
+        flex-direction: column;
+    }
+
+    .propertyImage {
+        flex: 2;
+    }
+
+    .propertyDetails {
+        flex: 2;
+    }
+
+    .smaller-text, .small-icon {
+        font-size: 16px;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .properties-container {
+        width: 100%;
+    }
+
+    .Mortgage {
+        width: 100%;
+        position: relative;
+        box-shadow: none;
+        border-left: none;
+    }
+
+    .properties {
+        margin: 10px;
+    }
+
+    .properties .col-lg-3, .row .col-lg-4 {
+        width: 100%;
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn {
+        width: 100%;
+    }
+
+    .propertylist .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }

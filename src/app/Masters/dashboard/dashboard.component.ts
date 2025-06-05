@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
   }
   isExpanded = true;
   toggleSidebar() {
-    this.isExpanded = !this.isExpanded; // Toggle between expanded and collapsed
+    this.isExpanded = !this.isExpanded; 
   }
 
   logout() {
@@ -27,4 +27,5 @@ export class DashboardComponent implements OnInit {
     localStorage.clear();
   }
     
+  
 }

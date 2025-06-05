@@ -10,6 +10,6 @@ import { InactivityService } from './inactivity.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'PropertyManagement';
-  constructor(private inactivityService: InactivityService) {}
+  title = 'BUSERELE';
+  constructor(private inactivityService: InactivityService,) {}
 }

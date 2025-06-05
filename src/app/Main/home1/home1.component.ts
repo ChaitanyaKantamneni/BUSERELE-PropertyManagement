@@ -6,6 +6,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FooterComponent } from "../footer/footer.component";
 import emailjs from 'emailjs-com';
+import { ApiServicesService } from '../../api-services.service';
+
 
 interface Review {
   reviewID: string;
@@ -24,15 +26,17 @@ interface BlogImage {
   formattedDate?: string;
 }
 
-
 @Component({
   selector: 'app-home1',
   standalone: true,
-  imports: [TopNav1Component, CommonModule, FormsModule, HttpClientModule, RouterModule, FooterComponent,ReactiveFormsModule],
+  providers: [ApiServicesService],
+  imports: [TopNav1Component, CommonModule, FormsModule,HttpClientModule, RouterModule, FooterComponent,ReactiveFormsModule],
   templateUrl: './home1.component.html',
   styleUrl: './home1.component.css'
 })
 export class Home1Component implements OnInit,AfterViewInit  {
+  // isFullWidth = false; 
+
   propertyType: string | null = null;
   propertyForType:string|null=null;
   keyword: string | null = null;
@@ -41,10 +45,40 @@ export class Home1Component implements OnInit,AfterViewInit  {
   selectedPropertyType: string | null = '';
   selectedPropertyFor:string| null='';
   selectedcityName:string | null = '';
-
   propertydetails: any[] = [];
   FeaturedProperties:any[]=[];
   Reviews:any[]=[];
+  expandedblogContent: boolean[] = [];
+  propertytypes:any[]=[];
+  cities: any[] = [];
+  // selectedcityName: string | null = null;
+  properties: any[] = [];
+  CityName:string | null = null;
+  propertyFor: string = '';
+  isLoadingAdvProperty: boolean = false;
+  isLoadingFeaProperty:boolean=false;
+  blog: BlogImage | null = null;
+  blogId: string | null = null;
+  displayedProperties: any[] = [];
+  intervalId: any;
+  isLoadingFeaProperty1 = false;
+  selectedReview: any
+  rating: number = 0; 
+  stars: number[] = [1, 2, 3, 4, 5]; 
+  isUpdateModalOpen: boolean = false;
+  propertyInsStatus: string = ''; 
+  blogdetails: any[] = [];
+  expandedContent: { [key: number]: boolean } = {};
+  BlogintervalId: number | null = null; 
+  isLiked = false;
+  likedProperties: { [key: string]: boolean } = {};
+  currentBlogPage = 1;
+  BlogitemsPerPage = 3; 
+  totalBlogPages = 0;
+  currentIndex = 0;
+  currentPage = 0;
+  blogsPerPage = 4;
+
   reviews: Review[] = [
     {
       reviewID: '',
@@ -55,19 +89,171 @@ export class Home1Component implements OnInit,AfterViewInit  {
       
     }
   ];
-  
-  // propertytypes:any[]=[{
-  //   icon:'',
-  //   name:'',
-  //   propertyType:'',
-  //   propertiesCount:''
-  // }
-  // ]
 
-  propertytypes:any[]=[];
+
+  constructor( public apiurl:HttpClient,private route: ActivatedRoute,public routes:Router,private router: Router,private cdr: ChangeDetectorRef, private apiurls: ApiServicesService,private fb: FormBuilder){
+    emailjs.init('uZT6kwr7RPQM3n5lj');
+  }
+  
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.propertyType = params.get('propertyType');
+      this.propertyForType = params.get('propertyFor');
+      this.CityName=params.get('CityName');      
+      this.keyword = params.get('keyword');
+
+      this.selectedPropertyID=params.get('propID');
+      if (this.propertyType) {
+        this.selectedPropertyType = this.propertyType;
+      }
+      if (this.propertyForType) {
+        this.selectedPropertyFor = this.propertyForType;
+      }
+      if (this.CityName) {
+        this.selectedcityName = this.CityName;
+      }
+      if (this.keyword) {
+        this.keyword = this.keyword;
+      }
+      
+    });
+    this.userEnquiryform = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-Z\s]+$')]], 
+      // email: ['', [Validators.required, Validators.email,Validators.pattern('^[a-zA-Z0-9._%+-]+@gmail\\.com$')]], 
+      email: ['', [
+        Validators.required,
+        Validators.email
+      ]], 
+      phone: ['', [Validators.pattern('^[0-9]{10}$')]], 
+      message: ['', [Validators.required, Validators.minLength(10), Validators.pattern(/\S{10,}/)]], 
+    });
+
+    
+    
+    this.loadLikedProperties();
+    this.loadFeaturedPropertyDetails();
+    this.loadPropertyDetails();
+    this.getTestimonials();
+    this.getPropertTypes();
+    this.getUniqueCities();
+    this.fetchblogDet();
+    this.fetchblogDet();
+    setInterval(() => {
+      this.changePage();
+    }, 20000); 
+	  this.route.paramMap.subscribe(params => {
+      this.blogId = params.get('id');  
+
+      if (this.blogId) {
+       this.fetchblogDet();
+      }
+    });
+    
+    if (history.state.selectedReview) {
+      this.selectedReview = history.state.selectedReview;
+    }
+    window.scrollTo(0, 0);
+  }
+
+
+
+  
+  
+  private getValidParam(param: string | null, defaultValue: string): string | null {
+    return param === defaultValue ? null : param;
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId); 
+    }
+
+    if (this.BlogintervalId !== null) {
+      clearInterval(this.BlogintervalId); 
+    }
+
+  }
+
+
+    // ngOnInit(): void {
+  //   this.route.paramMap.subscribe(params => {
+  //     const encodedParams = params.get('encodedParams');
+  
+  //     if (encodedParams) {
+  //       try {
+  //         const decoded = atob(encodedParams);
+  //         const parsedParams = JSON.parse(decoded);
+  
+  //         this.propertyType = parsedParams.propertyType;
+  //         this.propertyForType = parsedParams.propertyFor;
+  //         this.CityName = parsedParams.CityName;
+  //         this.keyword = parsedParams.keyword;
+  //         this.selectedPropertyID = parsedParams.propID;
+  
+  //         if (this.propertyType) {
+  //           this.selectedPropertyType = this.propertyType;
+  //         }
+  //         if (this.propertyForType) {
+  //           this.selectedPropertyFor = this.propertyForType;
+  //         }
+  //         if (this.CityName) {
+  //           this.selectedcityName = this.CityName;
+  //         }
+  //         if (this.keyword) {
+  //           this.keyword = this.keyword;
+  //         }
+  
+  //         console.log('Decoded Params:', parsedParams);
+  //       } catch (e) {
+  //         console.error('Failed to decode route parameters', e);
+  //       }
+  //     }
+  
+  //     this.blogId = params.get('id');  
+  //     if (this.blogId) {
+  //       this.fetchblogDet();
+  //     }
+  //   });
+  
+  //   this.userEnquiryform = this.fb.group({
+  //     name: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-Z\\s]+$')]], 
+  //     email: ['', [Validators.required, Validators.email]], 
+  //     phone: ['', [Validators.pattern('^[0-9]{10}$')]], 
+  //     message: ['', [Validators.required, Validators.minLength(10), Validators.pattern(/\S{10,}/)]], 
+  //   });
+  
+  //   this.loadLikedProperties();
+  //   this.loadFeaturedPropertyDetails();
+  //   this.loadPropertyDetails();
+  //   this.getTestimonials();
+  //   this.getPropertTypes();
+  //   this.getUniqueCities();
+  //   this.fetchblogDet();
+  
+  //   setInterval(() => {
+  //     this.changePage();
+  //   }, 20000); 
+  
+  //   if (history.state.selectedReview) {
+  //     this.selectedReview = history.state.selectedReview;
+  //   }
+  //   window.scrollTo(0, 0);
+  // }
+  
+
+  // encodeParams(): string {
+  //   const params = {
+  //     propertyType: 'flat',
+  //     propertyFor: 'sale',
+  //     CityName: 'Hyderabad',
+  //     keyword: 'luxury'
+  //   };
+  //   const jsonString = JSON.stringify(params);
+  //   return btoa(jsonString);
+  // }
 
   getPropertTypes(): void {
-    this.apiurl.get('https://localhost:7190/api/Users/GetAllPropertyTypes')
+    this.apiurls.get<any>('GetAllPropertyTypes') 
       .subscribe((response: any) => {
         console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
@@ -85,14 +271,9 @@ export class Home1Component implements OnInit,AfterViewInit  {
       });
   }
 
-
-  cities: any[] = [];
-  // selectedcityName: string | null = null;
-  properties: any[] = [];
-  
   getUniqueCities(): void {
-    this.apiurl.get<string[]>('https://localhost:7190/api/Users/GetUniqueCities')
-      .subscribe(
+    this.apiurls.get<any>('GetUniqueCities') 
+          .subscribe(
         (response: any) => {
           console.log('API response:', response);
           if (response && Array.isArray(response)) {
@@ -111,11 +292,10 @@ export class Home1Component implements OnInit,AfterViewInit  {
       );
   }
   
-  
   getPropertiesByCity(): void {
     if (this.selectedcityName) {
-      this.apiurl.get<any[]>(`https://localhost:7190/api/Property/GetPropertiesByCity/${this.selectedcityName}`)
-        .subscribe(
+      this.apiurls.get<any[]>(`Property/GetPropertiesByCity/${this.selectedcityName}`)
+              .subscribe(
           (response) => {
             this.properties = response; 
             console.log('Properties in selected city:', this.properties);
@@ -127,161 +307,37 @@ export class Home1Component implements OnInit,AfterViewInit  {
     }
   }
 
-  CityName:string | null = null;
-  propertyFor: string = '';
-  isLoadingAdvProperty: boolean = false;
-  isLoadingFeaProperty:boolean=false;
-  constructor( public apiurl:HttpClient,private route: ActivatedRoute,public routes:Router,private router: Router,private cdr: ChangeDetectorRef,private fb: FormBuilder){
-    emailjs.init('uZT6kwr7RPQM3n5lj');
-  }
-  ngOnInit(): void {
-    // this.loadPropertiesCount();
-    this.route.paramMap.subscribe(params => {
-      this.propertyType = params.get('propertyType');
-      this.propertyForType = params.get('propertyFor');
-      this.CityName=params.get('CityName');
-      console.log("city home",this.CityName);
-      this.keyword = params.get('keyword');
-      this.selectedPropertyID=params.get('propID');
-      if (this.propertyType) {
-        this.selectedPropertyType = this.propertyType;
-      }
-      if (this.propertyForType) {
-        this.selectedPropertyFor = this.propertyForType;
-      }
-      if (this.keyword) {
-        this.keyword = this.keyword;
-      }
-      if (this.CityName) {
-        this.selectedcityName = this.CityName;
-      }
-      
-    });
-
-    // this.userEnquiryform = this.fb.group({
-    //   name: ['', [Validators.required, Validators.minLength(3)]],  
-    //   email: ['', [Validators.required, Validators.email]],  
-    //   phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],  
-    //   message: ['', [Validators.required, Validators.minLength(10)]],  
-    // });
-
-    this.userEnquiryform = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-Z\s]+$')]], 
-      email: ['', [Validators.required, Validators.email,Validators.pattern('^[a-zA-Z0-9._%+-]+@gmail\\.com$')]], 
-      // email: new FormControl('', [Validators.required, Validators.email,Validators.pattern('^[a-zA-Z0-9._%+-]+@gmail\\.com$')]),
-      phone: ['', [Validators.pattern('^[0-9]{10}$')]], 
-      message: ['', [Validators.required, Validators.minLength(10)]], 
-    });
-
-    this.loadLikedProperties();
-    this.loadFeaturedPropertyDetails();
-    this.loadPropertyDetails();
-    
-    // this.intervalId = setInterval(() => {
-    //   this.loadProperties();  
-    // }, 30000);
-
-    // this.loadFeaturedPropertyDetails();
-    // this.loadProperties(); 
-    // this.intervalId = setInterval(() => {
-    //   this.loadProperties();  
-    // }, 1000);
-
-
-    this.getTestimonials();
-    this.getPropertTypes();
-    //this.loadCities(); 
-    this.getUniqueCities();
-
-  
-    this.fetchblogDet();
-    // this.startAutoScroll();
-
-    
-    this.fetchblogDet();
-    // this.startAutoScroll();
-    setInterval(() => {
-      this.changePage();
-    }, 20000); 
-	
-
-	 this.route.paramMap.subscribe(params => {
-      this.blogId = params.get('id');  
-
-      if (this.blogId) {
-       this.fetchblogDet();
-      }
-    });
-    
-    if (history.state.selectedReview) {
-      this.selectedReview = history.state.selectedReview;
-    }
-    window.scrollTo(0, 0);
-  }
-
-  blog: BlogImage | null = null;
-  blogId: string | null = null;
-  ngOnDestroy(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId); 
-    }
-
-    if (this.BlogintervalId !== null) {
-      clearInterval(this.BlogintervalId); 
-    }
-
-  }
-
+ 
   changePage() {
     this.currentPage++;
     if (this.currentPage * this.blogsPerPage >= this.blogdetails.length) {
       this.currentPage = 0;
     }
   }
-
-
-
-  
-
   navigateToBlog(blogId: string): void {
-    this.router.navigate([`/viewblog/${blogId}`]);
-    
+    const encodedBlogId = this.encodeID(blogId);
+    this.router.navigate([`/viewblog/${encodedBlogId}`]);
   }
   
-  // loadCities() {
-  //   this.apiurl.get<any[]>('https://localhost:7190/api/Users/byCity').subscribe(data => {
-  //     this.cities = data;
-  //   });
+ 
+  
+  // navigateToBlog(blogId: string): void {
+  //   this.router.navigate([`/viewblog/${blogId}`]);
   // }
 
-getDisplayedBlogs() {
-  this.blogdetails.sort((a, b) => new Date(b.BlogCreatedDate).getTime() - new Date(a.BlogCreatedDate).getTime());
-  const startIndex = this.currentPage * this.blogsPerPage;
-  return this.blogdetails.slice(startIndex, startIndex + this.blogsPerPage);
-}
-
-currentPage = 0;
-blogsPerPage = 4;
- 
-displayedProperties: any[] = [];
-currentIndex = 0;
-intervalId: any;
-isLoadingFeaProperty1 = false;
-
-
-// loadProperties(): void {
-//   if (this.FeaturedProperties.length === 0) return;
-//   const propertiesToDisplay = this.FeaturedProperties.slice(this.currentIndex, this.currentIndex + 4);
-//   if (propertiesToDisplay.length < 4) {
-//     propertiesToDisplay.push(...this.FeaturedProperties.slice(0, 4 - propertiesToDisplay.length));
-//   }
-
-//   this.displayedProperties = propertiesToDisplay;
-//   this.currentIndex = (this.currentIndex + 4) % this.FeaturedProperties.length;
+  getDisplayedBlogs() {
+    const approvedBlogs = this.blogdetails.filter(blog => blog.status === '1'); 
+    approvedBlogs.sort((a, b) => new Date(b.BlogCreatedDate).getTime() - new Date(a.BlogCreatedDate).getTime());
+    const startIndex = this.currentPage * this.blogsPerPage;
+    return approvedBlogs.slice(startIndex, startIndex + this.blogsPerPage);
+  }
+  
+// getDisplayedBlogs() {
+//   this.blogdetails.sort((a, b) => new Date(b.BlogCreatedDate).getTime() - new Date(a.BlogCreatedDate).getTime());
+//   const startIndex = this.currentPage * this.blogsPerPage;
+//   return this.blogdetails.slice(startIndex, startIndex + this.blogsPerPage);
 // }
 
-
-  
   OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
     const charCode = event.which ? event.which : event.keyCode;
     const inputElement = event.target as HTMLInputElement;
@@ -310,16 +366,6 @@ isLoadingFeaProperty1 = false;
     return false;
   }
   
-  // OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  
-  //   if (charCode !== 32 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
-  //     console.log('Restricted keyCode: ' + charCode);
-  //     return false; 
-  //   }
-    
-  //   return true; 
-  // }
   scrollLeftblog() {
     const totalPages = Math.ceil(this.blogdetails.length / this.blogsPerPage);
     if (this.currentPage > 0) {
@@ -337,31 +383,25 @@ isLoadingFeaProperty1 = false;
     }
   }
 
+  // openReview(review: any): void {
+  //   this.selectedReview = review;
+  //   this.router.navigate(['/view-reviews'], { state: { selectedReview: this.selectedReview, remainingReviews: this.Reviews.filter(r => r !== review) } });
+  // }
 
-  
-  selectedReview: any
-  openReview(review: any): void {
-    this.selectedReview = review;
-    this.router.navigate(['/view-reviews'], { state: { selectedReview: this.selectedReview, remainingReviews: this.Reviews.filter(r => r !== review) } });
+  viewReview(reviewId: string) {
+    const encodedReviewId = this.encodeID(reviewId); 
+    this.router.navigate(['/view-reviews'], { queryParams: { id: encodedReviewId } }); 
   }
-
   
   
-
-  
+//  viewReview(reviewId: string) {
+//   this.router.navigate(['/view-reviews'], { queryParams: { id: reviewId } });
+//  }
  
- rating: number = 0; 
- stars: number[] = [1, 2, 3, 4, 5]; 
 
- viewReview(reviewId: string) {
-  this.router.navigate(['/view-reviews'], { queryParams: { id: reviewId } });
- }
-
-  
- 
   getTestimonials() {
-    this.apiurl.get<Review[]>("https://localhost:7190/api/Users/GetUserReviewsStatus1")
-    .subscribe(
+    this.apiurls.get<any>('GetUserReviewsStatus1')
+        .subscribe(
       (response: any) => {
         
         this.Reviews = response.data.map((testimonial: any) => {
@@ -384,7 +424,6 @@ isLoadingFeaProperty1 = false;
     );
   }
 
-
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -399,14 +438,36 @@ isLoadingFeaProperty1 = false;
     console.log(option);
   }
 
+  // onKeywordChange() {
+  //   if (this.keyword && this.keyword.length > 2) {
+  //     let url = `https://localhost:7190/api/Users/GetKeywordSuggestions?keyword=${encodeURIComponent(this.keyword)}`;
+  
+  //     if (this.propertyFor) {
+  //       url += `&propertyFor=${encodeURIComponent(this.propertyFor)}`;
+  //     }
+  //     this.apiurls.get<string[]>(url).subscribe(
+  //       (response) => {
+  //         this.suggestions = response;
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching keyword suggestions:', error);
+  //         this.suggestions = [];
+  //       }
+  //     );
+  //   } else {
+  //     this.suggestions = [];
+  //   }
+  // }
+  
+
   onKeywordChange() {
     if (this.keyword && this.keyword.length > 2) {
-      let url = `https://localhost:7190/api/Users/GetKeywordSuggestions?keyword=${encodeURIComponent(this.keyword)}`;
-  
+      let endpoint = `GetKeywordSuggestions?keyword=${encodeURIComponent(this.keyword)}`;
       if (this.propertyFor) {
-        url += `&propertyFor=${encodeURIComponent(this.propertyFor)}`;
+        endpoint += `&propertyFor=${encodeURIComponent(this.propertyFor)}`;
       }
-      this.apiurl.get<string[]>(url).subscribe(
+  
+      this.apiurls.get<string[]>(endpoint).subscribe(
         (response) => {
           this.suggestions = response;
         },
@@ -421,6 +482,8 @@ isLoadingFeaProperty1 = false;
   }
   
 
+
+
   selectSuggestion(suggestion: string) {
     this.keyword = suggestion;
     this.suggestions = [];
@@ -429,15 +492,16 @@ isLoadingFeaProperty1 = false;
     const propertyType = this.propertytypes.find(pt => pt.propertyType === propertyTypeId);
     return propertyType ? propertyType.name : 'Unknown Type';
   }
+
   loadPropertyDetails() {
     this.isLoadingAdvProperty = true; 
-    this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnAdvertisingProperty')
-      .subscribe(
+    this.apiurls.get<any>('GetAllPropertyDetailsWithImagesBasedOnAdvertisingProperty')
+          .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
   
           this.propertydetails = response.map((property: any) => {
-            let propertyImage: string = 'assets/images/img2.jpg'; 
+            let propertyImage: string = 'assets/images/empty.png'; 
             let defaultPropImage: string = '';
   
             console.log('Full Property:', property);
@@ -467,18 +531,22 @@ isLoadingFeaProperty1 = false;
                   console.error('Error decoding first image data:', error);
                 }
               } else {
-                propertyImage = 'assets/images/img2.jpg'; 
+                propertyImage = 'assets/images/empty.png'; 
               }
             } else {
-              defaultPropImage = 'assets/images/img2.jpg'; 
+              defaultPropImage = 'assets/images/empty.png'; 
               console.log('images property is missing, not an array, or empty.');
             }
   
+            // if (property.image && property.image.filePath) {
+            //   defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+            //   console.log('Generated Default Image URL:', defaultPropImage);
+            // } 
             if (property.image && property.image.filePath) {
-              defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-              console.log('Generated Default Image URL:', defaultPropImage);
-            } else {
-              defaultPropImage = 'assets/images/img2.jpg'; 
+              defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
+            }
+            else {
+              defaultPropImage = 'assets/images/empty.png'; 
             }
   
             let propertyBadge = '';
@@ -512,12 +580,12 @@ isLoadingFeaProperty1 = false;
   
             return {
               propertyID: property.propID || 'N/A',
-              propertyname: property.propname || 'Unknown Property',
-              propertyprice: property.propertyTotalPrice || 'Price not available',
-              propertyaddress: property.landMark || 'Address not available',
-              propertyarea: property.totalArea || 'Area not available',
-              propertybeds: property.noOfBedrooms || 'Beds not available',
-              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+              propertyname: property.propname || 'N/A',
+              propertyprice: property.propertyTotalPrice || 'N/A',
+              propertyaddress: property.landMark || 'N/A',
+              propertyarea: property.totalArea || 'N/A',
+              propertybeds: property.noOfBedrooms || 'N/A',
+              propertybathrooms: property.noOfBathrooms || 'N/A',
               propertytype: property.propertyType || 'Unknown Type',
               propertyfor: property.propertyFor,
               propertytypeName: this.getPropertyTypeName(property.propertyType),
@@ -541,16 +609,133 @@ isLoadingFeaProperty1 = false;
       );
   }
 
+  // loadFeaturedPropertyDetails() {
+  //   this.isLoadingFeaProperty = true; 
+  //   this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
+  //     .subscribe(
+  //       (response: any[]) => {
+  //         console.log('API Response:', response);
+  
+  //         this.FeaturedProperties = response.map((property: any) => {
+  //           let propertyImage: string = 'assets/images/img2.jpg'; 
+  //           let defaultPropImage: string = '';
+  
+  //           console.log('Full Property:', property);
+  
+  //           if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+  //             console.log('Property Images:', property.images);
+  
+  //             const firstImage = property.images[0];
+  
+  //             if (firstImage.fileData) {
+  //               console.log('First Image File Data:', firstImage.fileData);
+  
+  //               try {
+  //                 const byteCharacters = atob(firstImage.fileData);
+  //                 const byteArray = new Uint8Array(byteCharacters.length);
+  
+  //                 for (let i = 0; i < byteCharacters.length; i++) {
+  //                   byteArray[i] = byteCharacters.charCodeAt(i);
+  //                 }
+  
+  //                 const blob = new Blob([byteArray], { type: firstImage.mimeType });
+  
+  //                 propertyImage = URL.createObjectURL(blob);
+  
+  //                 console.log('Generated Image URL:', propertyImage);
+  //               } catch (error) {
+  //                 console.error('Error decoding first image data:', error);
+  //               }
+  //             } else {
+  //               propertyImage = 'assets/images/img2.jpg'; 
+  //             }
+  //           } else {
+  //             defaultPropImage = 'assets/images/img2.jpg'; 
+  //             console.log('images property is missing, not an array, or empty.');
+  //           }
+  
+  //           if (property.image && property.image.filePath) {
+  //             defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+  //             console.log('Generated Default Image URL:', defaultPropImage);
+  //           } else {
+  //             defaultPropImage = 'assets/images/img2.jpg'; 
+  //           }
+  
+  //           let propertyBadge = '';
+  //           let propertyBadgeColor = '';
+  //           if (property.propertyFor === '1') {
+  //             propertyBadge = 'For Buy';
+  //             propertyBadgeColor = 'green';
+  //           } else if (property.propertyFor === '2') {
+  //             propertyBadge = 'For Sale';
+  //             propertyBadgeColor = 'red';
+  //           } else if (property.propertyFor === '3') {
+  //             propertyBadge = 'For Rent';
+  //             propertyBadgeColor = 'blue';
+  //           } else if (property.propertyFor === '4') {
+  //             propertyBadge = 'For Lease';
+  //             propertyBadgeColor = 'orange';
+  //           }
+  
+  //           let PropertyFacing = '';
+  //           if (property.propertyFacing === '1') {
+  //             PropertyFacing = 'North';
+  //           } else if (property.propertyFacing === '2') {
+  //             PropertyFacing = 'South';
+  //           } else if (property.propertyFacing === '3') {
+  //             PropertyFacing = 'East';
+  //           } else if (property.propertyFacing === '4') {
+  //             PropertyFacing = 'West';
+  //           } else {
+  //             PropertyFacing = 'N/A';
+  //           }
+  
+  //           return {
+  //             propertyID: property.propID || 'N/A',
+  //             propertyname: property.propname || 'Unknown Property',
+  //             propertyprice: property.propertyTotalPrice || 'Price not available',
+  //             propertyaddress: property.landMark || 'Address not available',
+  //             propertyarea: property.totalArea || 'Area not available',
+  //             propertybeds: property.noOfBedrooms || 'Beds not available',
+  //             propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+  //             propertytype: property.propertyType || 'Unknown Type',
+  //             propertyfor: property.propertyFor,
+  //             propertytypeName: this.getPropertyTypeName(property.propertyType),
+  //             propertyimage: propertyImage,
+  //             defaultPropImage: defaultPropImage,
+  //             propertyparking: property.noOfParkings,
+  //             propertyfacing: PropertyFacing,
+  //             propertyAvailability: propertyBadge,
+  //             propertyBadgeColor: propertyBadgeColor,
+  //             PropertyTypeName: property.propertyTypeName
+  //           };
+  //         });
+  
+  //         this.isLoadingFeaProperty = false;
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching property details:', error);
+  //         this.FeaturedProperties = [];
+  //         this.isLoadingFeaProperty = false; 
+  //       }
+  //     );
+  // }
+
+  
+  getSafeValue(value: any, fallback: string = 'N/A'): string {
+    return value !== null && value !== undefined && value !== '' ? value.toString() : fallback;
+  }
+  
 
   loadFeaturedPropertyDetails() {
     this.isLoadingFeaProperty = true; 
-    this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
-      .subscribe(
+    this.apiurls.get<any[]>('GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
+    .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
   
           this.FeaturedProperties = response.map((property: any) => {
-            let propertyImage: string = 'assets/images/img2.jpg'; 
+            let propertyImage: string = 'assets/images/empty.png'; 
             let defaultPropImage: string = '';
   
             console.log('Full Property:', property);
@@ -580,18 +765,22 @@ isLoadingFeaProperty1 = false;
                   console.error('Error decoding first image data:', error);
                 }
               } else {
-                propertyImage = 'assets/images/img2.jpg'; 
+                propertyImage = 'assets/images/empty.png'; 
               }
             } else {
-              defaultPropImage = 'assets/images/img2.jpg'; 
+              defaultPropImage = 'assets/images/empty.png'; 
               console.log('images property is missing, not an array, or empty.');
             }
   
+            // if (property.image && property.image.filePath) {
+            //   defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+            //   console.log('Generated Default Image URL:', defaultPropImage);
+            // }
             if (property.image && property.image.filePath) {
-              defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-              console.log('Generated Default Image URL:', defaultPropImage);
-            } else {
-              defaultPropImage = 'assets/images/img2.jpg'; 
+              defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
+            }
+             else {
+              defaultPropImage = 'assets/images/empty.png'; 
             }
   
             let propertyBadge = '';
@@ -625,12 +814,12 @@ isLoadingFeaProperty1 = false;
   
             return {
               propertyID: property.propID || 'N/A',
-              propertyname: property.propname || 'Unknown Property',
-              propertyprice: property.propertyTotalPrice || 'Price not available',
-              propertyaddress: property.landMark || 'Address not available',
-              propertyarea: property.totalArea || 'Area not available',
-              propertybeds: property.noOfBedrooms || 'Beds not available',
-              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+              propertyname: property.propname || 'N/A',
+              propertyprice: property.propertyTotalPrice || 'N/A',
+              propertyaddress: property.landMark || 'N/A',
+              propertyarea: property.totalArea || 'N/A',
+              propertybeds: property.noOfBedrooms || 'N/A',
+              propertybathrooms: property.noOfBathrooms || 'N/A',
               propertytype: property.propertyType || 'Unknown Type',
               propertyfor: property.propertyFor,
               propertytypeName: this.getPropertyTypeName(property.propertyType),
@@ -654,123 +843,68 @@ isLoadingFeaProperty1 = false;
       );
   }
 
-  // loadFeaturedPropertyDetails() {
-  //   this.isLoadingFeaProperty = true;
-  
-  //   this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
-  //     .subscribe(
-  //       (response: any[]) => {
-  //         console.log('API Response:', response);
-  
-  //         this.FeaturedProperties = response.map((property: any) => {
-  //           let propertyImage = 'assets/images/img1.png';
-  //           let defaultPropImage = 'assets/images/img1.png';
-  
-  //           if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-  //             const firstImage = property.images[0];
-  //             if (firstImage.filePath) {
-  //               propertyImage = `https://localhost:7190${firstImage.filePath}`;
-  //             }
-  //           }
-  
-  //           if (property.image && property.image.filePath) {
-  //             defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-  //           }
-  
-  //           let propertyBadge = '';
-  //           let propertyBadgeColor = '';
-  //           switch (property.propertyFor) {
-  //             case '1': propertyBadge = 'For Buy'; propertyBadgeColor = 'green'; break;
-  //             case '2': propertyBadge = 'For Sale'; propertyBadgeColor = 'red'; break;
-  //             case '3': propertyBadge = 'For Rent'; propertyBadgeColor = 'blue'; break;
-  //             case '4': propertyBadge = 'For Lease'; propertyBadgeColor = 'orange'; break;
-  //           }
-  
-  //           let PropertyFacing = '';
-  //           switch (property.propertyFacing) {
-  //             case '1': PropertyFacing = 'North'; break;
-  //             case '2': PropertyFacing = 'South'; break;
-  //             case '3': PropertyFacing = 'East'; break;
-  //             case '4': PropertyFacing = 'West'; break;
-  //             default: PropertyFacing = 'N/A';
-  //           }
-  
-  //           return {
-  //             propertyID: property.propID || 'N/A',
-  //             propertyname: property.propname || 'Unknown Property',
-  //             propertyprice: property.propertyTotalPrice || 'Price not available',
-  //             propertyaddress: property.landMark || 'Address not available',
-  //             propertyarea: property.totalArea || 'Area not available',
-  //             propertybeds: property.noOfBedrooms || 'Beds not available',
-  //             propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
-  //             propertytype: property.propertyType || 'Unknown Type',
-  //             propertytypeName: this.getPropertyTypeName(property.propertyType),
-  //             propertyimage: propertyImage,
-  //             defaultPropImage: defaultPropImage,
-  //             propertyparking: property.noOfParkings,
-  //             propertyfacing: PropertyFacing,
-  //             propertyAvailability: propertyBadge,
-  //             propertyBadgeColor: propertyBadgeColor,
-  //             propertyNearBy: property.nearBy
-  //           };
-  //         });
-  
-  //         this.isLoadingFeaProperty = false;
-  
-  //         this.loadProperties();
-  
-  //         this.intervalId = setInterval(() => {
-  //           this.loadProperties();
-  //         }, 20000);
-  //       },
-  //       (error) => {
-  //         console.error('Error fetching property details:', error);
-  //         this.FeaturedProperties = [];
-  //         this.isLoadingFeaProperty = false;
-  //       }
-  //     );
-  // }
-
-  isUpdateModalOpen: boolean = false;
-  propertyInsStatus: string = ''; 
-
-
   searchclick() {
-    if (this.selectedPropertyType && this.selectedPropertyFor && this.selectedcityName && this.keyword) {
-      this.routes.navigate(['/search-properties', this.selectedPropertyType, this.selectedPropertyFor,this.selectedcityName, this.keyword]);
-      this.propertyInsStatus = 'Search successful!'; 
-      this.isUpdateModalOpen = true; 
-      console.log("selectedPropertyType h2",this.selectedPropertyType);
-    console.log("selectedPropertyFor h2",this.selectedPropertyFor);
-    console.log("selectedcityName h2",this.selectedcityName);
-    console.log("keyword h2",this.keyword);
-    } else if (this.selectedPropertyType || this.keyword || this.selectedPropertyFor || this.selectedcityName) { 
-      this.routes.navigate(['/search-properties', this.selectedPropertyType || 'defaultType', this.selectedPropertyFor || 'defaultFor',this.selectedcityName, this.keyword || 'defaultKeyword']);
-      this.propertyInsStatus = 'Search successful with default parameters!';
-      this.isUpdateModalOpen = true; 
-    console.log("selectedPropertyType h1",this.selectedPropertyType);
-    console.log("selectedPropertyFor h1",this.selectedPropertyFor);
-    console.log("selectedcityName h1",this.selectedcityName);
-    console.log("keyword h1",this.keyword);
+    const encodedPropertyType = this.selectedPropertyType ? this.encodeID(this.selectedPropertyType) : '';
+    const encodedPropertyFor = this.selectedPropertyFor ? this.encodeID(this.selectedPropertyFor) : '';
+    const city = this.selectedcityName || '';
+    const keyword = this.keyword || 'defaultKeyword';
+  
+    if (this.selectedPropertyType || this.selectedPropertyFor || this.selectedcityName || this.keyword) {
+      this.router.navigate([
+        '/search-properties',
+        encodedPropertyType,
+        encodedPropertyFor,
+        city,
+        keyword
+      ]);
+  
+      this.propertyInsStatus = 'Search successful!';
+      this.isUpdateModalOpen = true;
+  
+      console.log("encodedPropertyType", encodedPropertyType);
+      console.log("encodedPropertyFor", encodedPropertyFor);
+      console.log("City", city);
+      console.log("Keyword", keyword);
     } else {
-      this.propertyInsStatus = 'Please select a property type or property for or city or enter a keyword.'; 
-      this.isUpdateModalOpen = true; 
+      this.propertyInsStatus = 'Please select a property type or property for or city or enter a keyword.';
+      this.isUpdateModalOpen = true;
     }
-    
   }
+  
+
+  // searchclick() {
+  //   if (this.selectedPropertyType && this.selectedPropertyFor && this.selectedcityName && this.keyword) {
+  //     this.routes.navigate(['/search-properties', this.selectedPropertyType, this.selectedPropertyFor,this.selectedcityName, this.keyword]);
+  //     this.propertyInsStatus = 'Search successful!'; 
+  //     this.isUpdateModalOpen = true; 
+
+  //     console.log("selectedPropertyType h2",this.selectedPropertyType);
+  //     console.log("selectedPropertyFor h2",this.selectedPropertyFor);
+  //     console.log("selectedcityName h2",this.selectedcityName);
+  //     console.log("keyword h2",this.keyword);
+
+  //   } else if (this.selectedPropertyType  || this.selectedPropertyFor || this.selectedcityName || this.keyword) { 
+  //     this.routes.navigate(['/search-properties', this.selectedPropertyType, this.selectedPropertyFor, this.selectedcityName, this.keyword || 'defaultKeyword']);
+  //     this.propertyInsStatus = 'Search successful with default parameters!';
+  //     this.isUpdateModalOpen = true; 
+  //   console.log("selectedPropertyType h1",this.selectedPropertyType);
+  //   console.log("selectedPropertyFor h1",this.selectedPropertyFor);
+  //   console.log("selectedcityName h1",this.selectedcityName);
+  //   console.log("keyword h1",this.keyword);
+  //   } else {
+  //     this.propertyInsStatus = 'Please select a property type or property for or city or enter a keyword.'; 
+  //     this.isUpdateModalOpen = true; 
+  //   }
+    
+  // }
 
   UpdatecloseModal() {
     this.isUpdateModalOpen = false;
   }
-
-
-  
   handleOk() {
     this.UpdatecloseModal();
     this.userEnquiryform.reset();
   }
-
-
 
   convertToCrores(value: number | string): string {
     if (!value) return 'N/A'; 
@@ -792,8 +926,6 @@ isLoadingFeaProperty1 = false;
       return value.toString(); 
     }
   }
-  
-  
 
   ngAfterViewInit() {
     this.autoScroll();
@@ -811,12 +943,6 @@ isLoadingFeaProperty1 = false;
     }
   }
 
-  // truncateText(text: string, length: number): string {
-  //   if (!text) return '';
-  //   return text.length > length ? text.substring(0, length) + '...' : text;
-  // }
-
-
   truncateText(text: string, limit: number): string {
     return text.length > limit ? text.substring(0, limit) + '...' : text;
   }
@@ -826,33 +952,7 @@ isLoadingFeaProperty1 = false;
     phone:new FormControl(''),
     message:new FormControl('')
   })
-  
-  // enquiryformsubmit() {
-  //   const data = {
-  //     name: this.userEnquiryform.get('name')?.value.toString(),
-  //     email: this.userEnquiryform.get('email')?.value.toString(),
-  //     phone: this.userEnquiryform.get('phone')?.value.toString(),
-  //     message: this.userEnquiryform.get('message')?.value.toString()
-  //   };
-  
-  //   this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
-  //     headers: { 'Content-Type': 'application/json' }
-  //   }).subscribe({
-  //     next: (response: any) => {
-  //       alert('We have received your enquiry. Our team will contact you soon...!');
-  //       this.routes.navigate(['/home']);
-  //       // this.sendEmail();
-  //     },
-  //     error: (error) => {
-  //       console.error("Error details:", error);
-  //       alert('Failed to submit enquiry. Try again later...!');
-  //       this.routes.navigate(['/home']);
-  //     },
-  //     complete: () => {
-  //       console.log("Request completed");
-  //     }
-  //   });
-  // }
+ 
   enquiryformsubmit() {
     const data = {
       name: this.userEnquiryform.get('name')?.value.toString(),
@@ -861,10 +961,14 @@ isLoadingFeaProperty1 = false;
       message: this.userEnquiryform.get('message')?.value.toString()
     };
   
-    this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
-      next: (response: any) => {
+    // this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response: any) => {
+    //     this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
+    this.apiurls.post<any>('InsUserEnquiry', data).subscribe({
+      next: (response) => {
+        console.log('Enquiry response:', response);
         this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
         this.isUpdateModalOpen = true;
         // setTimeout(() => {
@@ -879,15 +983,10 @@ isLoadingFeaProperty1 = false;
           this.routes.navigate(['/home']);
         }, 2000);
       },
-      complete: () => {
-        console.log("Request completed");
-      }
+     
     });
   }
 
-  isLiked = false;
-
-  likedProperties: { [key: string]: boolean } = {};
   loadLikedProperties(): void {
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('wishlist_')) {
@@ -907,7 +1006,7 @@ isLoadingFeaProperty1 = false;
         localStorage.setItem('wishlist_' + propertyID, 'true');
         this.addToWishlist(propertyID);
       } else {
-        localStorage.removeItem('wishlist_' + propertyID);
+        localStorage.removeItem('wishlist_' + propertyID,);
         this.removeFromWishlist(propertyID);
       }
       this.cdr.detectChanges();
@@ -923,12 +1022,16 @@ isLoadingFeaProperty1 = false;
 
     console.log('Adding to wishlist:', wishlistRequest);
 
-    this.apiurl.post('https://localhost:7190/api/Users/AddToWishlist', wishlistRequest, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
-      next: (response: any) => {
+    // this.apiurl.post('https://localhost:7190/api/Users/AddToWishlist', wishlistRequest, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response: any) => {
+    //     console.log('Added to wishlist:', response);
+    //     this.likedProperties[propertyID] = true;  
+    this.apiurls.post<any>('AddToWishlist', wishlistRequest).subscribe({
+      next: (response) => {
         console.log('Added to wishlist:', response);
-        this.likedProperties[propertyID] = true;  
+        this.likedProperties[propertyID] = true;
         localStorage.setItem('wishlist_' + propertyID, 'true');  
         this.propertyInsStatus = "Property added to your wishlist!";
         this.isUpdateModalOpen = true;
@@ -950,12 +1053,17 @@ isLoadingFeaProperty1 = false;
 
     console.log('Removing from wishlist:', wishlistRequest);
 
-    this.apiurl.post('https://localhost:7190/api/Users/RemoveFromWishlist', wishlistRequest, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
-      next: (response: any) => {
-        console.log('Removed from wishlist:', response);
-        this.likedProperties[propertyID] = false;  
+    // this.apiurl.post('https://localhost:7190/api/Users/RemoveFromWishlist', wishlistRequest, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response: any) => {
+    //     console.log('Removed from wishlist:', response);
+    //     this.likedProperties[propertyID] = false;  
+    
+  this.apiurls.post<any>('RemoveFromWishlist', wishlistRequest).subscribe({
+    next: (response) => {
+      console.log('Removed from wishlist:', response);
+      this.likedProperties[propertyID] = false;
         localStorage.removeItem('wishlist_' + propertyID);  
       },
       error: (error) => {
@@ -1014,14 +1122,6 @@ isLoadingFeaProperty1 = false;
       scrollContainer.scrollBy({ left: 300, behavior: 'smooth' }); 
     }
   }
-  //blog
-  //blogImages: Array<BlogImage> = [];
-  blogdetails: any[] = [];
-  expandedContent: { [key: number]: boolean } = {};
-  currentBlogPage = 1;
-  BlogitemsPerPage = 3; 
-  totalBlogPages = 0;
-  BlogintervalId: number | null = null; 
 
   truncateContent(content: string, limit: number): string {
     if (content.length > limit) {
@@ -1037,24 +1137,53 @@ isLoadingFeaProperty1 = false;
         return div.textContent || div.innerText || '';
       }
 
-expandedblogContent: boolean[] = []; 
+      
+// fetchblogDet() {
+//   this.apiurls.get<any>('GetAllBlogDetails')
+//       .subscribe(
+//       (response: any[]) => {
+//         console.log('API Response:', response);
+//         this.blogdetails = response.map((blog: any, index: number) => {
+//           this.expandedblogContent[index] = false;  
+
+//           let blogImage: string = ''; 
+
+//           if (blog.imageUrl && blog.imageUrl !== '') {
+//             blogImage = `https://localhost:7190${blog.imageUrl}`; 
+//           } else {
+//             // blogImage = 'assets/images/img2.jpg'; 
+//             blogImage = 'assets/images/villa4.jpg'; 
+//           }
+
+//           return {
+//             BlogID: blog.id || 'N/A',
+//             BlogCreatedDate: new Date(blog.createdDate).toLocaleDateString('en-US', {
+//               year: 'numeric',
+//               month: 'long',
+//               day: 'numeric',
+//             }),
+//             BlogTitle: blog.title || 'Unknown Type',
+//             BlogDescription: blog.description || 'No description available.',
+//             BlogImage: blogImage,  
+//           };
+//         });
+//       },
+//       (error) => {
+//         console.error('Error fetching blog details:', error);
+//         this.blogdetails = [];
+//       }
+//     );
+// }
 
 fetchblogDet() {
-  this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllBlogDetails')
+  this.apiurls.get<any>('GetAllBlogDetails')
     .subscribe(
       (response: any[]) => {
         console.log('API Response:', response);
-        this.blogdetails = response.map((blog: any, index: number) => {
-          this.expandedblogContent[index] = false;  
-
-          let blogImage: string = ''; 
-
-          if (blog.imageUrl && blog.imageUrl !== '') {
-            blogImage = `https://localhost:7190${blog.imageUrl}`; 
-          } else {
-            blogImage = 'assets/images/img2.jpg'; 
-          }
-
+        const approvedBlogs = response.filter(blog => blog.status === '1');
+        this.blogdetails = approvedBlogs.map((blog: any, index: number) => {
+          this.expandedblogContent[index] = false;
+          const blogImage: string = this.apiurls.getImageUrlblog(blog.imageUrl);
           return {
             BlogID: blog.id || 'N/A',
             BlogCreatedDate: new Date(blog.createdDate).toLocaleDateString('en-US', {
@@ -1064,9 +1193,11 @@ fetchblogDet() {
             }),
             BlogTitle: blog.title || 'Unknown Type',
             BlogDescription: blog.description || 'No description available.',
-            BlogImage: blogImage,  
+            BlogImage: blogImage,
+            status: blog.status,
           };
         });
+        
       },
       (error) => {
         console.error('Error fetching blog details:', error);
@@ -1074,6 +1205,38 @@ fetchblogDet() {
       }
     );
 }
+
+
+// fetchblogDet() {
+//   this.apiurls.get<any>('GetAllBlogDetails')
+//     .subscribe(
+//       (response: any[]) => {
+//         console.log('API Response:', response);
+//         this.blogdetails = response.map((blog: any, index: number) => {
+//           this.expandedblogContent[index] = false;
+
+//           const blogImage: string = this.apiurls.getImageUrlblog(blog.imageUrl);
+
+//           return {
+//             BlogID: blog.id || 'N/A',
+//             BlogCreatedDate: new Date(blog.createdDate).toLocaleDateString('en-US', {
+//               year: 'numeric',
+//               month: 'long',
+//               day: 'numeric',
+//             }),
+//             BlogTitle: blog.title || 'Unknown Type',
+//             BlogDescription: blog.description || 'No description available.',
+//             BlogImage: blogImage,
+//           };
+//         });
+//       },
+//       (error) => {
+//         console.error('Error fetching blog details:', error);
+//         this.blogdetails = [];
+//       }
+//     );
+// }
+
 
 processText(blogDescription: string, index: number): string {
   const strippedText = this.stripHtmlTags(blogDescription).trim(); 
@@ -1100,5 +1263,19 @@ truncateblogContent(content: string, limit: number): string {
 toggleExpand(index: number): void {
   this.expandedContent[index] = !this.expandedContent[index];
 }
+encodeID(id: string): string {
+  return btoa(id).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+decodeID(encoded: string): string {
+  encoded = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  while (encoded.length % 4) {
+    encoded += '=';
+  }
+  return atob(encoded);
+}
+
+
+
 
 }

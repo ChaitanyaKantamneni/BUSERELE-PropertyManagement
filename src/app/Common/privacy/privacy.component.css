@@ -59,3 +59,63 @@
     font-family: Arial, sans-serif;
   }
   
+@media (max-width: 768px) {
+  .privacy-policy-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .last-updated {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+
+  .list {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  h1.h1 {
+    font-size: 28px;
+  }
+
+  h3, h4, h1 {
+    font-size: 20px;
+  }
+
+  .list-details-wrap {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-policy-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+  }
+
+  .last-updated {
+    font-size: 0.85rem;
+  }
+
+  .list {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  h1.h1 {
+    font-size: 24px;
+  }
+
+  h3, h4, h1 {
+    font-size: 18px;
+  }
+
+  ul {
+    margin-left: 15px;
+  }
+
+  .list-details-wrap {
+    padding: 10px;
+  }
+}

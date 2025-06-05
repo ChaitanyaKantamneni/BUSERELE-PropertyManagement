@@ -10,29 +10,14 @@
       <div class="PageHeading">
         <h5 class="text-center m-0"><b>UPLOADED REVIEWS</b></h5>
       </div>
-      <div class="filtersSearch">
+      <!-- <div class="filtersSearch">
         <div class="input-container" >
           <div class="searchreview">
             <i class="fas fa-search search-icon"></i>
-            <input  style="width: 100%;"
-              type="text" 
-              class="form-control search-input" 
-              placeholder="Search reviews..." 
-              [(ngModel)]="searchQuery"
-            />
+            <input  style="width: 100%;" type="text" class="form-control search-input"  placeholder="Search reviews..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"/> 
           </div>
         </div>
         
-        <!-- <div class="input-container">
-          <div class="reviewStatus" style="width: 100%;">
-            <select id="pageSize" class="form-control" (change)="onWhosePropertySelectionChange($event)">
-              <option value="0">Latest</option>
-              <option value="1">Approved</option>
-              <option value="2">Declined</option>
-            </select>
-          </div>
-        </div> -->
-
         <div class="input-container">
           <div class="reviewStatus" style="width: 100%; position: relative;">
             <select id="pageSize" class="form-control dropdown-with-icon" (change)="onWhosePropertySelectionChange($event)">
@@ -43,9 +28,38 @@
             <i class="fa fa-caret-down dropdown-icon"></i>
           </div>
         </div>
-        
-        
+      </div> -->
+      <div class="filtersSearch">
+        <div class="input-container">
+          <div class="searchreview" style="position: relative;">
+            <label class="floating-label" [class.active]="searchQuery">Search reviews...</label>
+            <i class="fas fa-search search-icon"></i>
+            <input
+              style="width: 100%;"
+              type="text"
+              class="form-control search-input" placeholder=""
+              [(ngModel)]="searchQuery"
+              (ngModelChange)="onSearchChange()"/>
+          </div>
+        </div>
+      
+        <div class="input-container">
+          <div class="reviewStatus" style="width: 100%; position: relative;">
+            <!-- onWhosePropertySelectionChange -->
+            <select
+              id="pageSize"
+              class="form-control dropdown-with-icon" [value]="selectedReviewFilter"
+              
+              (change)="onReviewFilterChange($event)">
+              <option value="0">Latest</option>
+              <option value="1">Approved</option>
+              <option value="2">Declined</option>
+            </select>
+            <i class="fa fa-caret-down dropdown-icon"></i>
+          </div>
+        </div>
       </div>
+      
   
       <div class="reviewstable">
         <table  *ngIf="filteredreviews.length != 0"  class="table table-bordered">
@@ -83,36 +97,17 @@
           </tbody>
         </table>
       
-        <!-- No Reviews Message -->
-        <!-- <div *ngIf="filteredreviews.length === 0">
-          <p>No reviews found for the given search or filter criteria.</p>
-        </div> -->
-
         <div *ngIf="filteredreviews.length === 0" class="NoDataFound">
           <div class="NoDataFoundImg">
             <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
           </div>
-          <p>No properties found for the given search or filter criteria.</p>
+          <p>No Reviews found for the given search or filter criteria.</p>
         </div>
         
       </div>
       
-      <!-- Pagination Controls -->
-      <!-- <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-secondary" (click)="previousPage()" [disabled]="currentPage === 1">
-          <i class="fa fa-chevron-left"></i> Previous
-        </button>
-    
-        <div>
-          Page {{ currentPage }} of {{ totalPages }}
-        </div>
-    
-        <button class="btn btn-secondary" (click)="nextPage()" [disabled]="currentPage === totalPages">
-          Next <i class="fa fa-chevron-right"></i>
-        </button>
-      </div> -->
-    
-      <!-- Bootstrap Pagination with Page Number Buttons -->
+     
+   
       <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="currentPage === 1">
@@ -121,13 +116,9 @@
           <li class="page-item" [class.disabled]="currentPage === 1">
             <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
           </li>
-    
-          <li *ngFor="let page of [].constructor(totalPages); let i = index"
-              class="page-item"
-              [class.active]="currentPage === (i + 1)">
-            <button class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</button>
+          <li *ngFor="let page of getVisiblePages()" class="page-item" [class.active]="currentPage === page">
+            <button class="page-link" (click)="setPage(page)">{{ page }}</button>
           </li>
-    
           <li class="page-item" [class.disabled]="currentPage === totalPages">
             <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
           </li>
@@ -136,6 +127,7 @@
           </li>
         </ul>
       </nav>
+
     </div>
     <div *ngIf="viewReviewClicked" class="reviewview">
       <div class="PageHeading">
@@ -170,18 +162,6 @@
             <label for="contactphone">Status</label>
             <input type="text" id="contactphone" class="form-control" [value]="reviewdetails?.status" readonly>
           </div>
-          <!-- <div class="form-group">
-            <label for="contactphone">Rating</label>
-            <input type="text" id="contactphone" class="form-control" [value]="reviewdetails?.rating" readonly>
-          </div> -->
-          <!-- <div class="rating">
-            <p><strong>Rating:</strong> {{ reviewdetails?.rating }} / 5</p> 
-            <div class="stars">
-              <span *ngFor="let star of stars; let i = index" [class.filled]="i < reviewdetails.rating">
-                <i class="fa fa-star"></i>
-              </span>
-            </div>
-          </div> -->
           <div class="stars">
             <p><strong>Rating:</strong>
             <span *ngFor="let star of stars; let i = index" 
@@ -193,16 +173,56 @@
         </div>
         </div>
 
-
-        
-        
         <div class="form-group">
           <label for="contactMessage">Message</label>
           <textarea id="contactMessage" class="form-control" rows="4" [value]="reviewdetails?.usermessage" readonly></textarea>
         </div>
-        <div class="updatestatusbuttons">
+        <!-- <div class="updatestatusbuttons">
           <button class="decline" (click)="declineReview(reviewdetails?.ID)"><i class="fa fa-times-circle"></i>Decline</button>
           <button class="approve" (click)="approveReview(reviewdetails?.ID)"><i class="fa fa-check-circle"></i>Approve</button>
+        </div> -->
+ 
+        <div class="updatestatusbuttons">
+          <ng-container *ngIf="selectedReviewFilter === '0'">
+            <button class="decline" (click)="declineReview(reviewdetails?.ID)">
+              <i class="fa fa-times-circle"></i> Decline
+            </button>
+            <button class="approve" (click)="approveReview(reviewdetails?.ID)">
+              <i class="fa fa-check-circle"></i> Approve
+            </button>
+          </ng-container>
+        
+          <button *ngIf="selectedReviewFilter === '1'" class="decline" (click)="declineReview(reviewdetails?.ID)">
+            <i class="fa fa-times-circle"></i> Decline
+          </button>
+        
+          <button *ngIf="selectedReviewFilter === '2'" class="approve" (click)="approveReview(reviewdetails?.ID)">
+            <i class="fa fa-check-circle"></i> Approve
+          </button>
+        </div>
+        
+        
+        
+        <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
+        <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" style="margin-top: 35%;">
+              <div class="modal-header">
+                <h5 class="modal-title" style="color: black;">Status</h5>
+                <button type="button" class="close" aria-label="Close" style="cursor: pointer;
+                border-radius: 5px;
+                color: red;margin-left: 82%;" (click)="UpdatecloseModal()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body "  style="color: black">
+                <p>{{ subscriptionStatus }}</p> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </div>

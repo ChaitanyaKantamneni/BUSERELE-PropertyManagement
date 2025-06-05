@@ -9,7 +9,8 @@
                 <div class="properties row g-3 justify-content-center align-items-center">
                     <ng-container *ngFor="let propertyitem of propertydetails">
                         <div class="col-lg-4 col-md-6 col-sm-12 p-0 mb-3 rounded-2">
-                            <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                          <!-- [queryParams]="{ fromSearch: 'true' }" -->
+                            <a [routerLink]="['/view-property',encodeID(propertyitem.propertyID)]"   routerLinkActive="router-link-active" class="text-decoration-none text-black" >
                                 <div class="propertyFulldet d-flex flex-column">
                                     <div class="propertyImage position-relative">
                                         <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
@@ -73,7 +74,6 @@
                                               <div class="price">
                                                 <p class="mb-0 text-black m-lg-1">Price: </p>
                                                 <p class="mb-0 text-black m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
-
                                               </div>
                                             </div>
                                           </div>
@@ -131,6 +131,6 @@
           </div>
         </div>
       </div>
-  </div>
+   </div>
     <app-footer></app-footer>
 </div>

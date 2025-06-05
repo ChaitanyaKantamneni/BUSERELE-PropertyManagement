@@ -1,15 +1,26 @@
 <div *ngIf="isLoading" class="preloader">
     <img src="assets/images/load.gif" alt="Loading...">
 </div>
+<button id="goTopBtn" class="go-top-btn" (click)="scrollToTop()">
+  <i class="fas fa-arrow-up"></i> 
+</button>
+
 <div *ngIf="!isLoading">
     <app-top-nav-1></app-top-nav-1>
+  
+<!-- <div class="backLabel mt-4" *ngIf="showBackButton">
+  <a href="javascript:void(0);" (click)="backClick($event)" class="back-button">
+    <h5 class="title">Welcome back to the Property Hub</h5>
+    <p class="subtitle">Ready to jump back in?</p>
+  </a>
+</div> -->
+
+
     <div class="container">
-        <div class="maincontainer" *ngFor="let propertydetailsitem of propertydetails">
+        <div class="maincontainer"  *ngFor="let propertydetailsitem of propertydetails">
             <div class="propTitlePrice">
                 <h5 class="propertyTitle" style="flex: 1; margin: 0;">{{propertydetailsitem.propertyName}}</h5>
                 <h5 *ngIf="isVisible">{{propertydetailsitem.UserID}}</h5>
-
-                
                 <div class="propPriceDet">
                  <div style="display: flex; align-items: center; margin-right: 20px;">
                         <h5 style="margin: 0; font-size: 12px; color: #888; font-weight: 400">
@@ -20,9 +31,6 @@
                             Rs {{propertydetailsitem.propertyArea}}
                         </h5>
                     </div>
-                
-
-
                     <div style="display: flex; align-items: center; margin-right: 20px;">
                         <h5 style="margin: 0; font-size: 12px; color: #888; font-weight: 400">
                            Price
@@ -33,10 +41,7 @@
                         </h5>
                     </div>
 
-                    
-                
                     <div class="wishlist-container">
-                       
                         <div style="margin-right: 20px;" class="wishlist-container">
                           <i 
                             id="heartIcon"
@@ -48,44 +53,6 @@
                           </i>
                         </div>
                         
-                        <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title">Status</h5>
-                                <button type="button" class="close" aria-label="Close"  (click)="UpdatecloseModal()">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <p>{{ propertyInsStatus }}</p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      
-                        <!-- <div class="share-container" style="display: inline-block; position: relative;">
-                          <i 
-                            class="fas fa-share-alt share-icon"
-                            title="Share"
-                            style="cursor: pointer; font-size: 15px;"
-                            (click)="toggleShareMenu()">
-                          </i>
-                          <div *ngIf="isShareMenuVisible" class="share-menu" style="display: block;">
-                            <a (click)="shareOnWhatsApp()" title="Share on WhatsApp" style="cursor: pointer;">
-                              <i class="fab fa-whatsapp" style="color: #25D366;"></i>
-                            </a>
-                            <a (click)="shareOnInstagram()" title="Share on Instagram" style="cursor: pointer;">
-                              <i class="fab fa-instagram" style="color: #E1306C;"></i>
-                            </a>
-                            <a (click)="shareOnFacebook()" title="Share on Facebook" style="cursor: pointer;">
-                              <i class="fab fa-facebook" style="color: #1877F2;"></i>
-                            </a>
-                          </div>
-                        </div> -->
                         <div class="share-container" style="display: inline-block; position: relative;">
                           <i 
                             class="fas fa-share-alt share-icon"
@@ -111,43 +78,125 @@
                             </a>
                           </div>
                         </div>
-                        
-                        
+                        <!-- <div class="print-container" title="Print" (click)="printPage()">
+                          <i class="fas fa-print print-icon"></i>
+                        </div> -->
                       </div>   
                 </div>  
             </div>
           
             <div class="propertyimagecontainer d-flex flex-wrap justify-content-between align-items-start p-0 mb-4">
                 <div class="imagecon">
-                    <div class="property-for">
+                  <div class="property-for">
                     <p class="property-status" [ngStyle]="{'color': propertydetails[0]?.propertyBadgeColor}">
                         {{ propertydetails[0]?.propertyFor }}
-                      </p>
-                     </div>
+                    </p>
+                    <!-- <p class="property-status" [Style.background-color]= propertydetails[0]?.propertyBadgeColor>
+                      {{ propertydetails[0]?.propertyFor }}
+                  </p> -->
+                </div>
+                
                     <div class="imagecontainer">
-                        
-                        <img src="{{selectedImage}}">
-                        <ng-template #noImage>
-                            <img *ngIf="propertydetails[0]?.propertyImages?.length > 0; else noImagesAvailable"
-                                [src]="propertydetails[0]?.propertyImages[0]"
-                                [alt]="'Property Image 1'"
-                                class="property-image">
-                        </ng-template>
-                        <ng-template #noImagesAvailable>
-                            <p>No images available.</p>
-                        </ng-template>
+                      <img *ngIf="selectedImage; else noImage" [src]="selectedImage">
+                      
+                      <ng-template #noImage>
+                          <img *ngIf="propertydetails[0]?.propertyImages?.length > 0 || propertydetails[0]?.floorImages?.length > 0; else noImagesAvailable"
+                              [src]="propertydetails[0]?.propertyImages[0] || propertydetails[0]?.floorImages[0]"
+                              [alt]="'Property or Floor Image'"
+                              class="property-image">
+                      </ng-template>
+                  
+                      <ng-template #noImagesAvailable>
+                          <p>No images available.</p>
+                      </ng-template>
                     </div>
-
-                    <div class="image-list-container mt-3 d-flex flex-wrap">
-                        <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
-                             class="thumbnail"
-                             (click)="selectMainImage(image)">
-                          <img [src]="image"
-                               [alt]="'Thumbnail ' + (i + 1)"
-                               class="thumbnail-image"
-                               [class.selected]="image === selectedImage">
-                        </div>
+                  <!-- <div class="image-list-container mt-3 d-flex flex-wrap">
+                      <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(image)">
+                        <img [src]="image"
+                             [alt]="'Property Thumbnail ' + (i + 1)"
+                             class="thumbnail-image"
+                             [class.selected]="image === selectedImage">
+                      </div>
+                      <div *ngFor="let floorImage of propertydetails[0]?.floorImages; let j = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(floorImage)">
+                        <img [src]="floorImage"
+                             [alt]="'Floor Plan Thumbnail ' + (j + 1)"
+                             class="thumbnail-image"
+                             [class.selected]="floorImage === selectedImage">
+                      </div>
+                  </div> -->
+                     
+                  <div class="image-list-container mt-3 d-flex flex-wrap position-relative">
+                    <div 
+                      #scrollContainer
+                      class="d-flex overflow-x-auto overflow-y-hidden"
+                      [ngClass]="{ 'scrollable-images-container': showScrollButtons }"
+                      (window:resize)="checkScroll()" >
+                      <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(image)">
+                        <img [src]="image"
+                             [alt]="'Property Thumbnail ' + (i + 1)"
+                             class="thumbnail-image"
+                             (load)="checkScroll()" 
+                             [class.selected]="image === selectedImage">
+                      </div>
+                      <div *ngFor="let floorImage of propertydetails[0]?.floorImages; let j = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(floorImage)">
+                        <img [src]="floorImage"
+                             [alt]="'Floor Plan Thumbnail ' + (j + 1)"
+                             class="thumbnail-image"
+                             (load)="checkScroll()"  
+                             [class.selected]="floorImage === selectedImage">
+                      </div>
                     </div>
+                    <button class="scroll-button left" *ngIf="showScrollButtons" (click)="scrollLeft(scrollContainer)">
+                      <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <button class="scroll-button right" *ngIf="showScrollButtons" (click)="scrollRight(scrollContainer)">
+                      <i class="fa fa-chevron-right"></i>
+                    </button>
+                  </div>
+                  
+                  <!-- 
+                  <div class="image-list-container mt-3 d-flex flex-wrap position-relative">
+                    <div 
+                      class="scrollable-images-container d-flex overflow-auto" 
+                      #scrollContainer
+                      (window:resize)="checkScroll()">
+                      <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(image)">
+                        <img [src]="image"
+                             [alt]="'Property Thumbnail ' + (i + 1)"
+                             class="thumbnail-image"
+                             (load)="checkScroll()" 
+                             [class.selected]="image === selectedImage">
+                      </div>
+                      <div *ngFor="let floorImage of propertydetails[0]?.floorImages; let j = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(floorImage)">
+                        <img [src]="floorImage"
+                             [alt]="'Floor Plan Thumbnail ' + (j + 1)"
+                             class="thumbnail-image"
+                             (load)="checkScroll()"  
+                             [class.selected]="floorImage === selectedImage">
+                      </div>
+                    </div>
+                    <button class="scroll-button left" *ngIf="showScrollButtons" (click)="scrollLeft(scrollContainer)">
+                      <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <button class="scroll-button right" *ngIf="showScrollButtons" (click)="scrollRight(scrollContainer)">
+                      <i class="fa fa-chevron-right"></i>
+                    </button>
+                  </div> -->
+                  
+                  
+                  
                 </div>
 
                 <div class="enquiryform">
@@ -155,7 +204,7 @@
                     <form [formGroup]="userEnquiryform">
                         <div class="form-group">
                         <label for="contactname">Name</label>
-                        <input type="text" id="contactname" class="form-control" formControlName="name" (keypress)="OnlyAlphabetsAndSpacesAllowed($event)" name="name" required  pattern="^[a-zA-Z\s]+$">
+                        <input type="text" id="contactname" class="form-control" formControlName="name" (keypress)="OnlyAlphabetsAndSpacesAllowed($event)" name="name" required  placeholder="Enter Name" pattern="^[a-zA-Z\s]+$">
                         <div *ngIf="userEnquiryform.get('name')?.touched && userEnquiryform.get('name')?.invalid" class="error-message">
                           <small *ngIf="userEnquiryform.get('name')?.hasError('required')">Name is required.</small>
                           <small *ngIf="userEnquiryform.get('name')?.hasError('pattern')">Name should only contain letters and spaces.</small>
@@ -164,7 +213,7 @@
                         </div>
                         <div class="form-group">
                         <label for="contactEmail">Email</label>
-                        <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" required>
+                        <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" placeholder="Enter Email" required>
                         <div *ngIf="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid" class="error-message">
                           <!-- <small *ngIf="userEnquiryform.get('email')?.hasError('required')">Email is required.</small> -->
                           <small *ngIf="userEnquiryform.get('email')?.hasError('email')">Please enter a valid email address.</small>
@@ -174,14 +223,14 @@
                         </div>
                         <div class="form-group">
                         <label for="contactphone">Phone (Optional)</label>
-                        <input type="text" id="contactphone" class="form-control" (keypress)="OnlyNumbersAllowed($event)" formControlName="phone" name="phone" pattern="^[0-9]{10}$" maxlength="10">
+                        <input type="text" id="contactphone" class="form-control" (keypress)="OnlyNumbersAllowed($event)" formControlName="phone" name="phone" placeholder="Enter Mobile" pattern="^[0-9]{10}$" maxlength="10">
                         <div *ngIf="userEnquiryform.get('phone')?.touched && userEnquiryform.get('phone')?.invalid" class="error-message">
                           <small *ngIf="userEnquiryform.get('phone')?.hasError('pattern')">Phone number must be 10 digits long.</small>
                         </div>
                         </div>
                         <div class="form-group">
                         <label for="contactMessage">Message</label>
-                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
+                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" placeholder="Enter Message" name="message" required></textarea>
                         <div *ngIf="userEnquiryform.get('message')?.touched && userEnquiryform.get('message')?.invalid" class="error-message">
                           <small *ngIf="userEnquiryform.get('message')?.hasError('required')">Message is required.</small>
                           <small *ngIf="userEnquiryform.get('message')?.hasError('minlength')">Message should be at least 10 characters long.</small>
@@ -191,29 +240,26 @@
                         <button class="btn w-100" (click)="enquiryformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
                     </form>
                 </div>
-                <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Status</h5>
-                        <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <p>{{ propertyInsStatus }}</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
             </div>
 
-            <div class="PropertyContentMain">
-                <div class="propertydetails">
-                      <div class="propertyoverview">
+            <div class="nav-tabs-wrapper">
+              <ul class="nav-tabs">
+                <li *ngIf="overviewSection" (click)="scrollToSection1(overviewSection)">OVERVIEW</li>
+                <li *ngIf="addressSection" (click)="scrollToSection1(addressSection)">ADDRESS</li>
+                <li *ngIf="descriptionSection" (click)="scrollToSection(descriptionSection)">DESCRIPTION</li>
+                <li *ngIf="specificDescSection" (click)="scrollToSection(specificDescSection)">SPECIFICATIONS</li>
+                <li *ngIf="amenitiesSection" (click)="scrollToSection(amenitiesSection)">AMENITIES</li>
+                <li *ngIf="videoSection" (click)="scrollToSection(videoSection)">VIDEO</li>
+                <li *ngIf="reviewSection" (click)="scrollToSection1(reviewSection)">REVIEW</li>
+                <li *ngIf="locationSection" (click)="scrollToSection(locationSection)">LOCATION</li>
+                <li *ngIf="socialSection" (click)="scrollToSection(socialSection)">SOCIAL MEDIA</li>
+              </ul>
+            </div>
+
+        <div class="PropertyContentMain">
+              <div class="propertydetails">
+                
+                      <div class="propertyoverview" #overviewSection>
                         <div class="headings">
                           <p>Overview</p>
                         </div>
@@ -234,48 +280,8 @@
                         </div>
                       </div>
                     
-                      <!-- <div class="propertyoverview">
-                        <div class="headings">
-                          <p>Address</p>
-                        </div>
-                        <div class="body">
-                          <div class="addressbody">
-                            <div class="side1">
-                              <div *ngIf="propertydetailsitem.propertyAddress" class="addpropertytype">
-                                <p class="heading">Address:</p>
-                                <p class="value">{{ propertydetailsitem.propertyAddress }}</p>
-                              </div>
-                              <div *ngIf="propertydetailsitem.nearBy" class="addpropertytype">
-                                <p class="heading">Nearby:</p>
-                                <p class="value">{{ propertydetailsitem.nearBy }}</p>
-                              </div>
-                              <div *ngIf="propertydetailsitem.propertyCity" class="addpropertytype">
-                                <p class="heading">City:</p>
-                                <p class="value">{{ propertydetailsitem.propertyCity }}</p>
-                              </div>
-                            </div>
                       
-                            <div class="side2">
-                              <div *ngIf="propertydetailsitem.landMark" class="addpropertytype">
-                                <p class="heading">LandMark:</p>
-                                <p class="value">{{ propertydetailsitem.landMark }}</p>
-                              </div>
-                      
-                              <div *ngIf="propertydetailsitem.state" class="addpropertytype">
-                                <p class="heading">State:</p>
-                                <p class="value">{{ propertydetailsitem.state }}</p>
-                              </div>
-                      
-                              <div *ngIf="propertydetailsitem.propertyZipCode" class="addpropertytype">
-                                <p class="heading">Zip/Postal Code:</p>
-                                <p class="value">{{ propertydetailsitem.propertyZipCode }}</p>
-                              </div>
-                            </div>
-                          </div>   
-                        </div>
-                      </div> -->
-                      
-                      <div class="propertyoverview">
+              <div class="propertyoverview" #addressSection>
                         <div class="headings">
                           <p>Address</p>
                         </div>
@@ -291,10 +297,9 @@
                             </ng-container>
                           </div>
                         </div>
-                      </div>
+               </div>
                       
-
-            <div *ngIf="propertydetailsitem.propertydescription" class="propertyoverview PropertyDescriptionMain  ">
+            <div *ngIf="propertydetailsitem.propertydescription" class="propertyoverview PropertyDescriptionMain" #descriptionSection>
                 <div class="headings">
                 <p>Description</p>
                 </div>
@@ -303,7 +308,7 @@
                 </div>
             </div>
   
-            <div *ngIf="propertydetailsitem.propertyspecificDescription" class="propertyoverview PropertyDescriptionMain">
+            <div *ngIf="propertydetailsitem.propertyspecificDescription" class="propertyoverview PropertyDescriptionMain"  #specificDescSection>
                 <div class="headings">
                 <p>Specific Description</p>
                 </div>
@@ -313,9 +318,9 @@
             </div>
   
                     
-                <div *ngIf="selectedAmenities.length > 0" class="propertyoverview propertyfeatures">
+                <div *ngIf="selectedAmenities.length > 0" class="propertyoverview propertyfeatures" #amenitiesSection>
                     <div class="headings">
-                      <p>Features</p>
+                      <p>Aminities</p>
                     </div>
                     <div class="body">
                       <div *ngFor="let amenity of selectedAmenities">
@@ -330,7 +335,7 @@
                   </div>
                   
   
-                <div *ngIf="selectedVideo" class="propertyoverview propertyVideo">
+                <div *ngIf="selectedVideo" class="propertyoverview propertyVideo" #videoSection>
                     <div class="headings">
                     <p>Video</p>
                     </div>
@@ -344,7 +349,7 @@
                     </div>
                 </div>
   
-                    <div class="propertyoverview propertyreviews">
+                    <div class="propertyoverview propertyreviews" #reviewSection>
                         <div class="headings">
                             <p>Review</p>
                         </div>
@@ -448,24 +453,6 @@
                                             Submit
                                         </button>
                                     </div>
-                                    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-                                        <div class="modal-dialog" role="document">
-                                          <div class="modal-content">
-                                            <div class="modal-header">
-                                              <h5 class="modal-title">Status</h5>
-                                              <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
-                                                <span aria-hidden="true">&times;</span>
-                                              </button>
-                                            </div>
-                                            <div class="modal-body">
-                                              <p>{{ propertyInsStatus }}</p> 
-                                            </div>
-                                            <div class="modal-footer">
-                                              <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
                                 </div>
                             </form>
                         </div>
@@ -514,30 +501,11 @@
                                         </div>
                                         <button class="btn w-100" (click)="reviewformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
                                     </div>
-
-                                    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-                                        <div class="modal-dialog" role="document">
-                                          <div class="modal-content">
-                                            <div class="modal-header">
-                                              <h5 class="modal-title">Status</h5>
-                                              <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
-                                                <span aria-hidden="true">&times;</span>
-                                              </button>
-                                            </div>
-                                            <div class="modal-body">
-                                              <p>{{ propertyInsStatus }}</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                              <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
                                 </div>
                             </form>
                         </div>
                     </div>
-                <div *ngIf="iframeHtml" class="propertyoverview">
+                <div *ngIf="iframeHtml" class="propertyoverview"  #locationSection>
                     <div class="headings">
                     <p>Location</p>
                     </div>
@@ -546,12 +514,12 @@
                     </div>
                 </div>
                 
-            <div *ngIf="propertydetailsitem.websiteurl || propertydetailsitem.pinteresturl || propertydetailsitem.facebookurl || propertydetailsitem.twitterurl" class="propertyoverview">
+
+            <div *ngIf="propertydetailsitem.websiteurl || propertydetailsitem.pinteresturl || propertydetailsitem.facebookurl || propertydetailsitem.twitterurl" class="propertyoverview"  #socialSection>
               <div class="headings">
                 <p>Social Networks</p>
               </div>
               <div class="body propSocialLinks">
-                
                 <div *ngIf="propertydetailsitem.websiteurl?.trim()">
                   <a href="{{propertydetailsitem.websiteurl}}" target="_blank" class="social-icon website">
                     <i class="fas fa-link"></i> 
@@ -579,12 +547,9 @@
                     <p class="value">TWITTER</p> 
                   </a>
                 </div>
-            
               </div>
             </div>
-  
           </div>
-               
                 <div class="AdvertisingPropertiesAdds">
                     <div class="ExploreFeaturedProperties">
                         <div class="container">
@@ -629,6 +594,13 @@
                                             </div>
                                         </div>
                                     </ng-container>
+                                    <div class="d-flex justify-content-center mt-3">
+                                      <span *ngFor="let dot of dots; let i = index"
+                                            (click)="goToSlide(i)"
+                                            class="dot"
+                                            [class.active]="i === currentSlideIndex">
+                                      </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -636,10 +608,10 @@
                 </div>
                 
                 
-                
+                <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
                 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
                   <div class="modal-dialog" role="document">
-                    <div class="modal-content">
+                    <div class="modal-content" style="margin-top: 35%;">
                       <div class="modal-header">
                         <h5 class="modal-title">Status</h5>
                         <button type="button" class="close" aria-label="Close" style="cursor: pointer;

@@ -6,9 +6,9 @@
         <div class="properties row g-3 justify-content-center align-items-center">
             <ng-container *ngFor="let propertyitem of propertydetails">
                 <div class="col-lg-4 col-md-6 col-sm-12 p-0 mb-3 rounded-2">
-                    <a [routerLink]="['/dashboard/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                    <!-- <a [routerLink]="['/dashboard/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black"> -->
+                    <a [routerLink]="['/dashboard/view-property', encodeID(propertyitem.propertyID)]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
                         <div class="propertyFulldet d-flex flex-column">
-                            <!-- Property Image Section -->
                             <div class="propertyImage position-relative">
                                 <!-- <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image"> -->
                                 <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
@@ -19,17 +19,16 @@
                                 </div> -->
                             </div>
                         
-                            <!-- Property Details Section -->
                             <div class="propertyDetails">
                                 <div class="propertyTitle d-flex align-items-center mt-1">                                          
                                     <p class="mb-0">
-                                      {{ propertyitem.propertyname.length > 20 ? (propertyitem.propertyname | slice:0:20) + '...' : propertyitem.propertyname }}
+                                      {{ propertyitem.propertyname.length > 20 ? (propertyitem.propertyname | slice:0:20) + '...' : propertyitem.propertyname}}
                                     </p>
                                   </div>
                                 <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
                                     <i class="fa fa-location"></i>
                                     <p class="mb-0 ms-2">
-                                        {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
+                                        {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress}}
                                     </p>
                                 </div>
                                 <div class="propertyspecifications row m-0 justify-content-between mb-1">
@@ -49,7 +48,7 @@
                                 <div class="propertyspecifications row m-0 justify-content-between">
                                     <div class="col-4 d-flex align-items-center p-0">
                                         <i class="fa fa-home text-dark me-2 small-icon"></i>
-                                        <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 7 ? (propertyitem.PropertyTypeName | slice:0:7) + '...' : propertyitem.PropertyTypeName }}</p>
+                                        <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 7 ? (propertyitem.PropertyTypeName | slice:0:7) + '...' : propertyitem.PropertyTypeName}}</p>
                                     </div>
                                     <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
                                         <i class="fa fa-compass text-dark me-2 small-icon"></i>
@@ -64,10 +63,10 @@
                                     <div class="bottom-bar2 d-flex justify-content-between align-items-center w-100">
                                         <div class="contact d-flex align-items-center">
                                         
-                                          <a [routerLink]="['/contact-us']" class="text-decoration-none  text-black fw-bold">
+                                          <!-- <a [routerLink]="['/contact-us']" class="text-decoration-none  text-black fw-bold">
                                             Contact
                                           </a>
-                                          <i class="fa fa-phone-alt me-2 text-black"></i>
+                                          <i class="fa fa-phone-alt me-2 text-black"></i> -->
                                         </div>
                                       
                                         <div class="cost d-flex justify-content-end">
@@ -87,7 +86,6 @@
                 <div class="NoDataFoundImg">
                     <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
                 </div>
-                <!-- <p class="text-center">{{NoDataFound}}</p> -->
                 <p>No properties found for the given search or filter criteria.</p>
 
             </div>

@@ -60,8 +60,9 @@ background-color: #0056b3;
 .reviewstable{
 height: auto;
 width: 100%;
-overflow: auto;
-max-height: 275px;
+/* overflow: auto; */
+/* max-height: 250px; */
+/* max-height: 321px; */
 }
 
 .viewbtn{
@@ -179,10 +180,6 @@ ul.AvailabilityOptions-row label {
   top: 6px;             
 }
 
-
-
-
-
 .availability-option {
   display: flex;        
   align-items: center;   
@@ -203,8 +200,6 @@ ul.AvailabilityOptions-row label {
   transition: none;    
   margin: 0;         
 }
-
-
 
 .amenity-row {
   display: flex;
@@ -230,11 +225,14 @@ ul.AvailabilityOptions-row label {
   text-align: center;
 }
 
+.media-buttons button:hover {
+  border-color: #007BFF; 
+  animation: dotted-move 1s linear infinite;
+}
+
 .propertyAminities .singleaminity{
   width: 32%;
 }
-
-
 
 .updatestatusbuttons{
   display: flex;
@@ -329,8 +327,7 @@ label {
   transition: 0.2s ease-in-out;
   opacity: 0;
 }
-/* select:focus+label,
-select:not(:placeholder-shown) + label */
+
 input:focus + label,
 input:not(:placeholder-shown) + label,
 textarea:focus+label,
@@ -343,7 +340,6 @@ textarea:not(:placeholder-shown) + label
     color: black;
     opacity: 1;
 }
-/* select:placeholder-shown+label */
 input:placeholder-shown + label,
 textarea:placeholder-shown + label
 {
@@ -357,29 +353,12 @@ font-family: 'Roboto', sans-serif;
 font-size: 11px;
 font-weight: 600;
 color: black;
-opacity: 1; /* Show label when selected */
+opacity: 1; 
 }
 
-/* Optional: Hide label when select is not focused and no value is selected */
 select:not(:focus):not(.filled) + label {
 opacity: 0;
 }
-
-/* 
-input[type="date"] {
-  padding: 10px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  position: relative; 
-}
-
-input[type="date"]:focus + label,
-input[type="date"]:valid + label {
-  top: -10px;
-  font-size: 12px;
-  color: black;
-  opacity: 1;
-} */
 
 .date .input-container {
   position: relative;
@@ -401,35 +380,32 @@ input[type="date"]:valid + label {
   color: #333;
 }
 
-/* Style for the label, initially acting as a placeholder */
 .date label {
   position: absolute;
   top: 50%;
   left: 10px;
   font-size: 16px;
-  color: #aaa; /* Light gray color for placeholder text */
+  color: #aaa; 
   pointer-events: none;
   transition: 0.2s ease-in-out;
-  transform: translateY(-50%); /* Vertically center the label */
+  transform: translateY(-50%);
   opacity: 1;
 }
 
-/* When input is focused or has a value (date is selected), the label floats upwards */
  input[type="date"]:focus + .date label,
  input[type="date"]:valid + .date label,
  input[type="date"]:not(:empty) + .date label {
   top: -10px;
   font-size: 12px;
   color: black;
-  opacity: 1; /* Keep the label visible */
+  opacity: 1;
 }
 
-/* When the input is empty and not focused, the label stays in placeholder position */
  input[type="date"]:not(:focus):not(:placeholder-shown) + .date label {
   top: 50%;
   font-size: 16px;
-  color: #aaa; /* Light gray */
-  opacity: 1; /* Keep label visible */
+  color: #aaa; 
+  opacity: 1; 
 }
 
 
@@ -515,6 +491,7 @@ table tbody{
 .image-table{
   height:300px;
   overflow: scroll;
+  overflow-x: auto;
 }
 .image-table table{
   height: 100%;
@@ -588,10 +565,19 @@ table tbody{
   padding: 10px 20px;
 }
 
+.statusButtons .UnSold{
+  margin-right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
 .statusButtons i,.updateButton i,.SubmitButton i{
   margin-right: 10px;
 }
-
+/* 
 .addnewButton button{
   background-color: #2495FD;
   color: white;
@@ -600,6 +586,33 @@ table tbody{
 
 .addnewButton button:hover{
   background-color: #0056b3;
+} */
+
+.addnewButton button {
+  background-color: #2495FD;
+  color: white;
+  border: none;
+  border-radius: 8px; 
+  padding: 10px 20px;
+  font-size: 15px; 
+  font-weight: bold;    
+  text-transform: uppercase; 
+  cursor: pointer;   
+  transition: all 0.3s ease; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.addnewButton button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+}
+
+
+
+.addnewButton button:focus {
+  outline: none; 
+  box-shadow: 0 0 0 4px rgba(37, 123, 255, 0.5); 
 }
 
 .NoDataFound{
@@ -695,7 +708,7 @@ table tbody{
       padding: 15px 8px 8px 8px; 
       box-sizing: border-box;
       position: relative;
-      display: block;
+      /* display: block; */
       border: 1px solid #ddd;
     }
   
@@ -741,7 +754,8 @@ table tbody{
 
 
 .back-button {
-  background-color: #007bff; 
+  /* background-color: #007bff;  */
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   color: #fff; 
   padding: 10px 20px; 
   font-size: 16px; 
@@ -751,6 +765,7 @@ table tbody{
   display: flex;
   align-items: center;
   transition: all 0.3s ease; 
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .back-button i {
@@ -760,7 +775,8 @@ table tbody{
 
 .back-button:hover {
   background-color: #0056b3; 
-  transform: translateY(-2px); 
+  transform: translateY(-2px) scale(1.02);
+  
 }
 
 .back-button:focus {
@@ -848,19 +864,18 @@ button[data-tooltip]:hover::after {
   z-index: 2;
 } */
 
-
 .table-container {
-  max-height: 400px; /* Define max height for scrolling */
-  overflow-y: auto;  /* Enable vertical scroll */
+  max-height: 400px; 
+  overflow-y: auto;  
   position: relative;
-  padding-top: 5px;  /* Small padding to avoid tooltip cutoff */
+  padding-top: 5px;  
 }
 
 .table thead {
   position: sticky;
   top: 0;
   background: white;
-  z-index: 10; /* Higher than tooltips */
+  z-index: 10;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
@@ -889,4 +904,432 @@ button[data-tooltip]:hover::after {
   visibility: visible;
   z-index: 20; 
 }
+
+
+.email-wrapper {
+  position: relative;
+}
+
+.email-wrapper i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.email-wrapper input {
+  padding-right: 35px; 
+}
+
+
+.go-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 41px;
+  font-size: 21px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.go-top-btn:hover {
+  background-color: #0056b3;
+}
+
+.show {
+  display: block;
+}
+
+
+
+
+
+
+
+
+
+@media (max-width: 1024px) {
+
+  .mainReview {
+      height: auto;
+  }
+
+  .filtersSearch {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .searchreview, .reviewStatus {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .reviewStatus {
+      justify-content: flex-start;
+  }
+
+  .table thead {
+      display: none;
+  }
+
+  .table tbody {
+      display: block;
+  }
+
+  .table tbody tr {
+      display: block;
+      margin-bottom: 10px;
+  }
+
+  .table tbody td {
+      width: 100%;
+      padding: 15px 8px;
+      box-sizing: border-box;
+      position: relative;
+      /* display: block; */
+      border: 1px solid #ddd;
+  }
+
+  .table tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      color: #555;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-size: 12px;
+  }
+
+  .formrow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+
+  .formrow .form-group {
+      width: 100%;
+  }
+
+  .media-buttons {
+      width: 100%;
+  }
+
+  .media-buttons button {
+      width: 100%;
+      padding: 12px;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+      width: 100%;
+  }
+
+  .select-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+
+  .select-buttons button {
+      width: 100%;
+      margin: 5px 0;
+  }
+
+  .updatestatusbuttons {
+      flex-direction: column;
+  }
+
+  .back-button-container {
+      display: block;
+  }
+
+  .back-button {
+      width: 100%;
+      margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .mainReview {
+      height: auto;
+  }
+
+  .filtersSearch {
+      flex-direction: column;
+      margin-bottom: 10px;
+      align-items: flex-start;
+  }
+
+  .searchreview, .reviewStatus {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .reviewStatus {
+      justify-content: flex-start;
+  }
+
+  .table thead {
+      display: none;
+  }
+
+  .table tbody {
+      display: block;
+  }
+
+  .table tbody tr {
+      display: block;
+      margin-bottom: 10px;
+  }
+
+  .table tbody td {
+      width: 100%;
+      padding: 15px 8px;
+      box-sizing: border-box;
+      position: relative;
+      /* display: block; */
+      border: 1px solid #ddd;
+  }
+
+  .table tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      color: #555;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-size: 12px;
+  }
+
+  .formrow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+
+  .formrow .form-group {
+      width: 100%;
+  }
+
+  .media-buttons {
+      width: 100%;
+  }
+
+  .media-buttons button {
+      width: 100%;
+      padding: 12px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+      width: 100%;
+  }
+
+  .select-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+
+  .select-buttons button {
+      width: 100%;
+      margin: 5px 0;
+  }
+
+  .updatestatusbuttons {
+      flex-direction: column;
+  }
+
+  .back-button-container {
+      display: block;
+  }
+
+  .back-button {
+      width: 100%;
+      margin-bottom: 20px;
+  }
+
+  .go-top-btn {
+      display: block;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .mainReview {
+      height: auto;
+  }
+
+  .filtersSearch {
+      flex-direction: column;
+      margin-bottom: 10px;
+      align-items: flex-start;
+  }
+
+  .searchreview, .reviewStatus {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .reviewStatus {
+      justify-content: flex-start;
+  }
+
+  .table thead {
+      display: none;
+  }
+
+  .table tbody {
+      display: block;
+  }
+
+  .table tbody tr {
+      display: block;
+      margin-bottom: 0px;
+  }
+
+  .table tbody td {
+      width: 100%;
+      padding: 15px 8px;
+      box-sizing: border-box;
+      position: relative;
+      /* display: block; */
+      border: 1px solid #ddd;
+  }
+
+  .table tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      color: #555;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-size: 12px;
+  }
+
+  .formrow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+
+  .formrow .form-group {
+      width: 100%;
+  }
+
+  .media-buttons {
+      width: 100%;
+  }
+
+  .media-buttons button {
+      width: 100%;
+      padding: 12px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+      width: 100%;
+  }
+
+  .select-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+
+  .select-buttons button {
+      width: 100%;
+      margin: 5px 0;
+  }
+
+  .updatestatusbuttons {
+      flex-direction: column;
+  }
+
+  .back-button-container {
+      display: block;
+  }
+
+  .back-button {
+      width: 100%;
+      margin-bottom: 20px;
+  }
+
+  .go-top-btn {
+      display: block;
+  }
+
+  .NoDataFoundImg {
+      height: 120px;
+      width: 150px;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  .table thead {
+    display: block; 
+  }
+
+  .table, 
+  .table tbody, 
+  .table tr, 
+  .table td {
+    /* display: block; */
+    width: 100%;
+  }
+
+  .table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+    padding: 10px;
+  }
+
+  .table td {
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    width: 45%;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+  }
+}
+
 

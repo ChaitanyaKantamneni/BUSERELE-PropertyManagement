@@ -72,12 +72,6 @@ button:disabled {
   }
 
 
-
-
-
-
-
-  
   .form-control {
     width: 100%;  
     height: 40px;  
@@ -90,15 +84,6 @@ button:disabled {
   
   
   .form-group input,.form-group textarea{
-    /* width: 100%;
-    padding: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid gray; */
     border: none;
     border-bottom: 1px solid gray;
     font-family: 'Roboto', sans-serif;
@@ -123,12 +108,11 @@ button:disabled {
     opacity: 0;
   }
   
-  /* Label animation when focused or the input has content */
   input:focus + label,
   input:not(:placeholder-shown) + label,
   textarea:focus+label,
   textarea:not(:placeholder-shown) + label {
-      top: -10px;
+      top: -6px;
       font-family: 'Roboto', sans-serif;
       font-size: 11px;
       font-weight: 600;
@@ -136,7 +120,6 @@ button:disabled {
       opacity: 1;
   }
   
-  /* Make label hidden when input is empty and not focused */
   input:placeholder-shown + label,
   textarea:placeholder-shown + label {
       opacity: 0;
@@ -275,3 +258,155 @@ button:disabled {
   }
   
   
+
+
+  .formrow {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.form-group {
+    width: 48%;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.validation-message {
+    min-height: 20px;  
+    display: block;
+    margin-top: 5px;
+    font-size: 10px;
+}
+
+.email-wrapper {
+  position: relative;
+}
+
+.email-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.email-wrapper input {
+  padding-right: 35px; 
+}
+
+@media (max-width: 768px) {
+  .mainReview {
+    flex-direction: column;
+    padding: 10px;
+    height: auto;
+  }
+
+  .reviewcard,
+  .reviewview {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .profileForm,
+  .profilePicture {
+    width: 100%;
+  }
+
+  .formrow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .formrow .form-group {
+    width: 100%;
+  }
+
+  .updatestatusbuttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .updatestatusbuttons1 {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .updatestatusbuttons2 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .PageHeading {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .image-preview {
+    height: auto;
+  }
+
+  .modal-dialog {
+    margin: 20% auto;
+    width: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  .form-control {
+    height: 35px;
+  }
+
+  .modal-dialog {
+    margin: 30% auto;
+  }
+
+  .formrow {
+    gap: 8px;
+  }
+
+  .reviewcard,
+  .reviewview {
+    padding: 10px;
+  }
+
+  a h5 {
+    font-size: 16px;
+  }
+
+  a p {
+    font-size: 9px;
+  }
+
+  .validation-message {
+    font-size: 9px;
+  }
+}

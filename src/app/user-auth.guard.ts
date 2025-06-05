@@ -13,14 +13,18 @@ export const userAuthGuard: CanActivateFn = (route, state) => {
   if(Email && userRole=="2"){
     if (lastActivityTime && (Date.now() - parseInt(lastActivityTime, 10)) > TIMEOUT) {
       localStorage.clear();
-      router.navigate(['/signin']);
+      // router.navigate(['/signin']);
+      router.navigate(['/home']);
+
       return false;
     }  
     return true;
   }
   else{
     localStorage.clear();
-    router.navigate(['/signin'])
+    // router.navigate(['/signin'])
+    router.navigate(['/home'])
+
     return false;
   }
 

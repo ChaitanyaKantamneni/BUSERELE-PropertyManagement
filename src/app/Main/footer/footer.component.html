@@ -2,30 +2,10 @@
 <footer class="footer">
     <div class="container">
         <div class="footernewsletter d-flex flex-wrap justify-content-between align-items-center m-0">
-            <h5 class="w-sm-50 mb-3 mb-sm-0">Newsletter Signup</h5>
+            <h5 class="w-sm-50 mb-3 mb-sm-0">Newsletter BUSERELE</h5>
             <div class="d-flex justify-content-end align-items-center w-sm-auto">
                 <input type="email" id="email" [(ngModel)]="email" placeholder="Enter your email" required />
                 <button (click)="subscribeMail()">SUBSCRIBE</button>
-                <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Status</h5>
-                          <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <p>{{ subscriptionStatus }}</p> 
-                        </div>
-                        <div class="modal-footer">
-                            <!-- <img src="assets/images/buserelelog.jpg" alt="Buserele Logo" class="modal-image" /> -->
-                          <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-                          
-                        </div>
-                      </div>
-                    </div>
-                </div>
               </div>
               
               
@@ -34,7 +14,7 @@
         <div class="footer-content d-flex flex-wrap justify-content-between align-items-start">
             <div class="footerlogo">
                 <div class="logo">
-                    <img class="w-100" src="assets/images/logo_1.png" alt="Company Logo">
+                    <img class="w-100" src="assets/images/logo_1.png" routerLink="/home" alt="Company Logo">
                 </div>
                 <div class="companyDescription">
                     <p>BUSERELE PROPERTY MANAGEMENT SYSTEM works with landlords, investors, real estate agents, and institutional investors to manage their Properties and real estate portfolios.</p>
@@ -63,22 +43,20 @@
                     <p><i class="fas fa-envelope"></i> info&#64;buserele.com</p> -->
                     <p>
                         <i class="fas fa-phone-alt" (click)="makeCall()"></i>
-                        <span>+91 8688802505</span> <!-- Display number here -->
+                        <span>+91 8688802505</span> 
                       </p>
                       
                       <p>
                         <i class="fas fa-envelope" style="padding: 0px 4px 0px 0px;" (click)="openEmailClient()"></i>
-                        <span>info&#64;buserele.com</span> <!-- Display email here -->
+                        <span>info&#64;buserele.com</span>
                       </p>
                       
                       
                     <div class="social-icons">
                         <a href="https://x.com/buserele" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <!-- <a routerLink="#"><i class="fab fa-facebook-f"></i></a> -->
                         <a href="https://www.facebook.com/buserele.buserele" target="_blank">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        
                         <a href="https://www.youtube.com/@buserele.property" target="_blank"><i class="fab fa-youtube"></i></a>
 
                         <a href="https://www.linkedin.com/in/buserele-properties-634484334/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
@@ -92,29 +70,31 @@
 
         
         <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
-    <p>© <a href="https://www.gvrinfosystems.com/" target="_blank" rel="noopener noreferrer">GVR INFOSYSTEMS PVT LTD</a> 2025, All Rights Reserved.</p>
+          <p>© <a href="https://www.gvrinfosystems.com/" target="_blank" rel="noopener noreferrer">GVR INFOSYSTEMS PVT LTD</a> 2025, All Rights Reserved.</p>
 
-  </div>
-  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" style="color: black;">Status</h5>
-          <button type="button" class="close" aria-label="Close" style="cursor: pointer;
-          border-radius: 5px;
-          color: red;margin-left: 82%;" (click)="UpdatecloseModal()">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
-        <div class="modal-body "  style="color: black">
-          <p>{{ subscriptionStatus }}</p> 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+      <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
+      <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="margin-top: 35%;">
+            <div class="modal-header">
+              <h5 class="modal-title" style="color: black;">Status</h5>
+              <button type="button" class="close" aria-label="Close" style="cursor: pointer;
+              border-radius: 5px;
+              color: red;margin-left: 82%;" (click)="UpdatecloseModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body "  style="color: black">
+              <p>{{ subscriptionStatus }}</p> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+
     </div>
     
 </footer>

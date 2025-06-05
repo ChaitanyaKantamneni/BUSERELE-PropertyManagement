@@ -5,15 +5,6 @@
     margin-top: 0px;
 }
 
-/* app-top-nav-1 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; 
-    background-color: #fff; 
-    box-shadow: 0 4px 2px -2px gray; 
-  } */
 
   .modal-header{
     justify-content: space-between;
@@ -29,7 +20,7 @@
 .preloader {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 60%;
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
@@ -77,16 +68,33 @@ p{
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* .image-list-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; 
+    overflow-y: auto; 
+    padding: 10px 0;
+    width: 100%; 
+    max-width: 100%;
+    height: 100px; 
+    white-space: nowrap; 
+} */
+
+
 .image-list-container {
     display: flex;
     gap: 10px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    overflow-y: auto; /* Prevent vertical scrolling */
-    padding: 10px 0;
-    width: 100%; /* Full width */
-    max-width: 100%; /* Ensures it doesn't exceed the screen width */
-    height: 100px; /* Adjust height as needed */
-    white-space: nowrap; /* Prevents line breaks */
+    /* overflow-x: auto; 
+    overflow-y: auto;  */
+    /* padding: 10px 0;
+    width: 100%;  */
+    padding: 0px 0;
+    width: 96%; 
+    max-width: 100%; 
+    height: 100px; 
+    white-space: nowrap;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .thumbnail {
@@ -94,29 +102,27 @@ p{
     border: 2px solid transparent;
     border-radius: 5px;
     transition: transform 0.2s, border-color 0.2s;
-    display: inline-block; /* Keeps the thumbnails inline */
+    display: inline-block; 
 }
 
 .thumbnail:hover {
-    border-color: #007bff; /* Highlight border color on hover */
-    transform: scale(1.05); /* Zoom effect on hover */
+    border-color: #007bff;
+    transform: scale(1.05);
 }
 
 .thumbnail-image {
-    width: 100px; /* Set width for each thumbnail */
-    height: 75px; /* Set height for each thumbnail */
-    /* object-fit: cover; Maintain aspect ratio */
-    border-radius: 5px; /* Rounded corners */
+    width: 100px; 
+    height: 75px; 
+    border-radius: 5px; 
 }
 
 .thumbnail.selected {
-    border-color: #007bff; /* Border color for the selected thumbnail */
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Blue glow effect */
+    border-color: #007bff; 
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
 }
 
-/* Custom scroll bar styling */
 .image-list-container::-webkit-scrollbar {
-    height: 8px; /* Scrollbar height */
+    height: 8px; 
 }
 
 .image-list-container::-webkit-scrollbar-thumb {
@@ -127,7 +133,6 @@ p{
 .image-list-container::-webkit-scrollbar-track {
     background-color: #f0f0f0;
 }
-
 
 .enquiryform {
     background-color: white;
@@ -263,7 +268,7 @@ p{
     justify-content: space-between;
     align-items: stretch;
     width: 100%;
-    padding: 20px 40px 10px 40px;
+    padding: 20px 40px 10px 34px;
     flex-direction: row;
     flex-wrap: wrap;
 }
@@ -277,7 +282,8 @@ p{
 .propertyoverview .body .propertytype .heading{
     text-align: center;
     font-weight: 600;
-    color: #222222
+    color: #222222;
+   
 }
 
 .propertyoverview .body .value {
@@ -296,16 +302,6 @@ p{
     margin-right: 10px;
     color: #222222
 }
-
-/* .PropertyDescriptionMain .body .PropertyDescriptionContent{
-    margin-top: 15px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #333;
-    word-wrap: break-word;
-    text-align: justify;
-    flex-grow: 1;
-} */
 
 .PropertyDescriptionMain .body .PropertyDescriptionContent ,.PropertyDescriptionContent {
     
@@ -331,9 +327,6 @@ p{
     white-space: nowrap !important; 
     display: inline !important;     
 }
-
-
-
 
 .propertyfeatures .body {
     display: grid;
@@ -539,7 +532,7 @@ p{
   }
 
 
-.share-icon {
+  .share-icon {
     background-color: #1877F2;
     color: white;
     padding: 1px;
@@ -559,7 +552,7 @@ p{
     background-color: #145A8A;
 }
 
-.share-container {
+/* .share-container {
     position: relative; 
 }
 .share-container {
@@ -568,22 +561,22 @@ p{
     margin-left: 10px; 
   }
 
+  .share-menu {
+    position: absolute;  
+    top: 100%;          
+    left: 30;          
+    padding: 10px;      
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;       
+  }
   
 
-.share-menu {
-    display: none;
-    position: absolute;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    gap: 10px;
-}
 
 .share-container:hover .share-menu {
     display: flex;
-    /* flex-direction: column;  */
     height: 40px;
 }
 
@@ -599,7 +592,44 @@ p{
 
 .share-menu {
     transition: opacity 0.3s ease, visibility 0.3s ease;
-}
+} */
+
+
+.share-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .share-icon {
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  .share-menu {
+    position: absolute;
+    top: 0;
+    left: 32px; 
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .share-menu a i {
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+  }
+  
+  .share-menu a:hover i {
+    transform: scale(1.2);
+    transition: transform 0.2s ease-in-out;
+  }
 
 .social-icon {
     display: inline-block;
@@ -695,7 +725,7 @@ p{
   }
   
   .propertytype {
-    padding: 5px;
+    padding: 4px;
     background-color: #f9f9f9;
     border-radius: 5px;
   }
@@ -831,11 +861,7 @@ p{
     .contactformdiv {
         width: 30%;
     }
-
-
 }
-
-
 
 @media (max-width: 767px) {
     .maincontainer{
@@ -935,7 +961,7 @@ p{
     }
 
     .image-list-container {
-        height: 120px; 
+        height: 60px; 
     }
 
     .thumbnail-image {
@@ -980,10 +1006,7 @@ p{
         width: 100%;
         
     }
-
 }
-
-
 
 
 .propertyoverview {
@@ -1089,9 +1112,6 @@ input.form-control:focus, textarea.form-control:focus {
     }
 }
 
-
-
-
 .imagecon {
     position: relative;
     max-width: 100%;
@@ -1102,7 +1122,9 @@ input.form-control:focus, textarea.form-control:focus {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    background-color: rgba(0, 0, 0, 1.5);
+
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -1110,3 +1132,267 @@ input.form-control:focus, textarea.form-control:focus {
     font-weight: bold;
     z-index: 10; 
 }
+
+:host ::ng-deep .locationMap iframe {
+    width: 100% !important;
+    /* height: 450px !important; */
+    border: 0;
+}
+.locationMap {
+    width: 100%;
+    /* height: 450px; */
+    overflow: hidden;
+}
+.locationMap iframe {
+    display: block;
+    width: 100%;
+    /* height: 100%; */
+}
+.backLabel {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.back-button {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+.back-button .title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 5px;
+    transition: color 0.3s;
+}
+
+.back-button .subtitle {
+    font-size: 10px;
+    color: #666;
+    margin: 0;
+    transition: color 0.3s;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);  
+    z-index: 1040;  
+  }
+  
+  .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1050;  
+  }
+  
+
+
+
+  .image-list-container {
+    position: relative;
+  }
+  
+  .scrollable-images-container {
+    display: flex;
+    overflow-x: scroll;
+    padding-bottom: 10px; 
+    scroll-behavior: smooth;
+  }
+  
+  .thumbnail {
+    margin-right: 10px;
+  }
+  
+  .thumbnail-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  .thumbnail-image.selected {
+    border: 2px solid #007bff; 
+  }
+  
+  .scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background-color: rgba(36, 149, 253, 0.8);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  
+  .scroll-button.left {
+    left: 0;
+  }
+  
+  .scroll-button.right {
+    right: 0;
+  }
+  
+  .scroll-button:hover {
+    background-color: rgba(0, 86, 179, 0.9);
+  }
+  
+  .scrollable-images-container {
+    scroll-behavior: smooth;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+
+
+
+
+
+
+  @media (max-width: 768px) {
+    .maincontainer,
+    .ExploreFeaturedProperties,
+    .Testimonials {
+      margin: 10px;
+    }
+  
+    .PropertyContentMain {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .AdvertisementProperties,
+    .enquiryform {
+      width: 100% !important;
+      height: auto;
+    }
+  
+    .reviewform {
+      flex-direction: column;
+    }
+  
+    .reviewform .reviewdiv,
+    .reviewform .reviewtextarea {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  
+    .propertyoverview .body {
+        flex-direction: row;
+        padding: 11px 10px 10px 0px;
+    }
+  
+    .propertyoverview .body .propertytype {
+      width: 100%;
+    }
+  
+    .addressbody .side1, 
+    .addressbody .side2 {
+      width: 100%;
+    }
+  
+    .propertyfeatures .body {
+      grid-template-columns: 1fr;
+    }
+  
+    .propTitlePrice {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .wishlist-container,
+    .propPriceDet {
+      width: 80%;
+      justify-content: flex-start;
+    }
+  
+    .grid-container {
+      grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    }
+  
+    .video-container {
+      height: auto;
+    }
+  
+    .thumbnail-image {
+      width: 80px;
+      height: 60px;
+    }
+  
+    .image-list-container {
+      overflow-x: auto;
+    }
+  }
+  @media (max-width: 768px) {
+    .ExploreFeaturedProperties {
+      margin: 20px 10px;
+    }
+  
+    .AdvertisingPropertiesAdds {
+      width: 100%;
+      margin: 10px 0;
+    }
+  
+    .AdvertisingPropertiesAdds .propertyFulldet {
+      flex-direction: column;
+      border-radius: 10px;
+    }
+  
+    .AdvertisingPropertiesAdds .propertyImage {
+      width: 100%;
+      height: 180px;
+      border-radius: 10px 10px 0 0;
+    }
+  
+    .AdvertisingPropertiesAdds .propertyDetails {
+      width: 100%;
+      height: auto;
+      padding: 10px;
+      border-radius: 0 0 10px 10px;
+      box-shadow: none;
+    }
+  
+    .AdvertisingPropertiesAdds .propertyDetails i,
+    .AdvertisingPropertiesAdds .propertyDetails .ms-2 {
+      font-size: 13px;
+    }
+  
+    .AdvertisingPropertiesAdds .propertyDetails p {
+      font-size: 12px;
+    }
+  
+    .AdvertisingPropertiesAdds .propertyDetails .price p {
+      font-size: 14px;
+      font-weight: bold;
+    }
+  
+    .AdvertisingPropertiesAdds .badge {
+      font-size: 10px;
+      padding: 3px 8px;
+    }
+  
+    .ExploreFeaturedProperties .propertyImage {
+      border-radius: 10px;
+    }
+  
+    .propertyImage {
+      height: auto;
+      min-height: 200px;
+    }
+  }
+  
+  
+
+
+  

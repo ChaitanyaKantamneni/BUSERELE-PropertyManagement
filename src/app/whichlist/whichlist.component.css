@@ -22,7 +22,7 @@
 .preloader {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 60%;
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
@@ -85,16 +85,6 @@
     overflow: hidden;
 }
 
-
-/* 
-.bottom-bar2 {
-    background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
-    color: white;
-    padding: 0px 10px;
-    text-align: center;
-}
-    
- */
  .bottom-bar2 {
     /* background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%); */
     /* color: white; */
@@ -106,10 +96,6 @@
 .propertyFooter{
     border-top: 0.5px solid #e5dddd;
 }
-
-
-
-
 
 .propertyImage {
     position: relative;
@@ -147,18 +133,8 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
 .propertyaddress i {
-    font-size: 1.2rem; /* Adjust as needed */
+    font-size: 1.2rem; 
 }
 
 .propertyspecifications {
@@ -172,11 +148,11 @@
 }
 
 .propertyDetails .cost {
-    color: #007bff; /* Or use a color that fits your design */
+    color: #007bff; 
 }
 
 .smaller-text,.small-icon {
-    font-size: 9px; /* Adjust as needed */
+    font-size: 9px; 
 }
 
 .properties .col-lg-3,.row .col-lg-4{
@@ -205,11 +181,10 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: calc(100vh - 60px); /* Adjust for header/footer height */
+    height: calc(100vh - 60px); 
     overflow: hidden;
 }
 
-/* Properties container */
 .properties-container {
     flex-grow: 1;
     overflow-y: auto;
@@ -218,14 +193,13 @@
     height: calc(100vh - 60px);
 }
 
-/* Mortgage section */
 .Mortgage {
     position: sticky;
     height: calc(100vh - 60px);
-    width: 25%; /* Fixed width */
+    width: 25%; 
     background-color: #f7f7f7;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
-    border-left: 2px solid #ccc; /* Optional border */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); 
+    border-left: 2px solid #ccc;
     padding: 1rem;
     overflow-y: hidden;
     z-index: 100;
@@ -308,9 +282,6 @@
 }
 
 
-
-
-
 .contact i {
     font-size: 8px;
     padding-left: 4px;
@@ -325,9 +296,9 @@
     padding: 0px 10px;
     /* background-color: rgba(0, 0, 0, 0.7);  */
     border-radius: 5px;
-    width: 100%;  /* Ensure it takes full width */
+    width: 100%;
     display: flex;
-    justify-content: space-between;  /* Space between the contact and price sections */
+    justify-content: space-between;
     align-items: center; 
     
   }
@@ -345,7 +316,7 @@
   }
   
   .text-primary {
-    color: white !important; /* Adjust the color for Contact */
+    color: white !important; 
   }
   
   .text-primary:hover {
@@ -353,20 +324,15 @@
   }
   
 
-
-
-
-
-
 @media (max-width: 768px) {
 
     .propertyFulldet {
         flex-direction: column;
     }
 
-    .propertyImage {
+    /* .propertyImage {
         flex: 1;
-    }
+    } */
 
     .propertyDetails {
         flex: 2;
@@ -410,29 +376,51 @@
     }
 }
 
-
 .button-container {
     display: flex;
     justify-content: flex-end; 
     margin-top: 20px; 
   }
   
-  button {
-    background-color: #2495FD;
-    color: white; 
-    border: none; 
-    padding: 10px 20px; 
-    font-size: 16px; 
-    cursor: pointer; 
-    border-radius: 5px; 
-    transition: background-color 0.3s; 
+  .btn {
+    background-color: #2495FD; 
+    color: white;
+    border: 2px solid #2495FD; 
+    padding: 10px 25px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
   }
   
-  button:hover {
-    background-color: #1f7cdb; 
+  .btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    transition: all 0.4s ease;
+    z-index: -1;
+  }
+  
+  .btn:hover::before {
+    left: 0;
+  }
+  
+  .btn:hover {
+    color: #2495FD;
+    background-color: transparent; 
   }
   
   button:focus {
     outline: none; 
   }
-  
+  .wishlist-item {
+    color: red;
+  }

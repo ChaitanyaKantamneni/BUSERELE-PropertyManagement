@@ -19,7 +19,7 @@ export class UserDashboardComponent {
   }
   isExpanded = true;
   toggleSidebar() {
-    this.isExpanded = !this.isExpanded; // Toggle between expanded and collapsed
+    this.isExpanded = !this.isExpanded;
   }
 
   logout() {
