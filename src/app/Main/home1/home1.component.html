@@ -1,6 +1,40 @@
     <div *ngIf="isLoadingAdvProperty" class="preloader">
         <img src="assets/images/load.gif" alt="Loading...">
     </div>
+    
+    <!-- <button class="floating-chat-btn" (click)="toggleSidebar()" title="Have a query? Ask me!">
+      <i class="fas fa-comment-dots"></i>
+    </button>
+    
+    <div class="contact-sidebar" *ngIf="isSidebarOpen">
+      <div class="header">
+        <img src="assets/logo.png" alt="Logo" class="logo">
+        <div>
+          
+          <strong>Buserele Team</strong><br>
+          <span><i class="fas fa-phone"></i> +91 8688802505</span><br>
+          <a href="#" class="listings-link">View Listings</a>
+        </div>
+        <button class="close-btn" (click)="toggleSidebar()">×</button>
+      </div>
+
+      <form #contactForm="ngForm" (ngSubmit)="sendMessage()">
+        <input type="text" name="name" [(ngModel)]="contact.name" placeholder="Your name" required>
+        <input type="text" name="phone" [(ngModel)]="contact.phone" placeholder="Phone" required>
+        <input type="email" name="email" [(ngModel)]="contact.email" placeholder="Email" required>
+        <textarea name="description" [(ngModel)]="contact.description" placeholder="Description"></textarea>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div> -->
+   
+    <div class="call-icon-fixed">
+      <a href="tel:+918688802505" title="Call Now">
+        <img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call" />
+      </a>
+    </div>
+
+  
+    
     <div *ngIf="!isLoadingFeaProperty && !isLoadingAdvProperty" class="pagestartContainer">
       <section class="maincontainerSection">
         <app-top-nav-1 class="w-100"></app-top-nav-1>
@@ -44,6 +78,8 @@
                               </ul>
                               </div>
                           </div>
+
+                          
                           <div class="col-12 col-md-2 position-relative input-container">
                               
                               <select class="form-control" [(ngModel)]="selectedPropertyType">
@@ -86,53 +122,34 @@
                     
                           <div class="col-12 col-md-2">
                             <button class="btn w-100" (click)="searchclick()" 
-                                    style="border: none; background-color: #2495FD; color: white; padding: 6px;">
+                                    style="border: none; background-color: #2495FD; padding: 6px;">
+                                    <!-- color: white; -->
                               <i class="fa fa-search"></i> Search
                             </button>
                           </div>
-                          
-
-
-                          <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-                              <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title">Status</h5>
-                                    <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
-                                      <span aria-hidden="true">&times;</span>
-                                    </button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <p>{{ propertyInsStatus }}</p> <!-- Success/Failure message -->
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          
                       </div>
                   </div>
               </div>
           </div>
         </div>
       </section>
-        <div class="container p-0 m-0">
-            
-            <section class="FeaturedUserAdertisingPropertiesSection">
+      
+      
+        <div class="container p-0 m-0"> 
+            <section class="FeaturedUserAdertisingPropertiesSection" *ngIf="FeaturedProperties?.length > 0">
               <div class="FeaturedUserAdertisingProperties">
-                <div class="container">
+                <div class="container" [ngClass]="{'full-width': FeaturedProperties.length < 4, 'default-width': FeaturedProperties.length >= 4}">
                     <div class="headding">
                         <h5 class="bold-text d-flex justify-content-center align-items-center">Explore Our Featured Properties</h5>
                         <p class="p-text d-flex justify-content-center align-items-center">Enjoy the variety of 100+ Different properties in the market!</p>
                     </div>
                     <div class="PropertiesList">
                           <div class="property-container">
-                            <div class="fscrollable-properties">
+                            <div class="fscrollable-properties" [ngClass]="{'center': FeaturedProperties.length < 3}">
                               <ng-container *ngFor="let propertyitem of FeaturedProperties; let i = index">
-                                <div *ngIf="i < 6" class="property-card">
-                                  <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                                <div *ngIf="i < 5" class="property-card">
+                                  <!-- <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black"> -->
+                                  <a [routerLink]="['/view-property', encodeID(propertyitem.propertyID)]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
                                     <div class="propertyFulldet d-flex">
                                       <div class="propertyImage position-relative">
                                         <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
@@ -146,8 +163,8 @@
                                             (click)="toggleHeart($event, propertyitem.propertyID)"
                                             style="cursor: pointer;">
                                           </i>
-                                        </div>
-                                        -->
+                                        </div> -->
+                                       
                                       </div>
                                       
                                       <div class="propertyDetails">
@@ -159,35 +176,35 @@
                                         <div class="propertyaddress d-flex align-items-center mt-1 mb-2">
                                           <i class="fa fa-location"></i>
                                           <p class="mb-0 ms-2">
-                                            {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress }}
+                                            {{ propertyitem.propertyaddress.length > 20 ? (propertyitem.propertyaddress | slice:0:20) + '...' : propertyitem.propertyaddress || 'N/A'}}
                                           </p>
                                         </div>
                                         <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-2">
                                           <div class="col-4 d-flex align-items-center p-0">
                                             <i class="fa fa-ruler-combined text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea}} Sqft</p>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyarea || 'N/A'}} Sqft</p>
                                           </div>
                                           <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
                                             <i class="fa fa-bed text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds}}</p>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybeds || 'N/A'}}</p>
                                           </div>
                                           <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
                                             <i class="fa fa-bathtub text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms}}</p>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertybathrooms || 'N/A'}}</p>
                                           </div>
                                         </div>
                                         <div class="propertyspecifications row m-0 justify-content-center align-items-center mb-2">
                                           <div class="col-4 d-flex align-items-center p-0">
                                             <i class="fa fa-home text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 07 ? (propertyitem.PropertyTypeName | slice:0:07) + '...' : propertyitem.PropertyTypeName }}</p>
+                                            <p class="mb-0 text-dark smaller-text">{{ propertyitem.PropertyTypeName.length > 07 ? (propertyitem.PropertyTypeName | slice:0:07) + '...' : propertyitem.PropertyTypeName || 'N/A' }}</p>
                                           </div>
                                           <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
                                             <i class="fa fa-compass text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing}}</p>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyfacing || 'N/A' }}</p>
                                           </div>
                                           <div class="col-4 d-flex justify-content-center align-items-center p-0 border-dark" style="border-left: 0.5px dotted;">
                                             <i class="fa fa-car text-dark me-2 small-icon"></i>
-                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking}}</p>
+                                            <p class="mb-0 text-dark smaller-text">{{propertyitem.propertyparking || 'N/A' }}</p>
                                           </div>
                                         </div>
                                         <div class="propertyFooter position-relative mt-2">
@@ -214,43 +231,45 @@
                               </ng-container>
                             </div>
                         
-                            <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
+                            <!-- <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
+                              <button class="scroll-btn left" (click)="fscrollLeft()">&#8592;</button>
+                              <button class="scroll-btn right" (click)="fscrollRight()">&#8594;</button>
+                            </div> -->
+                            <div *ngIf="FeaturedProperties?.length > 3" class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
                               <button class="scroll-btn left" (click)="fscrollLeft()">&#8592;</button>
                               <button class="scroll-btn right" (click)="fscrollRight()">&#8594;</button>
                             </div>
                             
-                          </div>
-                                                    
+                          </div>                      
                         <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                          <!-- routerLink="/search-properties" -->
-                            <button class="btn" [routerLink]="['/search-properties', '2']" routerLinkActive="router-link-active">Browse More Properties</button>
+                            <button class="btn" [routerLink]="['/search-properties', encodeID('2')]" routerLinkActive="router-link-active">Browse More Properties</button>
+                            <!-- <button class="btn" [routerLink]="['/search-properties',  encodeParams()]" routerLinkActive="router-link-active">Browse More Properties</button> -->
                         </div>              
                     </div>
                 </div>  
               </div>
             </section>
 
-            <section class="ExploreAdertisingPropertiesSection">
+            <section class="ExploreAdertisingPropertiesSection" *ngIf="propertydetails && propertydetails.length > 0">
               <div class="ExploreAdertisingProperties">
-                  <div class="container">
+                  <div class="container" [ngClass]="{'full-width': propertydetails.length < 4, 'default-width': propertydetails.length >= 4}">
                       <div class="headding">
-                          <h5 class="bold-text d-flex justify-content-center align-items-center">Explore Our Properties</h5>
+                          <h5 class="bold-text d-flex justify-content-center align-items-center">Explore Our Advertisement Properties</h5>
                           <p class="p-text d-flex justify-content-center align-items-center">Enjoy the variety of 100+ Different properties in the market!</p>
                       </div>
                       <div class="PropertiesList">
                             <div class="property-container">
-                              <div class="scrollable-properties">
+                              <div class="scrollable-properties" [ngClass]="{'center': propertydetails.length < 3}">
                                 <ng-container *ngFor="let propertyitem of propertydetails; let i = index">
-                                  <div *ngIf="i < 6" class="property-card">
-                                    <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+                                  <div *ngIf="i < 5" class="property-card">
+                                    <!-- <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black"> -->
+                                    <a [routerLink]="['/view-property', encodeID(propertyitem.propertyID)]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
                                       <div class="propertyFulldet d-flex">
                                         <div class="propertyImage position-relative">
                                           <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
                                           <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">
                                             {{ propertyitem.propertyAvailability }}
                                           </span>
-                                          
-                                        
                                           <!-- <div class="wishlist-container position-absolute end-0 top-0 m-2">
                                             <i id="heartIcon" class="fas fa-heart"
                                               [ngStyle]="{ 'color': likedProperties[propertyitem.propertyID] ? 'red' : 'grey' }"
@@ -260,7 +279,6 @@
                                             </i>
                                           </div>
                                           -->
-                                          
                                         </div>
                                         
                                         <div class="propertyDetails">
@@ -328,17 +346,22 @@
                                 </ng-container>
                               </div>
                           
-                              <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
+                              <!-- <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
+                                <button class="scroll-btn left" (click)="scrollLeft()">&#8592;</button>
+                                <button class="scroll-btn right" (click)="scrollRight()">&#8594;</button>
+                              </div> -->
+                              <div *ngIf="propertydetails?.length > 3" class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
                                 <button class="scroll-btn left" (click)="scrollLeft()">&#8592;</button>
                                 <button class="scroll-btn right" (click)="scrollRight()">&#8594;</button>
                               </div>
                               
+                              
                             </div>
-                                                      
-                          <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                              <button class="btn" [routerLink]="['/search-properties', '1']" routerLinkActive="router-link-active">Browse More Properties</button>
-                          </div>  
                                             
+                          <div class="browsemoreproperties row justify-content-center align-items-center m-0">
+                            <!-- <button class="btn" [routerLink]="['/search-properties', encodeParams()]" routerLinkActive="router-link-active">Browse More Properties</button> -->
+                            <button class="btn" [routerLink]="['/search-properties', encodeID('1')]" routerLinkActive="router-link-active">Browse More Properties</button>
+                        </div>        
                       </div>
                   </div>                
                   <!-- Featured Properties -->
@@ -389,10 +412,9 @@
                           </div>
                       </div>
                   </div> -->
-              </div>
-            </section>
 
-            
+                </div>
+            </section>
 
             <section class="ServiceDivSection">
               <div class="ServiceDiv d-flex justify-content-center align-items-center">
@@ -429,7 +451,7 @@
                                   <form [formGroup]="userEnquiryform">
                                       <div class="form-group">
                                         <label for="contactname">Name</label>
-                                        <input type="text" id="contactname" class="form-control"   (keypress)="OnlyAlphabetsAndSpacesAllowed($event)" formControlName="name" name="name"   pattern="^[a-zA-Z\s]+$" required>
+                                        <input type="text" id="contactname" class="form-control"   (keypress)="OnlyAlphabetsAndSpacesAllowed($event)" formControlName="name" name="name" placeholder="Enter Name"   pattern="^[a-zA-Z\s]+$" required>
                                         <div *ngIf="userEnquiryform.get('name')?.touched && userEnquiryform.get('name')?.invalid" class="error-message">
                                           <small *ngIf="userEnquiryform.get('name')?.hasError('required')">Name is required.</small>
                                           <small *ngIf="userEnquiryform.get('name')?.hasError('pattern')">Name should only contain letters and spaces.</small>
@@ -438,7 +460,7 @@
                                       </div>
                                       <div class="form-group">
                                         <label for="contactEmail">Email</label>
-                                        <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" required>
+                                        <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" placeholder="Enter Email" required>
                                         
                                         <div *ngIf="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid" class="error-message">
                                           <!-- <small *ngIf="userEnquiryform.get('email')?.hasError('required')">Email is required.</small> -->
@@ -450,14 +472,14 @@
                                       </div>
                                       <div class="form-group">
                                         <label for="contactphone">Phone (Optional)</label>
-                                        <input type="text" id="contactphone" class="form-control" formControlName="phone"  (keypress)="OnlyNumbersAllowed($event)"  pattern="^[0-9]{10}$" maxlength="10" name="phone">
+                                        <input type="text" id="contactphone" class="form-control" formControlName="phone" placeholder="Enter Mobile"  (keypress)="OnlyNumbersAllowed($event)"  pattern="^[0-9]{10}$" maxlength="10" name="phone">
                                         <div *ngIf="userEnquiryform.get('phone')?.touched && userEnquiryform.get('phone')?.invalid" class="error-message">
                                           <small *ngIf="userEnquiryform.get('phone')?.hasError('pattern')">Phone number must be 10 digits long.</small>
                                         </div>
                                       </div>
                                       <div class="form-group">
                                         <label for="contactMessage">Message</label>
-                                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" required></textarea>
+                                        <textarea id="contactMessage" class="form-control" rows="4" formControlName="message" name="message" placeholder="Enter Message" required></textarea>
                                         <div *ngIf="userEnquiryform.get('message')?.touched && userEnquiryform.get('message')?.invalid" class="error-message">
                                           <small *ngIf="userEnquiryform.get('message')?.hasError('required')">Message is required.</small>
                                           <small *ngIf="userEnquiryform.get('message')?.hasError('minlength')">Message should be at least 10 characters long.</small>
@@ -466,24 +488,7 @@
                                       <button class="btn w-100" (click)="enquiryformsubmit()" [disabled]="userEnquiryform.invalid">Submit</button>
                                   </form>
                               </div>
-                              <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-                                <div class="modal-dialog" role="document">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h5 class="modal-title">Status</h5>
-                                      <button type="button" class="close" aria-label="Close" (click)="UpdatecloseModal()">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <p>{{ propertyInsStatus }}</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                             
                           </div>
 
                           
@@ -491,178 +496,189 @@
                   </div>
               </div>
             </section>
-            <!-- <div class="blog">
-                <div class="container">
-                  <div class="headding">
-                    <h5 class="bold-text d-flex justify-content-center align-items-center">Latest Blogs</h5>
-                  </div>
-              
-                  <div class="row">
-                    <div *ngFor="let blog of getDisplayedBlogs(); let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
-                      <div class="card">
-                        <div class="image-container propertyImage">
-                          <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
-                        </div>
-              
-                        <div class="card-body">
-                          <div class="info-section">
-                            <h5 class="card-title">{{ blog.BlogTitle | slice:0:50 }}</h5>
-                          </div>
-              
-                          <div class="content-section">
-                            <div class="card-text">
-                              <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
-              
-                              <p *ngIf="expandedContent[i]">{{ blog.BlogDescription }}</p>
-                            </div>
-                          </div>
-                          <div class="blogposteddate">
-                            <button  [routerLink]="'/viewblog/' + blog.BlogID">Read More</button>
-                            <p class="date" *ngIf="blog.BlogCreatedDate">
-                              <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="scrollbtn text-end" style="    display: flex;justify-content: flex-end;gap: 5px;">
-                    <button class="scrollbtn-left" (click)="scrollLeftblog()">&#8592;</button>
-                    <button  class="scrollbtn-right" (click)="scrollRightblog()">&#8594;</button>
-                </div>
-            </div> -->
-            <section class="blogSection">
+            
+            <section class="blogSection" *ngIf="getDisplayedBlogs()?.length > 0">
               <div class="blog">
                 <div class="container">
                   <div class="headding">
                     <h5 class="bold-text d-flex justify-content-center align-items-center">Latest Blogs</h5>
                   </div>
-              
-                  <div class="row">
-                    <div *ngFor="let blog of getDisplayedBlogs(); let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
+            
+                  <div class="row" >
+                    <div *ngFor="let blog of getDisplayedBlogs(); let i = index" class="col-12 col-sm-6 col-md-4 col-lg-4 mb-4" [ngClass]="{'justify-content-center': getDisplayedBlogs()?.length < 2,'default-width': getDisplayedBlogs().length < 4 && getDisplayedBlogs().length > 2,'total-width': getDisplayedBlogs().length >= 4 }">
                       <div class="card">
                         <div class="image-container propertyImage">
                           <img [src]="blog.BlogImage" alt="Uploaded Image" class="uploaded-image" />
                         </div>
-              
+            
                         <div class="card-body">
                           <div class="info-section">
                             <h5 class="card-title">{{ blog.BlogTitle | slice:0:50 }}</h5>
                           </div>
-              
+            
                           <div class="content-section">
                             <div class="card-text">
                               <div [innerHTML]="processText(blog.BlogDescription, i)" class="blog-description"></div>
-              
                               <p *ngIf="expandedContent[i]">{{ blog.BlogDescription }}</p>
                             </div>
                           </div>
-                          <div class="blogposteddate">
+                          <!-- <div class="blogposteddate">
                             <button class="button" [routerLink]="'/viewblog/' + blog.BlogID">Read More</button>
                             <p class="date" *ngIf="blog.BlogCreatedDate">
                               <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
                             </p>
+                          </div> -->
+                          <div class="blogposteddate">
+                            <button class="button" [routerLink]="'/viewblog/' + encodeID(blog.BlogID)">Read More</button>
+                            <p class="date" *ngIf="blog.BlogCreatedDate">
+                              <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
+                            </p>
                           </div>
+                          
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              <div class="scrollbtn text-end" style="display: flex;justify-content: flex-end;gap: 5px;">
+                  <button class="scrollbtn-left btns" (click)="scrollLeftblog()">&#8592;</button>
+                  <button class="scrollbtn-right btns" (click)="scrollRightblog()">&#8594;</button>
+              </div>
+              <!-- <div *ngIf="getDisplayedBlogs()?.length >= 4" class="scrollbtn text-end" style="display: flex; justify-content: flex-end; gap: 5px;">
+                <button class="scrollbtn-left btns" (click)="scrollLeftblog()">&#8592;</button>
+                <button class="scrollbtn-right btns" (click)="scrollRightblog()">&#8594;</button>
+              </div> -->
               
-                <!-- Scroll buttons for carousel -->
-                <div class="scrollbtn text-end" style="display: flex;justify-content: flex-end;gap: 5px;">
-                  <button class="scrollbtn-left btn" (click)="scrollLeftblog()">&#8592;</button>
-                  <button class="scrollbtn-right btn" (click)="scrollRightblog()">&#8594;</button>
-                </div>
               </div>
             </section>
-
-            <section class="TestimonialsSection">
+            
+            <section class="TestimonialsSection" *ngIf="Reviews?.length > 0">
               <div class="Testimonials">
-                  <div class="container">
-                    <div class="headding">
-                      <h5 class="bold-text d-flex justify-content-center align-items-center">Testimonials</h5>
-                      <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p>
-                    </div>
-                
-                    <div *ngIf="selectedReview" class="selected-review">
-                      
-                        <div class="review-card d-flex flex-column justify-content-center align-items-center">
-                          <div class="image">
-                            <img [src]="selectedReview.imageurl" alt="userimage" class="img-fluid rounded-circle">
-                          </div>
-                          <div class="review-text w-100">
-                            <div class="username w-100 d-flex justify-content-center align-items-center">
-                              <h5>{{ selectedReview.username ? selectedReview.username.toUpperCase() : 'N/A' }}</h5>
-                            </div>
-                            <div class="date w-100 d-flex justify-content-center align-items-center">
-                              <p>{{ selectedReview.posteddate }}</p>
-                            </div>
-                            <div class="content w-100 d-flex justify-content-center align-items-center">
-                              <p class="review-text-content">“{{ selectedReview.review }}”</p>
-                            </div>
-                            <div class="rating w-100 d-flex justify-content-center align-items-center">
-                              <p>Rating:
-                                <span *ngFor="let star of stars; let i = index" [class.filled]="i < selectedReview.rating" class="star">
-                                  <i class="fa fa-star"></i>
-                                </span>
-                              </p>
-                            </div>
-                          </div>
+                <div class="container">
+                  <div class="headding">
+                    <h5 class="bold-text d-flex justify-content-center align-items-center">Testimonials</h5>
+                    <p class="p-text d-flex justify-content-center align-items-center">What Our Clients Say About Us!</p>
+                  </div>
+            
+                  <div *ngIf="selectedReview" class="selected-review" >
+                    <div class="review-card d-flex flex-column justify-content-center align-items-center">
+                      <div class="image">
+                        <img [src]="selectedReview.imageurl" alt="userimage" class="img-fluid rounded-circle">
+                      </div>
+                      <div class="review-text w-100">
+                        <div class="username w-100 d-flex justify-content-center align-items-center">
+                          <h5>{{ selectedReview.username ? selectedReview.username.toUpperCase() : 'N/A' }}</h5>
                         </div>
-                      
+                        <div class="date w-100 d-flex justify-content-center align-items-center">
+                          <p>{{ selectedReview.posteddate }}</p>
+                        </div>
+                        <div class="content w-100 d-flex justify-content-center align-items-center">
+                          <p class="review-text-content">“{{ selectedReview.review }}”</p>
+                        </div>
+                        <div class="rating w-100 d-flex justify-content-center align-items-center">
+                          <p>Rating:
+                            <span *ngFor="let star of stars; let i = index" [class.filled]="i < selectedReview.rating" class="star">
+                              <i class="fa fa-star"></i>
+                            </span>
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                
-                    <div class="reviewsList d-flex justify-content-center align-items-center flex-column">
-                      <div class="review-container">
-                        <div class="review-content">
-                          <ng-container *ngFor="let reviewitem of Reviews">
-                            <a [routerLink]="['/view-reviews', reviewitem.reviewID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
-                            <div class="review-card d-flex flex-column justify-content-center align-items-center" (click)="openReview(reviewitem)">
+                  </div>
+            
+                 
+                  <div class="reviewsList d-flex justify-content-center align-items-center flex-column">
+                    <div class="review-container" [ngClass]="{'justify-content-center': Reviews.length < 2,'default-width': Reviews.length < 4 && Reviews.length > 2,'total-width': Reviews.length >= 4}">
+                      <div class="review-content">
+                        <div *ngFor="let reviewitem of Reviews">
+                          <!-- <a
+                            [routerLink]="['/view-reviews', reviewitem.reviewID]"
+                            routerLinkActive="router-link-active"
+                            class="text-decoration-none text-black"
+                          > -->
+                          <a
+                          [routerLink]="['/view-reviews', encodeID(reviewitem.reviewID)]"
+                          routerLinkActive="router-link-active"
+                          class="text-decoration-none text-black"
+                        >
+                            <div
+                              class="review-card d-flex flex-column justify-content-center align-items-center"
+                              (click)="openReview(reviewitem)"
+                            >
                               <div class="image">
-                                <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
+                                <img
+                                  [src]="reviewitem.imageurl"
+                                  alt="userimage"
+                                  class="img-fluid rounded-circle"
+                                />
                               </div>
                               <div class="review-text w-100">
-                                <div class="username w-100 d-flex justify-content-center align-items-center">
-                                  <h5>{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</h5>
+                                <div
+                                  class="username w-100 d-flex justify-content-center align-items-center"
+                                >
+                                  <h5>
+                                    {{
+                                      reviewitem.username
+                                        ? reviewitem.username.toUpperCase()
+                                        : 'N/A'
+                                    }}
+                                  </h5>
                                 </div>
-                                <div class="date w-100 d-flex justify-content-center align-items-center">
+                                <div
+                                  class="date w-100 d-flex justify-content-center align-items-center"
+                                >
                                   <p>{{ reviewitem.posteddate }}</p>
                                 </div>
-                                <div class="rating w-100 d-flex justify-content-center align-items-center">
+                                <div
+                                  class="rating w-100 d-flex justify-content-center align-items-center"
+                                >
                                   <div class="stars">
                                     <p>
-                                      <span *ngFor="let star of stars; let i = index" [class.filled]="i < reviewitem.rating" class="star">
+                                      <span
+                                        *ngFor="let star of stars; let i = index"
+                                        [class.filled]="i < reviewitem.rating"
+                                        class="star"
+                                      >
                                         <i class="fa fa-star"></i>
                                       </span>
                                     </p>
                                   </div>
                                 </div>
-                                <div class="content w-100 d-flex justify-content-center align-items-center">
-                                  <p class="review-text-content">“{{ truncateText(reviewitem.review, 20) }}”</p>
+                                <div
+                                  class="content w-100 d-flex justify-content-center align-items-center"
+                                >
+                                  <p class="review-text-content">
+                                    “{{ truncateText(reviewitem.review, 20) }}”
+                                  </p>
                                 </div>
-                                
                               </div>
                             </div>
                           </a>
-                          </ng-container>
                         </div>
                       </div>
-                
-                      <div class="browsemoreproperties row justify-content-center align-items-center mt-5">
-                        <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
-                      </div>
                     </div>
-
+                  
+                    <!-- <div
+                      class="browsemoreproperties row justify-content-center align-items-center mt-5"
+                      style="width: 40%;">
+                      <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
+                    </div> -->
+                    <div
+                    class="browse-more-container  d-flex justify-content-center align-items-center mt-5">
+                    <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
                   </div>
 
+                    
+                  </div>
+                  
+                </div>
               </div>
             </section>
-
+            
+            <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
             <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
                 <div class="modal-dialog" role="document">
-                  <div class="modal-content">
+                  <div class="modal-content" style="margin-top: 35%;">
                     <div class="modal-header">
                       <h5 class="modal-title">Status</h5>
                       <button type="button" class="close" aria-label="Close" style="cursor: pointer;
@@ -675,7 +691,11 @@
                       <p>{{ propertyInsStatus  }}</p> 
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
+                      <!-- <button type="button" class="btn btn-primary" style="border: none;
+                        background: blue;
+                        /* box-decoration-break: clone; */
+                        color: white;" (click)="handleOk()">OK</button> -->
+                        <button type="button" class="btntype btn-primary" (click)="handleOk()">OK</button>
                     </div>
                   </div>
                 </div>

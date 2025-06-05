@@ -1,70 +1,25 @@
-<!-- 
+
 <app-top-nav-1></app-top-nav-1>
-
-<div class="main-container">
-  <div class="blog-card">
+<div class="main-container d-flex" style="gap: 20px;">
+  <div class="blog-card" style="flex: 1;">
     <h1 class="card-title">{{ blog.title }}</h1>
     <div *ngIf="blog" class="card">
       <div *ngIf="blog.imageUrl">
         <img [src]="blog.imageUrl" alt="Blog Image" class="card-image"/>
       </div>
-
       <div [innerHTML]="blog.description" class="card-text"></div>
-
       <p class="date" *ngIf="blog.BlogCreatedDate && blog.BlogCreatedDate !== 'Invalid date'">
         <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
       </p>
     </div>
     <div *ngIf="!blog">Loading...</div>
   </div>
-
-  <div class="latest-blogs">
-    <h2>Latest Blogs</h2>
-    <div *ngFor="let recentBlog of latestBlogs" class="blog-cardlatest" (click)="goToBlogDetail(recentBlog)">
-      <div class="blog-image-container" >
-        <img [src]="recentBlog.imageUrl" alt="Blog Image" class="blog-image"/>
-      </div>
-  
-      <div class="blog-details">
-        <h3 class="blog-title" style="font-size: 13px;">{{ recentBlog.title  }}</h3>
-        <p class="date" *ngIf="recentBlog.BlogCreatedDate && recentBlog.BlogCreatedDate !== 'Invalid date'">
-          <i class="fas fa-calendar-alt"></i> {{ recentBlog.BlogCreatedDate }}  
-        </p>
-      </div>
-    </div>
-  </div>
-  </div>
-
-<app-footer></app-footer>
- -->
-
-
- <app-top-nav-1></app-top-nav-1>
-
-<div class="main-container">
-  <div class="blog-card">
-    <h1 class="card-title">{{ blog.title }}</h1>
-    <div *ngIf="blog" class="card">
-      <div *ngIf="blog.imageUrl">
-        <img [src]="blog.imageUrl" alt="Blog Image" class="card-image"/>
-      </div>
-
-      <div [innerHTML]="blog.description" class="card-text"></div>
-
-      <p class="date" *ngIf="blog.BlogCreatedDate && blog.BlogCreatedDate !== 'Invalid date'">
-        <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
-      </p>
-    </div>
-    <div *ngIf="!blog">Loading...</div>
-  </div>
-
-  <div class="latest-blogs">
-    <h2>Latest Blogs</h2>
+  <div class="latest-blogs blogcard">
+    <h2 style="text-align: center;">Latest Blogs</h2>
     <div *ngFor="let recentBlog of displayedBlogs" class="blog-cardlatest" (click)="goToBlogDetail(recentBlog)">
       <div class="blog-image-container">
         <img [src]="recentBlog.imageUrl" alt="Blog Image" class="blog-image"/>
       </div>
-
       <div class="blog-details">
         <h3 class="blog-title" style="font-size: 13px;">{{ recentBlog.title }}</h3>
         <p class="date" *ngIf="recentBlog.BlogCreatedDate && recentBlog.BlogCreatedDate !== 'Invalid date'">
@@ -72,7 +27,16 @@
         </p>
       </div>
     </div>
+
+    <div class="d-flex justify-content-center mt-3">
+      <span *ngFor="let dot of dots; let i = index"
+            (click)="goToSlide(i)"
+            class="dot"
+            [class.active]="i === currentSlideIndex"
+            style="cursor: pointer; margin: 0 5px; width: 10px; height: 10px; border-radius: 50%; background-color: gray; display: inline-block;"
+            [style.backgroundColor]="i === currentSlideIndex ? '#333' : '#ccc'">
+      </span>
+    </div>
   </div>
 </div>
-
 <app-footer></app-footer>

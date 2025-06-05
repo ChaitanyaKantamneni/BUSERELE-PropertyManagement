@@ -8,6 +8,7 @@ import { TopNav1Component } from "../top-nav-1/top-nav-1.component";
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs';
+import { ApiServicesService } from '../../api-services.service';
 interface propertyDet{
   propertyID:string,
   propertyimage:string,
@@ -28,86 +29,135 @@ interface propertyDet{
 @Component({
   selector: 'app-search-properties',
   standalone: true,
+  providers: [ApiServicesService],
   imports: [NgFor, HttpClientModule, CommonModule, FooterComponent, RouterModule, TopNav1Component,FormsModule],
   templateUrl: './search-properties.component.html',
   styleUrl: './search-properties.component.css'
 })
 export class SearchPropertiesComponent implements OnInit {
-  propertyType: string | null = null;
   selectedPropertyType:string|null='';
-  keyword: string | null = '';
-  propertyFor:string|null=null;
   selectedPropertyFor:string|null='';
   propID: string | null = '';
   isLoading: boolean = false;
   CityName:string|null=null;
+  propertyType:string|null=null;
+  propertyFor:string|null=null;
+  keyword: string | null = '';
   selectedcityName:string | null = '';
   propertyAvailabilityOptions:string|null='';
+  propertydetails: any[] = []
+
+  constructor(public apiurl:HttpClient,private route: ActivatedRoute,public router:Router,private apiurls: ApiServicesService){}
   
-  constructor(public apiurl:HttpClient,private route: ActivatedRoute,public router:Router){}
   // ngOnInit(): void {
-  //   this.route.paramMap.subscribe(params => {
+  //   this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
   //     this.propertyAvailabilityOptions = params.get('propertyAvailabilityOptions');
-  //     this.propertyType = params.get('propertyType');
-  //     this.keyword = params.get('keyword');
-  //     this.propertyFor = params.get('propertyFor');
-  //     this.propID = params.get('propertyID');
-  //     this.CityName = params.get('CityName');  
       
-  //     this.propertyType = this.propertyType === 'defaultType' ? null : this.propertyType;
-  //     this.keyword = this.keyword === 'defaultKeyword' ? null : this.keyword;
-  //     this.propertyFor = this.propertyFor === 'defaultFor' ? null : this.propertyFor;
-  //     this.CityName = this.CityName === 'defaultCity' ? null : this.CityName; 
-  //   });
-  
-  //   console.log("Availability Option",this.propertyAvailabilityOptions);
+  //     this.propertyType = this.getValidParam(params.get('propertyType'), 'defaultType');
+  //     this.keyword = this.getValidParam(params.get('keyword'), 'defaultKeyword');
+  //     this.propertyFor = this.getValidParam(params.get('propertyFor'), 'defaultFor');
+  //     this.CityName = this.getValidParam(params.get('CityName'), 'defaultCity');
 
-  //   if (this.propertyAvailabilityOptions) {
-  //     this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
-  //   }
-  //   else{
-  //     if (this.propertyType || this.propertyFor || this.CityName || this.keyword ) {
-  //       this.loadPropertyDetailsByFilters(this.propertyType || '', this.propertyFor || '',this.CityName || '', this.keyword || '');
-  //     } else {
-  //       this.loadPropertyDetails(); 
+  //     console.log("Availability Option:", this.propertyAvailabilityOptions);
+
+  //     if (this.propertyAvailabilityOptions) {
+  //       this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
   //     }
-  //   }
-    
+  //     else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
+  //       this.loadPropertyDetailsByFilters(this.propertyType || '', this.propertyFor || '', this.CityName || '', this.keyword || '');
+  //     } 
+  //     else {
+  //       this.loadPropertyDetails();
+  //     }
+      
+  //   });
   // }
-  
 
-  //propertydetails: propertyDet[] = [];
-  
   ngOnInit(): void {
     this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.propertyAvailabilityOptions = params.get('propertyAvailabilityOptions');
-      this.propertyType = this.getValidParam(params.get('propertyType'), 'defaultType');
+      const encodedAvailability = params.get('propertyAvailabilityOptions');
+      const encodedType = params.get('propertyType');
+      const encodedFor = params.get('propertyFor');
+  
+      this.propertyAvailabilityOptions = encodedAvailability ? this.decodeID(encodedAvailability) : null;
+      this.propertyType = encodedType ? this.getValidParam(this.decodeID(encodedType), 'defaultType') : null;
+      this.propertyFor = encodedFor ? this.getValidParam(this.decodeID(encodedFor), 'defaultFor') : null;
+  
       this.keyword = this.getValidParam(params.get('keyword'), 'defaultKeyword');
-      this.propertyFor = this.getValidParam(params.get('propertyFor'), 'defaultFor');
       this.CityName = this.getValidParam(params.get('CityName'), 'defaultCity');
-
-      console.log("Availability Option:", this.propertyAvailabilityOptions);
-
+  
+      console.log("Decoded Availability Option:", this.propertyAvailabilityOptions);
+  
       if (this.propertyAvailabilityOptions) {
         this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
-      } else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
-        this.loadPropertyDetailsByFilters(this.propertyType || '', this.propertyFor || '', this.CityName || '', this.keyword || '');
+      }
+      else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
+        this.loadPropertyDetailsByFilters(
+          this.propertyType || '',
+          this.propertyFor || '',
+          this.CityName || '',
+          this.keyword || ''
+        );
       } else {
         this.loadPropertyDetails();
       }
     });
   }
+  
+
+  
 
   private getValidParam(param: string | null, defaultValue: string): string | null {
     return param === defaultValue ? null : param;
   }
 
   private unsubscribe$ = new Subject<void>(); 
+  
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-  propertydetails: any[] = []
+
+
+    // ngOnInit(): void {
+  //   this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
+  //     const encodedParams = params.get('encodedParams'); 
+  
+  //     if (encodedParams) {
+  //       try {
+  //         const decoded = atob(encodedParams);
+  //         const parsedParams = JSON.parse(decoded);
+  
+  //         this.propertyAvailabilityOptions = parsedParams.propertyAvailabilityOptions;
+  //         this.propertyType = this.getValidParam(parsedParams.propertyType, 'defaultType');
+  //         this.keyword = this.getValidParam(parsedParams.keyword, 'defaultKeyword');
+  //         this.propertyFor = this.getValidParam(parsedParams.propertyFor, 'defaultFor');
+  //         this.CityName = this.getValidParam(parsedParams.CityName, 'defaultCity');
+  
+  //         console.log("Decoded Availability Option:", this.propertyAvailabilityOptions);
+  
+  //         if (this.propertyAvailabilityOptions) {
+  //           this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
+  //         } else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
+  //           this.loadPropertyDetailsByFilters(
+  //             this.propertyType || '',
+  //             this.propertyFor || '',
+  //             this.CityName || '',
+  //             this.keyword || ''
+  //           );
+  //         } else {
+  //           this.loadPropertyDetails();
+  //         }
+  
+  //       } catch (e) {
+  //         console.error('Failed to decode route parameters:', e);
+  //         this.loadPropertyDetails();
+  //       }
+  //     } else {
+  //       this.loadPropertyDetails();
+  //     }
+  //   });
+  // }
 
   propertytypes:any[]=[{
     icon:'fa-building',
@@ -151,15 +201,15 @@ export class SearchPropertiesComponent implements OnInit {
     const propertyType = this.propertytypes.find(pt => pt.propertyType === propertyTypeId);
     return propertyType ? propertyType.name : 'Unknown Type';
   }
-
+  
   loadPropertyDetails() {
     this.isLoading=true;
-    this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImages')
-      .subscribe(
+    this.apiurls.get<any>('GetAllPropertyDetailsWithImages')
+          .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
           this.propertydetails = response.map((property: any) => {
-            let propertyImage: string = 'assets/images/img1.png'; 
+            let propertyImage: string = 'assets/images/empty.png'; 
             let defaultPropImage: string = '';
   
             console.log('Full Property:', property);
@@ -189,10 +239,10 @@ export class SearchPropertiesComponent implements OnInit {
                   console.error('Error decoding first image data:', error);
                 }
               } else {
-                propertyImage='assets/images/img1.png';
+                propertyImage='assets/images/empty.png';
               }
             } else {
-              defaultPropImage='assets/images/img1.png';
+              defaultPropImage='assets/images/empty.png';
               console.log('images property is missing, not an array, or empty.');
             }
 
@@ -200,14 +250,18 @@ export class SearchPropertiesComponent implements OnInit {
               const firstImage = property.image;
   
               try {
-                defaultPropImage=`https://localhost:7190${property.image.filePath}`;
+                // defaultPropImage=`https://localhost:7190${property.image.filePath}`;
+                defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
                 console.log('Generated Default Image URL:', defaultPropImage);
-              } catch (error) {
+              } 
+            
+              catch (error) {
                 console.error('Error decoding default image data:', error);
               }
+
             }
             else {
-              defaultPropImage='assets/images/img1.png';
+              defaultPropImage='assets/images/empty.png';
               console.log('images property is missing, not an array, or empty.');
             }
 
@@ -277,8 +331,7 @@ export class SearchPropertiesComponent implements OnInit {
   }
 
   loadPropertyDetailsByPropertyType(propertytype:string){
-
-    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesByPropertyType/${propertytype}`)
+    this.apiurls.get<any[]>(`GetAllPropertyDetailsWithImagesByPropertyType/${propertytype}`)
       .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
@@ -315,7 +368,7 @@ export class SearchPropertiesComponent implements OnInit {
                     console.error('Error decoding first image data:', error);
                   }
                 } else {
-                  propertyImage='assets/images/img1.png';
+                  propertyImage='assets/images/empty.png';
                 }
               } else {
                 console.log('images property is missing, not an array, or empty.');
@@ -377,26 +430,20 @@ export class SearchPropertiesComponent implements OnInit {
       );
   }
 
-  loadPropertyDetailsByFilters(finalPropertyType: string, finalPropertyFor: string,finalCityName: string, finalKeyword: string) {
+  loadPropertyDetailsByFilters(finalPropertyType: string, finalPropertyFor: string, finalCityName: string, finalKeyword: string) {
     this.isLoading = true;
-    
     finalPropertyType = finalPropertyType ?? '';
     finalKeyword = finalKeyword ?? '';
     finalPropertyFor = finalPropertyFor ?? '';
     finalCityName = finalCityName ?? ''; 
 
-    console.log("finalPropertyType se",finalPropertyType);
-    console.log("finalPropertyFor se",finalPropertyFor);
-    console.log("finalCityName se",finalCityName);
-    console.log("finalKeyword se",finalKeyword);
-    
-    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesWithFilters?keyword=${encodeURIComponent(finalKeyword)}&propertyType=${encodeURIComponent(finalPropertyType)}&propertyFor=${encodeURIComponent(finalPropertyFor)}&CityName=${encodeURIComponent(finalCityName)}`)
+    this.apiurls.get<any>(`GetPropertiesWithFilters?keyword=${encodeURIComponent(finalKeyword)}&propertyType=${encodeURIComponent(finalPropertyType)}&propertyFor=${encodeURIComponent(finalPropertyFor)}&CityName=${encodeURIComponent(finalCityName)}`)
       .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
           if (response.length > 0) {
             this.propertydetails = response.map((property: any) => {
-              let propertyImage: string = 'assets/images/img1.png';  
+              let propertyImage: string = 'assets/images/empty.png';  
               let defaultPropImage: string = '';
   
               console.log('Full Property:', property);
@@ -407,20 +454,23 @@ export class SearchPropertiesComponent implements OnInit {
                 const firstImage = property.images[0];
   
                 if (firstImage.filePath) {
-                  propertyImage = `https://localhost:7190${firstImage.filePath}`;
-  
+                  // propertyImage = `https://localhost:7190${firstImage.filePath}`;
+                  propertyImage = this.apiurls.getImageUrl(firstImage.filePath); 
+
                   console.log('Generated Image URL:', propertyImage);
                 }
+
               } else {
                 console.log('images property is missing, not an array, or empty.');
               }
   
               if (property.image && property.image.filePath) {
-                defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-  
+                // defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+                defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
+
                 console.log('Generated Default Image URL:', defaultPropImage);
               } else {
-                defaultPropImage = 'assets/images/img1.png';
+                defaultPropImage = 'assets/images/empty.png';
                 console.log('images property is missing, not an array, or empty.');
               }
   
@@ -456,12 +506,12 @@ export class SearchPropertiesComponent implements OnInit {
   
               return {
                 propertyID: property.propID || 'N/A',  
-                propertyname: property.propname || 'Unknown Property',  
-                propertyprice: property.propertyTotalPrice || 'Price not available',  
-                propertyaddress: property.address || 'Address not available',  
-                propertyarea: property.totalArea || 'Area not available', 
-                propertybeds: property.noOfBedrooms || 'Beds not available', 
-                propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  
+                propertyname: property.propname || 'N/A',  
+                propertyprice: property.propertyTotalPrice || 'N/A',  
+                propertyaddress: property.address || 'N/A',  
+                propertyarea: property.totalArea || 'N/A', 
+                propertybeds: property.noOfBedrooms || 'N/A', 
+                propertybathrooms: property.noOfBathrooms || 'N/A',  
                 propertytype: property.propertyType || 'Unknown Type',  
                 propertyfor: property.propertyFor,
                 propertytypeName: this.getPropertyTypeName(property.propertyType),
@@ -489,18 +539,35 @@ export class SearchPropertiesComponent implements OnInit {
         }
       );
   }
+  
+
+  
+
+  encodeID(id: string): string {
+    return btoa(id).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  
+  decodeID(encoded: string): string {
+    encoded = encoded.replace(/-/g, '+').replace(/_/g, '/');
+    while (encoded.length % 4) {
+      encoded += '=';
+    }
+    return atob(encoded);
+  }
+
+
   
 
   loadPropertyDetailsByPropertyAvailabilityOptions(finalPropertyAvialabilityOptions: string) {
     this.isLoading = true;    
     finalPropertyAvialabilityOptions = finalPropertyAvialabilityOptions ?? '';
-    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesByAvailabilityOptions?propertyAvailabilityOption=${encodeURIComponent(finalPropertyAvialabilityOptions)}`)
+    this.apiurls.get<any>(`GetPropertiesByAvailabilityOptions?propertyAvailabilityOption=${encodeURIComponent(finalPropertyAvialabilityOptions)}`)
       .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
           if (response.length > 0) {
             this.propertydetails = response.map((property: any) => {
-              let propertyImage: string = 'assets/images/img1.png';  
+              let propertyImage: string = 'assets/images/empty.png';  
               let defaultPropImage: string = '';
   
               console.log('Full Property:', property);
@@ -511,8 +578,10 @@ export class SearchPropertiesComponent implements OnInit {
                 const firstImage = property.images[0];
   
                 if (firstImage.filePath) {
-                  propertyImage = `https://localhost:7190${firstImage.filePath}`;
-  
+
+                  // propertyImage = `https://localhost:7190${firstImage.filePath}`;
+                  propertyImage = this.apiurls.getImageUrl(firstImage.filePath); 
+
                   console.log('Generated Image URL:', propertyImage);
                 }
               } else {
@@ -520,11 +589,12 @@ export class SearchPropertiesComponent implements OnInit {
               }
   
               if (property.image && property.image.filePath) {
-                defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-  
+                // defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+                defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
+
                 console.log('Generated Default Image URL:', defaultPropImage);
               } else {
-                defaultPropImage = 'assets/images/img1.png';
+                defaultPropImage = 'assets/images/empty.png';
                 console.log('images property is missing, not an array, or empty.');
               }
   
@@ -560,12 +630,12 @@ export class SearchPropertiesComponent implements OnInit {
   
               return {
                 propertyID: property.propID || 'N/A',  
-                propertyname: property.propname || 'Unknown Property',  
-                propertyprice: property.propertyTotalPrice || 'Price not available',  
-                propertyaddress: property.address || 'Address not available',  
-                propertyarea: property.totalArea || 'Area not available', 
-                propertybeds: property.noOfBedrooms || 'Beds not available', 
-                propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  
+                propertyname: property.propname || 'N/A',  
+                propertyprice: property.propertyTotalPrice || 'N/A',  
+                propertyaddress: property.address || 'N/A',  
+                propertyarea: property.totalArea || 'N/A', 
+                propertybeds: property.noOfBedrooms || 'N/A', 
+                propertybathrooms: property.noOfBathrooms || 'N/A',  
                 propertytype: property.propertyType || 'Unknown Type',  
                 propertyfor: property.propertyFor,
                 propertytypeName: this.getPropertyTypeName(property.propertyType),
@@ -588,14 +658,11 @@ export class SearchPropertiesComponent implements OnInit {
         },
         (error) => {
           console.error('Error fetching property details:', error);
-          alert("An error occurred while fetching property details.");
-          this.router.navigate(['/home']);
+          // alert("An error occurred while fetching property details.");
+          this.router.navigate(['/search-properties']);
         }
       );
   }
-
-  
-
 
   convertToCrores(value: number | string): string {
     if (!value) return 'N/A'; 
@@ -619,25 +686,35 @@ export class SearchPropertiesComponent implements OnInit {
   }
   
   
-
   totalAmount: string = "";
   loanTerm: string = "";
   interestRate: string = "";
   emiAmount: string = "";
 
+  handleOk() {
+    this.isUpdateModalOpen = false;
+    this.propertyInsStatus = '';
+  }
+  
+  UpdatecloseModal() {
+    this.isUpdateModalOpen = false;
+    this.propertyInsStatus = '';
+  }
+  isUpdateModalOpen: boolean = false;
+  propertyInsStatus: string = ''; 
   calculateEMI(){
     const principal = parseFloat(this.totalAmount);
-    const rate = parseFloat(this.interestRate) / 100 / 12; // Monthly interest rate
-    const numberOfMonths = parseFloat(this.loanTerm) * 12; // Total number of monthly payments
-
+    const rate = parseFloat(this.interestRate) / 100 / 12; 
+    const numberOfMonths = parseFloat(this.loanTerm) * 12; 
     if (principal > 0 && this.loanTerm && this.interestRate) {
-      // EMI formula
       const emi = (principal * rate * Math.pow(1 + rate, numberOfMonths)) /
                   (Math.pow(1 + rate, numberOfMonths) - 1);
       
       this.emiAmount = emi.toFixed(2);
     } else {
-      alert('Please fill in all fields to calculate the EMI.');
+      // alert('Please fill in all fields to calculate the EMI.');
+      this.propertyInsStatus = 'Please fill in all fields to calculate the EMI.';
+      this.isUpdateModalOpen = true;
     }
-  }
+    }
 }

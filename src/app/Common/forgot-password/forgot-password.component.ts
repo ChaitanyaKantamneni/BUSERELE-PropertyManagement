@@ -4,11 +4,14 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { response } from 'express';
+import { FooterComponent } from "../../Main/footer/footer.component";
+import { ApiServicesService } from '../../api-services.service';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [HttpClientModule,ReactiveFormsModule,NgClass,RouterLink,NgIf],
+  providers: [ApiServicesService],
+  imports: [HttpClientModule, ReactiveFormsModule, NgClass, RouterLink, NgIf, FooterComponent],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css'
 })
@@ -17,15 +20,17 @@ export class ForgotPasswordComponent {
   submited: boolean = false;
   registredsuccesfull: string = '';
   public clr: any = { red: false, green: false };
-  
 
   otpSent: boolean = false;
   timeLeft: number = 60; 
   interval: any;
   otpExpired: boolean = false;
-
-
-  constructor(private apiurl: HttpClient,public routes:Router) { }
+  passwordVisible: boolean = false;
+  confirmPasswordVisible = false;  
+  otpVerified:boolean=false;
+  isUpdateModalOpen:boolean = false;
+  passwordChangeStatus:string="";
+  constructor(private apiurl: HttpClient,public routes:Router,private apiurls: ApiServicesService) { }
 
   ngOnInit(): void {
     this.signupform = new FormGroup({
@@ -43,12 +48,13 @@ export class ForgotPasswordComponent {
   }
 
 
-  passwordVisible: boolean = false;
   togglePasswordVisibility() {
-    this.passwordVisible = !this.passwordVisible;  
-  }
+    this.passwordVisible = !this.passwordVisible;
+}
 
-  otpVerified:boolean=false;
+toggleConfirmPasswordVisibility() {
+    this.confirmPasswordVisible = !this.confirmPasswordVisible;
+}
 
   startTimer() {
     this.timeLeft = 60; 
@@ -77,9 +83,17 @@ export class ForgotPasswordComponent {
   
     const data = { email: email.toString() };
   
-    this.apiurl.post('https://localhost:7190/api/Users/SendOTP', data, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
+    // this.apiurl.post('https://localhost:7190/api/Users/SendOTP', data, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response: any) => {
+    //     if (response.statusCode === "200") {
+    //       this.passwordChangeStatus = "An OTP has been sent to your email. Please check your inbox and enter the code to proceed.";
+    //     } else {
+    //       this.passwordChangeStatus = "OTP Sent To Email.";
+    //     }
+
+    this.apiurls.post('SendOTP', data).subscribe({
       next: (response: any) => {
         if (response.statusCode === "200") {
           this.passwordChangeStatus = "An OTP has been sent to your email. Please check your inbox and enter the code to proceed.";
@@ -99,37 +113,9 @@ export class ForgotPasswordComponent {
     });
   }
   
-  // sendOTPClick() {
-  //   const data = {
-  //     email: this.signupform.get('Email')?.value.toString()
-  //   };
-
-  //   this.apiurl.post('https://localhost:7190/api/Users/SendOTP', data, {
-  //     headers: { 'Content-Type': 'application/json' }
-  //   }).subscribe({
-  //     next: (response: any) => {
-  //       if (response.statusCode === "200") {
-  //         this.passwordChangeStatus = "An OTP has been sent to your email. Please check your inbox and enter the code to proceed.";
-  //         this.isUpdateModalOpen = true;
-  //       } else {
-  //         this.passwordChangeStatus = "Otp Sent To Email.";
-  //         this.isUpdateModalOpen = true; 
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error("Error details:", error);
-  //       this.passwordChangeStatus = "Email Was Not Register. Please try again later.";
-  //       this.isUpdateModalOpen = true; 
-  //     }
-  //   });
-  // }
-
-  isUpdateModalOpen:boolean = false;
-  passwordChangeStatus:string="";
   UpdatecloseModal() {
     this.isUpdateModalOpen = false;
   }
-
 
   handleOk() {
     this.UpdatecloseModal();
@@ -142,13 +128,19 @@ export class ForgotPasswordComponent {
       newPassword: this.signupform.get('Password')?.value.toString(),
     };
   
-    this.apiurl.post('https://localhost:7190/api/Users/ChangePassword', data, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
+    // this.apiurl.post('https://localhost:7190/api/Users/ChangePassword', data, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response: any) => {
+    //     if (response.statusCode === 200) {
+    //       this.passwordChangeStatus = response.message;
+    //       this.isUpdateModalOpen = true;
+    //       this.routes.navigate(['/signin']);
+    this.apiurl.post('ChangePassword', data).subscribe({
       next: (response: any) => {
+        this.passwordChangeStatus = response.message;
+        this.isUpdateModalOpen = true;
         if (response.statusCode === 200) {
-          this.passwordChangeStatus = response.message;
-          this.isUpdateModalOpen = true;
           this.routes.navigate(['/signin']);
         } else { 
           this.passwordChangeStatus = response.message;
@@ -160,6 +152,8 @@ export class ForgotPasswordComponent {
       }
     });
   }
+
+
   verifyOTPClick() {
     if (!this.otpSent) {
       this.passwordChangeStatus = "Please send OTP before verifying.";
@@ -184,10 +178,13 @@ export class ForgotPasswordComponent {
       otp: this.signupform.get('OTP')?.value.toString(),
       newPassword: this.signupform.get('Password')?.value.toString(),
     };
-  
-    this.apiurl.post('https://localhost:7190/api/Users/VerifyOTP', data, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
+    // this.apiurl.post('https://localhost:7190/api/Users/VerifyOTP', data, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response: any) => {
+    //     if (response.statusCode === 200) {
+    //       this.passwordChangeStatus = "OTP verified successfully.";
+    this.apiurls.post('VerifyOTP', data).subscribe({
       next: (response: any) => {
         if (response.statusCode === 200) {
           this.passwordChangeStatus = "OTP verified successfully.";
@@ -205,74 +202,5 @@ export class ForgotPasswordComponent {
       }
     });
   }
-  
-  // verifyOTPClick() {
-  //   if (this.otpExpired) {
-  //     this.passwordChangeStatus = "OTP has expired. Please request a new one.";
-  //     this.isUpdateModalOpen = true;
-  //     return;
-  //   }
-
-  //   if (!this.signupform.get('OTP')?.value) {
-  //     this.passwordChangeStatus = "Please enter an OTP.";
-  //     this.isUpdateModalOpen = true;
-  //     return;
-  //   }
-  //   // if (this.signupform.invalid) {
-  //   //   this.passwordChangeStatus = "Please enter all required fields before proceeding.";
-  //   //   this.isUpdateModalOpen = true; 
-  //   //   return; 
-  //   // }
-  
-  //   const data = {
-  //     email: this.signupform.get('Email')?.value.toString(),
-  //     otp: this.signupform.get('OTP')?.value.toString(),
-  //     newPassword: this.signupform.get('Password')?.value.toString(),
-  //   };
-  
-  //   this.apiurl.post('https://localhost:7190/api/Users/VerifyOTP', data, {
-  //     headers: { 'Content-Type': 'application/json' }
-  //   }).subscribe({
-  //     next: (response: any) => {
-  //       if (response.statusCode === 200) {
-  //         this.passwordChangeStatus = "OTP verified";
-  //         this.isUpdateModalOpen = true;
-  //         this.otpVerified = true;
-  //       } else {
-  //         this.passwordChangeStatus = response.message;
-  //         this.isUpdateModalOpen = true;
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error("Error details:", error);
-  //     }
-  //   });
-  // }
-  
-  // verifyOTPClick() {
-  //   const data = {
-  //     email: this.signupform.get('Email')?.value.toString(),
-  //     otp: this.signupform.get('OTP')?.value.toString(),
-  //     newPassword: this.signupform.get('Password')?.value.toString(),
-  //   };
-  
-  //   this.apiurl.post('https://localhost:7190/api/Users/VerifyOTP', data, {
-  //     headers: { 'Content-Type': 'application/json' }
-  //   }).subscribe({
-  //     next: (response: any) => {
-  //       if (response.statusCode === 200) {
-  //         this.passwordChangeStatus = "OTP verified";
-  //         this.isUpdateModalOpen = true;
-  //         this.otpVerified = true;
-  //       } else {
-  //         this.passwordChangeStatus = response.message;
-  //         this.isUpdateModalOpen = true;
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error("Error details:", error);
-  //     }
-  //   });
-  // }
-  
+    
 }

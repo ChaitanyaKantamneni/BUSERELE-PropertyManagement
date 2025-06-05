@@ -1,32 +1,47 @@
+
 <app-top-nav-1></app-top-nav-1>
-<div class="about-header">
-  <h1 style="font-size: 32px;">About Us</h1>
-  <p routerLink="/home" style="font-size: 12px;">HOME / ABOUT US</p>
-</div>
 
-      
-<div class="container">
-  <div class="video" >
-      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/EFB33r7u4tY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  </div>
-  <div class="text">
-      <p>Buserele Property management software is newly established software which is mainly designed for Professional property managers, 
-          includes all the tools necessary for a Professional Property management firm to manage and track numerous properties, owners, and tenants.
-          It enables landlords to effectively manage operations and provide convenience to the tenants. The Gateway is easy to make payments through 
-          online to tenants, as well as landlords can check their property status, monthly rentals through online with a single click.</p>
+    <div class="about-header">
+      <h1 style="font-size: 32px;">About Us</h1>
+      <p routerLink="/home" style="font-size: 12px;">HOME / ABOUT US</p>
+    </div>
+      <div class="container">
+        <!-- <div class="video" >
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/EFB33r7u4tY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div> -->
+        <div class="video" (click)="playVideo()">
+          <img *ngIf="!videoPlaying" src="assets/images/aboutbackground.jpg" class="video-thumbnail" alt="Real Estate Video">
+          <div *ngIf="!videoPlaying" class="play-button">
+            <i class="fas fa-play"></i>
+          </div>
+          <iframe *ngIf="videoPlaying" [src]="videoUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="text">
+        <p style="color: #6449e7;">BUSERELE PROPERTY MANAGEMENT SYSTEM</p>
+        <div>
+          <h5 style="font-weight: bold;text-transform: uppercase;">We'll help you to find a place that you'll love.</h5>
+        </div>
+            
+          <div  class="text1">
+              <p>Buserele Property management software is newly established software which is mainly designed for Professional property managers, 
+                includes all the tools necessary for a Professional Property management firm to manage and track numerous properties, owners, and tenants.
+                It enables landlords to effectively manage operations and provide convenience to the tenants. The Gateway is easy to make payments through 
+                online to tenants, as well as landlords can check their property status, monthly rentals through online with a single click.</p>
+              <br>
+
+            <p>(Buserele) We also provide software to Buy/Sell/Lease properties online. Even though we act as consultants to get the best deal for your property. 
+            Buserele online property management software provides all types of documents related to property issues to save your time. We are ready to assist customers to solve problems within a short period. Owners/ Tenants/ Buyers/ Sellers can get 
+            solutions under one umbrella.</p>
+            </div>
+        </div>
+      </div>
+
+
         <br>
-
-      <p>(Buserele) We also provide software to Buy/Sell/Lease properties online. Even though we act as consultants to get the best deal for your property. 
-      Buserele online property management software provides all types of documents related to property issues to save your time. We are ready to assist customers to solve problems within a short period. Owners/ Tenants/ Buyers/ Sellers can get 
-      solutions under one umbrella.</p>
-  </div>
-</div>
-
-
-
       <div class="container">
         <div class="left-section">
-          <h2>Why Choose Us</h2>
+          <h2 style="font-weight: bold;">Why Choose Us</h2>
           <p>
             BUSERELE PROPERTY MANAGEMENT SYSTEM works with landlords, investors, real estate agents, and institutional investors to manage their properties and real estate portfolios.
           </p>
@@ -74,7 +89,5 @@
             <p>Our reputation is built on trust, with thousands of satisfied clients.</p>
           </div>
         </div>
-      </div>
-  
-
+      </div> 
 <app-footer></app-footer>

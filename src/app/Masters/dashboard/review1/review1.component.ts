@@ -2,25 +2,36 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms'; // Import NgModel if needed
 import { NgFor, NgIf } from '@angular/common';
+import { ApiServicesService } from '../../../api-services.service';
 
 @Component({
   selector: 'app-review1',
   standalone:true,
+  providers: [ApiServicesService],
   imports:[HttpClientModule,FormsModule,NgFor,NgIf,ReactiveFormsModule],
   templateUrl: './review1.component.html',
   styleUrls: ['./review1.component.css']
 })
+
 export class Review1Component implements OnInit {
   reviews: Array<{ propID: string, username: string, useremail: string, usermessage: string }> = [];
   currentPage = 1;
   pageSize = 5;
   searchQuery: string = '';
   reviewdetails: any = {};
+  rating: number = 0; 
+  stars: number[] = [1, 2, 3, 4, 5]; 
+  updatedStatus:string='';
+  updatedStatusSubmited:boolean=false;
+  viewReviewClicked:boolean=false;
+  visiblePageCount: number = 3; 
 
-  constructor(private apihttp: HttpClient) {}
+  constructor(private apihttp: HttpClient,private apiurls: ApiServicesService) {}
 
   ngOnInit(): void {
     this.getreviews('0');
+    // this.getreviews(this.selectedReviewFilter);
+
   }
 
   get filteredreviews() {
@@ -40,33 +51,82 @@ export class Review1Component implements OnInit {
     return this.filteredreviews.slice(start, start + this.pageSize);
   }
 
-  setPage(page: number): void {
-    if (page > 0 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
-  }
 
   previousPage(): void {
     if (this.currentPage > 1) {
-      this.currentPage--;
+        this.currentPage--;
     }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
+}
+nextPage(): void {
+  if (this.currentPage < this.totalPages) {
       this.currentPage++;
-    }
   }
+}
+
+setPage(page: number): void {
+  if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+  }
+}
+getVisiblePages(): number[] {
+  let startPage = Math.max(1, this.currentPage - Math.floor(this.visiblePageCount / 2));
+  let endPage = Math.min(this.totalPages, startPage + this.visiblePageCount - 1);
+  if (endPage - startPage < this.visiblePageCount - 1) {
+    startPage = Math.max(1, endPage - this.visiblePageCount + 1);
+  }
+ 
+  let pages: number[] = [];
+  for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+  }
+  return pages;
+}
+
+
+  // getreviews(status: string): void {
+  //   this.apihttp.get(`https://localhost:7190/api/Users/GetUserReviewsStatus?status=${status}`)
+  //     .subscribe((response: any) => {
+  //       console.log('API response:', response);
+  //       if (response && Array.isArray(response.data)) {
+  //         this.reviews = response.data.map((data: any) => {
+  //           let reviewStatusUpdated = 'N/A'; 
+  //           if (data.status === '2') {
+  //             reviewStatusUpdated = 'Declined';
+  //           } else if (data.status === '1') {
+  //             reviewStatusUpdated = 'Approved';
+  //           } else if (data.status === '0') {
+  //             reviewStatusUpdated = 'Pending';
+  //           }
+          
+  //           return {
+  //             propID: data.propID,
+  //             username: data.username,
+  //             useremail: data.useremail,
+  //             usermessage: data.usermessage,
+  //             rating:data.rating,
+  //             reviewstatus: reviewStatusUpdated,  
+  //             reviewId: data.id
+  //           };
+  //         });
+          
+  //       } else {
+  //         console.error('Unexpected response format or no reviews found');
+  //         this.reviews = [];
+  //       }
+  //     }, error => {
+  //       console.error('Error fetching reviews:', error);
+  //     });
+  // }
+
+
 
   getreviews(status: string): void {
-    this.apihttp.get(`https://localhost:7190/api/Users/GetUserReviewsStatus?status=${status}`)
+   this.apiurls.get<any>(`GetUserReviewsStatus?status=${status}`)
       .subscribe((response: any) => {
         console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
-          
           this.reviews = response.data.map((data: any) => {
-            let reviewStatusUpdated = 'N/A'; 
-          
+            let reviewStatusUpdated = 'N/A';
             if (data.status === '2') {
               reviewStatusUpdated = 'Declined';
             } else if (data.status === '1') {
@@ -74,49 +134,62 @@ export class Review1Component implements OnInit {
             } else if (data.status === '0') {
               reviewStatusUpdated = 'Pending';
             }
-          
+  
             return {
               propID: data.propID,
               username: data.username,
               useremail: data.useremail,
               usermessage: data.usermessage,
-              rating:data.rating,
-              reviewstatus: reviewStatusUpdated,  
+              rating: data.rating,
+              reviewstatus: reviewStatusUpdated,
               reviewId: data.id
-
             };
           });
-          
+  
+          this.filteredReviews = this.reviews;
         } else {
-          console.error('Unexpected response format or no reviews found');
           this.reviews = [];
+          this.filteredReviews = [];
+          console.error('Unexpected response format or no reviews found');
         }
       }, error => {
+        this.reviews = [];
+        this.filteredReviews = [];
         console.error('Error fetching reviews:', error);
       });
   }
+  // onWhosePropertySelectionChange(event:any):void{
+  //   console.log(event.target.value);
+  //   if(event.target.value === '1'){
+  //     this.getreviews('1');
+  //   }
+  //   else if(event.target.value === '2'){
+  //     this.getreviews('2');
+  //   }
+  //   else{
+  //     this.getreviews('0');
+  //   }
+  // }
 
-  onWhosePropertySelectionChange(event:any):void{
-    console.log(event.target.value);
-    if(event.target.value=='1'){
+  filteredReviews: any[] = []; 
+
+  onWhosePropertySelectionChange(event: any): void {
+    const selectedValue = event.target.value;
+    console.log("Selected Review Filter:", selectedValue);
+
+    if (selectedValue === '1') {
       this.getreviews('1');
-    }
-    else if(event.target.value=='2'){
+    } else if (selectedValue === '2') {
       this.getreviews('2');
-    }
-    else{
-      this.getreviews('0');
+    } else {
+      this.getreviews('0'); 
     }
   }
-
+  
   truncateText(text: string, length: number): string {
     if (!text) return '';
     return text.length > length ? text.substring(0, length) + '...' : text;
   }
-
-  updatedStatus:string='';
-  updatedStatusSubmited:boolean=false;
-  viewReviewClicked:boolean=false;
 
   updateReviewDet(ReviewID: string) {
     const data = {
@@ -136,12 +209,27 @@ export class Review1Component implements OnInit {
     console.log('ReviewID:', ReviewID);
     console.log('Data being sent:', data);
   
-    this.apihttp.put(`https://localhost:7190/api/Users/updateReviewStatus/${ReviewID}`, data, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
+    // this.apihttp.put(`https://localhost:7190/api/Users/updateReviewStatus/${ReviewID}`, data, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response: any) => {
+    //     this.updatedStatusSubmited = true;
+    
+    this.apiurls.put<any>(`updateReviewStatus/${ReviewID}`, data)
+    .subscribe({
       next: (response: any) => {
         this.updatedStatusSubmited = true;
-        alert('Review updated successfully');
+
+       if (this.updatedStatus === '1') {
+        this.subscriptionStatus = 'Review Approved Successfully!';
+      } else if (this.updatedStatus === '2') {
+        this.subscriptionStatus = 'Review Declined Successfully!';
+      } else {
+        this.subscriptionStatus = 'Review status updated successfully!';
+      }
+
+      this.isUpdateModalOpen = true;
+      // this.getreviews('0');
         console.log('Response:', response);
       },
       error: (error) => {
@@ -155,15 +243,21 @@ export class Review1Component implements OnInit {
       }
     });
   }
+  // UpdatecloseModal(): void {
+  //   this.isUpdateModalOpen = false;
+  // }
 
-  rating: number = 0; 
-  stars: number[] = [1, 2, 3, 4, 5]; 
+  // handleOk(): void {
+  //   this.isUpdateModalOpen = false;
+  // }
+
+  isUpdateModalOpen: boolean = false;
+  subscriptionStatus: string = '';
+
 
   getReviewDet(ReviewID: string) {
-    this.apihttp.get(`https://localhost:7190/api/Users/GetReviewDetailsById/${ReviewID}`).subscribe(
+   this.apiurls.get<any>(`GetReviewDetailsById/${ReviewID}`).subscribe(
       (response: any) => {
-        
-        
         if (response) {
           let reviewStatusUpdated = 'N/A';
           
@@ -205,6 +299,7 @@ export class Review1Component implements OnInit {
     this.updateReviewDet(reviewID);
   }
 
+  
   viewReview(reviewID: string): void {
     this.getReviewDet(reviewID);
     this.viewReviewClicked=true;
@@ -218,14 +313,45 @@ export class Review1Component implements OnInit {
   approveReview(reviewID: string): void {
     this.updatedStatus='1';
     this.updateReviewDet(reviewID);
+    
+  }
+
+  // backclick(event: Event): void {
+  //   event.preventDefault(); 
+    
+  //   if (this.viewReviewClicked) {
+  //     this.viewReviewClicked = false; 
+  //   }
+  //   this.searchQuery = '';
+  // }
+  
+
+  onSearchChange(): void {
+    this.currentPage = 1;
+  }
+
+
+  selectedReviewFilter: string = '0';
+  onReviewFilterChange(event: any): void {
+    this.selectedReviewFilter = event.target.value;
+    this.getreviews(this.selectedReviewFilter);
   }
 
   backclick(event: Event): void {
-    event.preventDefault(); 
-    
-    if (this.viewReviewClicked) {
-      this.viewReviewClicked = false; 
-    }
+    event.preventDefault();
+    this.viewReviewClicked = false;
+    this.searchQuery = '';
+    this.getreviews(this.selectedReviewFilter);
   }
-  
+  UpdatecloseModal(): void {
+    this.handleOk();
+  }
+
+handleOk(): void {
+  this.isUpdateModalOpen = false;
+  this.viewReviewClicked = false;
+  this.searchQuery = '';
+  this.getreviews(this.selectedReviewFilter);
+}
+
 }

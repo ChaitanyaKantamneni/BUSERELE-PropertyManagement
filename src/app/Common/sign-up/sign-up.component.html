@@ -1,21 +1,42 @@
-<div class="container">
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="/"><img class="h-100" src="assets/images/logo_1.png"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+  </div>
+</nav>
+<div class="container gradient-background">
+  <div class="content-wrapper">
+    <!-- <div class="image-section">
+      <img src="assets/images/signimage.jpg" alt="House Image" class="full-height-img">
+    </div> -->
+
   <!-- <div class="image-section">
     <img src="assets/images/signimage.jpg" alt="House Image" style="height: 400px;
     width: 100%;
     border-radius: 3px;">
 </div> -->
   <form [formGroup]="signupform" class="form-grid">
-    <h2>SIGN UP</h2>
+    <h2 class="headerwell">Welcome</h2>
+    <h2 class="subtext">Create an account</h2>
+
     <br>
     
     <div class="form-columns">
       <div class="form-group">
         <div class="input-container">
           <input type="text" id="FirstName" formControlName="FirstName" placeholder="First Name" required />
-          <div *ngIf="signupform.get('FirstName')?.invalid && signupform.get('FirstName')?.touched">
-            <p class="text-danger fw-bold" [ngClass]="clr">First Name is required.</p>
-          </div>
           <label for="FirstName">First Name</label>
+
+          <div class="error-message">
+            <div *ngIf="signupform.get('FirstName')?.invalid && signupform.get('FirstName')?.touched">
+              <p class="text-danger fw-bold"><span class="text-danger">*</span>First Name is required.</p>
+            </div>
+          </div>
+          
         </div>
       </div>
 
@@ -26,44 +47,124 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <div class="input-container">
           <input type="text" id="mobile" formControlName="Mobile" placeholder="Mobile" required />
-          <div *ngIf="signupform.get('Mobile')?.invalid && signupform.get('Mobile')?.touched">
-            <p class="text-danger fw-bold" [ngClass]="clr">Mobile is required.</p>
-          </div>
           <label for="mobile">Mobile</label>
+          <!-- <div class="error-message">
+            <div *ngIf="signupform.get('Mobile')?.invalid && signupform.get('Mobile')?.touched">
+              <p class="text-danger fw-bold">Mobile is required.</p>
+            </div>
+          </div>
+           --
+           <div class="error-message">
+            <div *ngIf="signupform.get('Mobile')?.touched && signupform.get('Mobile')?.invalid">
+              <p *ngIf="signupform.get('Mobile')?.hasError('required')" class="text-danger fw-bold">
+                Mobile is required.
+              </p>
+              <p *ngIf="signupform.get('Mobile')?.hasError('pattern')" class="text-danger fw-bold">
+                Enter valid mobile Number.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="form-group">
+        <div class="input-container mobile-wrapper">
+          <input 
+            type="text" 
+            id="mobile" 
+            formControlName="Mobile" 
+            placeholder="Mobile" 
+            required 
+          />
+          <label for="mobile">Mobile</label>
+          <i class="fas fa-phone-alt"></i>
+      
+          <div class="error-message">
+            <div *ngIf="signupform.get('Mobile')?.touched && signupform.get('Mobile')?.invalid">
+              <p *ngIf="signupform.get('Mobile')?.hasError('required')" class="text-danger fw-bold">
+                <span class="text-danger">*</span>Mobile is required.
+              </p>
+              <p *ngIf="signupform.get('Mobile')?.hasError('pattern')" class="text-danger fw-bold">
+                Enter valid mobile Number.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+      <!-- <div class="form-group">
         <div class="input-container">
           <input type="email" id="email" formControlName="Email" placeholder="Email" required />
-          <div *ngIf="signupform.get('Email')?.invalid && signupform.get('Email')?.touched">
-            <p class="text-danger fw-bold" [ngClass]="clr">Email is required and should be valid.</p>
-          </div>
           <label for="email">Email</label>
+          <div class="error-message">
+            <div *ngIf="signupform.get('Email')?.invalid && signupform.get('Email')?.touched">
+              <p class="text-danger fw-bold" >Email is required and should be valid.</p>
+            </div>
+          </div>
+          <!-- [ngClass]="clr" --
+         
+        </div>
+      </div> -->
+
+      <div class="form-group">
+        <div class="input-container email-wrapper">
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="Email" 
+            placeholder="Email" 
+            required />
+            <label for="email">Email</label>
+          <i class="fas fa-envelope"></i> 
+          <div class="error-message">
+            <div *ngIf="signupform.get('Email')?.invalid && signupform.get('Email')?.touched">
+              <p class="text-danger fw-bold"><span class="text-danger">*</span>Email is required and should be valid.</p>
+            </div>
+          </div>
         </div>
       </div>
+      
 
       <div class="form-group">
         <div class="input-container password-container">
           <i 
             class="fas" 
-            [ngClass]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'" 
+            [ngClass]="passwordVisible ? 'fa-eye' : 'fa-eye-slash'" 
             (click)="togglePasswordVisibility()"></i>
           <input [type]="passwordVisible ? 'text' : 'password'" id="password" formControlName="Password" placeholder="Password" required />
-          <div *ngIf="signupform.get('Password')?.invalid && signupform.get('Password')?.touched">
-            <p class="text-danger fw-bold" [ngClass]="clr">Password is required.</p>
-          </div>
           <label for="password">Password</label>
+          <!-- <div class="error-message">
+            <div *ngIf="signupform.get('Password')?.invalid && signupform.get('Password')?.touched">
+              <p class="text-danger fw-bold" >Password is required.</p>
+            </div>
+          </div> -->
+          <div class="error-message">
+            <div *ngIf="signupform.get('Password')?.touched && signupform.get('Password')?.invalid">
+              <p *ngIf="signupform.get('Password')?.hasError('required')" class="text-danger fw-bold">
+                <span class="text-danger">*</span>Password is required.
+              </p>
+              <!-- <p *ngIf="signupform.get('Password')?.hasError('minlength')" class="text-danger fw-bold">
+                Password must be at least 6 characters long.
+              </p> -->
+              <p *ngIf="signupform.get('Password')?.hasError('pattern')" class="text-danger fw-bold">
+                Password must contain at least one uppercase letter and one number.
+              </p>
+          
+            </div>
+          </div>
+          
+          <!-- [ngClass]="clr" -->
         </div>
       </div>
       <div class="form-group">
         <div class="input-container password-container">
           <i 
             class="fas" 
-            [ngClass]="confirmPasswordVisible ? 'fa-eye-slash' : 'fa-eye'" 
+            [ngClass]="confirmPasswordVisible  ? 'fa-eye' : 'fa-eye-slash'" 
             (click)="toggleConfirmPasswordVisibility()"></i>
           <input 
             [type]="confirmPasswordVisible ? 'text' : 'password'" 
@@ -71,16 +172,19 @@
             formControlName="ConfirmPassword" 
             placeholder="Confirm Password" 
             required />
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="error-message">
           <div *ngIf="signupform.get('ConfirmPassword')?.invalid && signupform.get('ConfirmPassword')?.touched">
-            <p class="text-danger fw-bold" [ngClass]="clr">Confirm Password is required.</p>
+            <p class="text-danger fw-bold" ><span class="text-danger">*</span>Confirm Password is required.</p>
           </div>
-          <div *ngIf="signupform.hasError('passwordMismatch') && signupform.get('ConfirmPassword')?.touched">
-            <p class="text-danger fw-bold" [ngClass]="clr">Passwords do not match.</p>
+          <div *ngIf="signupform.hasError('passwordMismatch') && signupform.get('ConfirmPassword')?.touched && !signupform.get('ConfirmPassword')?.errors?.['required']">
+            <p class="text-danger fw-bold">Password & Confirm Password must match.</p>
           </div>
-          <label for="confirmPassword">Confirm Password</label>
+        </div>
+        <!-- [ngClass]="clr"
+        [ngClass]="clr" -->
         </div>
       </div>
-      
       
     </div>
 
@@ -91,4 +195,10 @@
 
     <p [ngClass]="clr.red ? 'text-danger' : (clr.green ? 'text-success' : '')">{{ registredsuccesfull }}</p>
   </form>
+  <div class="image-section">
+    <img src="assets/images/signimage.jpg" alt="House Image" class="full-height-img">
+  </div>
+  </div>
+ 
 </div>
+<app-footer></app-footer>

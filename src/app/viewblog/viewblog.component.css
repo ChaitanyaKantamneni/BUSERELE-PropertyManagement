@@ -1,12 +1,11 @@
-/* Container for both blog sections */
 .main-container {
     display: flex;
     justify-content: space-between;
     gap: 30px;
     margin: 20px;
+    /* flex-wrap: wrap; */
   }
   
-  /* Blog card styling */
   .card {
     width: 100%;
     max-width: 815px;
@@ -21,6 +20,7 @@
     transition: all 0.3s ease-in-out;
     overflow: hidden;
     position: relative;
+    font-family: 'Roboto', sans-serif;
   }
   .card1{
     width: 50%;
@@ -52,20 +52,19 @@
   }
   
   .card-title {
-    /* font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
-    margin: 20px 20px 10px; */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: bold;
     color: #333;
-    margin: 0px 3px 5px;
+    margin: 0px 0px 0px;
+    padding: 10px 0; 
+    /* border-bottom: 1px solid #eee;  */
   }
+  
   .card-latesttitle {
-    /* font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
-    margin: 20px 20px 10px; */
     font-size: 0.5rem;
     font-weight: 600;
     color: #333;
@@ -87,11 +86,15 @@
   }
   
   .card-text {
-    margin: 0 20px 20px;
+    /* margin: 0 20px 20px;
     font-size: 1rem;
     line-height: 1.6;
-    color: #333;
+    color: #333; */
     /* text-align: justify; */
+    margin: 15px 20px 20px;
+    font-size: 1rem;
+    line-height: 2.6;
+    color: #333;
   }
   
   .content-section {
@@ -100,7 +103,6 @@
     overflow-y: auto;
   }
   
-  /* Latest Blogs Section */
   .latest-blogs {
     flex: 1;
     max-width: 327px;
@@ -119,17 +121,10 @@
   }
   
 
-
-  
-
-
-
-/* Container for the Latest Blogs */
 .latest-blogs {
     margin: 20px;
   }
   
-  /* Styling the blog card */
   .blog-card {
     /* display: flex;
     align-items: center; */
@@ -148,11 +143,22 @@
     align-items: center;
     background: white;
     border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 16.6px;
     margin-bottom: 20px;
     padding: 15px;
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
+}
+.blogcard{
+  height: 100%;
+  width: 25%;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 40px;
+  margin-bottom: 20px;
+  padding: 17px;
 }
   
   /* .blog-card:hover {
@@ -160,10 +166,10 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
   } */
   
-  /* Image Container Styling */
   .blog-image-container {
     width: 30%;
     margin-right: 20px;
+    overflow: hidden;
   }
   
   .blog-image {
@@ -171,9 +177,12 @@
     height: 100px;
     border-radius: 8px;
     object-fit: cover;
+    transition: transform 2.5s ease;
   }
   
-  /* Blog Text Section */
+  .blog-image:hover {
+    transform: scale(1.1);
+  }
   .blog-details {
     width: 70%;
   }
@@ -186,7 +195,7 @@
   }
   
   .date {
-    font-size: 0.9rem;
+    font-size: 13px;
     color: #666;
     display: flex;
     align-items: center;
@@ -194,11 +203,10 @@
   
   .date i {
     margin-right: 5px;
-    font-size: 1.1rem;
-    color: #007bff;
+    font-size: 13px;
+    color:#94c7ff;
   }
   
-  /* Responsive Design for smaller screens */
   @media (max-width: 768px) {
     .blog-card {
       flex-direction: column;
@@ -224,12 +232,7 @@
   }
   
 
-
-
-
-
   
-  /* Media query for smaller screens */
   @media (max-width: 768px) {
     .main-container {
       flex-direction: column;
@@ -237,7 +240,7 @@
     }
   
     .card {
-      width: 90%;
+      width: 100%;
     }
   
     .card-title {
@@ -257,4 +260,69 @@
       margin-bottom: 15px;
     }
   }
+  
+  .dot {
+    transition: background-color 0.3s ease;
+  }
+  .dot.active {
+    background-color: #333 !important;
+  }
+  
+
+
+  
+  @media (max-width: 1024px) {
+    .main-container {
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+      gap: 20px;
+    }
+  
+    .blog-card, 
+    .latest-blogs {
+      width: 100%;
+      max-width: 100%;
+      position: static;
+      top: auto;
+    }
+  
+    .blog-image-container {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .blog-details {
+      width: 100%;
+    }
+  
+    .blog-cardlatest {
+      flex-direction: column;
+    }
+  
+    .blog-title {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .card-title {
+      font-size: 1.2rem;
+    }
+  
+    .card-text {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+  
+    .blog-title {
+      font-size: 0.9rem;
+    }
+  
+    .date {
+      font-size: 0.75rem;
+    }
+  }
+  
+
   

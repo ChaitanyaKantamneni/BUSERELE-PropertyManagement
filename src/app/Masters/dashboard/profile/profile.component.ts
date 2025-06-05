@@ -1,20 +1,32 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { ApiServicesService } from '../../../api-services.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
+  providers: [ApiServicesService],
   imports: [HttpClientModule,FormsModule,ReactiveFormsModule,NgClass,NgIf],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit {
-
-  constructor(private apihttp: HttpClient) {}
   isFormChanged = false;
+  isModalOpen = false;
+  ProfileUpdateStatus: boolean = false;
+  updateStausMessage:string='';
+  imagePreview: string | ArrayBuffer | null = null;
+  selectedFile: File | null = null;
+  passwordVisible = false;  
+  confirmPasswordVisible = false;  
+  profilePhoto: string[] = [];
+  changePasswordClicked:boolean=false;
+  profilePhotoUrl: string = 'assets/images/usericon.jpg';
 
+  constructor(private apihttp: HttpClient,private apiurls: ApiServicesService,private cdRef: ChangeDetectorRef) {}
+ 
   ngOnInit(): void {
     this.profileform.reset();
     const UserID = localStorage.getItem('email') as string;
@@ -34,24 +46,61 @@ export class ProfileComponent implements OnInit {
     mobile: new FormControl('')
   });
 
-  profilePasswordChangeform:FormGroup=new FormGroup({
-    oldPassword:new FormControl(''),
+  // profilePasswordChangeform:FormGroup=new FormGroup({
+  //   oldPassword:new FormControl(''),
+  //   Password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+  //   ConfirmPassword: new FormControl('', [Validators.required])
+  // }, { validators: this.passwordMatchValidator })
+
+  // passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+  //   const password = control.get('Password')?.value;
+  //   const confirmPassword = control.get('ConfirmPassword')?.value;
+  //   return password && confirmPassword && password === confirmPassword ? null : { passwordMismatch: true };
+  // }
+
+  profilePasswordChangeform: FormGroup = new FormGroup({
+    oldPassword: new FormControl('', Validators.required),
     Password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    ConfirmPassword: new FormControl('', [Validators.required])
-  }, { validators: this.passwordMatchValidator })
+    ConfirmPassword: new FormControl('', Validators.required)
+  }, { validators: this.passwordMatchValidator.bind(this) });
+  
+
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const oldPassword = control.get('oldPassword')?.value;
     const password = control.get('Password')?.value;
     const confirmPassword = control.get('ConfirmPassword')?.value;
-    return password && confirmPassword && password === confirmPassword ? null : { passwordMismatch: true };
+  
+    if (!password || !confirmPassword || !oldPassword) return null;
+  
+    const errors: any = {};
+  
+    if (password !== confirmPassword) {
+      errors.passwordMismatch = true;
+    }
+  
+    if (oldPassword === password) {
+      errors.sameAsOld = true;
+    }
+  
+    return Object.keys(errors).length ? errors : null;
   }
+  // profilePasswordChangeform: FormGroup = new FormGroup({
+  //   oldPassword: new FormControl(''),
+  //   Password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+  //   ConfirmPassword: new FormControl('', [Validators.required])
+  // }, { validators: this.passwordMatchValidator });
+  
 
-  isModalOpen = false;
-  ProfileUpdateStatus: boolean = false;
-  updateStausMessage:string='';
-
-  imagePreview: string | ArrayBuffer | null = null;
-  selectedFile: File | null = null;
+  // passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+  //   const password = control.get('Password')?.value;
+  //   const confirmPassword = control.get('ConfirmPassword')?.value;
+  //   if (!password || !confirmPassword) {
+  //     return null;
+  //   }
+  //   return password === confirmPassword ? null : { passwordMismatch: true };
+  // }
+  
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -66,7 +115,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getProfileDet(UserID: string) {
-    this.apihttp.get(`https://localhost:7190/api/Users/getUserDetailsByID/${UserID}`).subscribe(
+    this.apiurls.get<any>(`getUserDetailsByID/${UserID}`).subscribe(
       (response: any) => {
         if (response) {
           this.profileform.patchValue({
@@ -93,18 +142,26 @@ export class ProfileComponent implements OnInit {
       createdBy: null,
       createdIP: null,
       createdDate:null,
-      modifiedBy: null,
+      modifiedBy: localStorage.getItem('email') as string,
       modifiedIP: null,
       modifiedDate:null
     };
     const UserID=this.profileform.get('email')?.value;
 
-    this.apihttp.put(`https://localhost:7190/api/Users/ChangeProfileDet/${UserID}`, updatedProfileData, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
-      next: (response:any) => {
-        if(response.statusCode="200"){
-          this.updateStausMessage=response.message;
+    // this.apihttp.put(`https://localhost:7190/api/Users/ChangeProfileDet/${UserID}`, updatedProfileData, {
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).subscribe({
+    //   next: (response:any) => {
+    //     if(response.statusCode="200"){
+    //       this.updateStausMessage=response.message;
+    //       this.ProfileUpdateStatus = true;
+    //       this.isModalOpen = true;
+
+    this.apiurls.put<{ message: string; statusCode: number }>(`ChangeProfileDet/${UserID}`, updatedProfileData)
+    .subscribe({
+      next: (response: any) => {
+        if (response.statusCode === 200) {
+          this.updateStausMessage = response.message;
           this.ProfileUpdateStatus = true;
           this.isModalOpen = true;
         }
@@ -135,26 +192,38 @@ export class ProfileComponent implements OnInit {
   }
   updateProfileImage(formData: FormData): void {
     const emailId: string = this.profileform.get('email')?.value;
-    this.apihttp.put(`https://localhost:7190/api/Users/updateProfileimage/${emailId}`, formData).subscribe(
-      (response) => {
+    // this.apihttp.put(`https://localhost:7190/api/Users/updateProfileimage/${emailId}`, formData).subscribe(
+    //   (response) => {
+    //     console.log('Profile Image updated successfully:', response);
+    //     this.fetchProfileimage(emailId); 
+    //   },
+    //   (error) => {
+    //     console.error('Upload failed:', error);
+    //   }
+    // );
+    
+    this.apiurls.put<any>(`updateProfileimage/${emailId}`, formData).subscribe({
+      next: (response) => {
         console.log('Profile Image updated successfully:', response);
-        this.fetchProfileimage(emailId); 
+        this.fetchProfileimage(emailId);  
       },
-      (error) => {
+      error: (error) => {
         console.error('Upload failed:', error);
       }
-    );
+    }
+  );
   }
-
   closeModal() {
     this.isModalOpen = false;
+    this.profilePasswordChangeform.reset();
+    this.changePasswordClicked = false;
+    this.cdRef.detectChanges();
   }
 
   handleOk() {
     this.closeModal();
   }
 
-  changePasswordClicked:boolean=false;
   changepassword(){
     this.changePasswordClicked=true;
   }
@@ -168,34 +237,65 @@ export class ProfileComponent implements OnInit {
     const NPassword=this.profilePasswordChangeform.get('Password')?.value;
     const UserID=this.profileform.get('email')?.value;
 
-    this.apihttp.put(`https://localhost:7190/api/Users/ChangePassword/${encodeURIComponent(UserID)}?OPassword=${encodeURIComponent(OPassword)}&NPassword=${encodeURIComponent(NPassword)}`,{}).subscribe({
-      next: (response:any) => {
-        if(response.statusCode="200"){
-          this.updateStausMessage=response.message;
+    // this.apihttp.put(`https://localhost:7190/api/Users/ChangePassword/${encodeURIComponent(UserID)}?OPassword=${encodeURIComponent(OPassword)}&NPassword=${encodeURIComponent(NPassword)}`,{}).subscribe({
+    //   next: (response:any) => {
+    //     if(response.statusCode="200"){
+    //       this.updateStausMessage=response.message;
+    //       this.ProfileUpdateStatus = true;
+    //       this.isModalOpen = true;
+    //     }
+    //     else{
+    //       this.updateStausMessage=response.message;
+    //       this.ProfileUpdateStatus = false;
+    //       this.isModalOpen = true;
+    //     }
+    //   },
+    //   error: (error) => {
+    //     console.error('Error updating profile', error);
+    //     this.ProfileUpdateStatus = false;
+    //     this.isModalOpen = true;
+    //   }
+    // });
+
+    const passwordUpdateUrl = `ChangePassword/${encodeURIComponent(UserID)}?OPassword=${encodeURIComponent(OPassword)}&NPassword=${encodeURIComponent(NPassword)}`;
+    this.apiurls.put<any>(passwordUpdateUrl, {}).subscribe({
+      next: (response: any) => {
+        if (response.statusCode === 200) {
+          this.updateStausMessage = response.message;
           this.ProfileUpdateStatus = true;
           this.isModalOpen = true;
-        }
-        else{
-          this.updateStausMessage=response.message;
+          this.cdRef.detectChanges();
+        } else {
+          this.updateStausMessage = response.message;
           this.ProfileUpdateStatus = false;
           this.isModalOpen = true;
         }
       },
       error: (error) => {
-        console.error('Error updating profile', error);
+        console.error('Error updating password', error);
         this.ProfileUpdateStatus = false;
         this.isModalOpen = true;
       }
     });
+  
   }
   
   deactivateAccount(email: string): void{
-    const url = `https://localhost:7190/api/Users/DeactivateAccount?email=${email}`;
-    this.apihttp.put(url,{}).subscribe({
-      next: (response:any) => {
+    // const url = `https://localhost:7190/api/Users/DeactivateAccount?email=${email}`;
+    // this.apihttp.put(url,{}).subscribe({
+    //   next: (response:any) => {
+    //     if (response && response.statusCode) {
+    //       if(response.statusCode="200"){
+    //         this.updateStausMessage=response.message;
+    //         this.ProfileUpdateStatus = true;
+    //         this.isModalOpen = true;
+
+    const url = `DeactivateAccount?email=${email}`;
+    this.apiurls.put<any>(url, {}).subscribe({
+      next: (response: any) => {
         if (response && response.statusCode) {
-          if(response.statusCode="200"){
-            this.updateStausMessage=response.message;
+          if (response.statusCode === 200) {
+            this.updateStausMessage = response.message;
             this.ProfileUpdateStatus = true;
             this.isModalOpen = true;
           }
@@ -216,14 +316,20 @@ export class ProfileComponent implements OnInit {
     })
   }
 
-  profilePhotoUrl: string = 'assets/images/usericon.jpg';
-  profilePhoto: string[] = [];
+  
 
   fetchProfileimage(email: string): void {
-    const url = `https://localhost:7190/api/Users/GetProfileimage?email=${email}`;
+    // const url = `https://localhost:7190/api/Users/GetProfileimage?email=${email}`;
   
-    this.apihttp.get<any>(url).subscribe({
-      next: (response) => {
+    // this.apihttp.get<any>(url).subscribe({
+    //   next: (response) => {
+    //     if (response && response.fileData) {
+    //       const imageUrl = `data:image/jpeg;base64,${response.fileData}`;
+    //       this.profilePhotoUrl = imageUrl;  
+    
+    const url = `GetProfileimage?email=${email}`;
+    this.apiurls.get<any>(url).subscribe({
+      next: (response: any) => {
         if (response && response.fileData) {
           const imageUrl = `data:image/jpeg;base64,${response.fileData}`;
           this.profilePhotoUrl = imageUrl;  
@@ -238,4 +344,14 @@ export class ProfileComponent implements OnInit {
   triggerFileInput(): void {
     document.getElementById('profilePhoto')?.click();
   }
+
+
+  togglePasswordVisibility() {
+      this.passwordVisible = !this.passwordVisible;
+  }
+  
+  toggleConfirmPasswordVisibility() {
+      this.confirmPasswordVisible = !this.confirmPasswordVisible;
+  }
+
 }

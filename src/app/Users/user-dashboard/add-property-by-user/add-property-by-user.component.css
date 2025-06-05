@@ -38,6 +38,7 @@
   .searchreview,.reviewStatus{
     width: 49%;
     margin: 0px;
+    margin-top: 8px;
   }
   
   .reviewStatus{
@@ -220,6 +221,11 @@
     text-align: center;
   }
   
+  .media-buttons button:hover {
+    border-color: #007BFF; 
+    animation: dotted-move 1s linear infinite;
+  }
+
   .propertyAminities .singleaminity{
     width: 32%;
   }
@@ -276,6 +282,7 @@
 
   .input-container{
     position: relative; 
+    
   }
 
   .select {
@@ -318,8 +325,7 @@
     transition: 0.2s ease-in-out;
     opacity: 0;
   }
-  /* select:focus+label,
-  select:not(:placeholder-shown) + label */
+ 
   input:focus + label,
   input:not(:placeholder-shown) + label,
   textarea:focus+label,
@@ -352,9 +358,6 @@ select:not(:focus):not(.filled) + label {
   opacity: 0;
 }
 
-  
-
-
 input[type="date"] {
   padding: .375rem .75rem;
   font-size: 16px;
@@ -383,14 +386,6 @@ input[type="date"]:valid + label {
   color: black;
   opacity: 1;
 }
-  /* input[type="date"]:focus + label,
-  input[type="date"]:valid + label {
-    top: -10px;
-    font-size: 12px;
-    color: black;
-    opacity: 1;
-  } */
-  
 
   
   a{
@@ -472,6 +467,7 @@ input[type="date"]:valid + label {
   .image-table{
     height:300px;
     overflow: scroll;
+    overflow-x: auto;
   }
   .image-table table{
     height: 100%;
@@ -529,7 +525,7 @@ input[type="date"]:valid + label {
     margin-right: 10px;
   }
 
-  .addnewButton button{
+  /* .addnewButton button{
     background-color: #2495FD;
     color: white;
     border: none;
@@ -537,7 +533,32 @@ input[type="date"]:valid + label {
   
   .addnewButton button:hover{
     background-color: #0056b3;
+  } */
+  .addnewButton button {
+    background-color: #2495FD;
+    color: white;
+    border: none;
+    border-radius: 8px; 
+    padding: 10px 20px;
+    font-size: 15px;  
+    font-weight: bold;    
+    text-transform: uppercase; 
+    cursor: pointer;   
+    transition: all 0.3s ease; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   }
+  
+  .addnewButton button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  }
+  
+  .addnewButton button:focus {
+    outline: none; 
+    box-shadow: 0 0 0 4px rgba(37, 123, 255, 0.5); 
+  }
+  
   
   .NoDataFound{
     display: flex;
@@ -554,13 +575,14 @@ input[type="date"]:valid + label {
 
   .custom-quill-editor {
     width: 100%;
-    height: auto !important;
+    /* height: auto !important; */
+    height: 157px;
     padding: 10px !important; 
     border-radius: 8px;
     background-color: #fff;
     font-size: 1.1em !important; 
     box-sizing: border-box;
-    overflow: hidden !important;
+    /* overflow: hidden !important; */
 }
 
 .custom-quill-editor .ql-editor {
@@ -687,7 +709,9 @@ input[type="date"]:valid + label {
   }
   
   .back-button {
-    background-color: #007bff; 
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    /* background-color: #007bff;  */
     color: #fff; 
     padding: 10px 20px; 
     font-size: 16px; 
@@ -706,7 +730,7 @@ input[type="date"]:valid + label {
   
   .back-button:hover {
     background-color: #0056b3; 
-    transform: translateY(-2px); 
+    transform: translateY(-2px) scale(1.02);
   }
   
   .back-button:focus {
@@ -734,14 +758,73 @@ input[type="date"]:valid + label {
   margin-left: 11px;
 }
 
-
-
 .clear-btn:active {
   background-color: red; 
   transform: scale(0.98); 
 }
 
 
+.statusButtons .soldOut{
+  margin-right: 20px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.statusButtons .UnSold{
+  margin-right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+
+
+.dropdown-icon {
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #999; 
+  font-size: 18px; 
+}
+.dropdown-icons {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #999;
+}
+.newbutton{
+  display: flex;
+    flex-direction: row-reverse;
+    margin-right: 0px;
+}
+
+
+.table-container {
+  max-height: 400px; 
+  overflow-y: auto;  
+  position: relative;
+  padding-top: 5px; 
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10; 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.table td, .table th {
+  position: relative;
+}
 
 
 button[data-tooltip] {
@@ -770,3 +853,298 @@ button[data-tooltip]:hover::after {
   opacity: 1;
   visibility: visible;
 }
+
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out;
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  z-index: 20; 
+}
+
+.email-wrapper {
+  position: relative;
+}
+
+.email-wrapper i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.email-wrapper input {
+  padding-right: 35px; 
+}
+
+.go-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 41px;
+  font-size: 21px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.go-top-btn:hover {
+  background-color: #0056b3;
+}
+
+.show {
+  display: block;
+}
+
+
+
+
+@media (max-width: 1024px) {
+  .mainReview {
+    height: auto;
+    padding: 10px;
+  }
+
+  .filtersSearch {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .searchreview, .reviewStatus {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .reviewstable {
+    max-height: 200px;
+  }
+
+  .table td, .table th {
+    padding: 12px;
+  }
+
+  .formrow .form-group {
+    width: 48%;
+    margin-bottom: 10px;
+  }
+
+  .media-buttons {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .socialLinks .formrow .form-group {
+    width: 100%;
+  }
+
+  .singleamenity {
+    flex: 1 1 45%;
+  }
+
+  .amenity-row {
+    justify-content: center;
+  }
+
+  .modal-dialog {
+    margin: 10% auto;
+    max-width: 90%;
+  }
+
+  .table-container {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainReview {
+    height: 100%;
+  }
+
+  .filtersSearch {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .reviewcard, .reviewview, .reviewcardPropertyView {
+    padding: 15px;
+    box-shadow: none;
+  }
+
+  .filtersSearch .searchreview,
+  .filtersSearch .reviewStatus {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .table thead {
+    display: block;
+  }
+
+  .table tbody {
+    display: block;
+  }
+
+  .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .table tbody td {
+    width: 100%;
+    padding: 15px 8px;
+    position: relative;
+    display: block;
+    border: 1px solid #ddd;
+  }
+
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    color: #555;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    z-index: 1;
+  }
+
+  .table tbody td {
+    padding-left: 20px;
+    padding-top: 25px;
+  }
+
+  .formrow {
+    flex-wrap: wrap;
+    display: flex;
+  }
+
+  .formrow .form-group {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .singleamenity {
+    flex: 1 1 45%;
+    min-width: 150px;
+  }
+
+  .amenity-row {
+    justify-content: center;
+  }
+
+  .updatestatusbuttons {
+    flex-direction: column;
+  }
+
+  .updatestatusbuttons .decline, .updatestatusbuttons .approve {
+    margin-right: 0;
+  }
+
+  .modal-dialog {
+    margin-top: 5%;
+    width: 100%;
+  }
+
+  .input-container input, .input-container textarea, .input-container select {
+    font-size: 14px;
+  }
+
+  .back-button-container {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .back-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainReview {
+    padding: 5px;
+  }
+
+  .filtersSearch {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .filtersSearch .searchreview,
+  .filtersSearch .reviewStatus {
+    width: 100%;
+  }
+
+  .table td, .table th {
+    padding: 10px;
+  }
+
+  .table tbody td::before {
+    font-size: 10px;
+  }
+
+  .formrow .form-group {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .singleamenity {
+    flex: 1 1 100%;
+  }
+
+  .table tbody td {
+    padding: 10px 8px;
+  }
+
+  .modal-dialog {
+    width: 95%;
+  }
+
+  .back-button {
+    width: 100%;
+  }
+
+  .back-button i {
+    margin-right: 5px;
+  }
+
+  .updateProperty {
+    flex-direction: column;
+  }
+
+  .submitButtonDiv {
+    text-align: center;
+  }
+}
+

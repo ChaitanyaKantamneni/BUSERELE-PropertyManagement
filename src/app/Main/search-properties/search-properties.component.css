@@ -2,6 +2,27 @@
     max-width: 100%;
 }
 
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);  
+    z-index: 1040;  
+  }
+  
+  .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1050;  
+  }
+
+
+  
+
 h5{
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
@@ -23,7 +44,7 @@ h5{
 .preloader {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 60%;
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
@@ -60,10 +81,10 @@ h5{
 
 .bottom-bar1 {
     background: linear-gradient(to right, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
-    width: 85%; /* Adjust the width as needed */
+    width: 85%; 
     color: white;
-    margin: 0 auto; /* Centers the element */
-    padding: 10px; /* Adds some internal spacing */
+    margin: 0 auto;
+    padding: 10px; 
     position: relative;
     overflow: hidden;
 }
@@ -82,7 +103,7 @@ h5{
 
 
 .propertyaddress i {
-    font-size: 1.2rem; /* Adjust as needed */
+    font-size: 1.2rem; 
 }
 
 .propertyspecifications {
@@ -96,11 +117,11 @@ h5{
 }
 
 .propertyDetails .cost {
-    color: #007bff; /* Or use a color that fits your design */
+    color: #007bff;
 }
 
 .smaller-text,.small-icon {
-    font-size: 9px; /* Adjust as needed */
+    font-size: 9px; 
 }
 
 .cost{
@@ -599,4 +620,74 @@ color: white !important;
     }
 }
 
+
+@media (max-width: 768px) {
+    .propertyFulldet {
+        flex-direction: column;
+    }
+
+    .propertyImage {
+        height: 50%;
+    }
+
+    .propertyDetails {
+        height: 50%;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .properties-container {
+        width: 100%;
+    }
+
+    .Mortgage {
+        width: 100%;
+        position: relative;
+        box-shadow: none;
+        border-left: none;
+    }
+
+    .properties .col-lg-3, .row .col-lg-4 {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn {
+        width: 100%;
+    }
+
+    .propertylist .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .propertyImage {
+        height: 50%;
+    }
+
+    .propertyDetails {
+        height: auto; 
+        padding: 5px;
+    }
+
+    .propertyTitle {
+        font-size: 14px; 
+    }
+
+    .propertyaddress {
+        font-size: 10px;
+    }
+
+    .cost {
+        font-size: 12px;
+    }
+
+    .propertyFooter {
+        padding: 10px;
+    }
+}
 

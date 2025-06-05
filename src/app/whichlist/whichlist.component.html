@@ -1,13 +1,17 @@
 
-<!-- <div *ngIf="isLoading" class="preloader">
+<div *ngIf="isLoading" class="preloader">
     <img src="assets/images/load.gif" alt="Loading...">
-</div> -->
+</div>
 <div *ngIf="!isLoading">
   
     <div class="container">
+      <!-- <div class="button-container">
+        <button *ngIf="propertydetails.length > 0" (click)="clearAllWishlist()">Clear Whichlist</button>
+      </div> -->
       <div class="button-container">
-        <button *ngIf="propertydetails.length > 0" (click)="clearWhichlist()">Clear Whichilist</button>
+        <button *ngIf="propertydetails.length > 0" class="btn" (click)="clearAllWishlist()">Clear Wishlist</button>
       </div>
+      
       
       <!-- <button (click)="clearWhichlist()">clear</button> -->
       <div class="properties row g-3 justify-content-center align-items-center">
@@ -15,17 +19,32 @@
         <ng-container *ngFor="let propertyitem of propertydetails">
           <div class="col-lg-4 col-md-6 col-sm-12 p-0 mb-3 rounded-2">
             
-            <a [routerLink]="['/dashboard/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
+            <a [routerLink]="['/dashboard/view-property',encodeID(propertyitem.propertyID)]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
               <div class="propertyFulldet d-flex flex-column">
-                <!-- Property Image Section -->
                 <div class="propertyImage position-relative">
                   <img [src]="propertyitem.propertyimage" class="img-fluid w-100 h-100" alt="Property Image">
                   <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
                   <!-- <div class="bottom-bar1 position-absolute bottom-0 start-0 w-100">
                     <h5 class="mb-0 text-white">{{propertyitem.propertyname}}</h5>
                   </div> -->
+
+                  
+                  <!-- <div *ngFor="let property of propertydetails" class="property-card"> -->
+                    <div class="wishlist-container position-absolute top-0 end-0 m-2">
+                    <i 
+                      class="fas fa-heart"
+                      style="color: red; cursor: pointer; font-size: 1.4rem;"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="left"
+                      title="Remove from wishlist"
+                      (click)="removeHeart(propertyitem.propertyID, $event)">
+                    </i>
+                    
+                  </div>
+                   <!-- </div> -->
+
                 </div>
-                <!-- Property Details Section -->
+
                 <div class="propertyDetails">
                   <div class="propertyTitle d-flex align-items-center mt-1">                                          
                     <p class="mb-0">
@@ -74,10 +93,10 @@
                           <!-- <a [routerLink]="['/contact-us', propertyitem.propertyID]" class="text-decoration-none text-primary fw-bold">
                             Contact
                           </a> -->
-                          <a [routerLink]="['/contact-us']" class="text-decoration-none text-black fw-bold">
+                          <!-- <a [routerLink]="['/contact-us']" class="text-decoration-none text-black fw-bold">
                             Contact
                           </a>
-                          <i class="fa fa-phone-alt me-2 text-black"></i>
+                          <i class="fa fa-phone-alt me-2 text-black"></i> -->
                         </div>
                       
                         <div class="cost d-flex justify-content-end">
@@ -102,7 +121,6 @@
           <div class="NoDataFoundImg">
             <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
           </div>
-          <!-- <p class="text-center">{{NoDataFound}}</p> -->
           <p>No Whichilist found for the given search </p>
         </div>
       </div>

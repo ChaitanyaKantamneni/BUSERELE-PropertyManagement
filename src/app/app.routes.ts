@@ -64,7 +64,7 @@ export const routes: Routes = [
             {path:'profile',component:ProfileComponent},
             {path:'membership-details',component:MembershipDetComponent},
             // {path:'addpropertysample',component:AddpropertysampleComponent},
-            {path:'addpropertysample',component:AddPropertyComponentComponent},
+            {path:'addproperty',component:AddPropertyComponentComponent},
             {path:'dashboarddet',component:DashboardcomponentComponent},
             {path:'userReviews',component:Review1Component},
             {path:'addpropertytype',component:PropertyForComponent},

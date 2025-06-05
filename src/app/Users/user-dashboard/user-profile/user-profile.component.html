@@ -1,123 +1,4 @@
-<!-- <div class="mainReview">
-    <div class="w-100">
-        <!-- <div class="reviewview">
-            <div class="profileForm">
-                <div class="PageHeading">
-                    <h5 class="text-center m-0"><b>CONTACT INFORMATION</b></h5>
-                </div>
-                  
-                <form [formGroup]="profileform">
-                    <div class="formrow">
-                        <div class="form-group">
-                          <div class="input-container">
-                            <input id="fname" type="text" placeholder="First Name" formControlName="fname" class="form-control" />
-                            <label for="fname">First Name</label>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="input-container">
-                            <input id="lname" type="text" placeholder="Last Name" formControlName="lname" class="form-control" />
-                            <label for="lname">Last Name</label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="formrow">
-                          <div class="form-group">
-                              <div class="input-container">
-                                <input id="email" type="text" placeholder="Email" formControlName="email" class="form-control" readonly />
-                                <label for="email">Email</label>
-                              </div>
-                            </div>
-                          <div class="form-group">
-                            <div class="input-container">
-                              <input id="mobile" type="text" placeholder="Mobile Number" formControlName="mobile" class="form-control" />
-                              <label for="mobile">Mobile</label>
-                            </div>
-                          </div>
-                    </div>
-          
-                    <div class="updatestatusbuttons">
-                          <button class="btn btn-primary" (click)="updateProfileDet()">Update</button>
-                    </div>
-                </form>
-            </div>
-            <div class="profilePicture">
-                
-            </div>
-        </div> --
-        <div class="reviewview">
-            <div class="profileForm">
-                <div class="PageHeading">
-                    <h5 class="text-center m-0"><b>CONTACT INFORMATION</b></h5>
-                </div>
-        
-                <form [formGroup]="profileform">
-                    <div class="formrow">
-                        <div class="form-group">
-                            <div class="input-container">
-                                <input id="fname" type="text" placeholder="First Name" formControlName="fname" class="form-control" />
-                                <label for="fname">First Name</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-container">
-                                <input id="lname" type="text" placeholder="Last Name" formControlName="lname" class="form-control" />
-                                <label for="lname">Last Name</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="formrow">
-                        <div class="form-group">
-                            <div class="input-container">
-                                <input id="email" type="text" placeholder="Email" formControlName="email" class="form-control" readonly />
-                                <label for="email">Email</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-container">
-                                <input id="mobile" type="text" placeholder="Mobile Number" formControlName="mobile" class="form-control" />
-                                <label for="mobile">Mobile</label>
-                            </div>
-                        </div>
-                    </div>
-        
-                    <div class="updatestatusbuttons">
-                        <button class="btn btn-primary" (click)="updateProfileDet()">Update</button>
-                    </div>
-                </form>
-            </div>
-            <div class="profilePicture">
-                <div class="form-group">
-                    <label for="profilePicture">Profile Picture</label>
-                    <input id="profilePicture" type="file" (change)="onFileSelected($event)" class="form-control" />
-                    <!-- Image preview section --
-                    <div *ngIf="imagePreview" class="image-preview">
-                        <img [src]="imagePreview" alt="Profile Picture Preview" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Success</h5>
-                <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <p>{{ ProfileUpdateStatus }}</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-              </div>
-            </div>
-          </div>
-        </div>
-    </div>
-</div> -->
+
 <div class="mainReview">
     <div class="w-100">
         <div class="reviewview">
@@ -125,7 +6,6 @@
                 <div class="PageHeading">
                     <h5 class="text-center m-0"><b>CONTACT INFORMATION</b></h5>
                 </div>
-
                 <form [formGroup]="profileform">
                     <div class="formrow">
                         <div class="form-group">
@@ -143,12 +23,26 @@
                     </div>
 
                     <div class="formrow">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <div class="input-container">
                                 <input id="email" type="text" placeholder="Email" formControlName="email" class="form-control" readonly />
                                 <label for="email">Email</label>
                             </div>
-                        </div>
+                        </div> -->
+                        <div class="form-group">
+                            <div class="input-container email-wrapper">
+                              <input 
+                                id="email" 
+                                type="text" 
+                                placeholder="Email" 
+                                formControlName="email" 
+                                class="form-control" 
+                                readonly />
+                                <label for="email">Email</label>
+                              <i class="fas fa-envelope"></i> 
+                            </div>
+                          </div>
+                          
                         <div class="form-group">
                             <div class="input-container">
                                 <input id="mobile" type="text" placeholder="Mobile Number" formControlName="mobile" class="form-control" />
@@ -179,7 +73,7 @@
                             <div class="input-container">
                                 <input id="fname" type="password" placeholder="Old Password" formControlName="oldPassword" class="form-control" required />
                                 <div *ngIf="profilePasswordChangeform.get('oldPassword')?.invalid && profilePasswordChangeform.get('oldPassword')?.touched">
-                                    <p class="text-danger fw-bold" [ngClass]="clr">Old Password is required.</p>
+                                    <p class="text-danger fw-bold" style="font-size: x-small;" [ngClass]="clr">Old Password is required.</p>
                                 </div>
                                 <label for="fname">Old Password</label>
                             </div>
@@ -187,7 +81,7 @@
                       
                     </div>
 
-                    <div class="formrow">
+                    <!-- <div class="formrow">
                         <div class="form-group">
                             <div class="input-container">
                               <input type="password" id="password" formControlName="Password" placeholder="New Password" class="form-control" />
@@ -210,8 +104,74 @@
                               <label for="confirmPassword">Confirm Password</label>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
+
+                    <div class="formrow">
+                        <div class="form-group">
+                            <div class="input-container">
+                                <div class="password-wrapper">
+                                    <input 
+                                        [type]="passwordVisible ? 'text' : 'password'" 
+                                        formControlName="Password" 
+                                        placeholder="Enter New Password" 
+                                        class="form-control"
+                                        required />
+                                    <label for="password">New Password</label>
+                                    <i class="fas" 
+                                       [ngClass]="passwordVisible  ? 'fa-eye' : 'fa-eye-slash'" 
+                                       (click)="togglePasswordVisibility()">
+                                    </i>
+                                </div>
+                                <div class="validation-message">
+                                    <p *ngIf="profilePasswordChangeform.get('Password')?.invalid && profilePasswordChangeform.get('Password')?.touched" class="text-danger fw-bold" [ngClass]="clr">New Password is required.</p>
+                                    <p 
+                                    *ngIf="profilePasswordChangeform.hasError('sameAsOld') && profilePasswordChangeform.get('Password')?.touched" 
+                                    class="text-danger fw-bold" 
+                                    [ngClass]="clr">
+                                    New Password must be different from Old Password.
+                                  </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-container">
+                                <div class="password-wrapper">
+                                    <input 
+                                        [type]="confirmPasswordVisible ? 'text' : 'password'" 
+                                        id="confirmPassword" 
+                                        formControlName="ConfirmPassword" 
+                                        placeholder="Confirm New Password" 
+                                        class="form-control"
+                                        required />
+                                    <label for="confirmPassword">Confirm New Password</label>
+                                    <i class="fas" 
+                                       [ngClass]="confirmPasswordVisible  ? 'fa-eye' : 'fa-eye-slash'" 
+                                       (click)="toggleConfirmPasswordVisibility()">
+                                    </i>
+                                </div>
+                                <!-- <div class="validation-message">
+                                    <p *ngIf="profilePasswordChangeform.get('ConfirmPassword')?.invalid && profilePasswordChangeform.get('ConfirmPassword')?.touched" class="text-danger fw-bold" [ngClass]="clr">Confirm Password is required.</p>
+                                    <p *ngIf="profilePasswordChangeform.hasError('passwordMismatch') && profilePasswordChangeform.get('ConfirmPassword')?.touched" class="text-danger fw-bold" [ngClass]="clr">New Password & Confirm Password must match.</p>
+                                </div> -->
+                                <div class="validation-message">
+                                    <p 
+                                      *ngIf="profilePasswordChangeform.get('ConfirmPassword')?.errors?.['required'] && profilePasswordChangeform.get('ConfirmPassword')?.touched" 
+                                      class="text-danger fw-bold" 
+                                      [ngClass]="clr">
+                                      Confirm Password is required.
+                                    </p>
+                                    <p 
+                                      *ngIf="profilePasswordChangeform.hasError('passwordMismatch') && profilePasswordChangeform.get('ConfirmPassword')?.touched && !profilePasswordChangeform.get('ConfirmPassword')?.errors?.['required']" class="text-danger fw-bold" [ngClass]="clr">New Password & Confirm Password must match.
+                                    </p>
+                                  </div>
+                                  
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="updatestatusbuttons mt-3">
                         <div class="updatestatusbuttons1">
                             <button class="btn deactivate" (click)="deactivateAccount()">Deactivate Account</button>
@@ -232,19 +192,8 @@
                     </div>
 
 
-                    <!-- Show file input before the image is uploaded -->
-                    <!-- <div *ngIf="!imagePreview">
-                        <input id="profilePicture" type="file" (change)="onFileSelected($event)" class="form-control" />
-                    </div> -->
-
-                    <!-- Show image preview after the image is selected -->
-                    <!-- <div *ngIf="imagePreview" class="image-preview">
-                        <img [src]="imagePreview" alt="Profile Picture Preview" />
-                    </div> -->
-
                     <input type="file" id="profilePhoto" (change)="onProfilePhotoChange($event)" class="upload-btn" accept="image/*">
 
-                    <!-- Upload button -->
                     <button type="button" class="btn btn-secondary mt-2" (click)="uploadImage()" *ngIf="imagePreview">
                         Upload Image
                     </button>
@@ -252,7 +201,6 @@
             </div>
         </div>
 
-        <!-- Modal for update success -->
         <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">

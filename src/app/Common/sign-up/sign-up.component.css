@@ -1,28 +1,40 @@
 
+.navbar {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
 
-/* Style for the password container */
+.nav-link {
+  font-weight: 700;
+  color: #484848;
+}
+
+.nav-link:hover {
+  color: #2495FD;
+}
+
+.navbar-brand {
+  height: 70px;
+}
+
+.navbar-nav .nav-link.active {
+  color: #2495FD;
+}
 .password-container {
   position: relative;
 }
 
-/* Style the eye icon */
 .password-container i {
   position: absolute;
-  left: 232px; 
-  top: 17%;
+  left: 170px;
   transform: translateY(-50%);
   cursor: pointer;
   z-index: 1;
-  color: #666; /* Adjust the color of the icon */
+  color: #666; 
 }
 
-/* Style the input field */
 .password-container input {
-
   width: 100%;
 }
-
-/* Optional: You can add more styles to match your design */
 
 .container {
   display: flex;
@@ -33,8 +45,17 @@
   /* background-color: #f4f7fa; */
 }
 
-.form-grid {
+.gradient-background {
   width: 100%;
+  background: linear-gradient(0deg, rgba(34, 78, 195, 1) 0%, rgba(234, 164, 14, 1) 100%);
+  padding: 2rem; 
+  color: white;  
+  display: flex;
+  max-width: 100%;
+}
+
+.form-grid {
+  width: 50%;
   max-width: 600px;
   background-color: #fff;
   padding: 40px;
@@ -144,6 +165,9 @@ button[type="submit"]:disabled {
   background-color: #d6d6d6;
   cursor: not-allowed;
 }
+.error-message {
+  min-height: 22px; 
+}
 
 .form-columns {
   display: grid;
@@ -199,5 +223,161 @@ button[type="submit"]:disabled {
 
   .form-buttons button {
     width: 100%; 
+  }
+}
+.image-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+.full-height-img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: cover; */
+}
+.headerwell {
+  font-size: 28px;
+  font-weight: bold;
+  color: #007bff;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.subtext {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.content-wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 80%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+
+.email-wrapper {
+  position: relative;
+}
+
+.email-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 20%;
+  transform: translateY(-50%);
+  color: #999;
+  pointer-events: none;
+  font-size: 14px;
+  z-index: 1;
+}
+
+.email-wrapper input {
+  padding-right: 35px; 
+}
+
+
+.mobile-wrapper {
+  position: relative;
+}
+
+.mobile-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 20%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.mobile-wrapper input {
+  padding-right: 35px; 
+}
+
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .image-section {
+    width: 100%;
+    height: 200px;
+  }
+
+  .full-height-img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .form-grid {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .form-columns {
+    display: block;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .form-buttons button {
+    width: 100%;
+  }
+
+  .password-container i,
+  .email-wrapper i,
+  .mobile-wrapper i {
+    left: auto;
+    right: 10px;
+  }
+
+  .headerwell {
+    font-size: 22px;
+  }
+
+  .subtext {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+
+  input {
+    font-size: 14px;
+    padding: 10px 0;
+  }
+
+  button[type="submit"],
+  button[type="button"] {
+    font-size: 14px;
+    padding: 10px;
   }
 }

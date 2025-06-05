@@ -3,22 +3,24 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, NgFor } from '@angular/common';
+import { ApiServicesService } from '../../../api-services.service';
 
 
 @Component({
   selector: 'app-userwhichlist',
   standalone: true,
+  providers: [ApiServicesService],
   imports: [ReactiveFormsModule,NgFor, HttpClientModule, CommonModule, RouterModule,FormsModule],
   templateUrl: './userwhichlist.component.html',
   styleUrl: './userwhichlist.component.css'
 })
 export class UserwhichlistComponent {
-  constructor(public apiurl:HttpClient,private route: ActivatedRoute,private router:Router){}
+  constructor(public apiurl:HttpClient,private route: ActivatedRoute,private router:Router,private apiurls: ApiServicesService){}
   propID:string|null='';
   userID=localStorage.getItem('email');
   isLoading: boolean = false;
   NoDataFound:string="";
-  EmptyPropertydetails:boolean=false;
+  EmptyPropertydetails:boolean=true;
   
   
   ngOnInit(): void {
@@ -27,47 +29,20 @@ export class UserwhichlistComponent {
       this.propID = params.get('propertyID');    
     })
   }
-  // ngOnInit(): void {
-  //   this.getownProperties(this.userID || '');
-  
-  //   this.route.paramMap.subscribe(params => {
-  //     console.log("🔍 Full Route Params:", params);
-  
-  //     const encryptedPropID = params.get('propertyID');
-  //     console.log("🔹 Encrypted Property ID from URL:", encryptedPropID);
-  
-  //     if (encryptedPropID) {
-  //       this.propID = this.decryptID(encryptedPropID);
-  //       console.log("✅ Decrypted Property ID:", this.propID);
-  
-  //       // Fetch property details after successful decryption
-  //       if (this.propID) {
-  //         this.getownProperties(this.propID);
-  //       } else {
-  //         console.error("❌ Decryption failed or resulted in an empty property ID.");
-  //       }
-  //     } else {
-  //       console.error("❌ Encrypted Property ID is null. Check routerLink.");
-  //     }
-  //   });
-  // }
-  
-  // decryptID(encryptedPropID: string): string {
-  //   try {
-  //     return atob(encryptedPropID).trim();  // Ensure correct decryption
-  //   } catch (error) {
-  //     console.error("❌ Error decrypting property ID:", error);
-  //     return '';
-  //   }
-  // }
-  
-  // encryptID(propertyID: string): string {
-  //   return btoa(propertyID);
-  // }
-  
 
-
-
+  encodeID(id: string): string {
+    return btoa(id).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  
+  decodeID(encoded: string): string {
+    encoded = encoded.replace(/-/g, '+').replace(/_/g, '/');
+    while (encoded.length % 4) {
+      encoded += '=';
+    }
+    return atob(encoded);
+  }
+  
+ 
   propertydetails: any[] = []
 
   propertytypes:any[]=[{
@@ -115,7 +90,7 @@ export class UserwhichlistComponent {
 
 getownProperties(UserID: string) {
   this.isLoading = true;
-  this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetWishlistByUserID/${UserID}`)
+  this.apiurls.get<any>(`GetWishlistByUserID/${UserID}`)
     .subscribe(
       (response: any[]) => {
         if (response.length > 0) {
@@ -146,23 +121,26 @@ getownProperties(UserID: string) {
                   console.error('Error decoding first image data:', error);
                 }
               } else {
-                propertyImage = 'assets/images/img1.png';
+                propertyImage = 'assets/images/empty.png';
               }
             } else {
-              defaultPropImage = 'assets/images/img1.png'; 
+              defaultPropImage = 'assets/images/empty.png'; 
               console.log('Property images are missing or not an array.');
             }
 
             if (property.image && property.image.filePath) {
               const firstImage = property.image;
               try {
-                defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+                // defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+
+                defaultPropImage=this.apiurls.getImageUrl(property.image.filePath) || 'assets/images/empty.png';
+
                 console.log('Generated Default Image URL:', defaultPropImage);
               } catch (error) {
                 console.error('Error generating default image URL:', error);
               }
             } else {
-              defaultPropImage = 'assets/images/img1.png'; 
+              defaultPropImage = 'assets/images/empty.png'; 
             }
 
             let propertyBadge = '';
@@ -197,16 +175,16 @@ getownProperties(UserID: string) {
 
             return {
               propertyID: property.propID || 'N/A',
-              propertyname: property.propname || 'Unknown Property',
-              propertyprice: property.propertyTotalPrice || 'Price not available',
-              propertyaddress: property.landMark || 'Address not available',
-              propertyarea: property.totalArea || 'Area not available',
-              propertybeds: property.noOfBedrooms || 'Beds not available',
-              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
-              propertytype: property.propertyType || 'Unknown Type',
+              propertyname: property.propname || 'N/A',
+              propertyprice: property.propertyTotalPrice || 'N/A',
+              propertyaddress: property.landMark || 'N/A',
+              propertyarea: property.totalArea || 'N/A',
+              propertybeds: property.noOfBedrooms || 'N/A',
+              propertybathrooms: property.noOfBathrooms || 'N/A',
+              propertytype: property.propertyType || 'N/A',
               propertyimage: defaultPropImage, 
-              propertyfor: property.propertyFor,
-              propertyparking: property.noOfParkings,
+              propertyfor: property.propertyFor || 'N/A',
+              propertyparking: property.noOfParkings || 'N/A',
               PropertyTypeName: property.propertyTypeName,
               propertyfacing: PropertyFacing,
               propertyAvailability: propertyBadge,
@@ -251,24 +229,51 @@ getownProperties(UserID: string) {
   }
   
 
-
-  clearWhichlist(): void {
+  removeHeart(propertyID: number, event: MouseEvent): void {
+    event.preventDefault(); 
+    event.stopPropagation();
+  
     this.isLoading = true;
-
+    const propertyIndex = this.propertydetails.findIndex(item => item.propertyID === propertyID);
+  
+    if (propertyIndex !== -1) {
+      this.propertydetails.splice(propertyIndex, 1);
+  
+      const userID = this.userID;
+  
+      this.apiurls.delete(`RemoveFromWishlist/${userID}/${propertyID}`)
+        .subscribe(
+          response => {
+            console.log(`Successfully removed property ${propertyID} from wishlist`);
+            if (this.propertydetails.length === 0) {
+              this.EmptyPropertydetails = true;
+              this.NoDataFound = "There are no properties in your wishlist.";
+            }
+          },
+          error => {
+            console.error(`Error removing property ${propertyID}:`, error);
+          }
+        );
+    }
+    this.isLoading = false;
+  }
+  
+  
+  clearAllWishlist(): void {
+    this.isLoading = true;
     const wishlistItems = this.propertydetails;
-
+  
     if (wishlistItems.length === 0) {
       this.EmptyPropertydetails = true;
       this.NoDataFound = "There are no properties in your wishlist.";
       this.isLoading = false;
       return;
     }
-
     wishlistItems.forEach(item => {
       const userID = this.userID;
       const propID = item.propertyID;
-
-      this.apiurl.delete(`https://localhost:7190/api/Users/RemoveFromWishlist/${userID}/${propID}`)
+  
+       this.apiurls.delete(`RemoveFromWishlist/${userID}/${propID}`)
         .subscribe(
           response => {
             console.log(`Successfully removed property ${propID} from wishlist`);
@@ -278,13 +283,10 @@ getownProperties(UserID: string) {
           }
         );
     });
-
-    this.propertydetails = [];  
-    this.EmptyPropertydetails = true; 
-    this.NoDataFound = "There are no properties in your wishlist.";  
-
+    this.propertydetails = [];
+    this.EmptyPropertydetails = true;
+    this.NoDataFound = "There are no properties in your wishlist.";
     this.isLoading = false;
-  }
-
-
+  }  
+  isLiked = true;  
 }

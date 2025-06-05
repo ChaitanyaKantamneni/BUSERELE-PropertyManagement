@@ -1,9 +1,11 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Location } from '@angular/common';
+import { ApiServicesService } from '../../../api-services.service';
 
 interface PropertyDet {
   propertyID: string;
@@ -28,14 +30,16 @@ interface Amenity {
 @Component({
   selector: 'app-viewuserdashboard',
   standalone: true,
+  providers: [ApiServicesService],
   imports: [HttpClientModule, NgFor,ReactiveFormsModule,NgIf,CommonModule],
   templateUrl: './viewuserdashboard.component.html',
   styleUrl: './viewuserdashboard.component.css'
 })
 export class ViewuserdashboardComponent {
-  constructor(public apiurl:HttpClient,private route: ActivatedRoute, public router:Router,private sanitizer: DomSanitizer ){
-  }
+  
+  constructor(public apiurl:HttpClient,private route: ActivatedRoute, public router:Router,private sanitizer: DomSanitizer,private location: Location,private apiurls: ApiServicesService){}
   selectedPropertyID: string | null = '';
+  
   userEnquiryform:FormGroup=new FormGroup({
     name:new FormControl(''),
     email:new FormControl(''),
@@ -93,36 +97,33 @@ export class ViewuserdashboardComponent {
     usermessage:new FormControl(''),
     rating:new  FormControl(''), 
   })
-  
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.selectedPropertyID = params.get('propertyID');
-      console.log("propertyid:",this.selectedPropertyID);
+      const encodedID = params.get('propertyID');
+  
+      if (encodedID) {
+        try {
+          this.selectedPropertyID = atob(encodedID); 
+          console.log('Decoded Property ID:', this.selectedPropertyID);
+          this.loadPropertyDetailsByPropertyID(this.selectedPropertyID);
+        } catch (e) {
+          alert("Invalid Property ID");
+          this.router.navigate(['/home']);
+        }
+      } else {
+        alert("No Properties Available with this Property Type.");
+        this.router.navigate(['/home']);
+      }
+  
+      const wishlistState = localStorage.getItem('wishlist_' + this.selectedPropertyID);
+      this.isLiked = wishlistState === 'true';
+      this.checkIfPropertyInWishlist();
     });
-    
-    if (this.selectedPropertyID) {
-      this.loadPropertyDetailsByPropertyID(this.selectedPropertyID || '');
-    } else {
-      alert("No Properties Available with this Property Type.");
-      this.router.navigate(['/home']);
-    }
-
+  
     this.loadFeaturedPropertyDetails();
-    
-    this.intervalId = setInterval(() => {
-      this.loadProperties();  
-    }, 1000);
-
-    // this.checkWishlistStatus();
-
-    const wishlistState = localStorage.getItem('wishlist_' + this.selectedPropertyID);
-    this.isLiked = wishlistState === 'true'; 
-    this.checkIfPropertyInWishlist();
-    
-
-    
+    this.loadProperties();
+  
   }
-
   //propertydetails:PropertyDet[]=[];
   propertydetails: any[] = []; 
   FeaturedProperties:any[]=[];
@@ -194,18 +195,34 @@ OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
 
 isLiked = true;  
  
-checkIfPropertyInWishlist() {
+// checkIfPropertyInWishlist() {
+//   const email = localStorage.getItem('email');
+//   if (email) {
+//     this.apiurl.get(`https://localhost:7190/api/Users/CheckIfPropertyInWishlist/${email}/${this.selectedPropertyID}`,{
+//       headers: { 'Content-Type': 'application/json' }
+//     }).subscribe({
+//       next: (response: any) => {
+//         if (response && response.activatedstatus === '1') {
+//           this.isLiked = true;
+//         } else {
+//           this.isLiked = false;
+//         }
+//       },
+//       error: (error) => {
+//         console.error('Error checking wishlist status:', error);
+//       }
+//     });
+//   }
+// }
+
+
+checkIfPropertyInWishlist(): void {
   const email = localStorage.getItem('email');
-  if (email) {
-    this.apiurl.get(`https://localhost:7190/api/Users/CheckIfPropertyInWishlist/${email}/${this.selectedPropertyID}`,{
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
+  if (email && this.selectedPropertyID) {
+    const endpoint = `CheckIfPropertyInWishlist/${email}/${this.selectedPropertyID}`;
+    this.apiurls.get<any>(endpoint).subscribe({
       next: (response: any) => {
-        if (response && response.activatedstatus === '1') {
-          this.isLiked = true;
-        } else {
-          this.isLiked = false;
-        }
+        this.isLiked = response?.activatedstatus === '1';
       },
       error: (error) => {
         console.error('Error checking wishlist status:', error);
@@ -213,6 +230,7 @@ checkIfPropertyInWishlist() {
     });
   }
 }
+
 toggleHeart() {
   this.isLiked = !this.isLiked;
   if (!localStorage.getItem('email')) {
@@ -228,20 +246,26 @@ toggleHeart() {
 
 
 addToWishlist() {
-  const wishlistRequest = {
+  const userEmail = localStorage.getItem('email') || 'Unknown User';
+    const wishlistRequest = {
     propID: this.selectedPropertyID,
     userID: localStorage.getItem('email'),
+    createdBy: userEmail,
     activatedstatus: '1',
   };
 
   console.log('Adding to wishlist:', wishlistRequest);
 
-  this.apiurl.post('https://localhost:7190/api/Users/AddToWishlist', wishlistRequest, {
-    headers: { 'Content-Type': 'application/json' }
-  }).subscribe({
-    next: (response: any) => {
+  // this.apiurl.post('https://localhost:7190/api/Users/AddToWishlist', wishlistRequest, {
+  //   headers: { 'Content-Type': 'application/json' }
+  // }).subscribe({
+  //   next: (response: any) => {
+  //     console.log('Added to wishlist:', response);
+  //     this.isLiked = true; 
+  this.apiurls.post<any>('AddToWishlist', wishlistRequest).subscribe({
+    next: (response) => {
       console.log('Added to wishlist:', response);
-      this.isLiked = true; 
+      this.isLiked = true;
       localStorage.setItem('wishlist_' + this.selectedPropertyID, 'true');
       this.propertyInsStatus = "Property added to your wishlist!";
       this.isUpdateModalOpen = true;
@@ -264,18 +288,48 @@ handleOk() {
   this.isUpdateModalOpen = false;
 }
 
+// removeFromWishlist() {
+//   const wishlistRequest = {
+//     propID: this.selectedPropertyID,
+//     userID: localStorage.getItem('email'),
+//     activatedstatus: '0',
+//   };
+
+//   console.log('Removing from wishlist:', wishlistRequest);
+
+//   this.apiurl.delete(`https://localhost:7190/api/Users/RemoveFromWishlist/${wishlistRequest.userID}/${wishlistRequest.propID}`, {
+//     headers: { 'Content-Type': 'application/json' }
+//   }).subscribe({
+//     next: (response: any) => {
+//       console.log('Removed from wishlist:', response);
+//       this.isLiked = false;  
+//       localStorage.removeItem('wishlist_' + this.selectedPropertyID);
+      
+//       this.propertyInsStatus = " Property removed from your wishlist!";
+//       this.isUpdateModalOpen = true; 
+//     },
+//     error: (error) => {
+//       console.error('Error removing from wishlist:', error);
+      
+//       this.propertyInsStatus = " Failed to remove from wishlist. Try again later!";
+//       this.isUpdateModalOpen = true;
+//     }
+//   });
+// }
+
+
+
 removeFromWishlist() {
   const wishlistRequest = {
     propID: this.selectedPropertyID,
     userID: localStorage.getItem('email'),
     activatedstatus: '0',
   };
-
   console.log('Removing from wishlist:', wishlistRequest);
 
-  this.apiurl.delete(`https://localhost:7190/api/Users/RemoveFromWishlist/${wishlistRequest.userID}/${wishlistRequest.propID}`, {
-    headers: { 'Content-Type': 'application/json' }
-  }).subscribe({
+  const endpoint = `RemoveFromWishlist/${wishlistRequest.userID}/${wishlistRequest.propID}`;
+
+  this.apiurls.delete(endpoint).subscribe({
     next: (response: any) => {
       console.log('Removed from wishlist:', response);
       this.isLiked = false;  
@@ -283,16 +337,15 @@ removeFromWishlist() {
       
       this.propertyInsStatus = " Property removed from your wishlist!";
       this.isUpdateModalOpen = true; 
+      setTimeout(() => this.location.back(), 1500); 
     },
     error: (error) => {
       console.error('Error removing from wishlist:', error);
-      
       this.propertyInsStatus = " Failed to remove from wishlist. Try again later!";
       this.isUpdateModalOpen = true;
     }
   });
 }
-
 propID:string|null='';
 userID=localStorage.getItem('email');
 NoDataFound:string="";
@@ -302,7 +355,7 @@ isVisible = false;
 
 loadPropertyDetailsByPropertyID(propertyID: string) {
   this.isLoading = true;
-  this.apiurl.get<any>(`https://localhost:7190/api/Users/GetPropertyDetailsById/${propertyID}`)
+  this.apiurls.get<any>(`GetPropertyDetailsById/${propertyID}`)
     .subscribe(
       (response: any) => {
         console.log('API Response:', response);
@@ -310,20 +363,26 @@ loadPropertyDetailsByPropertyID(propertyID: string) {
         if (response) {
           let imageUrls = [];
           if (response.images && Array.isArray(response.images) && response.images.length > 0) {
-            imageUrls = response.images.map((img: any) => `https://localhost:7190${img.filePath}`);
+            // imageUrls = response.images.map((img: any) => `https://localhost:7190${img.filePath}`);
+            imageUrls = response.images.map((img: any) => this.apiurls.getImageUrl(img.filePath));
             console.log("Generated Image URLs:", imageUrls);
           } else {
-            imageUrls = ['assets/images/img1.png'];
+            imageUrls = ['assets/images/empty.png'];
           }
+
           let floorImages = [];
           if (response.floorImages && Array.isArray(response.floorImages) && response.floorImages.length > 0) {
-            floorImages = response.floorImages.map((img: any) => `https://localhost:7190${img.filePath}`);
+            // floorImages = response.floorImages.map((img: any) => `https://localhost:7190${img.filePath}`);
+            floorImages = response.floorImages.map((img: any) => this.apiurls.getImageUrl(img.filePath)); 
             console.log("Generated Floor Image URLs:", floorImages);
           }
+
           const videoUrls = response.videos.map((video: any) => {
-            return `https://localhost:7190${video.filePath}`;
+            // return `https://localhost:7190${video.filePath}`;
+            return this.apiurls.getImageUrl(video.filePath);
           });
           console.log("Generated Video URLs:", videoUrls);
+
           let propertyBadge = '';
           let propertyBadgeColor = '';
           if (response.availabilityOptions === '1') {
@@ -335,6 +394,7 @@ loadPropertyDetailsByPropertyID(propertyID: string) {
           }
 
           let propertyForBadge = '';
+          
           if (response.propertyFor === '1') {
             propertyForBadge = 'For Buy';
             propertyBadgeColor = 'green';
@@ -349,6 +409,45 @@ loadPropertyDetailsByPropertyID(propertyID: string) {
             propertyBadgeColor = 'orange';
           }
 
+
+
+           const propertyStatusMap: { [key: string]: string } = {
+            "1": "Completed",
+            "2": "Under Construction",
+            // "3": "Under Construction",
+            // "4": "Booked",
+            // "5": "Coming Soon"
+          };
+
+          const propertyStatusName = propertyStatusMap[response.propertyStatus] || "Unknown";
+          const propertyForMap: { [key: string]: string } = {
+            '1': 'For Buy',
+            '2': 'For Sale',
+            '3': 'For Rent',
+            '4': 'For Lease'
+          };
+
+          const propertyColorMap: { [key: string]: string } = {
+            '1': 'green',
+            '2': 'red',
+            '3': 'blue',
+            '4': 'orange'
+          };
+
+          propertyForBadge = propertyForMap[response.propertyFor] || 'Unknown';
+          propertyBadgeColor = propertyColorMap[response.propertyFor] || 'black';
+
+          const facingMap: { [key: string]: string } = {
+            "1": "North",
+            "2": "South",
+            "3": "East",
+            "4": "West",
+            "5": "North-East",
+            "6": "North-West",
+            "7": "South-East",
+            "8": "South-West"
+          };
+          const propertyFacingName = facingMap[response.propertyFacing] || "Unknown";
           const selectedAmenitiesString = response.aminities || '';
           this.selectedAmenities = selectedAmenitiesString.split(',').map((amenity: string): Amenity => {
             const [id, name,icon] = amenity.trim().split(' - ');
@@ -360,17 +459,19 @@ loadPropertyDetailsByPropertyID(propertyID: string) {
 
           this.propertydetails = [{
             propertyID: response.propID || 'N/A',
-            propertyName: response.propname || 'Unknown Property',
-            propertyPrice: response.propertyTotalPrice || 'Price not available',
-            propertyAddress: response.address || 'Address not available',
-            propertyArea: response.totalArea || 'Area not available',
-            propertyBeds: response.noOfBedrooms || 'Beds not available',
-            propertyBathrooms: response.noOfBathrooms || 'Bathrooms not available',
+            propertyName: response.propname || 'N/A',
+            propertyPrice: response.propertyTotalPrice || 'N/A',
+            propertyAddress: response.address || 'N/A',
+            propertyArea: response.totalArea || 'N/A',
+            propertyBeds: response.noOfBedrooms || 'N/A',
+            propertyBathrooms: response.noOfBathrooms || 'N/A',
             propertyType: response.propertyTypeName || 'Unknown Type',
-            propertyImages: imageUrls,  
-            propertyVideos: videoUrls,  
-            propertyparking: response.noOfParkings,
-            propertyfacing: response.propertyFacing,
+            propertyImages: imageUrls, 
+            floorImages: floorImages,
+            propertyVideos: videoUrls,
+            propertyparking: response.noOfParkings || 'N/A',
+            // propertyfacing: response.propertyFacing,
+            propertyfacing: propertyFacingName || 'N/A', 
             propertyAvailability: propertyBadge,
             propertyBadgeColor: propertyBadgeColor,
             propertyCity: response.cityName,
@@ -386,8 +487,10 @@ loadPropertyDetailsByPropertyID(propertyID: string) {
             nearBy: response.nearBy,
             reraCertificateNumber: response.reraCertificateNumber,
             propertyApprovedBy: response.propertyApprovedBy,
-            propertyFor: propertyForBadge,
-            propertyStatus: response.propertyStatus,
+            // propertyFor: propertyForBadge,
+            propertyFor: propertyForBadge, 
+            // propertyStatus: response.propertyStatus,
+            propertyStatus: propertyStatusName,
             totalBlocks: response.totalBlocks,
             totalFloors: response.totalFloors,
             noOfFlats: response.noOfFlats,
@@ -404,14 +507,19 @@ loadPropertyDetailsByPropertyID(propertyID: string) {
             pinteresturl: response.pinteresturl,
             facebookurl: response.facebookurl,
             twitterurl: response.twitterurl,
+            
           }];
 
           if (response.googleLocationurl) {
             console.log(response.googleLocationurl);
             this.iframeHtml = this.sanitizer.bypassSecurityTrustHtml(response.googleLocationurl);
           }
+
           this.selectedImage = this.propertydetails[0]?.propertyImages[0] || null;
           console.log('selected Image', this.selectedImage);
+
+          this.selectedFloorImage = this.propertydetails[0]?.floorImages[0] || null;
+          console.log('selectedfloor Image', this.selectedFloorImage);
 
           this.selectedVideo = this.propertydetails[0]?.propertyVideos[0] || null;
           console.log('selected video', this.selectedVideo);
@@ -447,7 +555,7 @@ loadPropertyDetailsByPropertyID(propertyID: string) {
   }
 
   processImage(image: any): string {
-    let propertyImage = 'assets/images/img1.png'; 
+    let propertyImage = 'assets/images/empty.png'; 
 
     if (image && image.fileData) {
       try {
@@ -561,12 +669,17 @@ reviewformsubmit() {
 
   console.log("Form Data:", data);
 
-  this.apiurl.post('https://localhost:7190/api/Users/InsUserReviews', data, {
-      headers: { 'Content-Type': 'application/json' }
-  }).subscribe({
-      next: (response: any) => {
-          alert('The review has been successfully submitted. We appreciate your valuable feedback.');
-      },
+  // this.apiurl.post('https://localhost:7190/api/Users/InsUserReviews', data, {
+  //     headers: { 'Content-Type': 'application/json' }
+  // }).subscribe({
+  //     next: (response: any) => {
+  //         alert('The review has been successfully submitted. We appreciate your valuable feedback.');
+  //     },
+
+  this.apiurls.post('InsUserReviews', data).subscribe({
+    next: (response: any) => {
+      alert('The review has been successfully submitted. We appreciate your valuable feedback.');
+    },
       error: (error) => {
           alert('Failed to submit review. Try again later...!');
       }
@@ -575,7 +688,7 @@ reviewformsubmit() {
 
 selectedImage: string | null = null;
 selectedVideo:string|null=null;
-
+selectedFloorImage :string|null=null;
 selectMainImage(image: string) {
   this.selectedImage = image;
   console.log(this.selectedImage)
@@ -593,11 +706,15 @@ enquiryformsubmit() {
     message: this.userEnquiryform.get('message')?.value.toString()
   };
 
-  this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
-    headers: { 'Content-Type': 'application/json' }
-  }).subscribe({
+  // this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
+  //   headers: { 'Content-Type': 'application/json' }
+  // }).subscribe({
+  //   next: (response: any) => {
+  //     alert('We have received your enquiry. Our team will contact you soon...!');
+  //     this.router.navigate(['/home']);
+  this.apiurls.post('InsUserEnquiry', data).subscribe({
     next: (response: any) => {
-      alert('We have received your enquiry. Our team will contact you soon...!');
+      alert('We have received your enquiry. Our team will contact you soon!');
       this.router.navigate(['/home']);
       // this.sendEmail();
     },
@@ -611,30 +728,6 @@ enquiryformsubmit() {
     }
   });
 }
-
-// sendEmail() {
-//   const templateParams = {
-//     to_name: this.userEnquiryform.get('name')?.value, // Change to actual recipient name or use a form value
-//     to_email: this.userEnquiryform.get('email')?.value, // Recipient email address
-//     from_name: 'BUSERELE Property Management',
-//     message: 'Thank you for your enquiry. We will contact you soon.',
-//   };
-
-
-  
-//   emailjs.send(
-//     'service_47jdkyq', 
-//     'template_0szrprh', 
-//     templateParams,
-//     'uZT6kwr7RPQM3n5lj'
-//   ).then(response => {
-//     console.log('Email sent successfully:', response);
-//     alert('Email sent successfully!');
-//   }).catch(error => {
-//     console.error('Error sending email:', error);
-//     alert('Failed to send email. Please try again later.');
-//   });
-// }
 
 sanitizeHtml(content: string): SafeHtml {
   return this.sanitizer.bypassSecurityTrustHtml(content);  
@@ -661,13 +754,15 @@ formatPrice(value: number): string {
 
 propertyKeys = [
   'propertyID', 'developedby', 'propname', 'mobileNumber', 'emailID', 
-  'landMark', 'country', 'state', 'nearBy', 'reraCertificateNumber', 
+  'country', 'reraCertificateNumber', 
   'propertyApprovedBy', 'propertyType', 'propertyFor', 'propertyStatus',
   'propertyFacing', 'totalBlocks', 'totalFloors', 'noOfFlats', 
   'blockName', 'propertyOnWhichFloor', 'propertyBeds', 'propertyBathrooms', 
   'noOfBalconies', 'propertyparking', 'amenitiesCharges', 'buildYear', 
-  'possessionDate', 'listDate','propertyArea'
+  'possessionDate', 'listDate','propertyArea',''
 ];
+
+
 
 getLabel(key: string): string {
   const labels: { [key: string]: string } = {
@@ -676,6 +771,10 @@ getLabel(key: string): string {
     'propname': 'Property Title',
     'mobileNumber': 'Mobile Number',
     'emailID': 'Email ID',
+    'propertyAddress': 'Address',
+    'propertyCity': 'City',
+    'propertyZipCode': 'ZipCode',
+    
     'landMark': 'Landmark',
     'country': 'Country',
     'state': 'State',
@@ -730,156 +829,7 @@ ngOnDestroy(): void {
   }
 }
 
-// loadFeaturedPropertyDetails() {
-//   this.isLoadingFeaProperty=true;
-//   const minLoadingTime = 1000;
 
-//   const loadingTimer = setTimeout(() => {
-//     this.isLoadingFeaProperty = false;
-//   }, minLoadingTime);
-//   this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
-//     .subscribe(
-//       (response: any[]) => {
-//         console.log('API Response:', response);
-
-//         // Map the API response to the propertydetails array
-//         this.FeaturedProperties = response.map((property: any) => {
-//           let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
-//           let defaultPropImage: string = 'assets/images/img1.png';
-
-//           // Log the whole property object for inspection
-//           console.log('Full Property:', property);
-
-//           // Check if 'images' exists and is an array
-//           if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-//             console.log('Property Images:', property.images);
-
-//             // Process the first image in the array
-//             const firstImage = property.images[0];
-
-//             if (firstImage.fileData) {
-//               console.log('First Image File Data:', firstImage.fileData);
-
-//               try {
-//                 // Decode the Base64 string into raw binary data
-//                 const byteCharacters = atob(firstImage.fileData);
-//                 const byteArray = new Uint8Array(byteCharacters.length);
-
-//                 // Copy the binary data into the byteArray
-//                 for (let i = 0; i < byteCharacters.length; i++) {
-//                   byteArray[i] = byteCharacters.charCodeAt(i);
-//                 }
-
-//                 // Create a Blob from the byteArray
-//                 const blob = new Blob([byteArray], { type: firstImage.mimeType });
-
-//                 // Create an object URL from the Blob
-//                 propertyImage = URL.createObjectURL(blob);
-
-//                 // Log the URL for verification
-//                 console.log('Generated Image URL:', propertyImage);
-//               } catch (error) {
-//                 console.error('Error decoding first image data:', error);
-//               }
-//             } else {
-//               propertyImage='assets/images/img1.png';
-//             }
-//           } else {
-//             console.log('images property is missing, not an array, or empty.');
-//           }
-
-//           if (property.image && property.image.fileData) {
-//             const firstImage = property.image;
-
-//             try {
-//               // Decode the Base64 string into raw binary data
-//               const byteCharacters = atob(firstImage.fileData);
-//               const byteArray = new Uint8Array(byteCharacters.length);
-
-//               // Copy the binary data into the byteArray
-//               for (let i = 0; i < byteCharacters.length; i++) {
-//                 byteArray[i] = byteCharacters.charCodeAt(i);
-//               }
-
-//               // Create a Blob from the byteArray
-//               const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Set MIME type to 'image/jpeg' if it's a JPEG image
-
-//               // Create an object URL from the Blob
-//               defaultPropImage = URL.createObjectURL(blob);
-
-//               // Log the URL for verification
-//               console.log('Generated Default Image URL:', defaultPropImage);
-//             } catch (error) {
-//               console.error('Error decoding default image data:', error);
-//             }
-//           }
-
-//           let propertyBadge = '';
-//           let propertyBadgeColor = '';
-          
-//           if (property.propertyFor === '1') {
-//             propertyBadge = 'For Buy';
-//             propertyBadgeColor = 'green';
-//           } else if (property.propertyFor === '2') {
-//             propertyBadge = 'For Sale';
-//             propertyBadgeColor = 'red';
-//           }
-//           else if(property.propertyFor === '3') {
-//             propertyBadge = 'For Rent';
-//             propertyBadgeColor = 'blue';
-//           }
-//           else if(property.propertyFor === '4') {
-//             propertyBadge = 'For Lease';
-//             propertyBadgeColor = 'orange';
-//           }
-
-//           let PropertyFacing='';
-//           if(property.propertyFacing === '1'){
-//             PropertyFacing='North';
-//           }
-//           else if (property.propertyFacing === '2') {
-//             PropertyFacing='South';
-//           }
-//           else if (property.propertyFacing === '3') {
-//             PropertyFacing='East';
-//           }
-//           else if (property.propertyFacing === '4') {
-//             PropertyFacing='West';
-//           }
-//           else{
-//             PropertyFacing='N/A';
-//           }
-
-//           // Return the final object for each property
-//           return {
-//             propertyID: property.propID || 'N/A',  // Default value if undefined
-//             propertyname: property.propname || 'Unknown Property',  // Default value if undefined
-//             propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
-//             propertyaddress: property.landMark || 'Address not available',  // Default value if undefined
-//             propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
-//             propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
-//             propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
-//             propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
-//             propertytypeName: this.getPropertyTypeName(property.propertyType),
-//             propertyimage: propertyImage,  // Set the first converted Blob URL or default image URL
-//             defaultPropImage:defaultPropImage,
-//             propertyparking:property.noOfParkings,
-//             propertyfacing:PropertyFacing,
-//             propertyAvailability:propertyBadge,
-//             propertyBadgeColor: propertyBadgeColor,
-//             propertyNearBy:property.nearBy
-//           };
-//         });
-//         clearTimeout(loadingTimer);
-//         this.isLoadingFeaProperty=false;
-//       },
-//       (error) => {
-//         console.error('Error fetching property details:', error);
-//         this.FeaturedProperties=[];
-//         this.isLoadingFeaProperty=false;
-//       }
-//     );
-// }
 
 loadFeaturedPropertyDetails() {
   this.isLoadingFeaProperty = true;
@@ -889,31 +839,28 @@ loadFeaturedPropertyDetails() {
     this.isLoadingFeaProperty = false;
   }, minLoadingTime);
 
-  this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
+  this.apiurls.get<any>('GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
     .subscribe(
       (response: any[]) => {
         console.log('API Response:', response);
 
-        // Map the API response to the propertydetails array
         this.FeaturedProperties = response.map((property: any) => {
-          let propertyImage: string = 'assets/images/img1.png'; // Default image if no valid image found
-          let defaultPropImage: string = 'assets/images/img1.png'; // Default image if no valid default image found
+          let propertyImage: string = 'assets/images/empty.png'; 
+          let defaultPropImage: string = 'assets/images/empty.png'; 
 
-          // Log the whole property object for inspection
+       
           console.log('Full Property:', property);
 
-          // Check if 'images' exists and is an array
           if (property.images && Array.isArray(property.images) && property.images.length > 0) {
             console.log('Property Images:', property.images);
 
-            // Process the first image in the array (assuming path-based image handling)
             const firstImage = property.images[0];
 
             if (firstImage.filePath) {
               console.log('First Image Path:', firstImage.filePath);
 
-              // Directly use the image file path
-              propertyImage = `https://localhost:7190${firstImage.filePath}`;
+              // propertyImage = `https://localhost:7190${firstImage.filePath}`;
+              propertyImage = this.apiurls.getImageUrl(firstImage.filePath); 
 
               console.log('Generated Image URL:', propertyImage);
             }
@@ -924,9 +871,8 @@ loadFeaturedPropertyDetails() {
           if (property.image && property.image.filePath) {
             const firstImage = property.image;
 
-            // Directly use the image file path
-            defaultPropImage = `https://localhost:7190${firstImage.filePath}`;
-
+            // defaultPropImage = `https://localhost:7190${firstImage.filePath}`;
+            defaultPropImage = this.apiurls.getImageUrl(firstImage.filePath); 
             console.log('Generated Default Image URL:', defaultPropImage);
           }
 
@@ -949,7 +895,6 @@ loadFeaturedPropertyDetails() {
           }
 
           let PropertyFacing = '';
-          // Determine the property facing direction
           if (property.propertyFacing === '1') {
             PropertyFacing = 'North';
           } else if (property.propertyFacing === '2') {
@@ -962,19 +907,18 @@ loadFeaturedPropertyDetails() {
             PropertyFacing = 'N/A';
           }
 
-          // Return the final object for each property
           return {
-            propertyID: property.propID || 'N/A',  // Default value if undefined
-            propertyname: property.propname || 'Unknown Property',  // Default value if undefined
-            propertyprice: property.propertyTotalPrice || 'Price not available',  // Default value if undefined
-            propertyaddress: property.landMark || 'Address not available',  // Default value if undefined
-            propertyarea: property.totalArea || 'Area not available',  // Default value if undefined
-            propertybeds: property.noOfBedrooms || 'Beds not available',  // Default value if undefined
-            propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  // Default value if undefined
-            propertytype: property.propertyType || 'Unknown Type',  // Default value if undefined
+            propertyID: property.propID || 'N/A',  
+            propertyname: property.propname || 'Unknown Property',  
+            propertyprice: property.propertyTotalPrice || 'Price not available', 
+            propertyaddress: property.landMark || 'Address not available', 
+            propertyarea: property.totalArea || 'Area not available',  
+            propertybeds: property.noOfBedrooms || 'Beds not available',  
+            propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  
+            propertytype: property.propertyType || 'Unknown Type', 
             propertytypeName: this.getPropertyTypeName(property.propertyType),
-            propertyimage: propertyImage,  // Set the first image URL from filePath
-            defaultPropImage: defaultPropImage,  // Default image URL from filePath
+            propertyimage: propertyImage,  
+            defaultPropImage: defaultPropImage, 
             propertyparking: property.noOfParkings,
             propertyfacing: PropertyFacing,
             propertyAvailability: propertyBadge,
@@ -993,4 +937,54 @@ loadFeaturedPropertyDetails() {
       }
     );
 }
+
+
+
+
+openShareMenu(): void {
+  if (!this.isShareMenuVisible) {
+    this.isShareMenuVisible = true;
+  }
+}
+closeShareMenu(): void {
+  this.isShareMenuVisible = false;
+}
+
+setIframeHtml(iframeContent: string) {
+  this.iframeHtml = this.sanitizer.bypassSecurityTrustHtml(
+      iframeContent.replace(/<iframe /, '<iframe style="width:100%; height:450px;" ')
+  );
+}
+backClick(event: Event): void {
+  event.stopPropagation(); 
+  event.preventDefault();
+  this.location.back(); 
+}
+
+
+
+
+@ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
+showScrollButtons = false;
+
+ngAfterViewInit() {
+  setTimeout(() => this.checkScroll(), 0);
+}
+
+checkScroll() {
+  if (!this.scrollContainer) return;
+  const el = this.scrollContainer.nativeElement;
+  this.showScrollButtons = el.scrollWidth > el.clientWidth;
+}
+
+scrollLeft(container: HTMLElement) {
+  container.scrollBy({ left: -200, behavior: 'smooth' });
+}
+
+scrollRight(container: HTMLElement) {
+  container.scrollBy({ left: 200, behavior: 'smooth' });
+}
+
+
 }
