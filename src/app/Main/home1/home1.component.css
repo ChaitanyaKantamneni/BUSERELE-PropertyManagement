@@ -97,8 +97,6 @@ section{
     -ms-overflow-style: none; 
     scrollbar-width: none;
     height: 375px;
-    padding: 5px;
-    /* justify-content: center; */
   }
 
   .scrollable-properties.center, .fscrollable-properties.center {
@@ -114,6 +112,7 @@ section{
     flex: 0 0 auto;
     width: 100%;
     max-width: 290px; 
+    box-sizing: border-box;
   }
   
   .scroll-btn {   
@@ -175,11 +174,16 @@ section{
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
-
+/* 
 .AdvertisingPropertiesAdds{
     height: 100%;
     width: 25%;
     border-left: 1px solid black;
+    /* background: #fff;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 15px rgba(221, 221, 221, 0.56); */
 }
 
 .AdvertisingPropertiesAdds .badge {
@@ -196,6 +200,10 @@ section{
 .AdvertisingPropertiesAdds .propertyFulldet{
     border-radius: 15px;
 }
+/* 
+.AdvertisingPropertiesAdds .propertyFulldet img{
+    border-radius: 15px 0px 0px 15px;
+} */
 
 .AdvertisingPropertiesAdds .propertyFulldet .propertyDetails{
     border-radius: 0px 15px 15px 0px;
@@ -213,6 +221,11 @@ section{
     height: 86px;
     width: 70%;
 }
+
+
+/* .AdvertisingPropertiesAdds .propertyDetails h5{
+    font-size: 17px;
+} */
 
 .AdvertisingPropertiesAdds .propertyDetails i,.AdvertisingPropertiesAdds .propertyDetails .ms-2{
     font-size: 11px;
@@ -470,7 +483,7 @@ select.form-control option:disabled {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-.ExploreAdertisingProperties{
+.ExploreAdertisingProperties,.FeaturedUserAdertisingProperties{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -479,16 +492,17 @@ select.form-control option:disabled {
     /* border-top: 1px solid; */
 }
 
-.FeaturedUserAdertisingProperties{
+/* .FeaturedUserAdertisingProperties{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 600px;
-    margin: 10px 0px; 
+    margin: 10px 0px;
+    
 }
 
 .ExploreAdertisingProperties .container,.FeaturedUserAdertisingProperties .container{
-    /* width: 74%; */
+    width: 74%;
     margin: 50px 0px;
 }
 
@@ -1149,6 +1163,7 @@ select.form-control option:disabled {
 
     .ExploreFeaturedProperties,.ExploreAdertisingProperties,.FeaturedUserAdertisingProperties{
         margin: 20px 10px;
+        margin-top: 45px;
     }
 
     .content .heading,.content .steps{
@@ -1171,34 +1186,35 @@ select.form-control option:disabled {
         font-size: 16px; 
     }
 
-    .ExploreAdertisingProperties,.FeaturedUserAdertisingProperties{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: auto;
-        flex-wrap: wrap;
-        margin: 10px 0px;
-    }
+    
 
-    .ExploreAdertisingProperties .container,.FeaturedUserAdertisingProperties .container{
-        width: 100%;
-        margin: 50px 0px;
-    }
-
-    .AdvertisingPropertiesAdds{
+    .fscrollable-properties {
+        padding-left: 10px;  /* Less padding for mobile */
+        padding-right: 10px; /* Less padding for mobile */
+        scroll-padding-left: 10px; /* Scroll padding for mobile */
+        scroll-padding-right: 10px; /* Scroll padding for mobile */
+        gap: 8px;
         height: 100%;
         width: 100%;
+        /* border-left: 1px solid black; */
+        /* background: #fff;
+        margin-bottom: 30px;
+        padding: 20px;
+        border-radius: 3px;
+        box-shadow: 0 0 15px rgba(221, 221, 221, 0.56); */
     }
 
-    .AdvertisingPropertiesAdds .propertyImage{
-        height: 100px;
-        width: 30%;
+    .FeaturedUserAdertisingProperties .container .PropertiesList .propertyImage{
+        min-height: 200px;
+        max-height: 70%;
     }
     
     .AdvertisingPropertiesAdds .propertyDetails{
         height: 100px;
         width: 70%;
     }
+
+
 }
 
 .blog .card {
