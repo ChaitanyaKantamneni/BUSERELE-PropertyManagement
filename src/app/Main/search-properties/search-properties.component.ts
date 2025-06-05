@@ -89,7 +89,16 @@ export class SearchPropertiesComponent implements OnInit {
       console.log("Availability Option:", this.propertyAvailabilityOptions);
 
       if (this.propertyAvailabilityOptions) {
-        this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
+        // this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
+        if(this.propertyAvailabilityOptions=="1"){
+          this.loadAdvertisingPropertyDetails();
+        }
+        else if(this.propertyAvailabilityOptions=="2"){
+          this.loadFeaturedPropertyDetails();
+        }
+        else{
+          this.loadPropertyDetails();
+        }
       } else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
         this.loadPropertyDetailsByFilters(this.propertyType || '', this.propertyFor || '', this.CityName || '', this.keyword || '');
       } else {
@@ -491,109 +500,334 @@ export class SearchPropertiesComponent implements OnInit {
   }
   
 
-  loadPropertyDetailsByPropertyAvailabilityOptions(finalPropertyAvialabilityOptions: string) {
-    this.isLoading = true;    
-    finalPropertyAvialabilityOptions = finalPropertyAvialabilityOptions ?? '';
-    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesByAvailabilityOptions?propertyAvailabilityOption=${encodeURIComponent(finalPropertyAvialabilityOptions)}`)
+  // loadPropertyDetailsByPropertyAvailabilityOptions(finalPropertyAvialabilityOptions: string) {
+  //   this.isLoading = true;    
+  //   finalPropertyAvialabilityOptions = finalPropertyAvialabilityOptions ?? '';
+  //   this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesByAvailabilityOptions?propertyAvailabilityOption=${encodeURIComponent(finalPropertyAvialabilityOptions)}`)
+  //     .subscribe(
+  //       (response: any[]) => {
+  //         console.log('API Response:', response);
+  //         if (response.length > 0) {
+  //           this.propertydetails = response.map((property: any) => {
+  //             let propertyImage: string = 'assets/images/img1.png';  
+  //             let defaultPropImage: string = '';
+  
+  //             console.log('Full Property:', property);
+  
+  //             if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+  //               console.log('Property Images:', property.images);
+  
+  //               const firstImage = property.images[0];
+  
+  //               if (firstImage.filePath) {
+  //                 propertyImage = `https://localhost:7190${firstImage.filePath}`;
+  
+  //                 console.log('Generated Image URL:', propertyImage);
+  //               }
+  //             } else {
+  //               console.log('images property is missing, not an array, or empty.');
+  //             }
+  
+  //             if (property.image && property.image.filePath) {
+  //               defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+  
+  //               console.log('Generated Default Image URL:', defaultPropImage);
+  //             } else {
+  //               defaultPropImage = 'assets/images/img1.png';
+  //               console.log('images property is missing, not an array, or empty.');
+  //             }
+  
+  //             let propertyBadge = '';
+  //             let propertyBadgeColor = '';
+  
+  //             if (property.propertyFor === '1') {
+  //               propertyBadge = 'For Buy';
+  //               propertyBadgeColor = 'green';
+  //             } else if (property.propertyFor === '2') {
+  //               propertyBadge = 'For Sale';
+  //               propertyBadgeColor = 'red';
+  //             } else if (property.propertyFor === '3') {
+  //               propertyBadge = 'For Rent';
+  //               propertyBadgeColor = 'blue';
+  //             } else if (property.propertyFor === '4') {
+  //               propertyBadge = 'For Lease';
+  //               propertyBadgeColor = 'orange';
+  //             }
+  
+  //             let PropertyFacing = '';
+  //             if (property.propertyFacing === '1') {
+  //               PropertyFacing = 'North';
+  //             } else if (property.propertyFacing === '2') {
+  //               PropertyFacing = 'South';
+  //             } else if (property.propertyFacing === '3') {
+  //               PropertyFacing = 'East';
+  //             } else if (property.propertyFacing === '4') {
+  //               PropertyFacing = 'West';
+  //             } else {
+  //               PropertyFacing = 'N/A';
+  //             }
+  
+  //             return {
+  //               propertyID: property.propID || 'N/A',  
+  //               propertyname: property.propname || 'Unknown Property',  
+  //               propertyprice: property.propertyTotalPrice || 'Price not available',  
+  //               propertyaddress: property.address || 'Address not available',  
+  //               propertyarea: property.totalArea || 'Area not available', 
+  //               propertybeds: property.noOfBedrooms || 'Beds not available', 
+  //               propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  
+  //               propertytype: property.propertyType || 'Unknown Type',  
+  //               propertyfor: property.propertyFor,
+  //               propertytypeName: this.getPropertyTypeName(property.propertyType),
+  //               propertyimage: propertyImage,  
+  //               defaultPropImage: defaultPropImage,  
+  //               propertyparking: property.noOfParkings,
+  //               propertyfacing: PropertyFacing,
+  //               propertyAvailability: propertyBadge,
+  //               propertyBadgeColor: propertyBadgeColor,
+  //               PropertyTypeName: property.propertyTypeName,
+  //               selectedcityName:property.CityName
+  //             };
+  //           });
+  //           console.log(this.propertydetails);
+  //           this.isLoading = false;
+  //         } else {
+  //           alert("No Properties Available.");
+  //           this.router.navigate(['/home']);
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching property details:', error);
+  //         alert("An error occurred while fetching property details.");
+  //         this.router.navigate(['/home']);
+  //       }
+  //     );
+  // }
+
+
+  loadAdvertisingPropertyDetails() {
+    this.isLoading = true; 
+    this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnAdvertisingProperty')
       .subscribe(
         (response: any[]) => {
           console.log('API Response:', response);
-          if (response.length > 0) {
-            this.propertydetails = response.map((property: any) => {
-              let propertyImage: string = 'assets/images/img1.png';  
-              let defaultPropImage: string = '';
   
-              console.log('Full Property:', property);
+          this.propertydetails = response.map((property: any) => {
+            let propertyImage: string = 'assets/images/img2.jpg'; 
+            let defaultPropImage: string = '';
   
-              if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-                console.log('Property Images:', property.images);
+            console.log('Full Property:', property);
   
-                const firstImage = property.images[0];
+            if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+              console.log('Property Images:', property.images);
   
-                if (firstImage.filePath) {
-                  propertyImage = `https://localhost:7190${firstImage.filePath}`;
+              const firstImage = property.images[0];
+  
+              if (firstImage.fileData) {
+                console.log('First Image File Data:', firstImage.fileData);
+  
+                try {
+                  const byteCharacters = atob(firstImage.fileData);
+                  const byteArray = new Uint8Array(byteCharacters.length);
+  
+                  for (let i = 0; i < byteCharacters.length; i++) {
+                    byteArray[i] = byteCharacters.charCodeAt(i);
+                  }
+  
+                  const blob = new Blob([byteArray], { type: firstImage.mimeType });
+  
+                  propertyImage = URL.createObjectURL(blob);
   
                   console.log('Generated Image URL:', propertyImage);
+                } catch (error) {
+                  console.error('Error decoding first image data:', error);
                 }
               } else {
-                console.log('images property is missing, not an array, or empty.');
+                propertyImage = 'assets/images/img2.jpg'; 
               }
+            } else {
+              defaultPropImage = 'assets/images/img2.jpg'; 
+              console.log('images property is missing, not an array, or empty.');
+            }
   
-              if (property.image && property.image.filePath) {
-                defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+            if (property.image && property.image.filePath) {
+              defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+              console.log('Generated Default Image URL:', defaultPropImage);
+            } else {
+              defaultPropImage = 'assets/images/img2.jpg'; 
+            }
   
-                console.log('Generated Default Image URL:', defaultPropImage);
-              } else {
-                defaultPropImage = 'assets/images/img1.png';
-                console.log('images property is missing, not an array, or empty.');
-              }
+            let propertyBadge = '';
+            let propertyBadgeColor = '';
+            if (property.propertyFor === '1') {
+              propertyBadge = 'For Buy';
+              propertyBadgeColor = 'green';
+            } else if (property.propertyFor === '2') {
+              propertyBadge = 'For Sale';
+              propertyBadgeColor = 'red';
+            } else if (property.propertyFor === '3') {
+              propertyBadge = 'For Rent';
+              propertyBadgeColor = 'blue';
+            } else if (property.propertyFor === '4') {
+              propertyBadge = 'For Lease';
+              propertyBadgeColor = 'orange';
+            }
   
-              let propertyBadge = '';
-              let propertyBadgeColor = '';
+            let PropertyFacing = '';
+            if (property.propertyFacing === '1') {
+              PropertyFacing = 'North';
+            } else if (property.propertyFacing === '2') {
+              PropertyFacing = 'South';
+            } else if (property.propertyFacing === '3') {
+              PropertyFacing = 'East';
+            } else if (property.propertyFacing === '4') {
+              PropertyFacing = 'West';
+            } else {
+              PropertyFacing = 'N/A';
+            }
   
-              if (property.propertyFor === '1') {
-                propertyBadge = 'For Buy';
-                propertyBadgeColor = 'green';
-              } else if (property.propertyFor === '2') {
-                propertyBadge = 'For Sale';
-                propertyBadgeColor = 'red';
-              } else if (property.propertyFor === '3') {
-                propertyBadge = 'For Rent';
-                propertyBadgeColor = 'blue';
-              } else if (property.propertyFor === '4') {
-                propertyBadge = 'For Lease';
-                propertyBadgeColor = 'orange';
-              }
+            return {
+              propertyID: property.propID || 'N/A',
+              propertyname: property.propname || 'Unknown Property',
+              propertyprice: property.propertyTotalPrice || 'Price not available',
+              propertyaddress: property.landMark || 'Address not available',
+              propertyarea: property.totalArea || 'Area not available',
+              propertybeds: property.noOfBedrooms || 'Beds not available',
+              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+              propertytype: property.propertyType || 'Unknown Type',
+              propertyfor: property.propertyFor,
+              propertytypeName: this.getPropertyTypeName(property.propertyType),
+              propertyimage: propertyImage,
+              defaultPropImage: defaultPropImage,
+              propertyparking: property.noOfParkings,
+              propertyfacing: PropertyFacing,
+              propertyAvailability: propertyBadge,
+              propertyBadgeColor: propertyBadgeColor,
+              PropertyTypeName: property.propertyTypeName
+            };
+          });
   
-              let PropertyFacing = '';
-              if (property.propertyFacing === '1') {
-                PropertyFacing = 'North';
-              } else if (property.propertyFacing === '2') {
-                PropertyFacing = 'South';
-              } else if (property.propertyFacing === '3') {
-                PropertyFacing = 'East';
-              } else if (property.propertyFacing === '4') {
-                PropertyFacing = 'West';
-              } else {
-                PropertyFacing = 'N/A';
-              }
-  
-              return {
-                propertyID: property.propID || 'N/A',  
-                propertyname: property.propname || 'Unknown Property',  
-                propertyprice: property.propertyTotalPrice || 'Price not available',  
-                propertyaddress: property.address || 'Address not available',  
-                propertyarea: property.totalArea || 'Area not available', 
-                propertybeds: property.noOfBedrooms || 'Beds not available', 
-                propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  
-                propertytype: property.propertyType || 'Unknown Type',  
-                propertyfor: property.propertyFor,
-                propertytypeName: this.getPropertyTypeName(property.propertyType),
-                propertyimage: propertyImage,  
-                defaultPropImage: defaultPropImage,  
-                propertyparking: property.noOfParkings,
-                propertyfacing: PropertyFacing,
-                propertyAvailability: propertyBadge,
-                propertyBadgeColor: propertyBadgeColor,
-                PropertyTypeName: property.propertyTypeName,
-                selectedcityName:property.CityName
-              };
-            });
-            console.log(this.propertydetails);
-            this.isLoading = false;
-          } else {
-            alert("No Properties Available.");
-            this.router.navigate(['/home']);
-          }
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching property details:', error);
-          alert("An error occurred while fetching property details.");
-          this.router.navigate(['/home']);
+          this.propertydetails = [];
+          this.isLoading = false; 
         }
       );
   }
 
+
+  loadFeaturedPropertyDetails() {
+    this.isLoading = true; 
+    this.apiurl.get<any[]>('https://localhost:7190/api/Users/GetAllPropertyDetailsWithImagesBasedOnFeaturedProperty')
+      .subscribe(
+        (response: any[]) => {
+          console.log('API Response:', response);
+  
+          this.propertydetails = response.map((property: any) => {
+            let propertyImage: string = 'assets/images/img2.jpg'; 
+            let defaultPropImage: string = '';
+  
+            console.log('Full Property:', property);
+  
+            if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+              console.log('Property Images:', property.images);
+  
+              const firstImage = property.images[0];
+  
+              if (firstImage.fileData) {
+                console.log('First Image File Data:', firstImage.fileData);
+  
+                try {
+                  const byteCharacters = atob(firstImage.fileData);
+                  const byteArray = new Uint8Array(byteCharacters.length);
+  
+                  for (let i = 0; i < byteCharacters.length; i++) {
+                    byteArray[i] = byteCharacters.charCodeAt(i);
+                  }
+  
+                  const blob = new Blob([byteArray], { type: firstImage.mimeType });
+  
+                  propertyImage = URL.createObjectURL(blob);
+  
+                  console.log('Generated Image URL:', propertyImage);
+                } catch (error) {
+                  console.error('Error decoding first image data:', error);
+                }
+              } else {
+                propertyImage = 'assets/images/img2.jpg'; 
+              }
+            } else {
+              defaultPropImage = 'assets/images/img2.jpg'; 
+              console.log('images property is missing, not an array, or empty.');
+            }
+  
+            if (property.image && property.image.filePath) {
+              defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+              console.log('Generated Default Image URL:', defaultPropImage);
+            } else {
+              defaultPropImage = 'assets/images/img2.jpg'; 
+            }
+  
+            let propertyBadge = '';
+            let propertyBadgeColor = '';
+            if (property.propertyFor === '1') {
+              propertyBadge = 'For Buy';
+              propertyBadgeColor = 'green';
+            } else if (property.propertyFor === '2') {
+              propertyBadge = 'For Sale';
+              propertyBadgeColor = 'red';
+            } else if (property.propertyFor === '3') {
+              propertyBadge = 'For Rent';
+              propertyBadgeColor = 'blue';
+            } else if (property.propertyFor === '4') {
+              propertyBadge = 'For Lease';
+              propertyBadgeColor = 'orange';
+            }
+  
+            let PropertyFacing = '';
+            if (property.propertyFacing === '1') {
+              PropertyFacing = 'North';
+            } else if (property.propertyFacing === '2') {
+              PropertyFacing = 'South';
+            } else if (property.propertyFacing === '3') {
+              PropertyFacing = 'East';
+            } else if (property.propertyFacing === '4') {
+              PropertyFacing = 'West';
+            } else {
+              PropertyFacing = 'N/A';
+            }
+  
+            return {
+              propertyID: property.propID || 'N/A',
+              propertyname: property.propname || 'Unknown Property',
+              propertyprice: property.propertyTotalPrice || 'Price not available',
+              propertyaddress: property.landMark || 'Address not available',
+              propertyarea: property.totalArea || 'Area not available',
+              propertybeds: property.noOfBedrooms || 'Beds not available',
+              propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',
+              propertytype: property.propertyType || 'Unknown Type',
+              propertyfor: property.propertyFor,
+              propertytypeName: this.getPropertyTypeName(property.propertyType),
+              propertyimage: propertyImage,
+              defaultPropImage: defaultPropImage,
+              propertyparking: property.noOfParkings,
+              propertyfacing: PropertyFacing,
+              propertyAvailability: propertyBadge,
+              propertyBadgeColor: propertyBadgeColor,
+              PropertyTypeName: property.propertyTypeName
+            };
+          });
+  
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching property details:', error);
+          this.propertydetails = [];
+          this.isLoading = false; 
+        }
+      );
+  }
   
 
 

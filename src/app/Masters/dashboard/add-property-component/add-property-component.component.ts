@@ -118,7 +118,9 @@ export class AddPropertyComponentComponent implements OnInit {
     PropertyStatus: new FormControl(''),
     PropertyFacing: new FormControl(''),
     TotalBlocks: new FormControl(''),
-    TotalFloors: new FormControl('',[Validators.required, Validators.min(1), Validators.max(10)]),
+    // , Validators.min(1), Validators.max(10)
+    // TotalFloors: new FormControl('',[Validators.required]),
+    TotalFloors: new FormControl('', [Validators.required,Validators.pattern('^[0-9]+$'),Validators.min(1)]),    
     TotalNoOfFlats: new FormControl(''),
     BlockName: new FormControl(''),
     PropertyOnWhichFloor: new FormControl(''),
@@ -127,10 +129,12 @@ export class AddPropertyComponentComponent implements OnInit {
     NumberofBalconies: new FormControl(''),
     NumberofParkings: new FormControl(''),
     AreaType: new FormControl('', [Validators.required]),
-    TotalArea: new FormControl('', [Validators.required, Validators.min(1),this.areaValidator]),
-    
+    TotalArea: new FormControl('', [Validators.required, Validators.min(1)]),
+    // this.areaValidator
     CarpetArea: new FormControl(''),
-    PriceFor: new FormControl('', [Validators.required, Validators.min(1),this.priceForValidator]),
+    // PriceFor: new FormControl('', [Validators.required, Validators.min(1),this.priceForValidator]),
+    // this.priceForValidator
+    PriceFor: new FormControl('', [Validators.required, Validators.min(1)]),
     PropertyTotalPrice: new FormControl({ value: '', disabled: true }),
     AmenitiesCharges: new FormControl(''),
     MaintenanceCharges: new FormControl(''),
@@ -535,6 +539,10 @@ export class AddPropertyComponentComponent implements OnInit {
   propertyVideoUploadButtonClick:boolean=false;
   propertydocumenetUploadButtonClick:boolean=false;
 
+  propertyImagesUploadedSuccesful:boolean=false;
+  propertyFloorImagesUploadedSuccesful:boolean=false;
+  propertyVideosUploadedSuccesful:boolean=false;
+  propertyDocumentsUploadedSuccesful:boolean=false;
   uploadPropertyImages(): void {
 
     this.propertyImagesUploadButtonClick=true;
@@ -555,6 +563,7 @@ export class AddPropertyComponentComponent implements OnInit {
       response => {
         this.PropertyOnfileClicked=false;
         this.propertyImagesUploadButtonClick=false;
+        this.propertyImagesUploadedSuccesful=true;
         this.getPropertyImagesForProperty(this.propID); 
         const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
     if (fileInput) {
@@ -587,6 +596,7 @@ export class AddPropertyComponentComponent implements OnInit {
       response => {
         this.PropertyFloorImageOnFileClicked=false;
         this.propertyfloorImagesUploadButtonClick=false;
+        this.propertyFloorImagesUploadedSuccesful=true;
         this.getPropertyFloorImagesForProperty(this.propID); 
         const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
         if (fileInput) {
@@ -620,6 +630,7 @@ export class AddPropertyComponentComponent implements OnInit {
         response => {
             this.PropertyVideoOnFileClicked = false;
             this.propertyVideoUploadButtonClick = false;
+            this.propertyVideosUploadedSuccesful=true;
             this.getPropertyVideo(this.propID);  
             const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
             if (fileInput) {
@@ -651,6 +662,7 @@ export class AddPropertyComponentComponent implements OnInit {
       response => {
         this.PropertyDocumentOnFileClicked=false;
         this.propertydocumenetUploadButtonClick=false;
+        this.propertyDocumentsUploadedSuccesful=true;
         this.getPropertyDocument(this.propID); 
         const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
         if (fileInput) {
@@ -1256,14 +1268,13 @@ export class AddPropertyComponentComponent implements OnInit {
     });
   }
 
-
   submitpropertyDet(){
-
+    this.propertyform.get('PropertyTotalPrice')?.enable();
     if (this.propertyform.invalid) {
-      // Optionally, you can show a message here if needed
       return;
     }
-    const selectedAmenitiesString = this.selectedAmenities
+    else{
+      const selectedAmenitiesString = this.selectedAmenities
   .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
   .join(',');
     const data = {
@@ -1332,8 +1343,19 @@ export class AddPropertyComponentComponent implements OnInit {
     }).subscribe({
       next: (response: any) => {
         if(response.statusCode=="200"){
+          this.uploadPropertyImages();
+          this.uploadPropertyFloorImages();
+          this.uploadPropertyVideos();
+          this.uploadPropertyDocuments();
+          // if(this.propertyImagesUploadedSuccesful){
+
+          // }
           this.propertyInsStatus = "Property submitted successfully!";
           this.isUpdateModalOpen = true;
+          this.propertyImagesClicked=false;
+          this.propertyFloorImagesClicked=false;
+          this.propertyVideosClicked=false;
+          this.propertyDocumentsClicked=false;
           this.editclicked = false;
           this.addnewPropertyclicked = false;
         }
@@ -1344,7 +1366,26 @@ export class AddPropertyComponentComponent implements OnInit {
         console.error("Error details:", error);
       }
     });
+    }
   }
+
+  // submitpropertyDet1() {
+  //   this.propertyform.get('PropertyTotalPrice')?.enable();
+  //   // Log the status of each control in the form group
+  //   Object.keys(this.propertyform.controls).forEach(controlName => {
+  //     const control = this.propertyform.get(controlName);
+  //     console.log(`${controlName} valid: ${control?.valid}, touched: ${control?.touched}`);
+  //   });
+  
+  //   if (this.propertyform.invalid) {
+  //     console.log("property form is invalid");
+  //     return;
+  //   } else {
+  //     console.log("property form is valid");
+  //     return;
+  //   }
+  // }
+  
 
   UserIDDb:any='';
 
@@ -1433,6 +1474,10 @@ export class AddPropertyComponentComponent implements OnInit {
     }).subscribe({
       next: (response: any) => {
         if (response.statusCode == "200") {
+          this.uploadPropertyImages();
+          this.uploadPropertyFloorImages();
+          this.uploadPropertyVideos();
+          this.uploadPropertyDocuments();
           this.propertyInsStatus = "Property updated successfully!";
           this.isUpdateModalOpen = true;
           this.editclicked = false;
@@ -2150,33 +2195,7 @@ editorConfig = {
   }
   
 
-
-  // OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  
-  //   if (charCode !== 32 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
-  //     return false; 
-  //   }
-    
-  //   return true; 
-  // }
-
-  
-  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  //   const inputElement = event.target as HTMLInputElement;
-    
-  //   if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-  //     return false;
-  //   }
-    
-  //   if (inputElement.value.length >= 10) {
-  //     return false; 
-  //   }
-  //   return true;
-  // }
-
-  OnlyNumbersAllowed(event: KeyboardEvent): boolean {
+  OnlyNumbersAllowed1(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
     const inputElement = event.target as HTMLInputElement;
     let value = inputElement.value;
@@ -2196,30 +2215,18 @@ editorConfig = {
     return false;
   }
   
-
-  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  //   const inputElement = event.target as HTMLInputElement;
-  //   const value = inputElement.value;
+  OnlyNumbersAllowed(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
   
-  //   if (
-  //     (charCode >= 48 && charCode <= 57) ||   
-  //     charCode === 44 ||                     
-  //     charCode === 46                       
-  //   ) {
-  //     if (value.length >= 10) {
-  //       return false;
-  //     }
-  //     if (charCode === 44 || charCode === 46) {
-  //       if (value.includes(',') || value.includes('.')) {
-  //         return false;
-  //       }
-  //     }
-  
-  //     return true;
-  //   }
-  //   return false;
-  // }
+    // Allow only digits, Backspace, and delete
+    if ((charCode >= 48 && charCode <= 57) || charCode === 8 || charCode === 46) {
+      return true;
+    }
+    
+    return false;
+  }
   
 
   OnlypostelNumbersAllowed(event: KeyboardEvent): void {
@@ -2237,36 +2244,71 @@ editorConfig = {
   }
   
 
-  OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
-    const inputChar = event.key;
-    const currentValue = (event.target as HTMLInputElement).value;
-    if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
-        return;
-    }
-    if (inputChar >= '0' && inputChar <= '9') {
-        const parts = currentValue.split('-');
+//   OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
+//     const inputChar = event.key;
+//     const currentValue = (event.target as HTMLInputElement).value;
+//     if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+//         return;
+//     }
+//     if (inputChar >= '0' && inputChar <= '9') {
+//         const parts = currentValue.split('-');
 
-        if (parts.length === 1) {
-            if (parts[0].length >= 6) {
-                event.preventDefault();
-            }
-        }
-        if (parts.length === 2) {
-            if (parts[1].length >= 7) {
-                event.preventDefault();
-            }
-        }
-        return;
-    }
-    if (inputChar === '-') {
-        const parts = currentValue.split('-');
-        if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
-            return;
-        }
-    }
-    event.preventDefault();
- }
+//         if (parts.length === 1) {
+//             if (parts[0].length >= 6) {
+//                 event.preventDefault();
+//             }
+//         }
+//         if (parts.length === 2) {
+//             if (parts[1].length >= 7) {
+//                 event.preventDefault();
+//             }
+//         }
+//         return;
+//     }
+//     if (inputChar === '-') {
+//         const parts = currentValue.split('-');
+//         if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
+//             return;
+//         }
+//     }
+//     event.preventDefault();
+//     console.log('Form valid:', this.propertyform.valid);
+//     console.log('TotalArea valid:', this.propertyform.get('TotalArea')?.valid);
+//     console.log('TotalArea errors:', this.propertyform.get('TotalArea')?.errors);
+//  }
 
+
+OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
+  const inputChar = event.key;
+  const currentValue = (event.target as HTMLInputElement).value;
+  if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+      return;
+  }
+  if (inputChar >= '0' && inputChar <= '9') {
+      const parts = currentValue.split('-');
+      if (parts.length === 1) {
+          if (parts[0].length >= 6) {
+              event.preventDefault();
+          }
+      }
+      if (parts.length === 2) {
+          if (parts[1].length >= 7) {
+              event.preventDefault();
+          }
+      }
+      return;
+  }
+  if (inputChar === '-') {
+      const parts = currentValue.split('-');
+      if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
+          return;
+      }
+      if (parts.length > 1) {
+          event.preventDefault();
+      }
+  }
+  event.preventDefault();
+}
 
  OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
   const inputChar = event.key;
@@ -2288,19 +2330,16 @@ editorConfig = {
       }
       return;
   }
-
-  // Handle hyphen entry
   if (inputChar === '-') {
-      const parts = currentValue.split('-');
-
-      // Allow the hyphen only if it's not already present and exactly 7 digits exist before it
-      if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 7) {
-          return;
-      }
-  }
-
-  // Prevent any other character input
-  event.preventDefault();
+    const parts = currentValue.split('-');
+    if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
+        return;
+    }
+    if (parts.length > 1) {
+        event.preventDefault();
+    }
+}
+event.preventDefault();
 }
   
   
@@ -2397,7 +2436,21 @@ editorConfig = {
     }
     return { invalidArea: true };
   }
-
+//2382
+  // areaValidator(control: AbstractControl): ValidationErrors | null {
+  //   const value = control.value;
+    
+  //   // Convert value to a number if it's not already
+  //   const numericValue = Number(value);
+  
+  //   // Check if the value is a valid number and within the specified range
+  //   if (!isNaN(numericValue) && numericValue >= 1500 && numericValue <= 3500) {
+  //     return null;
+  //   }
+    
+  //   return { invalidArea: true };
+  // }
+  
   priceForValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     
@@ -2413,6 +2466,28 @@ editorConfig = {
     return { invalidPrice: true };
   }
 
+  // priceForValidator(control: AbstractControl): ValidationErrors | null {
+  //   const value = control.value;
+  
+  //   if (!value) {
+  //     return null;  // If value is empty, skip validation
+  //   }
+  
+  //   // Check if it's a valid number
+  //   if (typeof value === 'number' && value > 0) {
+  //     return null; 
+  //   }
+  
+  //   // Check if the value matches the price range pattern (e.g., 1000-5000)
+  //   const priceRangePattern = /^\d{4,5}-\d{4,5}$/;
+  //   if (priceRangePattern.test(value)) {
+  //     return null;
+  //   }
+  
+  //   return { invalidPrice: true };
+  // }
+  
+  
   calculateTotalPrice() {
     const totalArea = this.propertyform.get('TotalArea')?.value;
     const priceFor = this.propertyform.get('PriceFor')?.value;

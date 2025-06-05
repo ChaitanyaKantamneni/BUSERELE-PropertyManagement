@@ -11,7 +11,7 @@
 }
 
 
-/* .reviewcard,.reviewview{
+.reviewcard,.reviewview{
   height: auto;
   width: 100%;
   padding: 20px;
@@ -27,7 +27,7 @@
   background-color: white;
   border-radius: 20px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-} */
+}
 
 .filtersSearch{
   display: flex;
@@ -850,10 +850,10 @@ button[data-tooltip]:hover::after {
 
 
 .table-container {
-  max-height: 400px; /* Define max height for scrolling */
-  overflow-y: auto;  /* Enable vertical scroll */
+  max-height: 400px; 
+  overflow-y: auto;  
   position: relative;
-  padding-top: 5px;  /* Small padding to avoid tooltip cutoff */
+  padding-top: 5px;  
 }
 
 .table thead {
