@@ -64,7 +64,7 @@ export class FooterComponent {
       email: this.email,
       createdBy: createdBy  
     };
-    
+
   this.apiurls.post('subscribe', requestBody).subscribe({
     next: (response) => {
       console.log('Subscription successful!', response);
@@ -80,6 +80,7 @@ export class FooterComponent {
     });
   }
 
+  
   UpdatecloseModal(): void {
     this.isUpdateModalOpen = false;
   }

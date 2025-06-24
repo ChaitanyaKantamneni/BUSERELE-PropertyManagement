@@ -15,6 +15,8 @@ interface Review {
   rating: number;
 }
 
+
+
 @Component({
   selector: 'app-reviews-component',
   standalone: true,
