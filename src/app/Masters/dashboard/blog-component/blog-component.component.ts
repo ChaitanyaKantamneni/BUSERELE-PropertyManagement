@@ -540,6 +540,8 @@ export class BlogComponentComponent {
           });
       }
       
+
+      
      
       addNewBlog(): void {
         this.addnewBlogclicked = true;

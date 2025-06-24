@@ -675,6 +675,7 @@ export class AddpropertysampleComponent implements OnInit {
     const end = start + this.pageSize;
     return filteredProperties.slice(start, end);
   }
+  
 
   // Set the current page, ensuring it's within the valid range
   setPage(page: number): void {

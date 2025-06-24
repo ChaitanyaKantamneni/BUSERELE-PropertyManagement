@@ -227,6 +227,8 @@ export class DashboardcomponentComponent implements OnInit {
   getownProperties(UserID:string) {
     this.isLoading = true;
   
+
+    
     const data = {
       userID: UserID,
       Flag: '4'

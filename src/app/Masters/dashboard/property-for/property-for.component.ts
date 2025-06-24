@@ -64,6 +64,8 @@ export class PropertyForComponent implements OnInit {
     this.viewAminitieClicked=true;
   }
 
+
+  
   getAminitieDet(propertyTypeID: string) {
     const data = {
       PropertyTypeID: propertyTypeID,

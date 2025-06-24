@@ -269,12 +269,19 @@ OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
 
 checkIfPropertyInWishlist() {
   const email = localStorage.getItem('email');
+  const wishlistRequest = {
+    propID: this.selectedPropertyID,
+    userID: localStorage.getItem('email'),
+    createdBy: email,
+    modifiedBy:email,
+    activatedstatus: '1',
+    flag:'5'
+  };
+  
   if (email) {
-    this.apiurls.get<any[]>(`CheckIfPropertyInWishlist/${email}/${this.selectedPropertyID}
-`)
-.subscribe({
+    this.apiurls.post<any[]>('Proc_Tbl_Wishlist',wishlistRequest).subscribe({
       next: (response: any) => {
-        if (response && response.activatedstatus === '1') {
+        if (response.data && response.data.length > 0 && response.data[0].existing >= "1") {
           this.isLiked = true;
         } else {
           this.isLiked = false;
@@ -308,10 +315,11 @@ toggleHeart() {
       createdBy: email,
       modifiedBy:email,
       activatedstatus: '1',
+      flag:'1'
     };
 
     console.log('Adding to wishlist:', wishlistRequest);
-    this.apiurls.post('AddToWishlist', wishlistRequest).subscribe({
+    this.apiurls.post('Proc_Tbl_Wishlist', wishlistRequest).subscribe({
       next: (response: any) => {
         console.log('Added to wishlist:', response);
         this.isLiked = true; 
@@ -326,6 +334,7 @@ toggleHeart() {
       }
     });
   }
+
 
   UpdatecloseModal() {
     this.isUpdateModalOpen = false;
@@ -344,12 +353,12 @@ toggleHeart() {
       propID: this.selectedPropertyID,
       userID: localStorage.getItem('email'),
       activatedstatus: '0',
+      Flag:'4'
     };
 
     console.log('Removing from wishlist:', wishlistRequest);
 
-    const endpoint = `RemoveFromWishlist/${wishlistRequest.userID}/${wishlistRequest.propID}`;
-    this.apiurls.delete(endpoint).subscribe({
+    this.apiurls.post('Proc_Tbl_Wishlist',wishlistRequest).subscribe({
       next: (response: any) => {
         console.log('Removed from wishlist:', response);
         this.isLiked = false;
@@ -380,13 +389,31 @@ toggleHeart() {
 
         if (response) {
           let imageUrls: string[] = [];
-          if (response.data[0].propImages && Array.isArray(response.data[0].propImages) && response.data[0].propImages.length > 0) {
-            imageUrls = response.data[0].propImages.map((img: any) => this.apiurls.getImageUrl(img.filePath));
-            console.log("Generated Image URLs:", imageUrls);
+          // if (response.data[0].propImages && Array.isArray(response.data[0].propImages) && response.data[0].propImages.length > 0) {
+          //   imageUrls = response.data[0].propImages.map((img: any) => this.apiurls.getImageUrl(img.filePath));
+          //   console.log("Generated Image URLs:", imageUrls);
+          // } else {
+          //   imageUrls = ['assets/images/empty.png'];
+          // }
+
+          if (
+            response.data[0].propImages &&
+            Array.isArray(response.data[0].propImages) &&
+            response.data[0].propImages.length > 0
+          ) {
+            // Sort by ImageOrder first
+            const sortedImages = response.data[0].propImages.sort((a: any, b: any) => {
+              return a.ImageOrder - b.ImageOrder;
+            });
+          
+            // Map to URLs
+            imageUrls = sortedImages.map((img: any) => this.apiurls.getImageUrl(img.filePath));
+            console.log("Generated Image URLs (sorted):", imageUrls);
           } else {
             imageUrls = ['assets/images/empty.png'];
           }
 
+          
           let floorImages: string[] = [];
           if (response.data[0].floorImages && Array.isArray(response.data[0].floorImages) && response.data[0].floorImages.length > 0) {
             floorImages = response.data[0].floorImages.map((img: any) => this.apiurls.getImageUrl(img.filePath));

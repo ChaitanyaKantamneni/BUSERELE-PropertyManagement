@@ -64,34 +64,33 @@ export class ContactUsComponent  implements OnInit {
   
   isModalVisible: boolean = false;  
   enquiryformsubmit() {
-    this.userEnquiryform.markAllAsTouched();
-  
-    if (this.userEnquiryform.invalid) {
-      this.propertyInsStatus = 'Please fill out the form correctly before submitting.';
-      this.isUpdateModalOpen  = true;
-      return;
-    }
-  
     const data = {
       name: this.userEnquiryform.get('name')?.value.toString(),
       email: this.userEnquiryform.get('email')?.value.toString(),
       phone: this.userEnquiryform.get('phone')?.value.toString(),
-      message: this.userEnquiryform.get('message')?.value.toString(),
-      flag:'2'
+      description: this.userEnquiryform.get('message')?.value.toString(),
+      flag:'1'
     };
-    this.apiurls.post('Tbl_Enquiry_CRUD_Operations', data).subscribe({
-      next: (response: any) => {
-      this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
-      this.isUpdateModalOpen = true;
+    this.apiurls.post<any>('Tbl_Enquiry_CRUD_Operations', data).subscribe({
+      next: (response) => {
+        console.log('Enquiry response:', response);
+        if(response.statusCode==200){
+          this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
+          this.isUpdateModalOpen = true;
+        }
+        else{
+          this.propertyInsStatus = 'Something went wrong while submitting your enquiry. Please try again later.';
+          this.isUpdateModalOpen = true;
+        } 
       },
       error: (error) => {
         console.error("Error details:", error);
-        this.propertyInsStatus = 'Failed to submit enquiry. Try again later...!';
+        this.propertyInsStatus = 'Something went wrong while submitting your enquiry. Please try again later.';
         this.isUpdateModalOpen = true;
+        setTimeout(() => {
+          this.routes.navigate(['/home']);
+        }, 2000);
       },
-      complete: () => {
-        console.log("Request completed");
-      }
     });
   }
 

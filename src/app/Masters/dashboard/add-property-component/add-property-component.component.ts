@@ -1127,6 +1127,8 @@ getPropertyDocument(propID: string): void {
   }
   
 
+  
+
   deleteImage1(propertyId: string, imageId: number): void {
     const formData = new FormData();
     formData.append('flag', '4');
