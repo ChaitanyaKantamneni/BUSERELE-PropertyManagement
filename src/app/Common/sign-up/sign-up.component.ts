@@ -34,7 +34,6 @@ export class SignUpComponent implements OnInit {
       // Password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       Password: new FormControl('', [
         Validators.required,
-        // Validators.minLength(6),
         Validators.pattern('^(?=.*[A-Z])(?=.*\\d).+$') 
       ]),
       ConfirmPassword: new FormControl('', [Validators.required]),

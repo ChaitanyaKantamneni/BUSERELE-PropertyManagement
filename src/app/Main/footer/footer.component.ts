@@ -58,23 +58,13 @@ export class FooterComponent {
       return;
     }
 
-    // const requestBody = { email: this.email };
-    
-    // this.http.post(`https://localhost:7190/api/Users/subscribe`, requestBody).subscribe({
-    //   next: (response) => {
-    //     console.log('Subscription successful!', response);
-    //     this.subscriptionStatus = 'Subscription successful!';
-    //     this.isUpdateModalOpen = true;
-    //     this.email = '';
-    //   },
-    const createdBy = localStorage.getItem('email') || 'Unknown User';  // ✅ Get from localStorage
+    const createdBy = localStorage.getItem('email') || 'Unknown User'; 
 
     const requestBody = {
       email: this.email,
       createdBy: createdBy  
     };
-    // const requestBody = { email: this.email };
-
+    
   this.apiurls.post('subscribe', requestBody).subscribe({
     next: (response) => {
       console.log('Subscription successful!', response);
