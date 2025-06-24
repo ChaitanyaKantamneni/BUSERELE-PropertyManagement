@@ -158,6 +158,8 @@
             <div [ngClass]="changePasswordClicked ? 'height-80vh' : 'height-100'" class="profilePicture">
                 <div class="form-group">
 
+
+                    
                     <div *ngIf="!imagePreview" class="image-preview photo">
                         <img [src]="profilePhotoUrl" alt="Profile Picture Preview" />
                         <div class="edit-icon" (click)="triggerFileInput()">Edit</div>

@@ -74,6 +74,8 @@ getVisiblePages(): number[] {
   if (endPage - startPage < this.visiblePageCount - 1) {
     startPage = Math.max(1, endPage - this.visiblePageCount + 1);
   }
+
+  
  
   let pages: number[] = [];
   for (let i = startPage; i <= endPage; i++) {
