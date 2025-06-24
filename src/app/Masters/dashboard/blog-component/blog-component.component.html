@@ -232,19 +232,23 @@
               </button>
             </div>
             <div *ngIf="editclicked" class="updateProperty">
-              <div class="statusButtons">
+              <!-- <div class="statusButtons">
                 <button *ngIf="blog?.status !== '1'" class="approve" (click)="approveBlog(propID)">
                   <i class="fa fa-check-circle" aria-hidden="true"></i> Approve
                 </button>
                 <button *ngIf="blog?.status !== '2'" class="decline" (click)="declineBlog(propID)">
                   <i class="fa fa-times-circle" aria-hidden="true"></i> Decline
                 </button>
-              </div>
-              <!-- <div>
-                <button  class="updateButton" [disabled]="!propertytype.dirty" (click)="UpdateBlog()">
-                  <i class="fa fa-refresh" aria-hidden="true"></i> Update
-                </button>
               </div> -->
+              <div class="statusButtons">
+                <button *ngIf="updatedStatus !== '1'" class="approve" (click)="approveBlog(propID)">
+                  <i class="fa fa-check-circle" aria-hidden="true"></i> Approve
+                </button>
+                <button *ngIf="updatedStatus !== '2'" class="decline" (click)="declineBlog(propID)">
+                  <i class="fa fa-times-circle" aria-hidden="true"></i> Decline
+                </button>
+              </div>
+             
               <button class="updateButton"
               [disabled]="!propertytype.dirty && !imageChanged"
               (click)="UpdateBlog()">

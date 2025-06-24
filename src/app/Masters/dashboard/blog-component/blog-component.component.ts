@@ -77,10 +77,6 @@ export class BlogComponentComponent {
     });
   }
 
-
-
-
-  
   onSearchChange(): void {
     this.currentPage = 1;
   }
@@ -113,36 +109,25 @@ export class BlogComponentComponent {
       quillEditor.__quill.root.innerHTML = '';
     }
   }
-  // onFilesSelected(event: Event): void {
-  //   const fileInput = event.target as HTMLInputElement;
-  //   this.files = [];
-  //   if (fileInput?.files?.length) {
-  //     for (let i = 0; i < fileInput.files.length; i++) {
-  //       const file = fileInput.files[i];
-  //       console.log('Selected file:', file);
-  //       this.files.push(file);
-  //     }
-  //     console.log("selectd files",this.files);
-  //   }
-  // }
+  
   imageChanged: boolean = false; 
 
-onFilesSelected(event: Event): void {
-  const fileInput = event.target as HTMLInputElement;
-  this.files = [];
+    onFilesSelected(event: Event): void {
+      const fileInput = event.target as HTMLInputElement;
+      this.files = [];
 
-  if (fileInput?.files?.length) {
-    for (let i = 0; i < fileInput.files.length; i++) {
-      const file = fileInput.files[i];
-      console.log('Selected file:', file);
-      this.files.push(file);
+      if (fileInput?.files?.length) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+          const file = fileInput.files[i];
+          console.log('Selected file:', file);
+          this.files.push(file);
+        }
+
+        this.imageChanged = true; 
+
+        console.log("Selected files:", this.files);
+      }
     }
-
-    this.imageChanged = true; 
-
-    console.log("Selected files:", this.files);
-  }
-}
 
 
   onSubmit(): void {
@@ -152,19 +137,25 @@ onFilesSelected(event: Event): void {
       console.error('Form is invalid');
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('Description', this.propertytype.value.Blog);
-    formData.append('title', this.propertytype.get('Name')?.value);
-    formData.append('CreatedBy', localStorage.getItem('email') as string);
-    formData.append('status', '0'); 
+    formData.append('Title', this.propertytype.get('Name')?.value);
+    formData.append('CreatedBy', localStorage.getItem('email') || '');
+    formData.append('CreatedDate', new Date().toISOString());
+    formData.append('CreatedIP', ''); 
+    formData.append('ModifiedBy', '');
+    formData.append('ModifiedDate', '');
+    formData.append('ModifiedIP', '');
+    formData.append('Flag', '1'); 
+    formData.append('Status', '');
   
     if (this.files.length > 0) {
       this.files.forEach((file) => {
         formData.append('files', file, file.name);
       });
     }
-    this.apiurls.post<{ message: string; uploadedImage: any }>('uploadBlog', formData)
+    this.apiurls.post<{ message: string; uploadedImage: any }>('Proc_Tbl_AddBlogs', formData)
       .subscribe({
         next: (response: any) => {
           if (response.statusCode === 200) {
@@ -187,59 +178,115 @@ onFilesSelected(event: Event): void {
       });
   }
   
-
+  // UpdateBlog(): void {
+  //   console.log('Form values:', this.propertytype.value);
+  
+  //   if (this.propertytype.invalid || !this.propID) {
+  //     console.error('Form is invalid or blog ID is missing');
+  //     return;
+  //   }
+  
+  //   const formData = new FormData();
+  //   formData.append('ID', this.propID.toString());
+  //   formData.append('Description', this.propertytype.value.Blog);
+  //   formData.append('Title', this.propertytype.get('Name')?.value || '');
+  //   formData.append('ModifiedBy', localStorage.getItem('email') || '');
+  //   formData.append('ModifiedDate', new Date().toISOString());
+  //   formData.append('ModifiedIP', '');
+  //   formData.append('Flag', '4');
+  //   formData.append('CreatedBy', '');
+  //   formData.append('CreatedDate', '');
+  //   formData.append('CreatedIP', '');
+  
+  //   formData.append('BlogStatus', this.updatedStatus ?? '0');
+  
+  //   if (this.files.length > 0) {
+  //     this.files.forEach(file => {
+  //       formData.append('files', file, file.name);
+  //     });
+  //   }
+  //   this.apiurls.post<{ message: string; updatedBlog: any }>('Proc_Tbl_AddBlogs', formData)
+  //     .subscribe({
+  //       next: (response: any) => {
+  //         console.log('Blog updated successfully:', response);
+  
+  //         this.propertyInsStatus = response.Message || response.message;
+  //         this.isUpdateModalOpen = true;
+  //         this.propertytype.markAsPristine();
+  //         this.cdRef.detectChanges();
+  //         this.editclicked = false;
+  //         this.propertytype.reset();
+  //         this.files = [];
+  //         this.files1 = [];
+  //         this.imageChanged = false;
+  //         this.fetchBlogDetails();
+  //       },
+  //       error: (err) => {
+  //         console.error('Blog update failed', err);
+  //         this.propertyInsStatus = 'Failed to update blog. Please try again.';
+  //         this.isUpdateModalOpen = true;
+  //       }
+  //     });
+  // }
+  
+  
   UpdateBlog(): void {
     console.log('Form values:', this.propertytype.value);
     if (this.propertytype.invalid || !this.propID) {
       console.error('Form is invalid or blog ID is missing');
       return;
     }
-    const formData = new FormData();
-    formData.append('Description', this.propertytype.value.Blog);
-    formData.append('title', this.propertytype.get('Name')?.value);
-    formData.append('ModifiedBy', localStorage.getItem('email') as string);
-    // formData.append('status', this.updatedStatus);
-    // formData.append('status', this.updatedStatus || '1');
-
-    if (this.updatedStatus !== undefined && this.updatedStatus !== null) {
-      formData.append('status', this.updatedStatus);
-    } else {
-      formData.append('status', '0'); 
-    }
-    
-    this.files.forEach((file) => {
-      formData.append('files', file, file.name);
-    });
   
-    // this.http.put<{ message: string; updatedBlog: any }>(`https://localhost:7190/api/Users/updateBlog/${this.propID}`, formData)
-    //   .subscribe({
-    //     next: (response) => {
-    //       console.log('Blog updated successfully:', response);
-    //       this.isUpdateModalOpen = true;
-    this.apiurls.put<{ message: string; updatedBlog: any }>(`updateBlog/${this.propID}`, formData)
-    .subscribe({
-      next: (response) => {
-        console.log('Blog updated successfully:', response);
-    
-          this.propertyInsStatus = response.message;
+    const formData = new FormData();
+    formData.append('ID', this.propID.toString());
+    formData.append('Description', this.propertytype.value.Blog);
+    formData.append('Title', this.propertytype.get('Name')?.value || '');
+    formData.append('ModifiedBy', localStorage.getItem('email') || '');
+    formData.append('ModifiedDate', new Date().toISOString());
+    formData.append('ModifiedIP', '');
+    formData.append('Flag', '4');
+    formData.append('CreatedBy', '');
+    formData.append('CreatedDate', '');
+    formData.append('CreatedIP', '');
+  
+    formData.append('BlogStatus', this.updatedStatus ?? '0');
+  
+    if (this.files.length > 0) {
+      this.files.forEach(file => {
+        formData.append('files', file, file.name);
+      });
+    }
+  
+    this.apiurls.post<{ message: string; updatedBlog: any }>('Proc_Tbl_AddBlogs', formData)
+      .subscribe({
+        next: (response: any) => {
+          console.log('Blog updated successfully:', response);
+  
+          if (this.updatedStatus === '1') {
+            this.propertyInsStatus = 'Blog approved successfully';
+          } else if (this.updatedStatus === '2') {
+            this.propertyInsStatus = 'Blog declined successfully';
+          } else {
+            this.propertyInsStatus = response.Message || response.message;
+          }
           this.isUpdateModalOpen = true;
-          this.propertytype.markAsPristine(); 
+          this.propertytype.markAsPristine();
           this.cdRef.detectChanges();
           this.editclicked = false;
           this.propertytype.reset();
           this.files = [];
           this.files1 = [];
           this.imageChanged = false;
-          this.fetchBlogDetails(); 
+          this.fetchBlogDetails();
         },
         error: (err) => {
           console.error('Blog update failed', err);
+          this.propertyInsStatus = 'Failed to update blog. Please try again.';
           this.isUpdateModalOpen = true;
         }
       });
   }
   
-
 
   approveBlog(blogID: string): void {
     this.updatedStatus = '1';
@@ -274,23 +321,9 @@ onFilesSelected(event: Event): void {
     console.log('Updated file list:', this.files1);
   }
   
-  // viewImage1(file1: CustomFile | File): void {
-  //   console.log('viewImage1 triggered with:', file1);
-  //   if (file1 instanceof File) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e: any) => {
-  //       this.imageUrl = e.target.result;
-  //       this.showModal = true;  
-  //     };
-  //     reader.readAsDataURL(file1); 
-  //   } else {
-  //     this.imageUrl = "https://localhost:7190/" + file1.url;
-  //     this.showModal = true; 
-  //   }
-  // }
-  
   viewImage1(file1: CustomFile | File): void {
     console.log('viewImage1 triggered with:', file1);
+  
     if (file1 instanceof File) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -299,10 +332,14 @@ onFilesSelected(event: Event): void {
       };
       reader.readAsDataURL(file1);
     } else {
-      this.imageUrl = this.apiurls.getviewimage(file1.url);
+      this.imageUrl = file1.url.startsWith('http')
+        ? file1.url
+        : this.apiurls.getImageUrlblog(file1.url);
+  
       this.showModal = true;
     }
   }
+  
 
   viewImage(file: File): void {
     const reader = new FileReader();
@@ -313,88 +350,52 @@ onFilesSelected(event: Event): void {
     reader.readAsDataURL(file);  
   }
 
-    
-      fetchBlogDetailsById(id: string): void {
-        this.apiurls.get<any>(`allUploadedBlogs/${id}`).subscribe({
-          next: (response: any) => {
-            if (response) {
-              this.blog = response;
-              this.updatedStatus = response.status;
-      
-              this.propertytype.patchValue({
-                Blog: response.description,
-                Name: response.title,
-                ImageUrl: response.imageUrl 
-              });
-      
-              if (response.imageUrl) {
-                const filename = response.fileName;
-                this.files1.push({
-                  name: filename,
-                  url: response.imageUrl,
-                  // data: null   
-                });
-              } else {
-                console.warn('Image URL is missing.');
-              }
-            } else {
-              console.error('Blog not found');
-            }
-          },
-          error: (err) => {
-            console.error('Error fetching blog details:', err);
+
+  fetchBlogDetailsById(id: string): void {
+    const formData = new FormData();
+    formData.append('Flag', '3');
+    formData.append('ID', id);
+  
+    this.apiurls.post<any>('Proc_Tbl_AddBlogs', formData).subscribe({
+      next: (response: any) => {
+        const blog = response?.data?.[0];
+  
+        if (response?.statusCode === 200 && blog) {
+          this.blog = blog;
+          this.updatedStatus = blog.blogStatus;
+  
+          this.propertytype.patchValue({
+            Blog: blog.description,
+            Name: blog.title,
+            ImageUrl: blog.filePath 
+              ? `${this.apiurls.getImageUrlblog}${blog.filePath}` 
+              : ''
+          });
+  
+          this.files1 = [];
+          this.cdRef.detectChanges(); 
+
+          if (blog.filePath && blog.fileName) {
+            const imageUrl = this.apiurls.getImageUrlblog(blog.filePath);
+            this.files1 = [{
+              name: blog.fileName,
+              url: imageUrl,
+            }];
+          } else {
+            console.warn('Missing filePath or fileName, cannot push to files1');
           }
-        });
+          
+  
+        } else {
+          console.error('Blog not found or invalid response:', response);
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching blog details:', err);
       }
-      
-      // fetchBlogDetailsById(id: string): void {
-      //   this.apiurls.get<any>(`allUploadedBlogs/${id}`).subscribe({
-      //     next: (response: any) => {
-      //       if (response) {
-      //         this.blog = response;
-      //         this.updatedStatus = response.status; 
-      //         this.propertytype.patchValue({
-      //           Blog: response.description,
-      //           Name: response.title,
-      //           ImageUrl: response.imageUrl 
-      //         });
-      //         if (response.fileData && response.fileData.length > 0) {
-      //           let base64Data = response.fileData;
-      //           const base64Prefix = 'data:image/jpeg;base64,';
-      //           if (base64Data.startsWith(base64Prefix)) {
-      //             base64Data = base64Data.slice(base64Prefix.length);
-      //           }
-      //           try {
-      //             const byteCharacters = atob(base64Data); 
-      //             const byteArray = new Uint8Array(byteCharacters.length);
-      //             for (let i = 0; i < byteCharacters.length; i++) {
-      //               byteArray[i] = byteCharacters.charCodeAt(i);
-      //             }
-      
-      //             const blob = new Blob([byteArray], { type: 'image/jpeg' }); 
-      //             const imageUrl = URL.createObjectURL(blob);
-      
-      //             const filename = response.fileName;  
-      //             this.files1.push({
-      //               name: filename,
-      //               url: imageUrl,  
-      //               data: blob      
-      //             });
-      //           } catch (error) {
-      //             console.error('Error decoding Base64 image data:', error);
-      //           }
-      //         } else {
-      //           console.error('Image data is missing or invalid.');
-      //         }
-      //       } else {
-      //         console.error('Blog not found');
-      //       }
-      //     },
-      //     error: (err) => {
-      //       console.error('Error fetching blog details:', err);
-      //     }
-      //   });
-      // }
+    });
+  }
+
   backclick(event: Event): void {
     event.preventDefault();
     if (this.editclicked || this.addnewBlogclicked) {
@@ -420,11 +421,26 @@ onFilesSelected(event: Event): void {
       }
 
       fetchFilteredProperties(status: string, search: string): void {
-        const endpoint = `GetFilteredBlog?status=${status}&search=${search}`;
-        this.apiurls.get<any>(endpoint).subscribe({
+        const data = {
+          Title: search ,
+          FileName: '',
+          FilePath: '',
+          Description: search,
+          BlogStatus: status ,
+          CreatedDate: null,
+          CreatedBy: '',
+          CreatedIP: '',
+          ModifiedDate: null,
+          ModifiedBy: '',
+          ModifiedIP: '',
+          Flag: '6',  
+          Status: ''  
+        };
+      
+        this.apiurls.post<any>(`Proc_Tbl_AddBlogs`, data).subscribe({
           next: (response) => {
             if (response.statusCode === 200) {
-              this.properties = response.data.map((property: any) => {
+              this.properties = response.Data.map((property: any) => {
                 let PropertyStatus: string = '';
                 if (property.status === "2") {
                   PropertyStatus = "Not Approved";
@@ -435,8 +451,8 @@ onFilesSelected(event: Event): void {
                 }
     
                 let imageUrl = '';
-                if (property.fileData) {
-                  imageUrl = `data:image/jpeg;base64,${property.fileData}`;
+                if (property.FilePath) {
+                  `${this.apiurls.getImageUrlblog}${property.FilePath}`
                 }
     
                 return {
@@ -483,41 +499,48 @@ onFilesSelected(event: Event): void {
           default: return 'Unknown';
         }
       }
-
-     
-      
       fetchBlogDetails(): void {
-        this.apiurls.get<any>('allUploadedBlogs')
-          .subscribe((response: any) => {
-            this.properties = response.map((property: any) => {
-              let PropertyStatus: string = '';
-              if (property.status === "2") {
-                PropertyStatus = "Not Approved";
-              } else if (property.status === "1") {
-                PropertyStatus = "Approved";
-              } else if (property.status === "0") {
-                PropertyStatus = "Pending";
+        const formData = new FormData();
+        formData.append('Flag', '2');
+      
+        this.apiurls.post<any>('Proc_Tbl_AddBlogs', formData)
+          .subscribe({
+            next: (response: any) => {
+              console.log('API response:', response);
+              if (response.statusCode === 200 && response.data && response.data.length > 0) {
+                this.properties = response.data.map((property: any) => {
+                  let PropertyStatus = 'Pending';
+                
+                  if (property.blogStatus === "1") {
+                    PropertyStatus = "Approved";
+                  } else if (property.blogStatus === "2") {
+                    PropertyStatus = "Not Approved";
+                  }
+                
+                  const imageUrl = property.filePath
+                    ? `${this.apiurls.getImageUrlblog}${property.filePath}`
+                    : '';
+                
+                  return {
+                    BlogID: property.id,
+                    title: property.title,
+                    status: PropertyStatus,
+                    imageUrl: imageUrl
+                  };
+                });
+                
+                console.log('Mapped properties:', this.properties);
+              } else {
+                console.warn('No blog data found or unexpected status code');
               }
-      
-              let imageUrl = '';
-              if (property.fileData) {
-                imageUrl = `data:image/jpeg;base64,${property.fileData}`;
-              }
-      
-              return {
-                BlogID: property.id,
-                title: property.title,
-                status: PropertyStatus,
-                imageUrl: imageUrl,
-              };
-            });
-      
-            console.log('Mapped properties:', this.properties);
-          }, error => {
-            console.error('Error fetching properties:', error);
+            },
+            error: (error) => {
+              console.error('Error fetching properties:', error);
+            }
           });
       }
-    
+      
+     
       addNewBlog(): void {
         this.addnewBlogclicked = true;
         this.editclicked = false; 

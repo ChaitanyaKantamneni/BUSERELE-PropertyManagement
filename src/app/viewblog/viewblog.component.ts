@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,6 +45,7 @@ export class ViewblogComponent {
       this.fetchAllBlogs(); 
     });
   }
+
   decodeID(encoded: string): string {
     encoded = encoded.replace(/-/g, '+').replace(/_/g, '/');
     while (encoded.length % 4) {
@@ -53,6 +53,7 @@ export class ViewblogComponent {
     }
     return atob(encoded);  
   }
+
   ngOnDestroy(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId); 
@@ -61,8 +62,10 @@ export class ViewblogComponent {
 
   fetchAllBlogs(): void {
     this.isLoadingBlogs = true;
-    this.apiurls.get<any>(`getAllBlogs`).subscribe(
-      (response) => {
+    const formData = new FormData();
+    formData.append('Flag', '2');
+    this.apiurls.post<any>('Proc_Tbl_AddBlogs', formData).subscribe(
+      (response:any) => {
         if (response && response.data && Array.isArray(response.data)) {
           this.allBlogs = response.data.map((blog: any) => {
             let parsedDate = null;
@@ -99,48 +102,6 @@ export class ViewblogComponent {
       }
     );
   }
-  
-  // fetchAllBlogs(): void {
-  //   this.isLoadingBlogs = true;
-  //   this.apiurls.get<any>(`getAllBlogs`).subscribe(
-  //     (response) => {
-  //       if (response && response.data && Array.isArray(response.data)) {
-  //         this.allBlogs = response.data.map((blog: any) => {
-  //           let parsedDate = null;
-  //           if (blog.createdDate) {
-  //             parsedDate = new Date(blog.createdDate);
-  //             if (isNaN(parsedDate.getTime())) {
-  //               parsedDate = null;
-  //             }
-  //           }
-  
-  //           const formattedDate = parsedDate
-  //             ? parsedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-  //             : 'Invalid date';
-  
-  //           return {
-  //             ...blog,
-  //             BlogCreatedDate: formattedDate,
-  //             // imageUrl: blog.filePath ? `https://localhost:7190/${blog.filePath}` : 'assets/images/villa4.jpg'
-  //             imageUrl: blog.filePath ? this.apiurls.getImageUrlblog(blog.filePath) : 'assets/images/villa4.jpg'
-  //           };
-  //         });
-  
-  //         this.totalPages = Math.ceil(this.allBlogs.length / this.blogsPerPage);
-  //         this.dots = Array(this.totalPages).fill(0).map((_, index) => index);  
-  //         this.updateDisplayedBlogs(); 
-  //         this.startRotation(); 
-  //       } else {
-  //         console.error('Error: Invalid response data');
-  //       }
-  //       this.isLoadingBlogs = false;
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching blogs:', error);
-  //       this.isLoadingBlogs = false;
-  //     }
-  //   );
-  // }
 
   updateDisplayedBlogs(): void {
     const startIndex = this.currentPage * this.blogsPerPage;
@@ -155,28 +116,34 @@ export class ViewblogComponent {
     }, 20000); 
   }
   
-  fetchBlogById(ID: string): void {
-   this.apiurls.get<any>(`allUploadedBlogs/${ID}`).subscribe(
-      (response) => {
+  fetchBlogById(id: string): void {
+    const formData = new FormData();
+    formData.append('ID', id);
+    formData.append('Flag', '3');
+  
+    this.apiurls.post<any>('Proc_Tbl_AddBlogs', formData).subscribe(
+      (response:any) => {
+        const blogData = response.data[0];
+        console.log('blog response',blogData);
         let parsedDate: Date | null = null;
-        if (response.createdDate) {
-          parsedDate = new Date(response.createdDate);
+        if (blogData?.createdDate) {
+          parsedDate = new Date(blogData.createdDate);
           if (isNaN(parsedDate.getTime())) {
-            console.error('Invalid date format:', response.createdDate);
+            console.error('Invalid date format:', blogData.createdDate);
             parsedDate = null;
           }
         }
+  
         const formattedDate = parsedDate
           ? parsedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
           : 'Invalid date';
-
+  
         this.blog = {
-          ...response,
-          // imageUrl: response.imageUrl ? `https://localhost:7190${response.imageUrl}` : 'assets/images/villa4.jpg',
-          imageUrl: response.imageUrl 
-          ? this.apiurls.getImageUrlblog(response.imageUrl) 
-          : 'assets/images/villa4.jpg',
-           BlogCreatedDate: formattedDate,
+          ...blogData,
+          imageUrl: blogData?.filePath
+            ? this.apiurls.getImageUrlblog(blogData.filePath)
+            : 'assets/images/villa4.jpg',
+          BlogCreatedDate: formattedDate,
         };
       },
       (error) => {
@@ -192,6 +159,7 @@ export class ViewblogComponent {
       this.router.navigate([`/viewblog/${encodedBlogId}`]);
     }
   }
+
   encodeID(id: string): string {
     return btoa(id).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
@@ -205,6 +173,4 @@ export class ViewblogComponent {
       this.startRotation();
     }
   }
-
-
 }

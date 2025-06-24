@@ -132,74 +132,200 @@ addRandomLines(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): vo
     return this.LoginForms.controls;
   }
 
+  // loginform() {
+  //   this.validateCaptcha();  
+
+  //   if (!this.captchaValid) {
+  //     this.propertyInsStatus = 'CAPTCHA is incorrect. Please try again!';
+  //     this.isUpdateModalOpen = true; 
+  //     return;
+  //   }
+ 
+  //   // const data = {
+  //   //   email: this.LoginForms.get('email').value,
+  //   //   password: this.LoginForms.get('password').value,
+  //   //   Flag:'4'
+  //   // };
+  //   const data = {
+  //     Email: this.LoginForms.get('email')?.value,
+  //     Password: this.LoginForms.get('password')?.value,
+  //     Flag: '4',
+  
+  //     Name: '',
+  //     LastName: '',
+  //     MobileNo: '',
+  //     CreatedBy: '',
+  //     CreatedIP: '',
+  //     CreatedDate: '',
+  //     ModifiedBy: '',
+  //     ModifiedIP: '',
+  //     ModifiedDate: '',
+  //     RollId: '',
+  //     IsActive: '',
+  //     OldPassword: '',
+  //     NewPassword: '',
+  //     Status: '',
+  //     FileName: '',
+  //     FilePath: ''
+  //   };
+  
+  //   const formData = new FormData();
+  //   Object.keys(data).forEach(key => {
+  //     formData.append(key, (data as any)[key]);
+  //   });
+    
+  //   this.loginsuccesfull = true;
+  //   console.log(this.LoginForms);
+  //   if(!localStorage.getItem('email')){
+  //     this.routes.navigate(['/signin']);
+  //   }
+   
+  //   this.apiurls.post('Tbl_Users_CRUD_Operations', data).subscribe({
+  //     next: (result: any) => {
+  //       this.propertyInsStatus = result.message;
+  //         this.color = { red: false, green: true };
+  //         // if (result.data.rollId === "1") {
+  //         //   this.RollID="1";
+  //         //   localStorage.setItem("email", this.LoginForms.get('email').value);
+  //         //   localStorage.setItem("RollID",this.RollID);
+
+  //         //     this.routes.navigate(['/dashboard']);
+
+  //         //   // setTimeout(() => {
+  //         //   //   this.routes.navigate(['/dashboard']);
+  //         //   // }, 3000);
+  //         // } else if(result.data.rollId === "2"){
+  //         //   this.RollID="2";
+  //         //   localStorage.setItem("email", this.LoginForms.get('email').value);
+  //         //   localStorage.setItem("RollID",this.RollID);
+  //         //   this.routes.navigate(['/UserDashboard']);
+
+  //         //   // setTimeout(() => {
+  //         //   //   this.routes.navigate(['/UserDashboard']);
+  //         //   // }, 3000);
+  //         // }
+  //         // else {
+  //         //   this.propertyInsStatus = "Login Failed. Please try again!";
+  //         //   this.color = { red: true, green: false };
+  //         //   this.routes.navigate(['/signin']);
+  //         // }
+
+  //         const userData = result.data[0];
+
+  //       if (userData.rollId === "1") {
+  //         this.RollID = "1";
+  //         localStorage.setItem("email", this.LoginForms.get('email').value);
+  //         localStorage.setItem("RollID", this.RollID);
+  //         this.routes.navigate(['/dashboard']);
+  //       } else if (userData.rollId === "2") {
+  //         this.RollID = "2";
+  //         localStorage.setItem("email", this.LoginForms.get('email').value);
+  //         localStorage.setItem("RollID", this.RollID);
+  //         this.routes.navigate(['/UserDashboard']);
+  //       } else {
+  //         this.propertyInsStatus = "Login Failed. Please try again!";
+  //         this.color = { red: true, green: false };
+  //         this.routes.navigate(['/signin']);
+  //       }
+
+  //       },
+  //       error: (error) => {
+  //         console.error('Error:', error);
+  //         // this.LoginStatus = error.error;
+  //         this.propertyInsStatus = error.error || "Login failed due to server error.";
+  //         this.color = { red: true, green: false };
+  //         this.isUpdateModalOpen = true;
+  //       },
+  //       complete: () => {
+  //         console.log('Request completed');
+  //       }
+  //     });
+  // }
+
   loginform() {
     this.validateCaptcha();  
-
+  
     if (!this.captchaValid) {
       this.propertyInsStatus = 'CAPTCHA is incorrect. Please try again!';
-      this.isUpdateModalOpen = true; 
+      this.isUpdateModalOpen = true;
       return;
     }
-    // if (!this.captchaValid) {
-    //   alert('CAPTCHA is incorrect. Please try again!');
-    //   return;
-    // }
 
     const data = {
-      email: this.LoginForms.get('email').value,
-      password: this.LoginForms.get('password').value
+      Email: this.LoginForms.get('email')?.value,
+      Password: this.LoginForms.get('password')?.value,
+      Flag: '4',
+  
+      Name: '',
+      LastName: '',
+      MobileNo: '',
+      CreatedBy: '',
+      CreatedIP: '',
+      CreatedDate: '',
+      ModifiedBy: '',
+      ModifiedIP: '',
+      ModifiedDate: '',
+      RollId: '',
+      IsActive: '',
+      OldPassword: '',
+      NewPassword: '',
+      Status: '',
+      FileName: '',
+      FilePath: ''
     };
+  
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+      formData.append(key, (data as any)[key]);
+    });
+  
     this.loginsuccesfull = true;
-    console.log(this.LoginForms);
-    if(!localStorage.getItem('email')){
-      this.routes.navigate(['/signin']);
-    }
-    // this.http.post("https://localhost:7190/api/Users/login", data, { headers: { 'Content-Type': 'application/json' } })
-    //   .subscribe({
-    //     next: (result: any) => {
-    //       this.LoginStatus = result.message;
-    this.apiurls.post('login', data).subscribe({
+  
+    this.apiurls.post('Tbl_Users_CRUD_Operations', formData).subscribe({
       next: (result: any) => {
-        this.propertyInsStatus = result.message;
-          this.color = { red: false, green: true };
-          if (result.user.rollId === "1") {
-            this.RollID="1";
-            localStorage.setItem("email", this.LoginForms.get('email').value);
-            localStorage.setItem("RollID",this.RollID);
-
-              this.routes.navigate(['/dashboard']);
-
-            // setTimeout(() => {
-            //   this.routes.navigate(['/dashboard']);
-            // }, 3000);
-          } else if(result.user.rollId === "2"){
-            this.RollID="2";
-            localStorage.setItem("email", this.LoginForms.get('email').value);
-            localStorage.setItem("RollID",this.RollID);
-            this.routes.navigate(['/UserDashboard']);
-
-            // setTimeout(() => {
-            //   this.routes.navigate(['/UserDashboard']);
-            // }, 3000);
-          }
-          else {
-            this.propertyInsStatus = "Login Failed. Please try again!";
-            this.color = { red: true, green: false };
-            this.routes.navigate(['/signin']);
-          }
-        },
-        error: (error) => {
-          console.error('Error:', error);
-          // this.LoginStatus = error.error;
-          this.propertyInsStatus = error.error || "Login failed due to server error.";
+        if (!result?.data || result.data.length === 0) {
+          this.propertyInsStatus = "Login Failed. Please try again!";
           this.color = { red: true, green: false };
-          this.isUpdateModalOpen = true;
-        },
-        complete: () => {
-          console.log('Request completed');
+          this.routes.navigate(['/signin']);
+          return;
         }
-      });
+  
+        const userData = result.data[0];
+  
+        this.propertyInsStatus = result.message || "Login Successful!";
+        this.color = { red: false, green: true };
+  
+        const email = this.LoginForms.get('email')?.value;
+  
+        if (userData.rollId === "1") {
+          this.RollID = "1";
+          localStorage.setItem("email", email);
+          localStorage.setItem("RollID", this.RollID);
+          this.routes.navigate(['/dashboard']);
+        } else if (userData.rollId === "2") {
+          this.RollID = "2";
+          localStorage.setItem("email", email);
+          localStorage.setItem("RollID", this.RollID);
+          this.routes.navigate(['/UserDashboard']);
+        } else {
+          this.propertyInsStatus = "Login Failed. Please try again!";
+          this.color = { red: true, green: false };
+          this.routes.navigate(['/signin']);
+        }
+      },
+      error: (error) => {
+        console.error('Login error:', error);
+        this.propertyInsStatus = error?.error?.message || "Login failed due to server error.";
+        this.color = { red: true, green: false };
+        this.isUpdateModalOpen = true;
+      },
+      complete: () => {
+        console.log('Login request completed');
+      }
+    });
   }
+  
+  
   isUpdateModalOpen: boolean = false;
   propertyInsStatus: string = ''; 
 

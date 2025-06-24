@@ -83,67 +83,87 @@ getVisiblePages(): number[] {
 }
 
 
-  // getreviews(status: string): void {
-  //   this.apihttp.get(`https://localhost:7190/api/Users/GetUserReviewsStatus?status=${status}`)
-  //     .subscribe((response: any) => {
-  //       console.log('API response:', response);
-  //       if (response && Array.isArray(response.data)) {
-  //         this.reviews = response.data.map((data: any) => {
-  //           let reviewStatusUpdated = 'N/A'; 
-  //           if (data.status === '2') {
-  //             reviewStatusUpdated = 'Declined';
-  //           } else if (data.status === '1') {
-  //             reviewStatusUpdated = 'Approved';
-  //           } else if (data.status === '0') {
-  //             reviewStatusUpdated = 'Pending';
-  //           }
-          
-  //           return {
-  //             propID: data.propID,
-  //             username: data.username,
-  //             useremail: data.useremail,
-  //             usermessage: data.usermessage,
-  //             rating:data.rating,
-  //             reviewstatus: reviewStatusUpdated,  
-  //             reviewId: data.id
-  //           };
-  //         });
-          
-  //       } else {
-  //         console.error('Unexpected response format or no reviews found');
-  //         this.reviews = [];
-  //       }
-  //     }, error => {
-  //       console.error('Error fetching reviews:', error);
-  //     });
-  // }
+// getreviews(reviewstatus: string): void {
+//   const data={
+//     reviewstatus:'1',
+//     flag:'2'
+//   }
+
+
+//   console.log('Calling API with:', data);
+
+//   this.apiurls.post<any>('Tbl_Reviews_CRUD_Operations', data).subscribe({
+//     next: (response: any) => {
+//       console.log('API response:', response);
+
+//       if (response?.data && Array.isArray(response.data) && response.data.length > 0) {
+//         this.reviews = response.data.map((item: any) => {
+//           let reviewStatusUpdated = 'N/A';
+//           switch (item.reviewstatus) { 
+//             case '0': reviewStatusUpdated = 'Pending'; break;
+//             case '1': reviewStatusUpdated = 'Approved'; break;
+//             case '2': reviewStatusUpdated = 'Declined'; break;
+//           }
+        
+//           return {
+//             propID: item.propID,
+//             username: item.username,
+//             useremail: item.useremail,
+//             usernumber: item.usernumber,
+//             usermessage: item.usermessage,
+//             rating: item.rating,
+//             reviewstatus: reviewStatusUpdated,
+//             reviewID: item.reviewID 
+//           };
+//         });
+
+//         this.filteredReviews = [...this.reviews];
+//       } else {
+//         this.reviews = [];
+//         this.filteredReviews = [];
+//         console.warn('No reviews found or unexpected data structure.');
+//       }
+//     },
+//     error: (err) => {
+//       this.reviews = [];
+//       this.filteredReviews = [];
+//       console.error('Error fetching reviews:', err);
+//     }
+//   });
+// }
 
 
 
   getreviews(status: string): void {
-   this.apiurls.get<any>(`GetUserReviewsStatus?status=${status}`)
-      .subscribe((response: any) => {
+    const data={
+          reviewstatus:status,
+          flag:'2'
+        }
+    this.apiurls.post<any>('Tbl_Reviews_CRUD_Operations', data).subscribe({
+      next: (response: any) => {
         console.log('API response:', response);
-        if (response && Array.isArray(response.data)) {
-          this.reviews = response.data.map((data: any) => {
+  
+        if (response?.data && Array.isArray(response.data) && response.data.length > 0) {
+          this.reviews = response.data.map((item: any) => {
             let reviewStatusUpdated = 'N/A';
-            if (data.status === '2') {
+            if (data.reviewstatus === '2') {
               reviewStatusUpdated = 'Declined';
-            } else if (data.status === '1') {
+            } else if (data.reviewstatus === '1') {
               reviewStatusUpdated = 'Approved';
-            } else if (data.status === '0') {
+            } else if (data.reviewstatus === '0') {
               reviewStatusUpdated = 'Pending';
             }
   
             return {
-              propID: data.propID,
-              username: data.username,
-              useremail: data.useremail,
-              usermessage: data.usermessage,
-              rating: data.rating,
-              reviewstatus: reviewStatusUpdated,
-              reviewId: data.id
-            };
+                          propID: item.propID,
+                          username: item.username,
+                          useremail: item.useremail,
+                          usernumber: item.usernumber,
+                          usermessage: item.usermessage,
+                          rating: item.rating,
+                          reviewstatus: reviewStatusUpdated,
+                          reviewID: item.reviewID 
+                        };
           });
   
           this.filteredReviews = this.reviews;
@@ -152,25 +172,14 @@ getVisiblePages(): number[] {
           this.filteredReviews = [];
           console.error('Unexpected response format or no reviews found');
         }
-      }, error => {
-        this.reviews = [];
-        this.filteredReviews = [];
-        console.error('Error fetching reviews:', error);
+      },error: (err) => {
+              this.reviews = [];
+              this.filteredReviews = [];
+              console.error('Error fetching reviews:', err);
+            }
       });
   }
-  // onWhosePropertySelectionChange(event:any):void{
-  //   console.log(event.target.value);
-  //   if(event.target.value === '1'){
-  //     this.getreviews('1');
-  //   }
-  //   else if(event.target.value === '2'){
-  //     this.getreviews('2');
-  //   }
-  //   else{
-  //     this.getreviews('0');
-  //   }
-  // }
-
+ 
   filteredReviews: any[] = []; 
 
   onWhosePropertySelectionChange(event: any): void {
@@ -191,108 +200,197 @@ getVisiblePages(): number[] {
     return text.length > length ? text.substring(0, length) + '...' : text;
   }
 
-  updateReviewDet(ReviewID: string) {
+  updateReviewDet(reviewID: string): void {
     const data = {
-      id: this.reviewdetails.ID,
+      Flag: '4',
+      ReviewID: reviewID,
       propID: this.reviewdetails.propertyID,
       userID: this.reviewdetails.userID,
       username: this.reviewdetails.username,
       useremail: this.reviewdetails.useremail,
       usernumber: this.reviewdetails.usernumber,
       usermessage: this.reviewdetails.usermessage,
-      rating:this.reviewdetails.rating,
-      createdDate: this.reviewdetails.createdDate,
-      status: this.updatedStatus,
-      modifieddate: new Date().toISOString()
+      rating: this.reviewdetails.rating,
+      reviewstatus: this.updatedStatus,
+      modifiedDate: new Date().toISOString()  
     };
   
-    console.log('ReviewID:', ReviewID);
-    console.log('Data being sent:', data);
+    console.log('Updating ReviewID:', reviewID);
+    console.log('Payload:', data);
   
-    // this.apihttp.put(`https://localhost:7190/api/Users/updateReviewStatus/${ReviewID}`, data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     this.updatedStatusSubmited = true;
-    
-    this.apiurls.put<any>(`updateReviewStatus/${ReviewID}`, data)
-    .subscribe({
-      next: (response: any) => {
+    this.apiurls.post<any>('Tbl_Reviews_CRUD_Operations', data).subscribe({
+      next: (response) => {
         this.updatedStatusSubmited = true;
-
-       if (this.updatedStatus === '1') {
-        this.subscriptionStatus = 'Review Approved Successfully!';
-      } else if (this.updatedStatus === '2') {
-        this.subscriptionStatus = 'Review Declined Successfully!';
-      } else {
-        this.subscriptionStatus = 'Review status updated successfully!';
-      }
-
-      this.isUpdateModalOpen = true;
-      // this.getreviews('0');
-        console.log('Response:', response);
+  
+        switch (this.updatedStatus) {
+          case '1':
+            this.subscriptionStatus = 'Review Approved Successfully!';
+            break;
+          case '2':
+            this.subscriptionStatus = 'Review Declined Successfully!';
+            break;
+          default:
+            this.subscriptionStatus = 'Review status updated successfully!';
+            break;
+        }
+  
+        this.isUpdateModalOpen = true;
+        console.log('Update Response:', response);
       },
       error: (error) => {
-        console.error("Error details:", error);
+        console.error('Error updating review:', error);
         if (error.error) {
-          console.error("Server Response:", error.error);
+          console.error('Server response:', error.error);
         }
         alert('There was an error with your request');
-      },
-      complete: () => {
       }
     });
   }
-  // UpdatecloseModal(): void {
-  //   this.isUpdateModalOpen = false;
-  // }
+  
 
-  // handleOk(): void {
-  //   this.isUpdateModalOpen = false;
+  // updateReviewDet(ReviewID: string) {
+  //   const data = {
+  //     id: this.reviewdetails.ID,
+  //     propID: this.reviewdetails.propertyID,
+  //     userID: this.reviewdetails.userID,
+  //     username: this.reviewdetails.username,
+  //     useremail: this.reviewdetails.useremail,
+  //     usernumber: this.reviewdetails.usernumber,
+  //     usermessage: this.reviewdetails.usermessage,
+  //     rating:this.reviewdetails.rating,
+  //     createdDate: this.reviewdetails.createdDate,
+  //     status: this.updatedStatus,
+  //     modifieddate: new Date().toISOString(),
+      
+
+  //   };
+  
+  //   console.log('ReviewID:', ReviewID);
+  //   console.log('Data being sent:', data);
+    
+  //   this.apiurls.put<any>(`updateReviewStatus/${ReviewID}`, data)
+  //   .subscribe({
+  //     next: (response: any) => {
+  //       this.updatedStatusSubmited = true;
+
+  //      if (this.updatedStatus === '1') {
+  //       this.subscriptionStatus = 'Review Approved Successfully!';
+  //     } else if (this.updatedStatus === '2') {
+  //       this.subscriptionStatus = 'Review Declined Successfully!';
+  //     } else {
+  //       this.subscriptionStatus = 'Review status updated successfully!';
+  //     }
+
+  //     this.isUpdateModalOpen = true;
+  //     // this.getreviews('0');
+  //       console.log('Response:', response);
+  //     },
+  //     error: (error) => {
+  //       console.error("Error details:", error);
+  //       if (error.error) {
+  //         console.error("Server Response:", error.error);
+  //       }
+  //       alert('There was an error with your request');
+  //     },
+  //     complete: () => {
+  //     }
+  //   });
   // }
 
   isUpdateModalOpen: boolean = false;
   subscriptionStatus: string = '';
 
 
-  getReviewDet(ReviewID: string) {
-   this.apiurls.get<any>(`GetReviewDetailsById/${ReviewID}`).subscribe(
-      (response: any) => {
-        if (response) {
+  getReviewDet(ReviewID: string): void {
+    const data = {
+      flag: '3',
+      reviewID: ReviewID  
+    };
+  
+    console.log(" Review id",ReviewID);
+    this.apiurls.post<any>('Tbl_Reviews_CRUD_Operations', data).subscribe({
+      next: (response) => {
+        if (response?.data?.length > 0) {
+          const review = response.data[0];
+  
           let reviewStatusUpdated = 'N/A';
-          
-            if (response.status === '2') {
-              reviewStatusUpdated = 'Declined';
-            } else if (response.status === '1') {
-              reviewStatusUpdated = 'Approved';
-            } else if (response.status === '0') {
+          switch (review.reviewstatus) {
+            case '0':
               reviewStatusUpdated = 'Pending';
-            }
-          
+              break;
+            case '1':
+              reviewStatusUpdated = 'Approved';
+              break;
+            case '2':
+              reviewStatusUpdated = 'Declined';
+              break;
+          }
+  
           this.reviewdetails = {
-            ID: response.id || 'N/A',  
-            propertyID: response.propID || 'N/A',  
-            userID: response.userID || 'N/A',  
-            username: response.username || 'Unknown User',  
-            useremail: response.useremail || 'Email not available', 
-            usernumber: response.usernumber || 'Phone number not available',  
-            usermessage: response.usermessage || 'Message not available',  
-            rating:response.rating || 'rating not found',
-            createdDate: response.createdDate ? new Date(response.createdDate) : new Date(),  
-            status: reviewStatusUpdated,  
-            modifiedDate: response.modifieddate ? new Date(response.modifieddate) : new Date(), 
+            ID: review.reviewID || 'N/A',
+            propertyID: review.propID || 'N/A',
+            userID: review.userID || 'N/A',
+            username: review.username || 'Unknown User',
+            useremail: review.useremail || 'Email not available',
+            usernumber: review.usernumber || 'Phone number not available',
+            usermessage: review.usermessage || 'Message not available',
+            rating: review.rating || 'Rating not found',
+            createdDate: review.createdDate ? new Date(review.createdDate) : new Date(),
+            status: reviewStatusUpdated,
+            modifiedDate: review.modifiedDate ? new Date(review.modifiedDate) : new Date()
           };
-          console.log('Original Response:', response);
-          console.log('Response:', this.reviewdetails);
+  
+          console.log('Review Object:', this.reviewdetails);
         } else {
-          console.error('Error: Response is null or undefined');
+          console.error('No review data found.');
         }
       },
-      error => {
-        console.error('Error fetching review details:', error);
+      error: (err) => {
+        console.error('Error fetching review details:', err);
       }
-    );
+    });
   }
+  
+  
+
+  // getReviewDet(ReviewID: string) {
+  //  this.apiurls.get<any>(`GetReviewDetailsById/${ReviewID}`).subscribe(
+  //     (response: any) => {
+  //       if (response) {
+  //         let reviewStatusUpdated = 'N/A';
+          
+  //           if (response.status === '2') {
+  //             reviewStatusUpdated = 'Declined';
+  //           } else if (response.status === '1') {
+  //             reviewStatusUpdated = 'Approved';
+  //           } else if (response.status === '0') {
+  //             reviewStatusUpdated = 'Pending';
+  //           }
+          
+  //         this.reviewdetails = {
+  //           ID: response.id || 'N/A',  
+  //           propertyID: response.propID || 'N/A',  
+  //           userID: response.userID || 'N/A',  
+  //           username: response.username || 'Unknown User',  
+  //           useremail: response.useremail || 'Email not available', 
+  //           usernumber: response.usernumber || 'Phone number not available',  
+  //           usermessage: response.usermessage || 'Message not available',  
+  //           rating:response.rating || 'rating not found',
+  //           createdDate: response.createdDate ? new Date(response.createdDate) : new Date(),  
+  //           status: reviewStatusUpdated,  
+  //           modifiedDate: response.modifieddate ? new Date(response.modifieddate) : new Date(), 
+  //         };
+  //         console.log('Original Response:', response);
+  //         console.log('Response:', this.reviewdetails);
+  //       } else {
+  //         console.error('Error: Response is null or undefined');
+  //       }
+  //     },
+  //     error => {
+  //       console.error('Error fetching review details:', error);
+  //     }
+  //   );
+  // }
   
 
   editreview(reviewID: string): void {
@@ -301,6 +399,7 @@ getVisiblePages(): number[] {
 
   
   viewReview(reviewID: string): void {
+    console.log('reviewID',reviewID);
     this.getReviewDet(reviewID);
     this.viewReviewClicked=true;
   }
@@ -316,15 +415,7 @@ getVisiblePages(): number[] {
     
   }
 
-  // backclick(event: Event): void {
-  //   event.preventDefault(); 
-    
-  //   if (this.viewReviewClicked) {
-  //     this.viewReviewClicked = false; 
-  //   }
-  //   this.searchQuery = '';
-  // }
-  
+
 
   onSearchChange(): void {
     this.currentPage = 1;
