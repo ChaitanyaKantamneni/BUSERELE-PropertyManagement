@@ -698,7 +698,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
     name: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
-      Validators.pattern(/^[A-Za-z ]+$/) // ✅ clean, correct pattern
+      Validators.pattern(/^[A-Za-z ]+$/) 
     ]),
     email: new FormControl('', [Validators.required, Validators.email]),
     phone: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),

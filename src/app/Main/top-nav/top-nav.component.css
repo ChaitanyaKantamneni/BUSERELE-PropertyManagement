@@ -11,6 +11,7 @@
 .navbar-brand{
     height: 100px;
 }
+
 .navbar-nav .nav-link.active{
     color: #d0b371;
 }

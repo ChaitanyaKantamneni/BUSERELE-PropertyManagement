@@ -777,7 +777,6 @@ export class SearchPropertiesComponent implements OnInit {
       
       this.emiAmount = emi.toFixed(2);
     } else {
-      // alert('Please fill in all fields to calculate the EMI.');
       this.propertyInsStatus = 'Please fill in all fields to calculate the EMI.';
       this.isUpdateModalOpen = true;
     }
