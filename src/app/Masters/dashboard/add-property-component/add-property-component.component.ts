@@ -262,10 +262,9 @@ export class AddPropertyComponentComponent implements OnInit {
     NumberofBalconies: new FormControl(''),
     NumberofParkings: new FormControl(''),
     AreaType: new FormControl('', [Validators.required]),
-    TotalArea: new FormControl('', [Validators.required, Validators.min(1),this.areaValidator]),
-    
+    TotalArea: new FormControl('', [Validators.required, Validators.min(1)]),
     CarpetArea: new FormControl(''),
-    PriceFor: new FormControl('', [Validators.required, Validators.min(1),this.priceForValidator]),
+    PriceFor: new FormControl('', [Validators.required, Validators.min(1)]),
     PropertyTotalPrice: new FormControl({ value: '', disabled: true }),
     AmenitiesCharges: new FormControl(''),
     MaintenanceCharges: new FormControl(''),
@@ -610,16 +609,10 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyDocumentsClicked=false;
   }
 
-  propertyImagesUploadButtonClick:boolean=false;
-  propertyfloorImagesUploadButtonClick:boolean=false;
-  propertyVideoUploadButtonClick:boolean=false;
-  propertydocumenetUploadButtonClick:boolean=false;
-
-  uploadPropertyImages(): void {
-
-    this.propertyImagesUploadButtonClick=true;
-    if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
-      alert('Property ID is required and you must select images.');
+ uploadPropertyImages(): void {
+  this.propertyImagesUploadButtonClick = true;
+  if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
+      console.error('Property ID is required and you must select images.');
       this.propertyImagesUploadButtonClick = false; 
       return;
   }
@@ -634,13 +627,14 @@ export class AddPropertyComponentComponent implements OnInit {
 
  this.apiurls.post<any>('uploadPropertyImages', formData).subscribe(
       response => {
-        this.PropertyOnfileClicked=false;
-        this.propertyImagesUploadButtonClick=false;
-        this.getPropertyImagesForProperty(this.propID); 
-        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';  
-    }
+          this.PropertyOnfileClicked = false;
+          this.propertyImagesUploadButtonClick = false;
+          this.propertyImagesUploadedSuccesful = true;
+          this.getPropertyImagesForProperty(this.propID); 
+          const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+          if (fileInput) {
+              fileInput.value = '';  
+          }
       },
       error => {
           console.error('Upload failed:', error);
@@ -667,13 +661,14 @@ export class AddPropertyComponentComponent implements OnInit {
 
    this.apiurls.post<any>('uploadFloorImages', formData).subscribe(
       response => {
-        this.PropertyFloorImageOnFileClicked=false;
-        this.propertyfloorImagesUploadButtonClick=false;
-        this.getPropertyFloorImagesForProperty(this.propID); 
-        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';
-        }
+          this.PropertyFloorImageOnFileClicked = false;
+          this.propertyfloorImagesUploadButtonClick = false;
+          this.propertyFloorImagesUploadedSuccesful = true;
+          this.getPropertyFloorImagesForProperty(this.propID); 
+          const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+          if (fileInput) {
+              fileInput.value = '';
+          }
       },
       error => {
           console.error('Upload failed:', error);
@@ -702,13 +697,14 @@ uploadPropertyVideos(): void {
       formData.append('videos', file, file.name);
   });
 
-    this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
-        response => {
-            this.PropertyVideoOnFileClicked = false;
-            this.propertyVideoUploadButtonClick = false;
-            this.getPropertyVideo(this.propID);  
-            const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-            if (fileInput) {
+   this.apiurls.post<any>('uploadPropertyVideo', formData).subscribe(
+      response => {
+          this.PropertyVideoOnFileClicked = false;
+          this.propertyVideoUploadButtonClick = false;
+          this.propertyVideosUploadedSuccesful = true;
+          this.getPropertyVideo(this.propID);  
+          const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+          if (fileInput) {
               fileInput.value = '';  
           }
       },
@@ -736,13 +732,14 @@ uploadPropertyDocuments(): void {
 
    this.apiurls.post<any>('uploadPropertyDocument', formData).subscribe(
       response => {
-        this.PropertyDocumentOnFileClicked=false;
-        this.propertydocumenetUploadButtonClick=false;
-        this.getPropertyDocument(this.propID); 
-        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';  
-        }
+          this.PropertyDocumentOnFileClicked = false;
+          this.propertydocumenetUploadButtonClick = false;
+          this.propertyDocumentsUploadedSuccesful = true;
+          this.getPropertyDocument(this.propID); 
+          const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+          if (fileInput) {
+              fileInput.value = '';  
+          }
       },
       error => {
           console.error('Upload failed:', error);
@@ -1546,8 +1543,10 @@ uploadPropertyDocuments(): void {
   }
 
 
-  submitpropertyDet(){
 
+  submitpropertyDet(){
+  
+    this.propertyform.get('PropertyTotalPrice')?.enable();
     if (this.propertyform.invalid) {
       return;
     }
@@ -1630,7 +1629,25 @@ uploadPropertyDocuments(): void {
 
     this.apiurls.post("inspropertysample", data).subscribe({
       next: (response: any) => {
-        if(response.statusCode=="200"){
+        if (response.statusCode == "200") {
+          this.uploadPropertyImages();
+
+          const orderValidationError = this.validateOrders();
+          if (orderValidationError) {
+            alert(orderValidationError);  
+            return; 
+          }
+        
+          const validationFloorError = this.validateOrdersfloor();
+          if (validationFloorError) {
+            alert(validationFloorError); 
+            return; 
+          }
+
+          
+          this.uploadPropertyFloorImages();
+          this.uploadPropertyVideos();
+          this.uploadPropertyDocuments();
           this.propertyInsStatus = "Property submitted successfully!";
           this.isUpdateModalOpen = true;
           this.propertyImagesClicked=false;
@@ -1648,6 +1665,7 @@ uploadPropertyDocuments(): void {
         console.error("Error details:", error);
       }
     });
+    }
   }
 
   isOrderSubmitEnabled: boolean = false;
@@ -1750,6 +1768,41 @@ uploadPropertyDocuments(): void {
     this.apiurls.put(`updatePropertyDet/${this.propID}`, data).subscribe({
       next: (response: any) => {
         if (response.statusCode == "200") {
+       this.uploadPropertyImages();
+
+    const validationError = this.validateOrders();
+    if (validationError) {
+      // alert(validationError); 
+      // return; 
+      this.propertyInsStatus = validationError; 
+      this.isUpdateModalOpen = true;
+      return; 
+    }
+    const updatedImages = this.uploadedImages1.map(image => ({
+      id: image.id,
+      imageOrder: image.customOrder.toString(),  
+      defaultImage: image.DefaultImage === "1" ? "1" : "0" 
+    }));  
+    this.updateImageOrderInDatabase(updatedImages);  
+          this.uploadPropertyFloorImages();
+          const validationFloorError = this.validateOrdersfloor();
+  
+    if (validationFloorError) {
+      // alert(validationFloorError); 
+      // return; 
+      this.propertyInsStatus = validationFloorError; 
+      this.isUpdateModalOpen = true;
+      return; 
+    }
+    const uploadedFloorImages = this.uploadedFloorImages1.map(image => ({
+      id: image.id,
+      imageOrder: image.customOrder.toString(),  
+      defaultImage: image.DefaultImage === "1" ? "1" : "0"  
+    }));
+
+          this.updateFloorImageOrderInDatabase(uploadedFloorImages);
+          this.uploadPropertyVideos();
+          this.uploadPropertyDocuments();
           this.propertyInsStatus = "Property updated successfully!";
           this.isUpdateModalOpen = true;
           this.editclicked = false;
@@ -2389,36 +2442,9 @@ editorConfig = {
     }
   
     return false;
-  }
-  
+}
 
-
-  // OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  
-  //   if (charCode !== 32 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
-  //     return false; 
-  //   }
-    
-  //   return true; 
-  // }
-
-  
-  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  //   const inputElement = event.target as HTMLInputElement;
-    
-  //   if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-  //     return false;
-  //   }
-    
-  //   if (inputElement.value.length >= 10) {
-  //     return false; 
-  //   }
-  //   return true;
-  // }
-
-  OnlyNumbersAllowed(event: KeyboardEvent): boolean {
+  OnlyNumbersAllowed1(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
     const inputElement = event.target as HTMLInputElement;
     let value = inputElement.value;
@@ -2439,29 +2465,31 @@ editorConfig = {
   }
   
 
-  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  //   const inputElement = event.target as HTMLInputElement;
-  //   const value = inputElement.value;
+  OnlyNumbersAllowed2(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
   
-  //   if (
-  //     (charCode >= 48 && charCode <= 57) ||   
-  //     charCode === 44 ||                     
-  //     charCode === 46                       
-  //   ) {
-  //     if (value.length >= 10) {
-  //       return false;
-  //     }
-  //     if (charCode === 44 || charCode === 46) {
-  //       if (value.includes(',') || value.includes('.')) {
-  //         return false;
-  //       }
-  //     }
+  validateLength(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length > 4) {
+      input.value = input.value.slice(0, 4); 
+    }
+  }
   
-  //     return true;
-  //   }
-  //   return false;
-  // }
+
+  OnlyNumbersAllowed(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+    if ((charCode >= 48 && charCode <= 57) || charCode === 8 || charCode === 46) {
+      return true;
+    }
+    
+    return false;
+  }
   
 
   OnlypostelNumbersAllowed(event: KeyboardEvent): void {
@@ -2479,40 +2507,6 @@ editorConfig = {
   }
   
 
-//   OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
-//     const inputChar = event.key;
-//     const currentValue = (event.target as HTMLInputElement).value;
-//     if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
-//         return;
-//     }
-//     if (inputChar >= '0' && inputChar <= '9') {
-//         const parts = currentValue.split('-');
-
-//         if (parts.length === 1) {
-//             if (parts[0].length >= 6) {
-//                 event.preventDefault();
-//             }
-//         }
-//         if (parts.length === 2) {
-//             if (parts[1].length >= 7) {
-//                 event.preventDefault();
-//             }
-//         }
-//         return;
-//     }
-//     if (inputChar === '-') {
-//         const parts = currentValue.split('-');
-//         if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
-//             return;
-//         }
-//     }
-//     event.preventDefault();
-//     console.log('Form valid:', this.propertyform.valid);
-//     console.log('TotalArea valid:', this.propertyform.get('TotalArea')?.valid);
-//     console.log('TotalArea errors:', this.propertyform.get('TotalArea')?.errors);
-//  }
-
-
   OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
     const inputChar = event.key;
     const currentValue = (event.target as HTMLInputElement).value;
@@ -2521,7 +2515,6 @@ editorConfig = {
     }
     if (inputChar >= '0' && inputChar <= '9') {
         const parts = currentValue.split('-');
-
         if (parts.length === 1) {
             if (parts[0].length >= 6) {
                 event.preventDefault();
@@ -2536,68 +2529,50 @@ editorConfig = {
     }
     if (inputChar === '-') {
         const parts = currentValue.split('-');
-        if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
+        if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
             return;
+        }
+        if (parts.length > 1) {
+            event.preventDefault();
         }
     }
     event.preventDefault();
- }
-
-
- OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
-  const inputChar = event.key;
-  const currentValue = (event.target as HTMLInputElement).value;
-  if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
-      return;
-  }
-  if (inputChar >= '0' && inputChar <= '9') {
-      const parts = currentValue.split('-');
-      if (parts.length === 1) {
-          if (parts[0].length >= 7) {
-              event.preventDefault();
-          }
-      }
-      if (parts.length === 2) {
-          if (parts[1].length >= 8) {
-              event.preventDefault();
-          }
-      }
-      return;
   }
 
-  // Handle hyphen entry
-  if (inputChar === '-') {
-      const parts = currentValue.split('-');
 
-      // Allow the hyphen only if it's not already present and exactly 7 digits exist before it
-      if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 7) {
+  OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
+    const inputChar = event.key;
+    const currentValue = (event.target as HTMLInputElement).value;
+    if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+        return;
+    }
+    if (inputChar >= '0' && inputChar <= '9') {
+        const parts = currentValue.split('-');
+        if (parts.length === 1) {
+            if (parts[0].length >= 7) {
+                event.preventDefault();
+            }
+        }
+        if (parts.length === 2) {
+            if (parts[1].length >= 8) {
+                event.preventDefault();
+            }
+        }
+        return;
+    }
+    if (inputChar === '-') {
+      const parts = currentValue.split('-');
+      if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
           return;
       }
+      if (parts.length > 1) {
+          event.preventDefault();
+      }
   }
-
-  // Prevent any other character input
   event.preventDefault();
-}
-  
-  
-  
-  
-  // OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
-  //   const inputChar = event.key;
-  //   if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(inputChar)) {
-  //     return;
-  //   }
-  //   if (inputChar >= '0' && inputChar <= '9') {
-  //     return;
-  //   }
-  //   const currentValue = (event.target as HTMLInputElement).value;
-  //   if (inputChar === '-' && !currentValue.includes('-') && currentValue.length > 0) {
-  //     return;
-  //   }
-  //   event.preventDefault();
-  // }
+  }
+    
 
-  
   OnlyValidEmailChars(event: KeyboardEvent): boolean {
     const charCode = event.key;
     const allowedCharsRegex = /^[a-zA-Z0-9@._+-]$/;
@@ -2684,6 +2659,7 @@ editorConfig = {
     return { invalidArea: true };
   }
 
+  
   priceForValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     
@@ -2699,6 +2675,7 @@ editorConfig = {
     return { invalidPrice: true };
   }
 
+  
   calculateTotalPrice() {
     const totalArea = this.propertyform.get('TotalArea')?.value;
     const priceFor = this.propertyform.get('PriceFor')?.value;

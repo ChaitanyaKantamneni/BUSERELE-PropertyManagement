@@ -35,70 +35,99 @@ interface propertyDet{
   styleUrl: './search-properties.component.css'
 })
 export class SearchPropertiesComponent implements OnInit {
-  selectedPropertyType:string|null='';
-  selectedPropertyFor:string|null='';
+  // selectedPropertyType:string|null='';
+  // selectedPropertyFor:string|null='';
+  // propID: string | null = '';
+  // isLoading: boolean = false;
+  // CityName:string|null=null;
+  // propertyType:string|null=null;
+  // propertyFor:string|null=null;
+  // keyword: string | null = '';
+  // selectedcityName:string | null = '';
+  // propertyAvailabilityOptions:string|null='';
+  // propertydetails: any[] = []
+
+  selectedPropertyType: string | null = '';
+  selectedPropertyFor: string | null = '';
   propID: string | null = '';
   isLoading: boolean = false;
-  CityName:string|null=null;
-  propertyType:string|null=null;
-  propertyFor:string|null=null;
+  CityName: string | null = null;
+  propertyType: string | null = null;
+  propertyFor: string | null = null;
   keyword: string | null = '';
-  selectedcityName:string | null = '';
-  propertyAvailabilityOptions:string|null='';
-  propertydetails: any[] = []
+  selectedcityName: string | null = '';
+  propertyAvailabilityOptions: string | null = '';
+  propertydetails: any[] = [];
 
   constructor(public apiurl:HttpClient,private route: ActivatedRoute,public router:Router,private apiurls: ApiServicesService){}
   
   // ngOnInit(): void {
   //   this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-  //     this.propertyAvailabilityOptions = params.get('propertyAvailabilityOptions');
-      
-  //     this.propertyType = this.getValidParam(params.get('propertyType'), 'defaultType');
+  //     const encodedAvailability = params.get('propertyAvailabilityOptions');
+  //     const encodedType = params.get('propertyType');
+  //     const encodedFor = params.get('propertyFor');
+  
+  //     this.propertyAvailabilityOptions = encodedAvailability ? this.decodeID(encodedAvailability) : null;
+  //     this.propertyType = encodedType ? this.getValidParam(this.decodeID(encodedType), 'defaultType') : null;
+  //     this.propertyFor = encodedFor ? this.getValidParam(this.decodeID(encodedFor), 'defaultFor') : null;
+  
   //     this.keyword = this.getValidParam(params.get('keyword'), 'defaultKeyword');
-  //     this.propertyFor = this.getValidParam(params.get('propertyFor'), 'defaultFor');
   //     this.CityName = this.getValidParam(params.get('CityName'), 'defaultCity');
-
-  //     console.log("Availability Option:", this.propertyAvailabilityOptions);
-
+  
+  //     console.log("Decoded Availability Option:", this.propertyAvailabilityOptions);
+  
   //     if (this.propertyAvailabilityOptions) {
   //       this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
   //     }
   //     else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
-  //       this.loadPropertyDetailsByFilters(this.propertyType || '', this.propertyFor || '', this.CityName || '', this.keyword || '');
-  //     } 
-  //     else {
+  //       this.loadPropertyDetailsByFilters(
+  //         this.propertyType || '',
+  //         this.propertyFor || '',
+  //         this.CityName || '',
+  //         this.keyword || ''
+  //       );
+  //     } else {
   //       this.loadPropertyDetails();
   //     }
-      
   //   });
   // }
+  
 
   ngOnInit(): void {
     this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       const encodedAvailability = params.get('propertyAvailabilityOptions');
       const encodedType = params.get('propertyType');
       const encodedFor = params.get('propertyFor');
-  
+
       this.propertyAvailabilityOptions = encodedAvailability ? this.decodeID(encodedAvailability) : null;
       this.propertyType = encodedType ? this.getValidParam(this.decodeID(encodedType), 'defaultType') : null;
       this.propertyFor = encodedFor ? this.getValidParam(this.decodeID(encodedFor), 'defaultFor') : null;
-  
+
       this.keyword = this.getValidParam(params.get('keyword'), 'defaultKeyword');
       this.CityName = this.getValidParam(params.get('CityName'), 'defaultCity');
-  
-      console.log("Decoded Availability Option:", this.propertyAvailabilityOptions);
-  
+
+      console.log("Decoded Filters =>", {
+        propertyAvailabilityOptions: this.propertyAvailabilityOptions,
+        propertyType: this.propertyType,
+        propertyFor: this.propertyFor,
+        CityName: this.CityName,
+        keyword: this.keyword
+      });
+
       if (this.propertyAvailabilityOptions) {
         this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
       } else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
-        this.loadPropertyDetailsByFilters(this.propertyType || '', this.propertyFor || '', this.CityName || '', this.keyword || '');
+        this.loadPropertyDetailsByFilters(
+          this.propertyType || '',
+          this.propertyFor || '',
+          this.CityName || '',
+          this.keyword || ''
+        );
       } else {
-        this.loadPropertyDetails();
+        this.loadPropertyDetails(); // fallback
       }
     });
   }
-  
-
   
 
   private getValidParam(param: string | null, defaultValue: string): string | null {
@@ -111,47 +140,6 @@ export class SearchPropertiesComponent implements OnInit {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
-
-    // ngOnInit(): void {
-  //   this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-  //     const encodedParams = params.get('encodedParams'); 
-  
-  //     if (encodedParams) {
-  //       try {
-  //         const decoded = atob(encodedParams);
-  //         const parsedParams = JSON.parse(decoded);
-  
-  //         this.propertyAvailabilityOptions = parsedParams.propertyAvailabilityOptions;
-  //         this.propertyType = this.getValidParam(parsedParams.propertyType, 'defaultType');
-  //         this.keyword = this.getValidParam(parsedParams.keyword, 'defaultKeyword');
-  //         this.propertyFor = this.getValidParam(parsedParams.propertyFor, 'defaultFor');
-  //         this.CityName = this.getValidParam(parsedParams.CityName, 'defaultCity');
-  
-  //         console.log("Decoded Availability Option:", this.propertyAvailabilityOptions);
-  
-  //         if (this.propertyAvailabilityOptions) {
-  //           this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
-  //         } else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
-  //           this.loadPropertyDetailsByFilters(
-  //             this.propertyType || '',
-  //             this.propertyFor || '',
-  //             this.CityName || '',
-  //             this.keyword || ''
-  //           );
-  //         } else {
-  //           this.loadPropertyDetails();
-  //         }
-  
-  //       } catch (e) {
-  //         console.error('Failed to decode route parameters:', e);
-  //         this.loadPropertyDetails();
-  //       }
-  //     } else {
-  //       this.loadPropertyDetails();
-  //     }
-  //   });
-  // }
 
   propertytypes:any[]=[{
     icon:'fa-building',
@@ -426,26 +414,29 @@ export class SearchPropertiesComponent implements OnInit {
 
   loadPropertyDetailsByFilters(finalPropertyType: string, finalPropertyFor: string, finalCityName: string, finalKeyword: string) {
     this.isLoading = true;
-    finalPropertyType = finalPropertyType ?? '';
-    finalKeyword = finalKeyword ?? '';
-    finalPropertyFor = finalPropertyFor ?? '';
-    finalCityName = finalCityName ?? ''; 
+    const data = {
+          cityName: finalCityName ?? '',
+          propertyType: finalPropertyType ?? '',
+          propertyFor: finalPropertyFor ?? '',
+          keyWord: finalKeyword ?? '',
+          flag: '7'
+        };
 
-    this.apiurls.get<any>(`GetPropertiesWithFilters?keyword=${encodeURIComponent(finalKeyword)}&propertyType=${encodeURIComponent(finalPropertyType)}&propertyFor=${encodeURIComponent(finalPropertyFor)}&CityName=${encodeURIComponent(finalCityName)}`)
+    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
       .subscribe(
-        (response: any[]) => {
+        (response: any) => {
           console.log('API Response:', response);
-          if (response.length > 0) {
-            this.propertydetails = response.map((property: any) => {
+          if (response.data.length > 0) {
+            this.propertydetails = response.data.map((property: any) => {
               let propertyImage: string = 'assets/images/empty.png';  
               let defaultPropImage: string = '';
   
               console.log('Full Property:', property);
   
-              if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-                console.log('Property Images:', property.images);
+              if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {
+                console.log('Property Images:', property.propImages);
   
-                const firstImage = property.images[0];
+                const firstImage = property.propImages[0];
   
                 if (firstImage.filePath) {
                   // propertyImage = `https://localhost:7190${firstImage.filePath}`;
@@ -522,21 +513,98 @@ export class SearchPropertiesComponent implements OnInit {
             console.log(this.propertydetails);
             this.isLoading = false;
           } else {
-            alert("No Properties Available.");
+            alert("No properties match the applied filters. Please adjust your criteria and try again.");
             this.router.navigate(['/home']);
           }
         },
         (error) => {
           console.error('Error fetching property details:', error);
-          alert("An error occurred while fetching property details.");
+          alert("No properties match the applied filters. Please adjust your criteria and try again.");
           this.router.navigate(['/home']);
         }
       );
   }
   
-
+  // loadPropertyDetailsByFilters(finalPropertyType: string, finalPropertyFor: string, finalCityName: string, finalKeyword: string) {
+  //   this.isLoading = true;
   
-
+  //   const data = {
+  //     city: finalCityName ?? '',
+  //     propertyType: finalPropertyType ?? '',
+  //     propertyFor: finalPropertyFor ?? '',
+  //     keyWord: finalKeyword ?? '',
+  //     flag: '7'
+  //   };
+  
+  //   console.log("Sending Filter Request:", data);
+  
+  //   this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', data).subscribe({
+  //     next: (response) => {
+  //       console.log('Filter API Response:', response);
+  
+  //       if (response.statusCode === 200 && response.data?.length > 0) {
+  //         this.propertydetails = response.data.map((property: any) => {
+  //           const propertyImage = property.images?.[0]?.filePath
+  //             ? this.apiurls.getImageUrl(property.images[0].filePath)
+  //             : 'assets/images/empty.png';
+  
+  //           const defaultPropImage = property.image?.filePath
+  //             ? this.apiurls.getImageUrl(property.image.filePath)
+  //             : 'assets/images/empty.png';
+  
+  //           const propertyBadgeMap: any = {
+  //             'Buy': { label: 'For Buy', color: 'green' },
+  //             'Sale': { label: 'For Sale', color: 'red' },
+  //             'Rent': { label: 'For Rent', color: 'blue' },
+  //             'Lease': { label: 'For Lease', color: 'orange' }
+  //           };
+  
+  //           const facingMap: any = {
+  //             'North': 'North',
+  //             'South': 'South',
+  //             'East': 'East',
+  //             'West': 'West'
+  //           };
+  
+  //           return {
+  //             propertyID: property.propID || 'N/A',
+  //             propertyname: property.propname || 'N/A',
+  //             propertyprice: property.propertyTotalPrice || 'N/A',
+  //             propertyaddress: property.address || 'N/A',
+  //             propertyarea: property.totalArea || 'N/A',
+  //             propertybeds: property.noOfBedrooms || 'N/A',
+  //             propertybathrooms: property.noOfBathrooms || 'N/A',
+  //             propertytype: property.propertyType || 'Unknown',
+  //             propertyfor: property.propertyFor,
+  //             propertytypeName: this.getPropertyTypeName(property.propertyType),
+  //             propertyimage: propertyImage,
+  //             defaultPropImage: defaultPropImage,
+  //             propertyparking: property.noOfParkings,
+  //             propertyfacing: facingMap[property.propertyFacing] || property.propertyFacing || 'N/A',
+  //             propertyAvailability: propertyBadgeMap[property.propertyFor]?.label || '',
+  //             propertyBadgeColor: propertyBadgeMap[property.propertyFor]?.color || '',
+  //             PropertyTypeName: property.propertyTypeName,
+  //             selectedcityName: property.cityName
+  //           };
+  //         });
+  //       } else {
+  //         alert("No Properties Available.");
+  //         this.router.navigate(['/home']);
+  //       }
+  
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error in filter API:', error);
+  //       alert("An error occurred while fetching properties.");
+  //       this.isLoading = false;
+  //       this.router.navigate(['/home']);
+  //     }
+  //   });
+  // }
+  
+  
+  
   encodeID(id: string): string {
     return btoa(id).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
@@ -553,85 +621,86 @@ export class SearchPropertiesComponent implements OnInit {
   
 
   loadPropertyDetailsByPropertyAvailabilityOptions(finalPropertyAvialabilityOptions: string) {
-    this.isLoading = true;    
-    finalPropertyAvialabilityOptions = finalPropertyAvialabilityOptions ?? '';
-    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesByAvailabilityOptions?propertyAvailabilityOption=${encodeURIComponent(finalPropertyAvialabilityOptions)}`)
+    this.isLoading = true;
+    const data={
+      availabilityOptions:finalPropertyAvialabilityOptions??'',
+      flag:'6'
+    }
+    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
       .subscribe(
-        (response: any[]) => {
+        (response: any) => {
           console.log('API Response:', response);
-          if (response.length > 0) {
-            this.propertydetails = response.map((property: any) => {
-              let propertyImage: string = 'assets/images/img1.png';  
+          if (response.data.length > 0) {
+            this.propertydetails = response.data.map((property: any) => {
+              let propertyImage: string = 'assets/images/empty.png';  
               let defaultPropImage: string = '';
   
-            console.log('Full Property:', property);
+              console.log('Full Property:', property);
   
-            if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-              console.log('Property Images:', property.images);
+              if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {
+                console.log('Property Images:', property.propImages);
   
-              const firstImage = property.images[0];
+                const firstImage = property.propImages[0];
   
                 if (firstImage.filePath) {
-                  propertyImage = `https://localhost:7190${firstImage.filePath}`;
-  
+
+                  // propertyImage = `https://localhost:7190${firstImage.filePath}`;
+                  propertyImage = this.apiurls.getImageUrl(firstImage.filePath); 
+
                   console.log('Generated Image URL:', propertyImage);
-                } catch (error) {
-                  console.error('Error decoding first image data:', error);
                 }
               } else {
-                propertyImage = 'assets/images/img2.jpg'; 
-              }
-            } else {
-              defaultPropImage = 'assets/images/img2.jpg'; 
-              console.log('images property is missing, not an array, or empty.');
-            }
-  
-              if (property.image && property.image.filePath) {
-                defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-  
-                console.log('Generated Default Image URL:', defaultPropImage);
-              } else {
-                defaultPropImage = 'assets/images/img1.png';
                 console.log('images property is missing, not an array, or empty.');
               }
   
-            let propertyBadge = '';
-            let propertyBadgeColor = '';
-            if (property.propertyFor === '1') {
-              propertyBadge = 'For Buy';
-              propertyBadgeColor = 'green';
-            } else if (property.propertyFor === '2') {
-              propertyBadge = 'For Sale';
-              propertyBadgeColor = 'red';
-            } else if (property.propertyFor === '3') {
-              propertyBadge = 'For Rent';
-              propertyBadgeColor = 'blue';
-            } else if (property.propertyFor === '4') {
-              propertyBadge = 'For Lease';
-              propertyBadgeColor = 'orange';
-            }
+              if (property.image && property.image.filePath) {
+                // defaultPropImage = `https://localhost:7190${property.image.filePath}`;
+                defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
+
+                console.log('Generated Default Image URL:', defaultPropImage);
+              } else {
+                defaultPropImage = 'assets/images/empty.png';
+                console.log('images property is missing, not an array, or empty.');
+              }
   
-            let PropertyFacing = '';
-            if (property.propertyFacing === '1') {
-              PropertyFacing = 'North';
-            } else if (property.propertyFacing === '2') {
-              PropertyFacing = 'South';
-            } else if (property.propertyFacing === '3') {
-              PropertyFacing = 'East';
-            } else if (property.propertyFacing === '4') {
-              PropertyFacing = 'West';
-            } else {
-              PropertyFacing = 'N/A';
-            }
+              let propertyBadge = '';
+              let propertyBadgeColor = '';
+  
+              if (property.propertyFor === '1') {
+                propertyBadge = 'For Buy';
+                propertyBadgeColor = 'green';
+              } else if (property.propertyFor === '2') {
+                propertyBadge = 'For Sale';
+                propertyBadgeColor = 'red';
+              } else if (property.propertyFor === '3') {
+                propertyBadge = 'For Rent';
+                propertyBadgeColor = 'blue';
+              } else if (property.propertyFor === '4') {
+                propertyBadge = 'For Lease';
+                propertyBadgeColor = 'orange';
+              }
+  
+              let PropertyFacing = '';
+              if (property.propertyFacing === '1') {
+                PropertyFacing = 'North';
+              } else if (property.propertyFacing === '2') {
+                PropertyFacing = 'South';
+              } else if (property.propertyFacing === '3') {
+                PropertyFacing = 'East';
+              } else if (property.propertyFacing === '4') {
+                PropertyFacing = 'West';
+              } else {
+                PropertyFacing = 'N/A';
+              }
   
               return {
                 propertyID: property.propID || 'N/A',  
-                propertyname: property.propname || 'Unknown Property',  
-                propertyprice: property.propertyTotalPrice || 'Price not available',  
-                propertyaddress: property.address || 'Address not available',  
-                propertyarea: property.totalArea || 'Area not available', 
-                propertybeds: property.noOfBedrooms || 'Beds not available', 
-                propertybathrooms: property.noOfBathrooms || 'Bathrooms not available',  
+                propertyname: property.propname || 'N/A',  
+                propertyprice: property.propertyTotalPrice || 'N/A',  
+                propertyaddress: property.address || 'N/A',  
+                propertyarea: property.totalArea || 'N/A', 
+                propertybeds: property.noOfBedrooms || 'N/A', 
+                propertybathrooms: property.noOfBathrooms || 'N/A',  
                 propertytype: property.propertyType || 'Unknown Type',  
                 propertyfor: property.propertyFor,
                 propertytypeName: this.getPropertyTypeName(property.propertyType),
@@ -654,14 +723,11 @@ export class SearchPropertiesComponent implements OnInit {
         },
         (error) => {
           console.error('Error fetching property details:', error);
-          alert("An error occurred while fetching property details.");
-          this.router.navigate(['/home']);
+          // alert("An error occurred while fetching property details.");
+          this.router.navigate(['/search-properties']);
         }
       );
   }
-
-  
-
 
   convertToCrores(value: number | string): string {
     if (!value) return 'N/A'; 

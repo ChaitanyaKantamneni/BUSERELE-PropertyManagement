@@ -424,7 +424,7 @@
               </div>
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalBlocks" type="text" placeholder="Total Blocks" formControlName="TotalBlocks" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="TotalBlocks" type="text" placeholder="Total Blocks" formControlName="TotalBlocks" class="form-control" (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="TotalBlocks">Total Blocks</label>
                 </div>
               </div>
@@ -435,7 +435,7 @@
              
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalFloors" type="text" placeholder="Total Floors" formControlName="TotalFloors" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="TotalFloors" type="text" placeholder="Total Floors" formControlName="TotalFloors" class="form-control" (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="TotalFloors">Total Floors</label>
                 </div>
               </div>
@@ -481,14 +481,14 @@
              
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NumberofBalconies" type="text" placeholder="Number of Balconies" formControlName="NumberofBalconies" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
+                  <input id="NumberofBalconies" type="text" placeholder="Number of Balconies" formControlName="NumberofBalconies" class="form-control" (keypress)="OnlyNumbersAllowed1($event)"/>
                   <label for="NumberofBalconies">Number of Balconies</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NumberofParkings" type="text" placeholder="Number of Parkings" formControlName="NumberofParkings" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
+                  <input id="NumberofParkings" type="text" placeholder="Number of Parkings" formControlName="NumberofParkings" class="form-control"  (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="NumberofParkings">Number of Parkings</label>
                 </div>
               </div>
@@ -515,20 +515,19 @@
 
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalArea" type="text" placeholder="Total Area" formControlName="TotalArea" class="form-control"  (keypress)="OnlyNumbersAllowedforrange($event)" />
+                  <input id="TotalArea" type="text" placeholder="Total Area" formControlName="TotalArea" class="form-control" (keypress)="OnlyNumbersAllowedforrange($event)" />
                   <label for="TotalArea">Total Area</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="CarpetArea" type="text" placeholder="Carpet Area" formControlName="CarpetArea" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"  />
+                  <input id="CarpetArea" type="text" placeholder="Carpet Area" formControlName="CarpetArea" class="form-control"  (keypress)="OnlyNumbersAllowed1($event)"  />
                   <label for="CarpetArea">Carpet Area</label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-container">
-                  <!-- (keypress)="OnlyNumbersAllowed1forrangeforprice($event)" -->
                   <input id="PriceFor" type="text" placeholder="Price For SqFt" formControlName="PriceFor" class="form-control"  maxlength="17" (keypress)="OnlyNumbersAllowedforrangeforprice($event)"  />
                   <label for="PriceFor">Price For SqFt</label>
                 </div>
@@ -546,13 +545,13 @@
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="AmenitiesCharges" type="text" placeholder="Amenities Charges" formControlName="AmenitiesCharges" class="form-control"   (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="AmenitiesCharges" type="text" placeholder="Amenities Charges" formControlName="AmenitiesCharges" class="form-control"   (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="AmenitiesCharges">Amenities Charges</label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-container">
-                  <input id="MaintenanceCharges" type="text" placeholder="Maintenance Charges" formControlName="MaintenanceCharges" class="form-control"   (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="MaintenanceCharges" type="text" placeholder="Maintenance Charges" formControlName="MaintenanceCharges" class="form-control"   (keypress)="OnlyNumbersAllowed1($event)"/>
                   <label for="MaintenanceCharges">Maintenance Charges</label>
                 </div>
               </div>
@@ -562,14 +561,14 @@
               
               <div class="form-group">
                 <div class="input-container">
-                  <input id="CorpusFund" type="text" placeholder="Corpus Fund" formControlName="CorpusFund" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="CorpusFund" type="text" placeholder="Corpus Fund" formControlName="CorpusFund" class="form-control"  (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="CorpusFund">Corpus Fund</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"  />
+                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control" minlength="4" maxlength="4"  (keypress)="OnlyNumbersAllowed2($event)"   />
                   <label for="BuildYear">Build Year</label>
                 </div>
               </div>
@@ -1142,7 +1141,6 @@
         </form>
 
         <div class="SubmitAndUpdateButtons">
-          <!-- [disabled]="propertyform.invalid" -->
            <div class="submitButtonDiv" *ngIf="!editclicked && addnewPropertyclicked">
             <button type="submit" class="SubmitButton"  (click)="submitpropertyDet()" [disabled]="propertyform.invalid"><i class="fa fa-paper-plane" aria-hidden="true"></i>Submit</button>
           </div>
