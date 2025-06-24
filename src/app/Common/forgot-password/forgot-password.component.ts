@@ -114,14 +114,7 @@ toggleConfirmPasswordVisibility() {
     this.UpdatecloseModal();
   }
 
-  changePassword(){
-    // const data = {
-    //   email: this.signupform.get('Email')?.value.toString(),
-    //   otp: this.signupform.get('OTP')?.value.toString(),
-    //   newPassword: this.signupform.get('Password')?.value.toString(),
-    //   Flag:'6'
-    // };
-  
+  changePassword(){  
     const formData = new FormData();
     formData.append('email', this.signupform.get('Email')?.value.toString());
     formData.append('newPassword', this.signupform.get('Password')?.value.toString());
