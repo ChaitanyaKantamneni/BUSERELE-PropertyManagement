@@ -43,7 +43,7 @@ export class ApiServicesService {
   }
 
   getImageUrl(filePath: string): string {
-    return filePath ? `https://localhost:7051${filePath}` : 'assets/images/empty.png';
+    return filePath ? `https://localhost:7039${filePath}` : 'assets/images/empty.png';
   }
 
   getviewimage(filePath: string): string {
@@ -52,7 +52,7 @@ export class ApiServicesService {
 
 
   getImageUrlblog(filePath: string): string {
-    return filePath ? `https://localhost:7051${filePath}` : 'assets/images/villa4.jpg';
+    return filePath ? `https://localhost:7039${filePath}` : 'assets/images/villa4.jpg';
   }
   
 }
