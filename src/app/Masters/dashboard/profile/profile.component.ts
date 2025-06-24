@@ -306,6 +306,8 @@ export class ProfileComponent implements OnInit {
     formData.append('IsActive', '1');
     formData.append('Flag', '9');
   
+
+    
     this.apiurls.post<any>('Tbl_Users_CRUD_Operations', formData).subscribe({
       next: (response) => {
         const msg = response?.Message || response?.message || '';

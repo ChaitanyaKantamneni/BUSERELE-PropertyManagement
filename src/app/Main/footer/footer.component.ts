@@ -51,6 +51,7 @@ export class FooterComponent {
   isUpdateModalOpen: boolean = false;
   subscriptionStatus: string = '';
 
+  
   subscribeMail(): void {
     if (!this.email) {
       this.subscriptionStatus = 'Please enter a valid email.';
@@ -60,12 +61,12 @@ export class FooterComponent {
 
     const createdBy = localStorage.getItem('email') || 'Unknown User'; 
 
-    const requestBody = {
-      email: this.email,
-      createdBy: createdBy  
-    };
-
-  this.apiurls.post('subscribe', requestBody).subscribe({
+    const formData = new FormData();
+    formData.append('email', this.email);
+    formData.append('createdBy', createdBy);
+    formData.append('Flag', '1');
+    
+    this.apiurls.post('Tbl_Users_CRUD_Operations', formData).subscribe({
     next: (response) => {
       console.log('Subscription successful!', response);
       this.subscriptionStatus = 'Subscription successful!';

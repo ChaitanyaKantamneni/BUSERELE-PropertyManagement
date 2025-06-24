@@ -17,6 +17,8 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/signin'])
     }
   }
+
+  
   isExpanded = true;
   toggleSidebar() {
     this.isExpanded = !this.isExpanded; 

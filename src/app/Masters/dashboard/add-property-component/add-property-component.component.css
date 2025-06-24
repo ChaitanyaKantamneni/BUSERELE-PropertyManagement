@@ -1320,6 +1320,7 @@ button[data-tooltip]:hover::after {
     border-bottom: 1px solid #eee;
   }
 
+  
   .table td::before {
     content: attr(data-label);
     position: absolute;

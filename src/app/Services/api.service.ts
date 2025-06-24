@@ -17,4 +17,6 @@ export class ApiService {
     return this.http.post(this.url+"login",data,{headers:{ 'Content-Type': 'application/json' }})
 
   }
+
+  
 }

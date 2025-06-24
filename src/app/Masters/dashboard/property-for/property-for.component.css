@@ -198,6 +198,8 @@
   input:focus,textarea:focus {
     border-color: #5c9dfc;
   }
+
+  
   
   label {
     position: absolute;

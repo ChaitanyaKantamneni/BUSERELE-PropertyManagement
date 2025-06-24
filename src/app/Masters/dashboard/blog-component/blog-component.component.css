@@ -1020,6 +1020,7 @@ button[data-tooltip]:hover::after {
     font-size: 16px;
   }
 
+  
   .search-icon {
     left: 10px;
     top: 50%;

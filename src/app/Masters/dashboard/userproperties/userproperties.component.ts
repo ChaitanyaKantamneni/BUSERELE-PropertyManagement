@@ -93,6 +93,8 @@ export class UserpropertiesComponent {
     userID: UserID  
   };
 
+
+  
   this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', data).subscribe(
     (response) => {
       this.isLoading = false;

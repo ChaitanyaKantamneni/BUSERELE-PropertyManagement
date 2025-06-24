@@ -16,6 +16,7 @@ export class AddPropertyComponent implements OnInit {
     this.propertyform.get('totalArea')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.propertyform.get('priceFor')?.valueChanges.subscribe(() => this.calculateTotalPrice());
   }
+  
  
 
   calculateTotalPrice(): void {

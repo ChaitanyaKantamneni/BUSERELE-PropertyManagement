@@ -199,78 +199,7 @@ export class AddAminities1Component implements OnInit {
   propertyInsStatus: any = '';
   editclicked: boolean = false;
 
-  // submitAminitieDet(){
-  //   const data = {
-  //     AminitieID: this.aminitiesform.get('id')?.value || '0',
-  //     Name: this.aminitiesform.get('name')?.value || '',
-  //     Description: this.aminitiesform.get('description')?.value || '',
-  //     AminitieIcon: this.aminitiesform.get('icon')?.value || '',
-  //     CreatedBy: localStorage.getItem('email') || '',
-  //     CreatedIP: "",        
-  //     CreatedDate: "",       
-  //     ModifiedBy: "",
-  //     ModifiedIP: "",
-  //     ModifiedDate: "",
-  //     Flag: "2",            
-  //     Status: "",
-  //     GeneratedID:""
-  //   };
-    
-  //   this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe({
-  //     next: (response) => {
-  //       if (response.statusCode === 200) {
-  //         this.AminityInsStatus = response.Message;
-  //         this.AminityInsStatus = "Aminity submitted successfully!";
-  //         this.isModalOpen = true;
-  //         this.aminitiesform.reset();
-  //         this.aminitiesform.markAsPristine();
-  //         this.editclicked = false;
-          
-  //       }
-  //       this.aminitiesform.reset();
-  //     },
-  //     error: (error) => {
-  //       console.error("Error details:", error);
-  //       this.AminityInsStatus = "Error Updating Aminity.";
-  //       this.isModalOpen = true;
-  //     },
-  //     complete: () => {
-  //     }
-  //   });
-  // }
-
-  // generateAminitieID(): void {
-  //   const data = {
-  //     AminitieID: "",
-  //     name: "",
-  //     Description: "",
-  //     AminitieIcon: "",
-  //     CreatedBy: "",
-  //     CreatedIP: "",
-  //     CreatedDate: null,
-  //     ModifiedBy: "",
-  //     ModifiedIP: "",
-  //     ModifiedDate: null,
-  //     Flag: "1", 
-  //     Status: ""
-  //   };
   
-  //   this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe({
-  //     next: (response: any) => {
-  //       console.log('Generated Amenity ID:', response);
-  
-  //       if (response && Array.isArray(response.data) && response.data.length > 0) {
-  //         const generatedID = response.data[0].aminitieID;
-  //         this.aminitiesform.patchValue({ id: generatedID }); 
-  //       } else {
-  //         console.error('Amenity ID generation returned empty result.');
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Error fetching Amenity ID:', error);
-  //     }
-  //   });
-  // }
   submitAminitieDet() {
     const data = {
       AminitieID: this.aminitiesform.get('id')?.value || '0',
