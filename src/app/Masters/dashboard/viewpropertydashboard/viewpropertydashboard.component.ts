@@ -210,33 +210,6 @@ OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
   return true; 
 }
 
-
-// checkIfPropertyInWishlist() {
-//   const email = localStorage.getItem('email');
-//   if (email) {
-//     // this.apiurl.get(`https://localhost:7190/api/Users/CheckIfPropertyInWishlist/${email}/${this.selectedPropertyID}`,{
-//     //   headers: { 'Content-Type': 'application/json' }
-//     // }).subscribe({
-//     //   next: (response: any) => {
-//       this.apiurls.get<any>(`CheckIfPropertyInWishlist/${email}/${this.selectedPropertyID}`)
-//     .subscribe({
-//       next: (response: any) => {
-//         if (response && response.activatedstatus === '1') {
-//           this.isLiked = true;
-//         } else {
-//           this.isLiked = false;
-//         }
-//       },
-//       error: (error) => {
-//         console.error('Error checking wishlist status:', error);
-//       }
-//     });
-//   }
-// }
-
-
-
-
 checkIfPropertyInWishlist(): void {
   const email = localStorage.getItem('email');
   if (email && this.selectedPropertyID) {
@@ -277,13 +250,6 @@ addToWishlist() {
 
   console.log('Adding to wishlist:', wishlistRequest);
 
-  // this.apiurl.post('https://localhost:7190/api/Users/AddToWishlist', wishlistRequest, {
-  //   headers: { 'Content-Type': 'application/json' }
-  // }).subscribe({
-  //   next: (response: any) => {
-  //     console.log('Added to wishlist:', response);
-  //     this.isLiked = true; 
-
   this.apiurls.post<any>('AddToWishlist', wishlistRequest).subscribe({
     next: (response) => {
       console.log('Added to wishlist:', response);
@@ -308,35 +274,6 @@ handleOk() {
   this.isUpdateModalOpen = false;
 }
 
-
-// removeFromWishlist() {
-//   const wishlistRequest = {
-//     propID: this.selectedPropertyID,
-//     userID: localStorage.getItem('email'),
-//     activatedstatus: '0',
-//   };
-
-//   console.log('Removing from wishlist:', wishlistRequest);
-
-//   this.apiurl.delete(`https://localhost:7190/api/Users/RemoveFromWishlist/${wishlistRequest.userID}/${wishlistRequest.propID}`, {
-//     headers: { 'Content-Type': 'application/json' }
-//   }).subscribe({
-//     next: (response: any) => {
-//       console.log('Removed from wishlist:', response);
-//       this.isLiked = false;  
-//       localStorage.removeItem('wishlist_' + this.selectedPropertyID);
-      
-//       this.propertyInsStatus = " Property removed from your wishlist!";
-//       this.isUpdateModalOpen = true; 
-//     },
-//     error: (error) => {
-//       console.error('Error removing from wishlist:', error);
-      
-//       this.propertyInsStatus = " Failed to remove from wishlist. Try again later!";
-//       this.isUpdateModalOpen = true;
-//     }
-//   });
-// }
 
 removeFromWishlist() {
   const wishlistRequest = {

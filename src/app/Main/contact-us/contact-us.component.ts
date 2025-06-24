@@ -78,13 +78,6 @@ export class ContactUsComponent  implements OnInit {
       phone: this.userEnquiryform.get('phone')?.value.toString(),
       message: this.userEnquiryform.get('message')?.value.toString()
     };
-  
-    // this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
-    //     this.isUpdateModalOpen = true;
       this.apiurls.post('InsUserEnquiry', data).subscribe({
     next: (response: any) => {
       this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';

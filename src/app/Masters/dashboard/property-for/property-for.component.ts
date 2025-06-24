@@ -13,7 +13,7 @@ import { ApiServicesService } from '../../../api-services.service';
   styleUrl: './property-for.component.css'
 })
 export class PropertyForComponent implements OnInit {
-  aminities: Array<{ propertyTypeID: string, name: string, description: string }> = [];
+  aminities: Array<{ propertyTypeID: string, name: string, description: string,flag:string }> = [];
   currentPage = 1;
   pageSize = 5;
   visiblePageCount: number = 3; 
@@ -65,25 +65,39 @@ export class PropertyForComponent implements OnInit {
   }
 
   getAminitieDet(propertyTypeID: string) {
-    this.apiurls.get<any>(`GetPropertyTypeById/${propertyTypeID}`).subscribe(
+    const data = {
+      PropertyTypeID: propertyTypeID,
+      Name: "",
+      Description: "",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "4",
+      Status: ""
+    };
+  
+    this.apiurls.post<any>("Tbl_PropertyType_CRUD_Operations", data).subscribe(
       (response: any) => {
-        if (response) {
+        const item = response?.data?.[0]; 
+        if (item) {
           this.aminitiesform.patchValue({
-            id: response.propertyTypeID,
-            name: response.name,
-            description: response.description
+            id: item.propertyTypeID,
+            name: item.name,
+            description: item.description
           });
         } else {
-          console.error('Error: Response is null or undefined');
+          console.error("Error: Response is null or invalid");
         }
       },
       error => {
-        console.error('Error fetching review details:', error);
+        console.error("Error fetching amenity details:", error);
       }
     );
   }
   
-
   get totalPages(): number {
     return Math.ceil(this.filteredAminities.length / this.pageSize);
   }
@@ -128,7 +142,22 @@ onSearchChange(): void {
 
 
   getreviews(): void {
-    this.apiurls.get<any>('GetAllPropertyTypes')
+
+    console.log('getreviews() called');
+    const data = {
+      PropertyTypeID: "",
+      Name: "",
+      Description: "",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "3",
+      Status: ""
+    };
+    this.apiurls.post<any>('Tbl_PropertyType_CRUD_Operations',data)
       .subscribe((response: any) => {
         console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
@@ -154,6 +183,8 @@ onSearchChange(): void {
   }
   
 
+  
+
   addnewclick(){
     this.addnewclickClicked=true;
     this.generateAminitieID();
@@ -167,26 +198,26 @@ onSearchChange(): void {
 
   submitAminitieDet(){
     const data = {
-      ID: 0,
       PropertyTypeID: this.aminitiesform.get('id')?.value,
       Name: this.aminitiesform.get('name')?.value,
       Description: new String(this.aminitiesform.get('description')?.value).toString() || null,
-      CreatedBy:localStorage.getItem('email') as string
+      CreatedBy:localStorage.getItem('email') as string,
+      CreatedIP: "",        
+      CreatedDate: new Date().toISOString(), 
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: new Date().toISOString(), 
+      Flag: "2",            
+      Status: "",
+      GeneratedID: null    
+     
     };
-    // this.apihttp.post("https://localhost:7190/api/Users/InsPropertyTypes", data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if(response.statusCode==200){
-    //       this.AminityInsStatus = response.Message;
-    //       this.isModalOpen = true;
-    //       this.propertyInsStatus = "Aminity submitted successfully!";
-    this.apiurls.post("InsPropertyTypes", data).subscribe({
+    this.apiurls.post("Tbl_PropertyType_CRUD_Operations", data).subscribe({
       next: (response: any) => {
         if (response.statusCode === 200) {
           this.AminityInsStatus = response.Message;
           this.isModalOpen = true;
-          this.propertyInsStatus = "PropertyTypes submitted successfully!";
+          this.AminityInsStatus = "PropertyTypes submitted successfully!";
           this.aminitiesform.reset();
           this.aminitiesform.markAsPristine();
           this.editclicked = false;
@@ -203,64 +234,82 @@ onSearchChange(): void {
     });
   }
 
-  generateAminitieID(){
-    // this.apihttp.get("https://localhost:7190/api/Users/getautoPropertyTypeID", { responseType: 'text' }).subscribe((response: string) => {
-    //   this.aminitiesform.patchValue({ id: response });
-    // }, error => {
-    //   console.error('Error fetching property ID:', error);
-    // });
-    this.apiurls.get<string>("getautoPropertyTypeID",'text').subscribe({
-      next: (response: string) => {
-        this.aminitiesform.patchValue({ id: response });
-      },
-      error: (error) => {
-        console.error('Error fetching property ID:', error);
-      }
-    });
+  generateAminitieID() {
+   
+    const data = {
+      PropertyTypeID: "",
+      Name: "",
+      Description: "",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "1",
+      Status: "",
+      GeneratedID:""
+    };
   
-  }
 
-
-
-  updatePropertyFor() {
-    const propertyTypeID: string = (this.aminitiesform.get('id')?.value).trim();
-    const Name:string= this.aminitiesform.get('name')?.value;
-    const Description:string= new String(this.aminitiesform.get('description')?.value).toString();
-    
-    // this.apihttp.put(`https://localhost:7190/api/Users/updatePropertyTypes/${propertyTypeID}?Name=${encodeURIComponent(Name)}&Description=${encodeURIComponent(Description)}`, {}).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode === 200) {
-    //       this.AminityInsStatus = response.message;
-    //       this.isModalOpen = true;
-    const requestData = {};
-
-    this.apiurls.put<any>(`updatePropertyTypes/${propertyTypeID}?Name=${encodeURIComponent(Name)}&Description=${encodeURIComponent(Description)}`, requestData)
-      .subscribe({
-        next: (response: any) => {
-          if (response.statusCode === 200) {
-            this.AminityInsStatus = response.message;
-            this.isModalOpen = true;
-          this.aminitiesform.markAsPristine(); 
+    this.apiurls.post<any>("Tbl_PropertyType_CRUD_Operations", data).subscribe({
+      next: (response: any) => {
+        console.log("Generate ID response:", response);
+        const id = response?.data?.[0]?.generatedID || response?.data?.[0]?.generatedID;
+        if (id) {
+          this.aminitiesform.patchValue({ id });  
+          console.log("Generated PropertyTypeID:", id);
+        } else {
+          console.error("ID not generated or missing in response:", response);
         }
       },
       error: (error) => {
-        console.error("Error details:", error);
-        this.AminityInsStatus = "Error Updating Aminity.";
-        this.isModalOpen = true;
-      },
-      complete: () => {
-        console.log('Request completed.');
+        console.error("Error generating PropertyTypeID:", error);
       }
     });
- }
+  }
+  
+
+  
+  updatePropertyFor() {
+    const idValue = this.aminitiesform.get('id')?.value?.trim();
+  
+    const requestData = {
+      PropertyTypeID: idValue,
+      Name: this.aminitiesform.get('name')?.value?.trim() || null,
+      Description: this.aminitiesform.get('description')?.value?.trim() || null,
+      Flag: '5',
+      ModifiedBy: localStorage.getItem('email') || 'system',
+      ModifiedIP: '', 
+      ModifiedDate: new Date().toISOString() 
+    };
+  
+    this.apiurls.post<any>('Tbl_PropertyType_CRUD_Operations', requestData).subscribe({
+      next: (response: any) => {
+        if (response.statusCode === 200) {
+          this.AminityInsStatus = "PropertyType updated successfully!";
+          this.AminityInsStatus = "PropertyType updated successfully!";
+          this.isModalOpen = true;
+          this.aminitiesform.markAsPristine(); 
+        } else {
+          this.AminityInsStatus = response.message || "Failed to update PropertyType.";
+          this.isModalOpen = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error updating property type:', error);
+        this.AminityInsStatus = 'Error updating property type.';
+        this.isModalOpen = true;
+      }
+    });
+  }
+  
 
 backclick(event: Event): void {
   event.preventDefault();
-  
   if (this.addnewclickClicked || this.viewAminitieClicked) {
     this.addnewclickClicked = false;
     this.viewAminitieClicked=false;
-    //this.aminitiesform.markAsPristine(); 
     this.aminitiesform.reset();
   }
   this.searchQuery = '';
