@@ -76,17 +76,11 @@ export class ContactUsComponent  implements OnInit {
       name: this.userEnquiryform.get('name')?.value.toString(),
       email: this.userEnquiryform.get('email')?.value.toString(),
       phone: this.userEnquiryform.get('phone')?.value.toString(),
-      message: this.userEnquiryform.get('message')?.value.toString()
+      message: this.userEnquiryform.get('message')?.value.toString(),
+      flag:'2'
     };
-  
-    // this.apiurl.post('https://localhost:7190/api/Users/InsUserEnquiry', data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
-    //     this.isUpdateModalOpen = true;
-      this.apiurls.post('InsUserEnquiry', data).subscribe({
-    next: (response: any) => {
+    this.apiurls.post('Tbl_Enquiry_CRUD_Operations', data).subscribe({
+      next: (response: any) => {
       this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
       this.isUpdateModalOpen = true;
       },
@@ -100,7 +94,8 @@ export class ContactUsComponent  implements OnInit {
       }
     });
   }
-  
+
+
   propertyInsStatus: string = ''; 
   isUpdateModalOpen:boolean = false;
   UpdatecloseModal() {

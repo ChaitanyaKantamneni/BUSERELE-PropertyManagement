@@ -137,11 +137,7 @@
             (click)="togglePasswordVisibility()"></i>
           <input [type]="passwordVisible ? 'text' : 'password'" id="password" formControlName="Password" placeholder="Password" required />
           <label for="password">Password</label>
-          <!-- <div class="error-message">
-            <div *ngIf="signupform.get('Password')?.invalid && signupform.get('Password')?.touched">
-              <p class="text-danger fw-bold" >Password is required.</p>
-            </div>
-          </div> -->
+        
           <div class="error-message">
             <div *ngIf="signupform.get('Password')?.touched && signupform.get('Password')?.invalid">
               <p *ngIf="signupform.get('Password')?.hasError('required')" class="text-danger fw-bold">

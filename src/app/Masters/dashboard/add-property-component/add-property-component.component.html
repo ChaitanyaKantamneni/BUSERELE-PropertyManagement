@@ -825,8 +825,6 @@
               Submit Order
             </button> -->
             
-              
-              
               </div>
             </div>
             <div *ngIf="propertyFloorImagesClicked" class="propertyFloorImagesUpload">
@@ -882,7 +880,7 @@
                                     type="number" 
                                     class="form-control" 
                                     [(ngModel)]="image.customOrder" 
-                                    (ngModelChange)="onOrderChange()" 
+                                    (ngModelChange)="onOrderChangeFloor()" 
                                     placeholder="Set Order" 
                                     min="1" 
                                     [ngModelOptions]="{standalone: true}">

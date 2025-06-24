@@ -81,19 +81,12 @@ toggleConfirmPasswordVisibility() {
       return;
     }
   
-    const data = { email: email.toString() };
-  
-    // this.apiurl.post('https://localhost:7190/api/Users/SendOTP', data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode === "200") {
-    //       this.passwordChangeStatus = "An OTP has been sent to your email. Please check your inbox and enter the code to proceed.";
-    //     } else {
-    //       this.passwordChangeStatus = "OTP Sent To Email.";
-    //     }
+       const formData = new FormData();
+       formData.append('email', email);
+       formData.append('Flag', '5');
 
-    this.apiurls.post('SendOTP', data).subscribe({
+   
+    this.apiurls.post('Tbl_Users_CRUD_Operations', formData).subscribe({
       next: (response: any) => {
         if (response.statusCode === "200") {
           this.passwordChangeStatus = "An OTP has been sent to your email. Please check your inbox and enter the code to proceed.";
@@ -121,22 +114,13 @@ toggleConfirmPasswordVisibility() {
     this.UpdatecloseModal();
   }
 
-  changePassword(){
-    const data = {
-      email: this.signupform.get('Email')?.value.toString(),
-      otp: this.signupform.get('OTP')?.value.toString(),
-      newPassword: this.signupform.get('Password')?.value.toString(),
-    };
-  
-    // this.apiurl.post('https://localhost:7190/api/Users/ChangePassword', data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode === 200) {
-    //       this.passwordChangeStatus = response.message;
-    //       this.isUpdateModalOpen = true;
-    //       this.routes.navigate(['/signin']);
-    this.apiurl.post('ChangePassword', data).subscribe({
+  changePassword(){  
+    const formData = new FormData();
+    formData.append('email', this.signupform.get('Email')?.value.toString());
+    formData.append('newPassword', this.signupform.get('Password')?.value.toString());
+    formData.append('Flag', '6');
+    
+    this.apiurls.post('Tbl_Users_CRUD_Operations', formData).subscribe({
       next: (response: any) => {
         this.passwordChangeStatus = response.message;
         this.isUpdateModalOpen = true;
@@ -178,12 +162,6 @@ toggleConfirmPasswordVisibility() {
       otp: this.signupform.get('OTP')?.value.toString(),
       newPassword: this.signupform.get('Password')?.value.toString(),
     };
-    // this.apiurl.post('https://localhost:7190/api/Users/VerifyOTP', data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode === 200) {
-    //       this.passwordChangeStatus = "OTP verified successfully.";
     this.apiurls.post('VerifyOTP', data).subscribe({
       next: (response: any) => {
         if (response.statusCode === 200) {

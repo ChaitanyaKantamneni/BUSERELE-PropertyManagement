@@ -15,6 +15,7 @@ interface navlists{
 })
 export class TopNavComponent implements OnInit {
 
+  
   constructor(public route:RouterModule,public routes:Router){}
   ngOnInit(): void {
     

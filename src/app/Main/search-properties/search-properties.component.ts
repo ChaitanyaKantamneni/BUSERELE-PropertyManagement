@@ -114,16 +114,7 @@ export class SearchPropertiesComponent implements OnInit {
       });
 
       if (this.propertyAvailabilityOptions) {
-        // this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
-        if(this.propertyAvailabilityOptions=="1"){
-          this.loadAdvertisingPropertyDetails();
-        }
-        else if(this.propertyAvailabilityOptions=="2"){
-          this.loadFeaturedPropertyDetails();
-        }
-        else{
-          this.loadPropertyDetails();
-        }
+        this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
       } else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
         this.loadPropertyDetailsByFilters(
           this.propertyType || '',
@@ -629,23 +620,26 @@ export class SearchPropertiesComponent implements OnInit {
   
 
   loadPropertyDetailsByPropertyAvailabilityOptions(finalPropertyAvialabilityOptions: string) {
-    this.isLoading = true;    
-    finalPropertyAvialabilityOptions = finalPropertyAvialabilityOptions ?? '';
-    this.apiurl.get<any[]>(`https://localhost:7190/api/Users/GetPropertiesByAvailabilityOptions?propertyAvailabilityOption=${encodeURIComponent(finalPropertyAvialabilityOptions)}`)
+    this.isLoading = true;
+    const data={
+      availabilityOptions:finalPropertyAvialabilityOptions??'',
+      flag:'6'
+    }
+    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
       .subscribe(
         (response: any) => {
           console.log('API Response:', response);
-          if (response.length > 0) {
-            this.propertydetails = response.map((property: any) => {
-              let propertyImage: string = 'assets/images/img1.png';  
+          if (response.data.length > 0) {
+            this.propertydetails = response.data.map((property: any) => {
+              let propertyImage: string = 'assets/images/empty.png';  
               let defaultPropImage: string = '';
   
             console.log('Full Property:', property);
   
-              if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-                console.log('Property Images:', property.images);
+              if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {
+                console.log('Property Images:', property.propImages);
   
-                const firstImage = property.images[0];
+                const firstImage = property.propImages[0];
   
                 if (firstImage.filePath) {
                   propertyImage = `https://localhost:7190${firstImage.filePath}`;
@@ -787,7 +781,6 @@ export class SearchPropertiesComponent implements OnInit {
       
       this.emiAmount = emi.toFixed(2);
     } else {
-      // alert('Please fill in all fields to calculate the EMI.');
       this.propertyInsStatus = 'Please fill in all fields to calculate the EMI.';
       this.isUpdateModalOpen = true;
     }

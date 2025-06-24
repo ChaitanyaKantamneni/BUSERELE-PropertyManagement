@@ -120,117 +120,155 @@ export class AddPropertyComponentComponent implements OnInit {
       this.isUpdateButtonEnabled = this.propertyform.dirty;
     });
 
-    if(this.isUpdateButtonEnabled==true){
-      this.isUpdateButtonEnabled=false;
-    }
-    else{
-      this.isUpdateButtonEnabled=false;
-    }
+    this.isUpdateButtonEnabled = false;
+    // if(this.isUpdateButtonEnabled==true){
+    //   this.isUpdateButtonEnabled=false;
+    // }
+    // else{
+    //   this.isUpdateButtonEnabled=false;
+    // }
   }
  
   isFormModified() {
     return JSON.stringify(this.initialFormData) !== JSON.stringify(this.propertyform.value);
   }
   
-  
-  // generatePropertyID(){
-  //   this.http.get("https://localhost:7190/api/Users/getautopropertyID", { responseType: 'text' }).subscribe((response: string) => {
-  //     this.propID = response;
-  //     this.propertyform.patchValue({ id: response });
-  //   }, error => {
-  //     console.error('Error fetching property ID:', error);
-  //   });
-  // }
 
-
+  generatePropertyID() {
+    const data = {
+      Flag: '1'
+    };
   
-    
-  generatePropertyID(){
-    // this.http.get("https://localhost:7190/api/Users/getautopropertyID", { responseType: 'text' }).subscribe((response: string) => {
-    //   this.propID = response;
-    //   this.propertyform.patchValue({ id: response });
-    // }, error => {
-    //   console.error('Error fetching property ID:', error);
-    // });
-    
-    this.apiurls.get<string>('getautopropertyID', 'text').subscribe({
+    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', data).subscribe({
       next: (response) => {
-        this.propID = response;
-        this.propertyform.patchValue({ id: response });
+        console.log('Full API response:', response);
+  
+        if (response && response.statusCode === 200 && response.data?.length > 0) {
+          const generatedPropID = response.data[0].generatedID;
+  
+          this.propID = generatedPropID;
+          this.propertyform.patchValue({ id: generatedPropID });
+  
+          console.log('Generated Property ID:', generatedPropID);
+        } else {
+          console.warn('Unexpected API response format:', response);
+        }
       },
       error: (error) => {
         console.error('Error fetching property ID:', error);
       }
     });
-    
   }
-  // generatePropertyID() {
-  //   this.apiurls.get<string>('getautopropertyID').subscribe({
-  //     next: (response: string) => {
-  //       this.propID = response;
-  //       this.propertyform.patchValue({ id: response });
-  //     },
-  //     error: (error) => {
-  //       console.error('Error fetching property ID:', error);
-  //     }
-  //   });
-  // }
-  
-  
+
+
   fetchProperties(): void {
-   this.apiurls.get<any>('GetAllPropertyDetails')
-      .subscribe((response: any) => {
-        this.properties = response.map((property: any) => {
-          let PropertyStatus: string = '';
-          if (property.activeStatus === "2") {
-            PropertyStatus = "Not Approved";
-          } else if (property.activeStatus === "1") {
-            PropertyStatus = "Approved";
-          } else if (property.activeStatus === "0") {
-            PropertyStatus = "Pending";
-          }
-
-          let PropertyIsActiveStatus: string = '';
-          if (property.propActiveStatus === "1") {
-            PropertyIsActiveStatus = "Active";
-          } else if (property.propActiveStatus === "0") {
-            PropertyIsActiveStatus = "InActive";
-          }
-
-
-          // let PropertySaleStatus: string = '';
-          // if (property.propertySaleStatus === "1") {
-          //   PropertySaleStatus = "Sold Out";
-          // } else if (property.propertySaleStatus === "0") {
-          //   PropertySaleStatus = "Unsold";
-          // }
-                let PropertySaleStatus: string = '';
-                if (property.propertySaleStatus == 1 || property.propertySaleStatus == "1") {
-                  PropertySaleStatus = "Sold Out";
-                } else {
-                  PropertySaleStatus = "Unsold";
-                }
-
-
+    const data = {
+      propID: '',
+      propname: '',
+      developedby: '',
+      mobileNumber: '',
+      emailID: '',
+      address: '',
+      landMark: '',
+      country: '',
+      state: '',
+      City: '',
+      NearBy: '',
+      ZIPCode: '',
+      ReraCertificateNumber: '',
+      PropertyApprovedBy: '',
+      PropertyType: '',
+      PropertyFor: '',
+      PropertyStatus: '',
+      PropertyFacing: '',
+      TotalBlocks: '',
+      TotalFloors: '',
+      NoOfFlats: '',
+      BlockName: '',
+      PropertyOnWhichFloor: '',
+      NoOfBedrooms: '',
+      NoOfBathrooms: '',
+      NoOfBalconies: '',
+      NoOfParkings: '',
+      AreaType: '',
+      TotalArea: '',
+      CarpetArea: '',
+      PriceFor: '',
+      PropertyTotalPrice: '',
+      AmenitiesCharges: '',
+      MaintenanceCharges: '',
+      CorpusFund: '',
+      BuildYear: '',
+      PossessionDate: null,
+      ListDate: null,
+      websiteurl: '',
+      Pinteresturl: '',
+      Facebookurl: '',
+      Twitterurl: '',
+      GoogleLocationurl: '',
+      userID: '',
+      ActiveStatus: '',
+      availabilityOptions: '',
+      description: '',
+      SpecificDescription: '',
+      Aminities: '',
+      CountryName: '',
+      StateName: '',
+      CityName: '',
+      PropertyTypeName: '',
+      PropActiveStatus: '',
+      propertySaleStatus: '',
+      CreatedBy: '',
+      CreatedIP: '',
+      CreatedDate: null,
+      ModifiedBy: '',
+      ModifiedIP: '',
+      ModifiedDate: null,
+      Flag: '3',
+      KeyWord: '',
+      UserActiveStatus: '',
+       p_newPropertID: ''
+    };
+  
+    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', data).subscribe({
+      next: (res: any) => {
+        const responseData = res.data || [];
+        this.properties = responseData.map((property: any) => {
+          const PropertyStatus =
+            property.activeStatus === "2"
+              ? "Not Approved"
+              : property.activeStatus === "1"
+              ? "Approved"
+              : "Pending";
+  
+          const PropertyIsActiveStatus =
+            property.propActiveStatus === "1" ? "Active"
+              : property.propActiveStatus === "0"
+              ? "Inactive"
+              : "Unknown";
+  
+          const PropertySaleStatus =
+            property.propertySaleStatus === "1" || property.propertySaleStatus === 1
+              ? "Sold Out"
+              : "Unsold";
+  
           return {
             propID: property.propID,
             propname: property.propname,
             developedby: property.developedby,
             status: PropertyStatus,
-            IsActiveStatus:PropertyIsActiveStatus,
-            IsActiveStatusBoolean:property.propActiveStatus,
+            IsActiveStatus: PropertyIsActiveStatus,
+            IsActiveStatusBoolean: property.propActiveStatus,
             SaleStatus: PropertySaleStatus
           };
         });
-      }, error => {
-        console.error('Error fetching properties:', error);
-      });
+      },
+      error: (err) => {
+        console.error('Error fetching properties:', err);
+      }
+    });
   }
-
-  
-
-
-  
+ 
   propertyform: FormGroup = new FormGroup({
     id: new FormControl(),
     PropertyTitle: new FormControl('', [Validators.required]),
@@ -338,46 +376,101 @@ export class AddPropertyComponentComponent implements OnInit {
     DocumentUrl: string 
   }> = [];
 
-  loadCountries(): void {
-    this.apiurls.get<any>('Countries')
-      .subscribe({
-        next: (data) => {
-          this.countries = data;
-        },
-        error: (err) => {
-          console.error('Failed to load countries:', err);
-        }
-      });
-  }
+  // loadCountries(): void {
+  //   this.apiurls.get<any>('Countries')
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.countries = data;
+  //       },
+  //       error: (err) => {
+  //         console.error('Failed to load countries:', err);
+  //       }
+  //     });
+  // }
 
+  // loadStates(): void {
+  //   if (this.selectedCountry) {
+  //     this.apiurls.get<any>(`States/${this.selectedCountry}`)
+  //       .subscribe({
+  //         next: (data) => {
+  //           this.states = data; 
+           
+  //         },
+  //         error: (err) => {
+  //           console.error('Failed to load states:', err);
+  //         }
+  //       });
+  //   }
+  // }
+
+  // loadCities(): void {
+  //   if (this.selectedState) {
+  //     this.apiurls.get<any>(`cities/${this.selectedState}`)
+  //       .subscribe({
+  //         next: (data) => {
+  //           this.cities = data;  
+  //         },
+  //         error: (err) => {
+  //           console.error('Failed to load cities:', err);
+  //         }
+  //       });
+  //   }
+  // }
+
+
+
+  loadCountries(): void {
+    const data = {
+      Type: 'country'
+    };
+  
+    this.apiurls.post<any>('Tbl_Locations_CRUD_Operations', data).subscribe({
+      next: (response) => {
+        this.countries = response.data;
+      },
+      error: (err) => {
+        console.error('Failed to load countries:', err);
+      }
+    });
+  }
+  
   loadStates(): void {
     if (this.selectedCountry) {
-      this.apiurls.get<any>(`States/${this.selectedCountry}`)
-        .subscribe({
-          next: (data) => {
-            this.states = data; 
-           
-          },
-          error: (err) => {
-            console.error('Failed to load states:', err);
-          }
-        });
+      const data = {
+        Type: 'state',
+        ParentId: this.selectedCountry   // ✅ Correct key name
+      };
+  
+      this.apiurls.post<any>('Tbl_Locations_CRUD_Operations', data).subscribe({
+        next: (response) => {
+          this.states = response.data;
+        },
+        error: (err) => {
+          console.error('Failed to load states:', err);
+        }
+      });
     }
   }
-
+  
   loadCities(): void {
     if (this.selectedState) {
-      this.apiurls.get<any>(`cities/${this.selectedState}`)
-        .subscribe({
-          next: (data) => {
-            this.cities = data;  
-          },
-          error: (err) => {
-            console.error('Failed to load cities:', err);
-          }
-        });
+      const data = {
+        Type: 'city',
+        ParentId: this.selectedState     
+      };
+  
+      this.apiurls.post<any>('Tbl_Locations_CRUD_Operations', data).subscribe({
+        next: (response) => {
+          this.cities = response.data;
+        },
+        error: (err) => {
+          console.error('Failed to load cities:', err);
+        }
+      });
     }
   }
+  
+  
 
   onCountryChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
@@ -424,7 +517,20 @@ export class AddPropertyComponentComponent implements OnInit {
 }
 
   getPropertTypes(): void {
-    this.apiurls.get<any>('GetAllPropertyTypes')
+    const data = {
+      PropertyTypeID: "",
+      Name: "",
+      Description: "",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "3",
+      Status: ""
+    };
+    this.apiurls.post<any>('Tbl_PropertyType_CRUD_Operations',data)
       .subscribe((response: any) => {
         if (response && Array.isArray(response.data)) {
           this.propertytypes = response.data.map((data: any) => ({
@@ -513,7 +619,21 @@ export class AddPropertyComponentComponent implements OnInit {
     }
   
   fetchAminities(): void {
-    this.apiurls.get<any>('GetAllAminities')
+    const data = {
+      AminitieID: "",
+      name: "",
+      Description: "",
+      AminitieIcon:"",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "3",
+      Status: ""
+    };
+    this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations',data)
       .subscribe((response: any) => {
         if (response && Array.isArray(response.data)) {
           this.amenities = response.data.map((data: any) => ({
@@ -530,6 +650,8 @@ export class AddPropertyComponentComponent implements OnInit {
         console.error('Error fetching reviews:', error);
       });
   }
+
+  
 
   isSelected(amenity: any): boolean {
     return this.selectedAmenities.some(item => item.id === amenity.aminitieID);
@@ -559,9 +681,6 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyFloorImagesClicked=false;
     this.propertyVideosClicked=false;
     this.propertyDocumentsClicked=false;
-    // const propID:string=(this.propertyform.get('id')?.value).toString();
-    // this.getPropertyImagesForProperty(propID);
-
     if (!this.hasImageListChanged()) {
       const propID: string = (this.propertyform.get('id')?.value).toString();
       this.getPropertyImagesForProperty(propID);
@@ -575,8 +694,6 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyFloorImagesClicked=true;
     this.propertyVideosClicked=false;
     this.propertyDocumentsClicked=false;
-    // const propID:string=(this.propertyform.get('id')?.value).toString();
-    // this.getPropertyFloorImagesForProperty(propID);
     if (!this.hasFloorImageListChanged()) {
       const propID: string = (this.propertyform.get('id')?.value).toString();
       this.getPropertyFloorImagesForProperty(propID);
@@ -610,172 +727,200 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyDocumentsClicked=false;
   }
 
-  propertyImagesUploadButtonClick:boolean=false;
-  propertyfloorImagesUploadButtonClick:boolean=false;
-  propertyVideoUploadButtonClick:boolean=false;
-  propertydocumenetUploadButtonClick:boolean=false;
 
-  uploadPropertyImages(): void {
 
-    this.propertyImagesUploadButtonClick=true;
-    if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
-      alert('Property ID is required and you must select images.');
-      this.propertyImagesUploadButtonClick = false; 
-      return;
+uploadPropertyImages(): void {
+  this.propertyImagesUploadButtonClick = true;
+
+  if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
+    console.error('Property ID is required and you must select images.');
+    this.propertyImagesUploadButtonClick = false;
+    return;
   }
-  const formData = new FormData();
-  formData.append('propID', this.propID);
-  const CreatedBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('createdBy', CreatedBy); 
-  
-  Array.from(this.selectedPropertyFiles).forEach((file: File) => {
-      formData.append('images', file, file.name);
-  });
 
- this.apiurls.post<any>('uploadPropertyImages', formData).subscribe(
-      response => {
-        this.PropertyOnfileClicked=false;
-        this.propertyImagesUploadButtonClick=false;
-        this.getPropertyImagesForProperty(this.propID); 
-        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';  
+  const formData = new FormData();
+  const createdBy = localStorage.getItem('email') || 'Unknown User';
+  const fileType = '1';    
+  const flag = '1';       
+             
+  formData.append('propID', this.propID);
+  formData.append('createdBy', createdBy);
+  formData.append('fileType', fileType);
+  formData.append('flag', flag);
+
+  Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+    formData.append('images', file, file.name);
+  });
+  
+  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
+    next: (response) => {
+      this.PropertyOnfileClicked = false;
+      this.propertyImagesUploadButtonClick = false;
+      this.propertyImagesUploadedSuccesful = true;
+
+      this.getPropertyImagesForProperty(this.propID); 
+
+      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+      if (fileInput) fileInput.value = ''; 
+    },
+    error: (err) => {
+      console.error('Upload failed:', err);
+      this.propertyImagesUploadButtonClick = false;
     }
-      },
-      error => {
-          console.error('Upload failed:', error);
-          this.propertyImagesUploadButtonClick = false;
-      }
-  );
+  });
 }
 
- uploadPropertyFloorImages(): void {
+
+uploadPropertyFloorImages(): void {
   this.propertyfloorImagesUploadButtonClick = true;
   if (!this.propID || !this.selectedPropertyFloorFiles || this.selectedPropertyFloorFiles.length === 0) {
-      console.error('Property ID is required and you must select images.');
-      this.propertyfloorImagesUploadButtonClick = false;
-      return;
+    console.error('Property ID is required and you must select images.');
+    this.propertyfloorImagesUploadButtonClick = false;
+    return;
   }
+
   const formData = new FormData();
   formData.append('propID', this.propID);
-  const CreatedBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('createdBy', CreatedBy); 
+  formData.append('fileType', '2'); 
+  const createdBy = localStorage.getItem('email') || 'Unknown User';
+  formData.append('createdBy', createdBy);
+  formData.append('flag', '1'); 
 
   Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
-      formData.append('images', file, file.name);
+    formData.append('images', file, file.name);
   });
+  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+    response => {
+      this.PropertyFloorImageOnFileClicked = false;
+      this.propertyfloorImagesUploadButtonClick = false;
+      this.propertyFloorImagesUploadedSuccesful = true;
+      this.getPropertyFloorImagesForProperty(this.propID); 
 
-   this.apiurls.post<any>('uploadFloorImages', formData).subscribe(
-      response => {
-        this.PropertyFloorImageOnFileClicked=false;
-        this.propertyfloorImagesUploadButtonClick=false;
-        this.getPropertyFloorImagesForProperty(this.propID); 
-        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';
-        }
-      },
-      error => {
-          console.error('Upload failed:', error);
+      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
       }
+    },
+    error => {
+      console.error('Upload failed:', error);
+      this.propertyfloorImagesUploadButtonClick = false;
+    }
   );
 }
 
 uploadPropertyVideos(): void {
   this.propertyVideoUploadButtonClick = true;
   if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
-      console.error('Property ID is required and you must select a video.');
-      this.propertyVideoUploadButtonClick = false;
-      return;
+    console.error('Property ID is required and you must select a video.');
+    this.propertyVideoUploadButtonClick = false;
+    return;
   }
 
   const formData = new FormData();
   formData.append('propID', this.propID);
-  
-  const CreatedBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('createdBy', CreatedBy);
+  formData.append('fileType', '4');      
+  formData.append('flag', '1');  
 
-  const ModifiedBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('ModifiedBy', ModifiedBy);
-  
+  const createdBy = localStorage.getItem('email') || 'Unknown User';
+  formData.append('createdBy', createdBy);
+  formData.append('modifiedBy', createdBy);
   Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-      formData.append('videos', file, file.name);
+    formData.append('images', file, file.name);
   });
+  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+    response => {
+      this.PropertyVideoOnFileClicked = false;
+      this.propertyVideoUploadButtonClick = false;
+      this.propertyVideosUploadedSuccesful = true;
+      this.getPropertyVideo(this.propID);  
 
-    this.http.post('https://localhost:7190/api/Users/uploadPropertyVideo', formData).subscribe(
-        response => {
-            this.PropertyVideoOnFileClicked = false;
-            this.propertyVideoUploadButtonClick = false;
-            this.getPropertyVideo(this.propID);  
-            const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-            if (fileInput) {
-              fileInput.value = '';  
-          }
-      },
-      error => {
-          console.error('Upload failed:', error);
+      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
       }
+    },
+    error => {
+      console.error('Upload failed:', error);
+      this.propertyVideoUploadButtonClick = false;
+    }
   );
 }
 
 uploadPropertyDocuments(): void {
   this.propertydocumenetUploadButtonClick = true;
   if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
-      console.error('Property ID is required and you must select a document.');
-      this.propertydocumenetUploadButtonClick = false;
-      return;
+    console.error('Property ID is required and you must select a document.');
+    this.propertydocumenetUploadButtonClick = false;
+    return;
   }
-
   const formData = new FormData();
   formData.append('propID', this.propID);
-  const CreatedBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('createdBy', CreatedBy); 
-  Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
-      formData.append('documents', file, file.name);
-  });
+  formData.append('fileType', '3');  
+  formData.append('flag', '1');              
 
-   this.apiurls.post<any>('uploadPropertyDocument', formData).subscribe(
-      response => {
-        this.PropertyDocumentOnFileClicked=false;
-        this.propertydocumenetUploadButtonClick=false;
-        this.getPropertyDocument(this.propID); 
-        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';  
-        }
-      },
-      error => {
-          console.error('Upload failed:', error);
+  const createdBy = localStorage.getItem('email') || 'Unknown User';
+  formData.append('createdBy', createdBy);
+  formData.append('modifiedBy', createdBy);
+
+  Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+    formData.append('images', file, file.name); 
+  });
+  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+    response => {
+      this.PropertyDocumentOnFileClicked = false;
+      this.propertydocumenetUploadButtonClick = false;
+      this.propertyDocumentsUploadedSuccesful = true;
+      this.getPropertyDocument(this.propID);
+
+      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
       }
+    },
+    error => {
+      console.error('Upload failed:', error);
+      this.propertydocumenetUploadButtonClick = false;
+    }
   );
 }
 
-  getPropertyImagesForProperty(propID: string): void {
-    this.apiurls.get<any>(`getimages/${propID}`).subscribe((response: any) => {
-      this.uploadedImages1 = response.map((image: any) => {
-        // const imageUrls = `https://localhost:7190${image.url}`; 
-        const imageUrls = this.apiurls.getImageUrl(image.url);
-        const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
-        return {
-          ...image,
-          propID: propID,
-          imageUrls,     
-          ImageOrder: image.imageOrder, 
-          customOrder        
-        };
-        
-      });
+getPropertyImagesForProperty(propID: string): void {
+  const formData = new FormData();
+  formData.append('propID', propID);
+  formData.append('flag', '2');      
+  formData.append('fileType', '1'); 
 
-      this.originalUploadedImages1 = this.uploadedImages1.map(img => ({
-        id: img.id,
-        imageOrder: img.customOrder,
-        defaultImage: img.DefaultImage
-      }));
-  
-    }, error => {
+  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+    (response: any) => {
+      if (response.statusCode === 200 && response.data && Array.isArray(response.data)) {
+        this.uploadedImages1 = response.data.map((image: any) => {
+          const imageUrls = this.apiurls.getImageUrl(image.filePath);
+          const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+
+          return {
+            ...image,
+            propID: propID,
+            imageUrls,           
+            ImageOrder: image.imageOrder,  
+            customOrder          
+          };
+        });
+
+        this.originalUploadedImages1 = this.uploadedImages1.map(img => ({
+          id: img.id,
+          imageOrder: img.customOrder,
+          defaultImage: img.DefaultImage 
+        }));
+      } else {
+        console.warn('No images returned or unexpected response format.', response);
+      }
+    },
+    error => {
       console.error('Error fetching images:', error);
-    });
-  }
+    }
+  );
+}
+
 
   
   hasImageListChanged(): boolean {
@@ -798,38 +943,43 @@ uploadPropertyDocuments(): void {
   }
   
   getPropertyFloorImagesForProperty(propID: string): void {
-   this.apiurls.get<any>(`get-Floorimages/${propID}`).subscribe(
+    const formData = new FormData();
+    formData.append('propID', propID);
+    formData.append('flag', '2');           
+    formData.append('fileType', '2'); 
+
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
       (response: any) => {
-  
-        if (!Array.isArray(response)) {
+        if (!response || !Array.isArray(response.data)) {
+          console.error('Unexpected response structure:', response);
           return;
         }
   
-        this.uploadedFloorImages1 = response.map((image: any) => {
-          // const imageUrls = image.imageUrl ? `https://localhost:7190${image.imageUrl}` : '';  
-          const imageUrls = this.apiurls.getImageUrl(image.imageUrl);
+        this.uploadedFloorImages1 = response.data.map((image: any) => {
+          const imageUrls = this.apiurls.getImageUrl(image.filePath || image.FilePath || '');
           const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
   
           return {
             ...image,
             propID: propID,
-            imageUrls,  
-            ImageOrder: image.imageOrder,
+            imageUrls,
+            ImageOrder: image.imageOrder || image.ImageOrder,
             customOrder,
           };
         });
+  
         this.originalUploadedFloorImages1 = this.uploadedFloorImages1.map(img => ({
           id: img.id,
           imageOrder: img.customOrder,
           defaultImage: img.DefaultImage
         }));
-  
       },
       (error) => {
         console.error('Error fetching floor images:', error);
       }
     );
   }
+  
 
   hasFloorImageListChanged(): boolean {
     if (this.uploadedFloorImages1.length !== this.originalUploadedFloorImages1.length) {
@@ -850,54 +1000,66 @@ uploadPropertyDocuments(): void {
   }
   
 
-  getPropertyVideo(propID: string): void {
-    this.apiurls.get<any>(`get-PropertyVideo/${propID}`).subscribe(
-      (response: any) => {
-  
-        if (!Array.isArray(response)) {
-          return;
-        }
-  
-        this.uploadedVideos1 = response.map((video: any) => {
-          // const videoUrl = video.videoUrl ? `https://localhost:7190${video.videoUrl}` : '';
-          const videoUrl = this.apiurls.getImageUrl(video.videoUrl);
+getPropertyVideo(propID: string): void {
+  const formData = new FormData();
+  formData.append('propID', propID);
+  formData.append('flag', '2');        
+  formData.append('fileType', '4');     
+
+  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+    (response: any) => {
+      if (response?.statusCode === 200 && Array.isArray(response.data)) {
+        this.uploadedVideos1 = response.data.map((video: any) => {
+          const videoUrl = this.apiurls.getImageUrl(video.filePath); 
+
           return {
             ...video,
             propID: propID,
-            videoUrl,  
-          
+            videoUrl 
           };
         });
-  
-      },
-      (error) => {
-        console.error('Error fetching video images:', error);
+      } else {
+        console.warn('No videos found or response format invalid.', response);
+        this.uploadedVideos1 = [];
       }
-    );
+    },
+    error => {
+      console.error('Error fetching video files:', error);
+    }
+  );
 }
 
- getPropertyDocument(propID: string): void {
-   this.apiurls.get<any>(`get-Documents/${propID}`).subscribe(
-      (response: any) => {
-          this.uploadedDocuments1 = response.map((document: any) => {
-            // const documentUrl = document.documentUrl ?`https://localhost:7190${document.documentUrl}` : ''; 
-            const documentUrl = this.apiurls.getImageUrl(document.documentUrl);
+
+getPropertyDocument(propID: string): void {
+  const formData = new FormData();
+  formData.append('propID', propID);
+  formData.append('flag', '2');            
+  formData.append('fileType', '3');        
+
+  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+    (response: any) => {
+      if (response?.statusCode === 200 && Array.isArray(response.data)) {
+        this.uploadedDocuments1 = response.data.map((doc: any) => {
+          const documentUrl = this.apiurls.getImageUrl(doc.filePath);
           const safeDocumentUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentUrl);
+
           return {
-            ...document,  
+            ...doc,
             propID: propID,
-            documentUrl,   
-            safeDocumentUrl,  
+            documentUrl,         
+            safeDocumentUrl     
           };
         });
-      },
-      error => {
-        console.error('Error fetching documents:', error);
+      } else {
+        console.warn('No documents found or response format invalid.', response);
+        this.uploadedDocuments1 = [];
       }
-    );
-  }
-
-
+    },
+    error => {
+      console.error('Error fetching documents:', error);
+    }
+  );
+}
 
   deleteImage(image: any): void {
     const index = this.uploadedImages.indexOf(image);
@@ -967,28 +1129,24 @@ uploadPropertyDocuments(): void {
   
 
   deleteImage1(propertyId: string, imageId: number): void {
-    // this.http.delete(`https://localhost:7190/api/Users/delete-image/${propertyId}/${imageId}`, {
-    //   headers: { 'Content-Type': 'application/json' },
-    //   responseType: 'text' 
-    // }).subscribe({
-    //   next: (response: string) => {
-    //     const index = this.uploadedImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
-    //     if (index !== -1) {
-    //       this.uploadedImages1.splice(index, 1); 
-    //     }
-    //     this.getPropertyImagesForProperty(this.propID);
-    //   },
-
-    const endpoint = `delete-image/${propertyId}/${imageId}`;
-    this.apiurls.delete<string>(endpoint).subscribe({
-      next: (response: string) => {
+    const formData = new FormData();
+    formData.append('flag', '4');
+    formData.append('propID', propertyId);
+    formData.append('imageOrderUpdateJson', JSON.stringify([{
+      ID: imageId,
+      PropID: propertyId,
+      Flag: '4'
+    }]));
+  
+    this.apiurls.post('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
+      next: (response) => {
         const index = this.uploadedImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
         if (index !== -1) {
           this.uploadedImages1.splice(index, 1);
           this.propertyInsStatus = "Image deleted successfully!";
           this.isUpdateModalOpen = true;
         }
-      
+  
         this.getPropertyImagesForProperty(this.propID);
       },
       error: (error) => {
@@ -999,67 +1157,128 @@ uploadPropertyDocuments(): void {
         console.log('Delete request completed');
       }
     });
+  }
+  
+  
+  
+
+  // deleteImage1(propertyId: string, imageId: number): void {
+  //   const endpoint = `delete-image/${propertyId}/${imageId}`;
+  //   this.apiurls.delete<string>(endpoint).subscribe({
+  //     next: (response: string) => {
+  //       const index = this.uploadedImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
+  //       if (index !== -1) {
+  //         this.uploadedImages1.splice(index, 1);
+  //         this.propertyInsStatus = "Image deleted successfully!";
+  //         this.isUpdateModalOpen = true;
+  //       }
+      
+  //       this.getPropertyImagesForProperty(this.propID);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error deleting image:', error);
+  //       console.log('Error response:', error.error);
+  //     },
+  //     complete: () => {
+  //       console.log('Delete request completed');
+  //     }
+  //   });
     
    
-  }
+  // }
+
+  // deleteFloorImage1(propertyId: string, imageId: number): void {
+  //   const endpoint = `delete-Floorimage/${propertyId}/${imageId}`;
+  //   this.apiurls.delete<string>(endpoint).subscribe({
+  //     next: (response: string) => {
+  //       const index = this.uploadedFloorImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
+  //       if (index !== -1) {
+  //         this.uploadedFloorImages1.splice(index, 1);
+  //         this.propertyInsStatus = "Image deleted successfully!";
+  //         this.isUpdateModalOpen = true;
+  //       }
+  //       this.getPropertyFloorImagesForProperty(this.propID);
+  //     },
+  //       error: (error) => {
+  //         console.error('Error deleting image:', error);
+  //         console.log('Error response:', error.error);
+  //       },
+  //       complete: () => {
+  //         console.log('Delete request completed');
+  //       }
+  //     });
+    
+   
+  // }
 
   deleteFloorImage1(propertyId: string, imageId: number): void {
-    // this.http.delete(`https://localhost:7190/api/Users/delete-Floorimage/${propertyId}/${imageId}`, {
-    //   headers: { 'Content-Type': 'application/json' },
-    //   responseType: 'text' 
-    // }).subscribe({
-    //   next: (response: string) => {
-        
-    //     const index = this.uploadedFloorImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
-    //     if (index !== -1) {
-    //       this.uploadedFloorImages1.splice(index, 1); 
-    //     }
-    
-    //     this.getPropertyFloorImagesForProperty(this.propID);
-    //   },
-    const endpoint = `delete-Floorimage/${propertyId}/${imageId}`;
-    this.apiurls.delete<string>(endpoint).subscribe({
-      next: (response: string) => {
+    const formData = new FormData();
+    formData.append('flag', '4');
+    formData.append('propID', propertyId);
+    formData.append('imageOrderUpdateJson', JSON.stringify([{
+      ID: imageId,
+      PropID: propertyId,
+      Flag: '4'
+    }]));
+  
+    this.apiurls.post('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
+      next: (response: any) => {
         const index = this.uploadedFloorImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
         if (index !== -1) {
           this.uploadedFloorImages1.splice(index, 1);
-          this.propertyInsStatus = "Image deleted successfully!";
+          this.propertyInsStatus = "Floor image deleted successfully!";
           this.isUpdateModalOpen = true;
         }
         this.getPropertyFloorImagesForProperty(this.propID);
       },
-        error: (error) => {
-          console.error('Error deleting image:', error);
-          console.log('Error response:', error.error);
-        },
-        complete: () => {
-          console.log('Delete request completed');
-        }
-      });
-    
-   
+      error: (error) => {
+        console.error('Error deleting floor image:', error);
+        console.log('Error response:', error.error);
+      },
+      complete: () => {
+        console.log('Delete floor image request completed');
+      }
+    });
   }
+  
 
-  deleteVideo(propertyId: string, VideoId: number): void {
-    // this.http.delete(`https://localhost:7190/api/Users/delete-PropertyVideo/${propertyId}/${VideoId}`, {
-    //   headers: { 'Content-Type': 'application/json' },
-    //   responseType: 'text' 
-    // }).subscribe({
-    //   next: (response: string) => {
-    //     console.log('Video deleted from database:', response);  
-        
-    //     const index = this.uploadedVideos1.findIndex(video => video.id === VideoId && video.propID === propertyId);
-    //     if (index !== -1) {
-    //       this.uploadedVideos1.splice(index, 1); 
-    //     }
-    
-    //     this.getPropertyVideo(this.propID);
-    //   },
-    const endpoint = `delete-PropertyVideo/${propertyId}/${VideoId}`;
-    this.apiurls.delete<string>(endpoint).subscribe({
-      next: (response: string) => {
+  // deleteVideo(propertyId: string, VideoId: number): void {
+  //   const endpoint = `delete-PropertyVideo/${propertyId}/${VideoId}`;
+  //   this.apiurls.delete<string>(endpoint).subscribe({
+  //     next: (response: string) => {
+  //       console.log('Video deleted from database:', response);
+  //       const index = this.uploadedVideos1.findIndex(video => video.id === VideoId && video.propID === propertyId);
+  //       if (index !== -1) {
+  //         this.uploadedVideos1.splice(index, 1);
+  //         this.propertyInsStatus = "Video deleted successfully!";
+  //         this.isUpdateModalOpen = true;
+  //       }
+  //       this.getPropertyVideo(this.propID);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error deleting image:', error);
+  //       console.log('Error response:', error.error);
+  //     },
+  //     complete: () => {
+  //       console.log('Delete request completed');
+  //     }
+  //   });
+  // }
+
+  deleteVideo(propertyId: string, videoId: number): void {
+    const formData = new FormData();
+    formData.append('flag', '4');
+    formData.append('propID', propertyId);
+    formData.append('imageOrderUpdateJson', JSON.stringify([{
+      ID: videoId,
+      PropID: propertyId,
+      Flag: '4'
+    }]));
+  
+    this.apiurls.post('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
+      next: (response: any) => {
         console.log('Video deleted from database:', response);
-        const index = this.uploadedVideos1.findIndex(video => video.id === VideoId && video.propID === propertyId);
+        const index = this.uploadedVideos1.findIndex(video => video.id === videoId && video.propID === propertyId);
         if (index !== -1) {
           this.uploadedVideos1.splice(index, 1);
           this.propertyInsStatus = "Video deleted successfully!";
@@ -1068,38 +1287,32 @@ uploadPropertyDocuments(): void {
         this.getPropertyVideo(this.propID);
       },
       error: (error) => {
-        console.error('Error deleting image:', error);
+        console.error('Error deleting video:', error);
         console.log('Error response:', error.error);
       },
       complete: () => {
-        console.log('Delete request completed');
+        console.log('Delete video request completed');
       }
     });
   }
-
-  deleteDocument(propertyId:string, DocumentID: number): void {
-    // this.http.delete(`https://localhost:7190/api/Users/delete-PropertyDocument/${propertyId}/${DocumentID}`, {
-    //   headers: { 'Content-Type': 'application/json' },
-    //   responseType: 'text'
-    // }).subscribe({
-    //   next: (response: string) => {
-    //     console.log('Document deleted from database:', response);
-        
-     
-    //     const index = this.uploadedDocuments1.findIndex(document => document.id === DocumentID && document.propID === propertyId);
-    //     if (index !== -1) {
-    //       this.uploadedDocuments1.splice(index, 1);
-    //     }
-    //     this.getPropertyDocument(this.propID);
-    //   },
-    const endpoint = `delete-PropertyDocument/${propertyId}/${DocumentID}`;
-    this.apiurls.delete<string>(endpoint).subscribe({
-      next: (response: string) => {
+  
+  deleteDocument(propertyId: string, documentId: number): void {
+    const formData = new FormData();
+    formData.append('flag', '4');
+    formData.append('propID', propertyId);
+    formData.append('imageOrderUpdateJson', JSON.stringify([{
+      ID: documentId,
+      PropID: propertyId,
+      Flag: '4'
+    }]));
+  
+    this.apiurls.post('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
+      next: (response: any) => {
         console.log('Document deleted from database:', response);
-        const index = this.uploadedDocuments1.findIndex(document => document.id === DocumentID && document.propID === propertyId);
+        const index = this.uploadedDocuments1.findIndex(document => document.id === documentId && document.propID === propertyId);
         if (index !== -1) {
           this.uploadedDocuments1.splice(index, 1);
-          this.propertyInsStatus = "Documenet deleted successfully!";
+          this.propertyInsStatus = "Document deleted successfully!";
           this.isUpdateModalOpen = true;
         }
         this.getPropertyDocument(this.propID);
@@ -1109,10 +1322,33 @@ uploadPropertyDocuments(): void {
         console.log('Error response:', error.error);
       },
       complete: () => {
-        console.log('Delete request completed');
+        console.log('Delete document request completed');
       }
     });
   }
+  
+  // deleteDocument(propertyId:string, DocumentID: number): void {
+  //   const endpoint = `delete-PropertyDocument/${propertyId}/${DocumentID}`;
+  //   this.apiurls.delete<string>(endpoint).subscribe({
+  //     next: (response: string) => {
+  //       console.log('Document deleted from database:', response);
+  //       const index = this.uploadedDocuments1.findIndex(document => document.id === DocumentID && document.propID === propertyId);
+  //       if (index !== -1) {
+  //         this.uploadedDocuments1.splice(index, 1);
+  //         this.propertyInsStatus = "Documenet deleted successfully!";
+  //         this.isUpdateModalOpen = true;
+  //       }
+  //       this.getPropertyDocument(this.propID);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error deleting document:', error);
+  //       console.log('Error response:', error.error);
+  //     },
+  //     complete: () => {
+  //       console.log('Delete request completed');
+  //     }
+  //   });
+  // }
 
   openModal(imagePath: string): void {
     this.selectedImage = imagePath;  
@@ -1222,38 +1458,7 @@ uploadPropertyDocuments(): void {
       console.error('No files in the input');
     }
   }
-  
-
-  // onVideoFileSelect(event: any): void {
-  //   this.PropertyVideoOnFileClicked = true;
-  
-  //   if (event?.target?.files) {
-  //     this.selectedPropertyVideoFiles = event.target.files;
-  
-  //     if (this.selectedPropertyVideoFiles && this.selectedPropertyVideoFiles.length > 0) {
-  //       this.uploadedVideos = []; 
-  
-  //       Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-  //         const fileSizeKB = file.size / 1024; 
-  
-  //         if (fileSizeKB < 2048) { 
-  //           const reader = new FileReader();
-  //           reader.onload = () => {
-  //             this.uploadedVideos.push({ path: reader.result as string });
-  //           };
-  //           reader.readAsDataURL(file); 
-  //         } else {
-  //           this.PropertyVideoOnFileClicked = false;
-  //           alert(`File ${file.name} is too large and will not be uploaded. Maximum size allowed is 2MB.`);
-  //         }
-  //       });
-  //     } else {
-  //       console.error('No files selected');
-  //     }
-  //   } else {
-  //     console.error('No files in the input');
-  //   }
-  // }
+ 
 
   onVideoFileSelect(event: any): void {
     this.PropertyVideoOnFileClicked = true;
@@ -1328,46 +1533,7 @@ uploadPropertyDocuments(): void {
     }
   }
   
-  // onDocumentFileSelect(event: any): void {
-  //   this.PropertyDocumentOnFileClicked = true;
-  
-  //   if (event?.target?.files) {
-  //     this.selectedPropertyDocumentFiles = event.target.files;
-  
-  //     if (this.selectedPropertyDocumentFiles && this.selectedPropertyDocumentFiles.length > 0) {
-  //       this.uploadedDocuments = []; 
-  //       Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
-  //         const fileSizeKB = file.size / 1024; 
-  
-  //         if (fileSizeKB < 2048) { 
-  //           const reader = new FileReader();
-  //           reader.onload = () => {
-  //             const unsafeUrl = reader.result as string; 
-  //             const safeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);
-  //             this.uploadedDocuments.push({ path: unsafeUrl, DocumentPath: safeUrl });
-  //           };
-  //           reader.readAsDataURL(file);  
-  //         } else {
-  //           this.PropertyDocumentOnFileClicked = false;
-  //           this.propertyInsStatus = `Document file ${file.name} is too large and will not be uploaded. Maximum size allowed is 2MB.`;
-  //           this.isUpdateModalOpen = true;
-            
-  //         }
-  //       });
-  //     } else {
-  //       console.error('No files selected');
-  //     }
-  //   } else {
-  //     console.error('No files in the input');
-  //   }
-  // }
-  
- 
 
-  SubmitPropertyClick(){
-  }
-
-  
   editproperty(propertyID: string): void {
     this.editclicked = true;
     this.propID = propertyID;  
@@ -1395,146 +1561,179 @@ uploadPropertyDocuments(): void {
     this.updatePropertyIsActiveStatus(this.propID,Status);
   }
 
-  updatePropertyIsActiveStatus(PropId: string, Status: string): void {
-    // this.http.put(`https://localhost:7190/api/Users/updatePropertyIsActiveStatus/${PropId}?Status=${Status}`, {}).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode == "200") {
-    //       this.propertyInsStatus = "Property IsActive Status updated successfully!";
-    //       this.isUpdateModalOpen = true;
 
-    //       this.fetchProperties();
-    //     }
-    //   },
-    const endpoint = `updatePropertyIsActiveStatus/${PropId}?Status=${status}`;
-    this.apiurls.put(endpoint, {}).subscribe({
+  // updatePropertyIsActiveStatus(PropId: string, Status: string): void {
+  //   const endpoint = `updatePropertyIsActiveStatus/${PropId}?Status=${status}`;
+  //   this.apiurls.put(endpoint, {}).subscribe({
+  //     next: (response: any) => {
+  //       if (response.statusCode == "200") {
+  //         this.propertyInsStatus = "Property IsActive Status updated successfully!";
+  //         this.isUpdateModalOpen = true;
+  //         this.fetchProperties();
+  //         this.cdRef.detectChanges();
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.propertyInsStatus = "Error Updating Property.";
+  //       this.isUpdateModalOpen = true;
+  //       console.error("Error details:", error);
+  //     }
+  //   });
+  // }
+
+  updatePropertyIsActiveStatus(propId: string, isActiveStatus: string): void {
+    const data = {
+      PropID: propId,
+      PropActiveStatus: isActiveStatus,  
+      Flag: '11',
+      ModifiedBy: localStorage.getItem('email') || '',
+      ModifiedDate: new Date().toISOString(),
+    };
+  
+    this.apiurls.post('Tbl_Properties_CRUD_Operations', data).subscribe({
       next: (response: any) => {
-        if (response.statusCode == "200") {
-          this.propertyInsStatus = "Property IsActive Status updated successfully!";
+        if (response.statusCode === 200) {
+          this.propertyInsStatus = isActiveStatus === '1'
+            ? 'Property marked as Active successfully!'
+            : 'Property marked as Inactive successfully!';
+          
           this.isUpdateModalOpen = true;
           this.fetchProperties();
           this.cdRef.detectChanges();
+        } else {
+          this.propertyInsStatus = 'Unexpected response from server.';
+          this.isUpdateModalOpen = true;
+          console.warn('Unexpected response:', response);
         }
       },
       error: (error) => {
-        this.propertyInsStatus = "Error Updating Property.";
+        this.propertyInsStatus = 'Error updating property active status.';
         this.isUpdateModalOpen = true;
-        console.error("Error details:", error);
+        console.error('Error details:', error);
       }
     });
   }
-
-  getTotalPropertyDet(propID: string): void {    
-    this.apiurls.get<any>(`GetOnlyPropertyDetailsById/${propID}`).subscribe((response: any) => {
-      this.UserIDDb=response.userID;
-      const convertToDDMMYYYY = (dateStr: string): string => {
-        const date = new Date(dateStr);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}-${month}-${year}`;
-      };
-
-      const convertToYYYYMMDD = (dateStr: string): string => {
-        const date = new Date(dateStr);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;  
-      };
   
-      const formattedPossessionDate = convertToDDMMYYYY(response.possessionDate);
-      const formattedListDate = convertToDDMMYYYY(response.listDate);
 
-      const formattedPossessionDateForInput = convertToYYYYMMDD(response.possessionDate); 
-      const formattedListDateForInput = convertToYYYYMMDD(response.listDate); 
 
-      const selectedAmenitiesString = response.aminities || '';
-      this.selectedAmenities = selectedAmenitiesString.split(',')
-  .map((amenity: string): Amenity => {
-    const [id, name,icon] = amenity.trim().split(' - ');  
-    return { id, name,icon };  
-  })
-  .filter((amenity: Amenity) => amenity.id && amenity.name&& amenity.icon);
-      this.propertyform.patchValue({
-        id: response.propID,
-        PropertyTitle: response.propname,
-        DevelopedBy: response.developedby,
-        MobileNumber: response.mobileNumber,
-        EmailID: response.emailID,
-        Address: response.address,
-        LandMark: response.landMark,
-        Country: response.country,
-        State: response.state,
-        City: response.city,
-        NearBy: response.nearBy,
-        PostalCode: response.zipCode,
-        CertificateNumber: response.reraCertificateNumber,
-        PropertyApprovedBy: response.propertyApprovedBy,
-        PropertyType: response.propertyType,
-        PropertyFor: response.propertyFor,
-        PropertyStatus: response.propertyStatus,
-        PropertyFacing: response.propertyFacing,
-        TotalBlocks: response.totalBlocks,
-        TotalFloors: response.totalFloors,
-        TotalNoOfFlats: response.noOfFlats,
-        BlockName: response.blockName,
-        PropertyOnWhichFloor: response.propertyOnWhichFloor,
-        NumberofBedrooms: response.noOfBedrooms,
-        NumberofBathrooms: response.noOfBathrooms,
-        NumberofBalconies: response.noOfBalconies,
-        NumberofParkings: response.noOfParkings,
-        AreaType: response.areaType,
-        TotalArea: response.totalArea,
-        CarpetArea: response.carpetArea,
-        PriceFor: response.priceFor,
-        PropertyTotalPrice: response.propertyTotalPrice,
-        AmenitiesCharges: response.amenitiesCharges,
-        MaintenanceCharges: response.maintenanceCharges,
-        CorpusFund: response.corpusFund,
-        BuildYear: response.buildYear,
-        PossessionDate: formattedPossessionDateForInput,
-        ListDate: formattedListDateForInput,
-        Description: response.description,
-        SpecificDescription: response.specificDescription,
-        WebsiteUrl: response.websiteurl,
-        Pinteresturl: response.pinteresturl,
-        Facebookurl: response.facebookurl,
-        Twitterurl: response.twitterurl,
-        GoogleLocationurl: response.googleLocationurl,
-        AvailabilityOptions: response.availabilityOptions,
-      });
-
-      this.selectedCountry = response.country;
-      this.selectedState = response.state;
-      this.selectedCity = response.city;
-
-      this.SelectedCountryName=response.countryName,
-      this.SelectedStateName=response.stateName,
-      this.SelectedCityName=response.cityName,
-      this.SelectedPropertyTypeName=response.propertyTypeName,
-      this.loadStates();  
-      this.loadCities();  
-
-      
-      if(response.activeStatus=="1"){
-        this.propertyActiveStatus=true;
+  getTotalPropertyDet(propID: string): void {  
+    const data = {
+          propID: propID,
+          Flag: '12'
+        };
+    this.apiurls.post<any>(`Tbl_Properties_CRUD_Operations`, data).subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && response.data && response.data.length > 0) {
+          const property = response.data[0];  
+  
+          this.UserIDDb = property.userID;
+  
+          const convertToDDMMYYYY = (dateStr: string | null): string => {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return '';
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+          };
+  
+          const convertToYYYYMMDD = (dateStr: string | null): string => {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return '';
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;  
+          };
+  
+          const formattedPossessionDateForInput = convertToYYYYMMDD(property.possessionDate);
+          const formattedListDateForInput = convertToYYYYMMDD(property.listDate);
+  
+          const selectedAmenitiesString = property.aminities || '';
+          this.selectedAmenities = selectedAmenitiesString.split(',')
+            .map((amenity: string): Amenity => {
+              const [id, name, icon] = amenity.trim().split(' - ');  
+              return { id, name, icon };  
+            })
+            .filter((amenity: Amenity) => amenity.id && amenity.name && amenity.icon);
+  
+          this.propertyform.patchValue({
+            id: property.propID,
+            PropertyTitle: property.propname,
+            DevelopedBy: property.developedby,
+            MobileNumber: property.mobileNumber,
+            EmailID: property.emailID,
+            Address: property.address,
+            LandMark: property.landMark,
+            Country: property.country,
+            State: property.state,
+            City: property.city,
+            NearBy: property.nearBy,
+            PostalCode: property.zipCode,
+            CertificateNumber: property.reraCertificateNumber,
+            PropertyApprovedBy: property.propertyApprovedBy,
+            PropertyType: property.propertyType,
+            PropertyFor: property.propertyFor,
+            PropertyStatus: property.propertyStatus,
+            PropertyFacing: property.propertyFacing,
+            TotalBlocks: property.totalBlocks,
+            TotalFloors: property.totalFloors,
+            TotalNoOfFlats: property.noOfFlats,
+            BlockName: property.blockName,
+            PropertyOnWhichFloor: property.propertyOnWhichFloor,
+            NumberofBedrooms: property.noOfBedrooms,
+            NumberofBathrooms: property.noOfBathrooms,
+            NumberofBalconies: property.noOfBalconies,
+            NumberofParkings: property.noOfParkings,
+            AreaType: property.areaType,
+            TotalArea: property.totalArea,
+            CarpetArea: property.carpetArea,
+            PriceFor: property.priceFor,
+            PropertyTotalPrice: property.propertyTotalPrice,
+            AmenitiesCharges: property.amenitiesCharges,
+            MaintenanceCharges: property.maintenanceCharges,
+            CorpusFund: property.corpusFund,
+            BuildYear: property.buildYear,
+            PossessionDate: formattedPossessionDateForInput,
+            ListDate: formattedListDateForInput,
+            Description: property.description,
+            SpecificDescription: property.specificDescription,
+            WebsiteUrl: property.websiteurl,
+            Pinteresturl: property.pinteresturl,
+            Facebookurl: property.facebookurl,
+            Twitterurl: property.twitterurl,
+            GoogleLocationurl: property.googleLocationurl,
+            AvailabilityOptions: property.availabilityOptions,
+          });
+  
+          this.selectedCountry = property.country;
+          this.selectedState = property.state;
+          this.selectedCity = property.city;
+  
+          this.SelectedCountryName = property.countryName;
+          this.SelectedStateName = property.stateName;
+          this.SelectedCityName = property.cityName;
+          this.SelectedPropertyTypeName = property.propertyTypeName;
+  
+          this.loadStates();  
+          this.loadCities();  
+  
+          this.propertyActiveStatus = property.activeStatus === "1";
+          this.SoldOutProperty = property.propertySaleStatus !== "1";
+  
+        } else {
+          console.warn('No property data found or error:', response.message);
+        }
+      }, 
+      error => {
+        console.error('Error fetching property details:', error);
       }
-      else{
-        this.propertyActiveStatus=false;
-      }
-
-      if(response.propertySaleStatus=="1"){
-        this.SoldOutProperty=false;
-      }
-      else{
-        this.SoldOutProperty=true;
-      }
-
-      
-    }, error => {
-      console.error('Error fetching property details:', error);
-    });
+    );
   }
+  
+
 
   convertBlobToBase64(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -1546,216 +1745,295 @@ uploadPropertyDocuments(): void {
   }
 
 
-  submitpropertyDet(){
-
+  submitpropertyDet() {
+    Object.keys(this.propertyform.controls).forEach(key => {
+      this.propertyform.get(key)?.enable();
+    });
+  
     if (this.propertyform.invalid) {
       return;
     }
-    else{
-      const selectedAmenitiesString = this.selectedAmenities
-  .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
-  .join(',');
+  
+    const selectedAmenitiesString = this.selectedAmenities
+      .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
+      .join(',');
+  
+    const now = new Date().toISOString();
+    const currentUserEmail = localStorage.getItem('email') || '';
+  
     const data = {
-      id: 0,
-      propID: this.propertyform.get('id')?.value,
-      propname: this.propertyform.get('PropertyTitle')?.value,
-      developedby: this.propertyform.get('DevelopedBy')?.value,
-      mobileNumber:new String(this.propertyform.get('MobileNumber')?.value).toString(),
-      emailID:new String(this.propertyform.get('EmailID')?.value).toString(),
-      address:new String(this.propertyform.get('Address')?.value).toString(),
-      landMark:this.propertyform.get('LandMark')?.value,
-      country:new String(this.propertyform.get('Country')?.value).toString(),
-      state:new String(this.propertyform.get('State')?.value).toString(),
-      City:this.propertyform.get('City')?.value,
-      NearBy:this.propertyform.get('NearBy')?.value,
-      ZIPCode:new String(this.propertyform.get('PostalCode')?.value).toString(),
-      ReraCertificateNumber:this.propertyform.get('CertificateNumber')?.value,
-      PropertyApprovedBy:this.propertyform.get('PropertyApprovedBy')?.value,
-      PropertyType:new String(this.propertyform.get('PropertyType')?.value).toString(),
-      PropertyFor:new String(this.propertyform.get('PropertyFor')?.value).toString(),
-      PropertyStatus:new String(this.propertyform.get('PropertyStatus')?.value).toString(),
-      PropertyFacing:new String(this.propertyform.get('PropertyFacing')?.value).toString(),
-      TotalBlocks:new String(this.propertyform.get('TotalBlocks')?.value).toString(),
-      TotalFloors:new String(this.propertyform.get('TotalFloors')?.value).toString(),
-      NoOfFlats:new String(this.propertyform.get('TotalNoOfFlats')?.value).toString(),
-      BlockName:this.propertyform.get('BlockName')?.value,
-      PropertyOnWhichFloor:new String(this.propertyform.get('PropertyOnWhichFloor')?.value).toString(),
-      NoOfBedrooms:new String(this.propertyform.get('NumberofBedrooms')?.value).toString(),
-      NoOfBathrooms:new String(this.propertyform.get('NumberofBathrooms')?.value).toString(),
-      NoOfBalconies:new String(this.propertyform.get('NumberofBalconies')?.value).toString(),
-      NoOfParkings:new String(this.propertyform.get('NumberofParkings')?.value).toString(),
-      AreaType:new String(this.propertyform.get('AreaType')?.value).toString(),
-      TotalArea:new String(this.propertyform.get('TotalArea')?.value).toString(),
-      CarpetArea:new String(this.propertyform.get('CarpetArea')?.value).toString(),
-      PriceFor:new String(this.propertyform.get('PriceFor')?.value).toString(),
-      PropertyTotalPrice:new String(this.propertyform.get('PropertyTotalPrice')?.value).toString(),
-      AmenitiesCharges:new String(this.propertyform.get('AmenitiesCharges')?.value).toString(),
-      MaintenanceCharges:new String(this.propertyform.get('MaintenanceCharges')?.value).toString(),
-      CorpusFund:new String(this.propertyform.get('CorpusFund')?.value).toString(),
-      BuildYear:new String(this.propertyform.get('BuildYear')?.value).toString(),
-      PossessionDate:new Date(this.propertyform.get('PossessionDate')?.value).toISOString(),
-      ListDate:new Date(this.propertyform.get('ListDate')?.value).toISOString(),
-
-      description:new String(this.propertyform.get('Description')?.value).toString(),
-      specificDescription:new String(this.propertyform.get('SpecificDescription')?.value).toString(),
-      aminities: selectedAmenitiesString,
-
-      websiteurl:new String(this.propertyform.get('WebsiteUrl')?.value).toString() || null,
-      Pinteresturl:new String(this.propertyform.get('Pinteresturl')?.value).toString() || null,
-      Facebookurl:new String(this.propertyform.get('Facebookurl')?.value).toString() || null,
-      Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || null,
-      GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || null,
-      availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString(),
-      userID:new String(localStorage.getItem('email')).toString(),
-      CreatedBy: new String(localStorage.getItem('email')).toString(),
-      ActiveStatus:"0",
-      CountryName: this.SelectedCountryName?.toString() || "",
-      StateName: this.SelectedStateName?.toString() || "",
-      CityName: this.SelectedCityName?.toString() || "",
-      PropActiveStatus: "1",
-      PropertyTypeName: this.SelectedPropertyTypeName?.toString() || "",
-      propertySaleStatus:"0",
-      // CreatedBy:localStorage.getItem('email') as string
+      PropID: this.propertyform.get('id')?.value || '',
+      Propname: this.propertyform.get('PropertyTitle')?.value || '',
+      DevelopedBy: this.propertyform.get('DevelopedBy')?.value || '',
+      MobileNumber: String(this.propertyform.get('MobileNumber')?.value || ''),
+      EmailID: String(this.propertyform.get('EmailID')?.value || ''),
+      Address: String(this.propertyform.get('Address')?.value || ''),
+      LandMark: this.propertyform.get('LandMark')?.value || '',
+      Country: String(this.propertyform.get('Country')?.value || ''),
+      State: String(this.propertyform.get('State')?.value || ''),
+      City: String(this.propertyform.get('City')?.value || ''),
+      NearBy: String(this.propertyform.get('NearBy')?.value || ''),
+      ZIPCode: String(this.propertyform.get('PostalCode')?.value || ''),
+      ReraCertificateNumber: this.propertyform.get('CertificateNumber')?.value || '',
+      PropertyApprovedBy: this.propertyform.get('PropertyApprovedBy')?.value || '',
+      PropertyType: String(this.propertyform.get('PropertyType')?.value || ''),
+      PropertyFor: String(this.propertyform.get('PropertyFor')?.value || ''),
+      PropertyStatus: String(this.propertyform.get('PropertyStatus')?.value || ''),
+      PropertyFacing: String(this.propertyform.get('PropertyFacing')?.value || ''),
+      TotalBlocks: String(this.propertyform.get('TotalBlocks')?.value || ''),
+      TotalFloors: String(this.propertyform.get('TotalFloors')?.value || ''),
+      NoOfFlats: String(this.propertyform.get('TotalNoOfFlats')?.value || ''),
+      BlockName: this.propertyform.get('BlockName')?.value || '',
+      PropertyOnWhichFloor: String(this.propertyform.get('PropertyOnWhichFloor')?.value || ''),
+      NoOfBedrooms: String(this.propertyform.get('NumberofBedrooms')?.value || ''),
+      NoOfBathrooms: String(this.propertyform.get('NumberofBathrooms')?.value || ''),
+      NoOfBalconies: String(this.propertyform.get('NumberofBalconies')?.value || ''),
+      NoOfParkings: String(this.propertyform.get('NumberofParkings')?.value || ''),
+      AreaType: String(this.propertyform.get('AreaType')?.value || ''),
+      TotalArea: String(this.propertyform.get('TotalArea')?.value || ''),
+      CarpetArea: String(this.propertyform.get('CarpetArea')?.value || ''),
+      PriceFor: String(this.propertyform.get('PriceFor')?.value || ''),
+      PropertyTotalPrice: String(this.propertyform.get('PropertyTotalPrice')?.value || ''),
+      AmenitiesCharges: String(this.propertyform.get('AmenitiesCharges')?.value || ''),
+      MaintenanceCharges: String(this.propertyform.get('MaintenanceCharges')?.value || ''),
+      CorpusFund: String(this.propertyform.get('CorpusFund')?.value || ''),
+      BuildYear: String(this.propertyform.get('BuildYear')?.value || ''),
+      PossessionDate: this.propertyform.get('PossessionDate')?.value
+        ? new Date(this.propertyform.get('PossessionDate')?.value).toISOString()
+        : null,
+      ListDate: this.propertyform.get('ListDate')?.value
+        ? new Date(this.propertyform.get('ListDate')?.value).toISOString()
+        : null,
+      Description: String(this.propertyform.get('Description')?.value || ''),
+      SpecificDescription: String(this.propertyform.get('SpecificDescription')?.value || ''),
+      Aminities: selectedAmenitiesString,
+      WebsiteUrl: String(this.propertyform.get('WebsiteUrl')?.value || ''),
+      Pinteresturl: String(this.propertyform.get('Pinteresturl')?.value || ''),
+      Facebookurl: String(this.propertyform.get('Facebookurl')?.value || ''),
+      Twitterurl: String(this.propertyform.get('Twitterurl')?.value || ''),
+      GoogleLocationurl: String(this.propertyform.get('GoogleLocationurl')?.value || ''),
+      AvailabilityOptions: String(this.propertyform.get('AvailabilityOptions')?.value || ''),
+      UserID: currentUserEmail,
+      CreatedBy: currentUserEmail,
+      CreatedIP: '',
+      CreatedDate: now,
+      ModifiedBy: '',
+      ModifiedIP: '',
+      ModifiedDate: now,
+      ActiveStatus: '1',
+      CountryName: this.SelectedCountryName || '',
+      StateName: this.SelectedStateName || '',
+      CityName: this.SelectedCityName || '',
+      PropertyTypeName: this.SelectedPropertyTypeName || '',
+      PropActiveStatus: '1',
+      PropertySaleStatus: '0',
+      Flag: '2',
+      Status: '',
+      GeneratedID: '',
+      KeyWord: '',
+      UserActiveStatus: '1'
     };
-
-    // this.http.post("https://localhost:7190/api/Users/inspropertysample", data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if(response.statusCode=="200"){
-    //       this.uploadPropertyImages();
-    //       this.uploadPropertyFloorImages();
-    //       this.uploadPropertyVideos();
-    //       this.uploadPropertyDocuments();
-
-    this.apiurls.post("inspropertysample", data).subscribe({
+  
+    console.log('Submitting Property Data:', data);
+  
+    this.apiurls.post("Tbl_Properties_CRUD_Operations", data).subscribe({
       next: (response: any) => {
-        if(response.statusCode=="200"){
+        if (response.statusCode === 200) {
+          console.log('Property saved successfully:', response.message);
+          const orderValidationError = this.validateOrders();
+          if (orderValidationError) {
+            alert(orderValidationError);
+            return;
+          }
+  
+          const ordervalidationFloorError = this.validateOrdersfloor();
+          if (ordervalidationFloorError) {
+            alert(ordervalidationFloorError);
+            return;
+          }
+  
+          this.uploadPropertyImages();
+          this.uploadPropertyFloorImages();
+          this.uploadPropertyVideos();
+          this.uploadPropertyDocuments();
+  
           this.propertyInsStatus = "Property submitted successfully!";
           this.isUpdateModalOpen = true;
-          this.propertyImagesClicked=false;
-          this.propertyFloorImagesClicked=false;
-          this.propertyVideosClicked=false;
-          this.propertyDocumentsClicked=false;
+          this.propertyImagesClicked = false;
+          this.propertyFloorImagesClicked = false;
+          this.propertyVideosClicked = false;
+          this.propertyDocumentsClicked = false;
           this.editclicked = false;
           this.addnewPropertyclicked = false;
           this.cdRef.detectChanges();
+        } else {
+          console.warn("Unexpected response:", response);
         }
       },
       error: (error) => {
+        console.error("Error inserting property:", error);
         this.propertyInsStatus = "Error Inserting Property.";
         this.isUpdateModalOpen = true;
-        console.error("Error details:", error);
       }
     });
   }
+  
+
 
   isOrderSubmitEnabled: boolean = false;
 
 
 
-
   updatePropertyDet() {
-    const selectedAmenitiesString = this.selectedAmenities
-  .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
-  .join(',');
-    const data = {
-      id: 0,
-      propID: this.propertyform.get('id')?.value,
-      propname: this.propertyform.get('PropertyTitle')?.value || '',
-      developedby: this.propertyform.get('DevelopedBy')?.value || '',
-      mobileNumber:new String(this.propertyform.get('MobileNumber')?.value).toString() || '',
-      emailID:new String(this.propertyform.get('EmailID')?.value).toString() || '',
-      address:new String(this.propertyform.get('Address')?.value).toString() || '',
-      landMark:this.propertyform.get('LandMark')?.value || '',
-      country:new String(this.propertyform.get('Country')?.value).toString() || '',
-      state:new String(this.propertyform.get('State')?.value).toString() || '',
-      City:this.propertyform.get('City')?.value || '',
-      NearBy:this.propertyform.get('NearBy')?.value || '',
-      ZIPCode:new String(this.propertyform.get('PostalCode')?.value).toString() || '',
-      ReraCertificateNumber:this.propertyform.get('CertificateNumber')?.value || '',
-      PropertyApprovedBy:this.propertyform.get('PropertyApprovedBy')?.value || '',
-      PropertyType:new String(this.propertyform.get('PropertyType')?.value).toString() || '',
-      PropertyFor:new String(this.propertyform.get('PropertyFor')?.value).toString() || '',
-      PropertyStatus:new String(this.propertyform.get('PropertyStatus')?.value).toString() || '',
-      PropertyFacing:new String(this.propertyform.get('PropertyFacing')?.value).toString() || '',
-      TotalBlocks:new String(this.propertyform.get('TotalBlocks')?.value).toString() || '',
-      TotalFloors:new String(this.propertyform.get('TotalFloors')?.value).toString() || '',
-      NoOfFlats:new String(this.propertyform.get('TotalNoOfFlats')?.value).toString() || '',
-      BlockName:this.propertyform.get('BlockName')?.value || '',
-      PropertyOnWhichFloor:new String(this.propertyform.get('PropertyOnWhichFloor')?.value).toString() || '',
-      NoOfBedrooms:new String(this.propertyform.get('NumberofBedrooms')?.value).toString() || '',
-      NoOfBathrooms:new String(this.propertyform.get('NumberofBathrooms')?.value).toString() || '',
-      NoOfBalconies:new String(this.propertyform.get('NumberofBalconies')?.value).toString() || '',
-      NoOfParkings:new String(this.propertyform.get('NumberofParkings')?.value).toString() || '',
-      AreaType:new String(this.propertyform.get('AreaType')?.value).toString() || '',
-      TotalArea:new String(this.propertyform.get('TotalArea')?.value).toString() || '',
-      CarpetArea:new String(this.propertyform.get('CarpetArea')?.value).toString() || '',
-      PriceFor:new String(this.propertyform.get('PriceFor')?.value).toString() || '',
-      PropertyTotalPrice:new String(this.propertyform.get('PropertyTotalPrice')?.value).toString() || '',
-      AmenitiesCharges:new String(this.propertyform.get('AmenitiesCharges')?.value).toString() || '',
-      MaintenanceCharges:new String(this.propertyform.get('MaintenanceCharges')?.value).toString() || '',
-      CorpusFund:new String(this.propertyform.get('CorpusFund')?.value).toString() || '',
-      BuildYear:new String(this.propertyform.get('BuildYear')?.value).toString() || '',
-      PossessionDate:new Date(this.propertyform.get('PossessionDate')?.value).toISOString() || '',
-      ListDate:new Date(this.propertyform.get('ListDate')?.value).toISOString() || '',
-
-      description:new String(this.propertyform.get('Description')?.value).toString() || '',
-      specificDescription:new String(this.propertyform.get('SpecificDescription')?.value).toString() || '',
-      aminities:selectedAmenitiesString,
-
-      websiteurl:new String(this.propertyform.get('WebsiteUrl')?.value).toString() || '',
-      Pinteresturl:new String(this.propertyform.get('Pinteresturl')?.value).toString() || '',
-      Facebookurl:new String(this.propertyform.get('Facebookurl')?.value).toString() || '',
-      Twitterurl:new String(this.propertyform.get('Twitterurl')?.value).toString() || '',
-      GoogleLocationurl:new String(this.propertyform.get('GoogleLocationurl')?.value).toString() || '',
-      availabilityOptions:new String(this.propertyform.get('AvailabilityOptions')?.value).toString() || '',
-
-      userID:(this.UserIDDb).toString(),
-      ModifiedBy: new String(localStorage.getItem('email')).toString(),
-      ActiveStatus:'',
-      // CountryName:(this.SelectedCountryName).toString(),
-      // StateName:(this.SelectedStateName).toString(),
-      // CityName:(this.SelectedCityName).toString(),
-      // PropActiveStatus:"",
-      // PropertyTypeName:(this.SelectedPropertyTypeName).toString()     
-      CountryName: (this.SelectedCountryName?.toString() || ""),
-      StateName: (this.SelectedStateName?.toString() || ""),
-      CityName: (this.SelectedCityName?.toString() || ""),
-      PropActiveStatus: "",
-      PropertyTypeName: (this.SelectedPropertyTypeName?.toString() || ""),
-      // ModifiedBy:(this.UserIDDb).toString(),
-    };
-    console.log(this.SelectedCountryName)
-    console.log(this.SelectedStateName)
-    console.log(this.SelectedCityName)
-    console.log(this.SelectedPropertyTypeName)
-    
+    Object.keys(this.propertyform.controls).forEach(key => {
+      this.propertyform.get(key)?.enable();
+    });
   
-    if (!this.propID || this.propID.trim() === '') {
-      console.error("Invalid propID");
+    if (this.propertyform.invalid) {
       return;
     }
   
-    // this.http.put(`https://localhost:7190/api/Users/updatePropertyDet/${this.propID}`, data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode == "200") {
-    //       this.uploadPropertyImages();
-    //       this.uploadPropertyFloorImages();
-    //       this.uploadPropertyVideos();
-    //       this.uploadPropertyDocuments();
-
-    this.apiurls.put(`updatePropertyDet/${this.propID}`, data).subscribe({
+    const selectedAmenitiesString = this.selectedAmenities
+      .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
+      .join(',');
+  
+    const now = new Date().toISOString();
+    const currentUserEmail = localStorage.getItem('email') || '';
+  
+  
+    const data = {
+      id: 0,
+      PropID: this.propertyform.get('id')?.value || '',
+      Propname: this.propertyform.get('PropertyTitle')?.value || '',
+      DevelopedBy: this.propertyform.get('DevelopedBy')?.value || '',
+      MobileNumber: String(this.propertyform.get('MobileNumber')?.value || ''),
+      EmailID: String(this.propertyform.get('EmailID')?.value || ''),
+      Address: String(this.propertyform.get('Address')?.value || ''),
+      LandMark: this.propertyform.get('LandMark')?.value || '',
+      Country: String(this.propertyform.get('Country')?.value || ''),
+      State: String(this.propertyform.get('State')?.value || ''),
+      City: String(this.propertyform.get('City')?.value || ''),
+      NearBy: String(this.propertyform.get('NearBy')?.value || ''),
+      ZIPCode: String(this.propertyform.get('PostalCode')?.value || ''),
+      ReraCertificateNumber: this.propertyform.get('CertificateNumber')?.value || '',
+      PropertyApprovedBy: this.propertyform.get('PropertyApprovedBy')?.value || '',
+      PropertyType: String(this.propertyform.get('PropertyType')?.value || ''),
+      PropertyFor: String(this.propertyform.get('PropertyFor')?.value || ''),
+      PropertyStatus: String(this.propertyform.get('PropertyStatus')?.value || ''),
+      PropertyFacing: String(this.propertyform.get('PropertyFacing')?.value || ''),
+      TotalBlocks: String(this.propertyform.get('TotalBlocks')?.value || ''),
+      TotalFloors: String(this.propertyform.get('TotalFloors')?.value || ''),
+      NoOfFlats: String(this.propertyform.get('TotalNoOfFlats')?.value || ''),
+      BlockName: this.propertyform.get('BlockName')?.value || '',
+      PropertyOnWhichFloor: String(this.propertyform.get('PropertyOnWhichFloor')?.value || ''),
+      NoOfBedrooms: String(this.propertyform.get('NumberofBedrooms')?.value || ''),
+      NoOfBathrooms: String(this.propertyform.get('NumberofBathrooms')?.value || ''),
+      NoOfBalconies: String(this.propertyform.get('NumberofBalconies')?.value || ''),
+      NoOfParkings: String(this.propertyform.get('NumberofParkings')?.value || ''),
+      AreaType: String(this.propertyform.get('AreaType')?.value || ''),
+      TotalArea: String(this.propertyform.get('TotalArea')?.value || ''),
+      CarpetArea: String(this.propertyform.get('CarpetArea')?.value || ''),
+      PriceFor: String(this.propertyform.get('PriceFor')?.value || ''),
+      PropertyTotalPrice: String(this.propertyform.get('PropertyTotalPrice')?.value || ''),
+      AmenitiesCharges: String(this.propertyform.get('AmenitiesCharges')?.value || ''),
+      MaintenanceCharges: String(this.propertyform.get('MaintenanceCharges')?.value || ''),
+      CorpusFund: String(this.propertyform.get('CorpusFund')?.value || ''),
+      BuildYear: String(this.propertyform.get('BuildYear')?.value || ''),
+      PossessionDate: this.propertyform.get('PossessionDate')?.value
+        ? new Date(this.propertyform.get('PossessionDate')?.value).toISOString()
+        : null,
+      ListDate: this.propertyform.get('ListDate')?.value
+        ? new Date(this.propertyform.get('ListDate')?.value).toISOString()
+        : null,
+      Description: String(this.propertyform.get('Description')?.value || ''),
+      SpecificDescription: String(this.propertyform.get('SpecificDescription')?.value || ''),
+      Aminities: selectedAmenitiesString,
+      WebsiteUrl: String(this.propertyform.get('WebsiteUrl')?.value || ''),
+      Pinteresturl: String(this.propertyform.get('Pinteresturl')?.value || ''),
+      Facebookurl: String(this.propertyform.get('Facebookurl')?.value || ''),
+      Twitterurl: String(this.propertyform.get('Twitterurl')?.value || ''),
+      GoogleLocationurl: String(this.propertyform.get('GoogleLocationurl')?.value || ''),
+      AvailabilityOptions: String(this.propertyform.get('AvailabilityOptions')?.value || ''),
+      UserID: currentUserEmail,
+      CreatedBy: currentUserEmail,
+      CreatedIP: '',
+      CreatedDate: now,
+      ModifiedBy: '',
+      ModifiedIP: '',
+      ModifiedDate: now,
+      ActiveStatus: '',
+      CountryName: this.SelectedCountryName || '',
+      StateName: this.SelectedStateName || '',
+      CityName: this.SelectedCityName || '',
+      PropertyTypeName: this.SelectedPropertyTypeName || '',
+      PropActiveStatus: '',
+      PropertySaleStatus: '',
+      Flag: '11',
+      Status: '',
+      GeneratedID: '',
+      KeyWord: '',
+      UserActiveStatus: ''
+    };
+  
+    this.apiurls.post("Tbl_Properties_CRUD_Operations", data).subscribe({
       next: (response: any) => {
         if (response.statusCode == "200") {
+          this.uploadPropertyImages();
+  
+          const validationError = this.validateOrders();
+          if (validationError) {
+            this.propertyInsStatus = validationError;
+            this.isUpdateModalOpen = true;
+            return;
+          }
+          // const updatedImages = this.uploadedImages1.map(image => ({
+          //   id: image.id,
+          //   imageOrder: image.customOrder.toString(),
+          //   defaultImage: image.DefaultImage === "1" ? "1" : "0"
+          // }));
+          // this.updateImageOrderInDatabase(updatedImages);
+          const updatedImages = this.uploadedImages1.map(image => ({
+            ID: image.id,
+            PropID: this.propID,
+            ImageOrder: image.customOrder.toString(),
+            DefaultImage: image.DefaultImage === "1" ? "1" : "0",
+            Flag: "3"
+          }));
+          this.updateImageOrderInDatabase(updatedImages);
+          
+          
+          
+          this.uploadPropertyFloorImages();
+  
+          const validationFloorError = this.validateOrdersfloor();
+          if (validationFloorError) {
+            this.propertyInsStatus = validationFloorError;
+            this.isUpdateModalOpen = true;
+            return;
+          }
+  
+          const uploadedFloorImages = this.uploadedFloorImages1.map(image => ({
+            ID: image.id,
+            PropID: this.propID,
+            ImageOrder: image.customOrder.toString(),
+            DefaultImage: image.DefaultImage === "1" ? "1" : "0",
+            Flag: "3"
+          }));
+          
+          this.updateFloorImageOrderInDatabase(uploadedFloorImages);
+          
+  
+          this.uploadPropertyVideos();
+          this.uploadPropertyDocuments();
+  
           this.propertyInsStatus = "Property updated successfully!";
           this.isUpdateModalOpen = true;
           this.editclicked = false;
           this.addnewPropertyclicked = false;
           this.isOrderSubmitEnabled = true;
-           this.cdRef.detectChanges();
+          this.cdRef.detectChanges();
+        } else {
+          console.warn("Unexpected response while updating:", response);
         }
       },
       error: (error) => {
@@ -1807,35 +2085,79 @@ uploadPropertyDocuments(): void {
     this.uploadedVideos1=[];
   }
   
-  getownProperties(){
-    this.apiurls.get<any>(`GetAllPropertyDetailsWithUserID?userID=${this.userID}`)
-    .subscribe((response: any) => {
-      this.properties = response.map((property: any) => ({
-        propID: property.propID,
-        propname: property.propname,
-        developedby: property.developedby
-      }));
+  // getownProperties(){
+  //   this.apiurls.get<any>(`GetAllPropertyDetailsWithUserID?userID=${this.userID}`)
+  //   .subscribe((response: any) => {
+  //     this.properties = response.map((property: any) => ({
+  //       propID: property.propID,
+  //       propname: property.propname,
+  //       developedby: property.developedby
+  //     }));
 
-    }, error => {
-      console.error('Error fetching properties:', error);
-    });
+  //   }, error => {
+  //     console.error('Error fetching properties:', error);
+  //   });
     
-  }
-  getUserProperties(){
-    this.apiurls.get<any>(`GetAllUsersPropertyDetails?userID=${this.userID}`) 
-    .subscribe((response: any) => {
-      this.properties = response.map((property: any) => ({
-        propID: property.propID,
-        propname: property.propname,
-        developedby: property.developedby
-      }));
+  // }
 
-    }, error => {
-      console.error('Error fetching properties:', error);
-    });
+
+
+  // getUserProperties(){
+  //   this.apiurls.get<any>(`GetAllUsersPropertyDetails?userID=${this.userID}`) 
+  //   .subscribe((response: any) => {
+  //     this.properties = response.map((property: any) => ({
+  //       propID: property.propID,
+  //       propname: property.propname,
+  //       developedby: property.developedby
+  //     }));
+
+  //   }, error => {
+  //     console.error('Error fetching properties:', error);
+  //   });
     
-  }
+  // }
 
+  
+
+  getownProperties() {
+    const data = { 
+      Flag: '4' 
+    };  
+    this.apiurls.post<any>(`Tbl_Properties_CRUD_Operations?userID=${this.userID}`, data)
+      .subscribe(
+        (response: any) => {
+          this.properties = response.map((property: any) => ({
+            propID: property.propID,
+            propname: property.propname,
+            developedby: property.developedby
+          }));
+        },
+        error => {
+          console.error('Error fetching properties:', error);
+        }
+      );
+  }
+  
+  getUserProperties() {
+    const data = 
+    { 
+      Flag: '5' 
+    }; 
+    this.apiurls.post<any>(`Tbl_Properties_CRUD_Operations?userID=${this.userID}`, data)
+      .subscribe(
+        (response: any) => {
+          this.properties = response.map((property: any) => ({
+            propID: property.propID,
+            propname: property.propname,
+            developedby: property.developedby
+          }));
+        },
+        error => {
+          console.error('Error fetching properties:', error);
+        }
+      );
+  }
+  
   
   get filteredProperties() {
     return this.properties.filter(property => 
@@ -1953,162 +2275,272 @@ getVisiblePages(): number[] {
       console.log('All amenities deselected');
     }
 
-  updatePropertyStatus(PropId: string, Status: string): void {
-    // this.http.put(`https://localhost:7190/api/Users/updatePropertyStatus/${PropId}?Status=${Status}`, {}).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode == "200") {
-    //       this.propertyInsStatus = "Property Status updated successfully!";
 
-    this.apiurls.put(`updatePropertyStatus/${PropId}?Status=${Status}`, {}).subscribe({
+  updatePropertyStatus(propId: string, status: string): void {
+    const data = {
+      PropID: propId,
+      ActiveStatus: status,
+      Flag: '11',
+      ModifiedBy: localStorage.getItem('email') || '',
+      ModifiedDate: new Date().toISOString(),
+    }; 
+
+    this.apiurls.post('Tbl_Properties_CRUD_Operations', data).subscribe({
       next: (response: any) => {
-        if (response.statusCode == "200") {
-          this.propertyInsStatus = "Property Status updated successfully!";
+        if (response.statusCode === 200) {
+          this.propertyInsStatus = 'Property status updated successfully!';
           this.isUpdateModalOpen = true;
-          this.editclicked = false;    
+          this.editclicked = false;
           this.addnewPropertyclicked = false;
+  
           this.fetchProperties();
           this.cdRef.detectChanges();
+        } else {
+          console.warn('Unexpected status while updating property:', response);
+          this.propertyInsStatus = 'Unexpected response from server.';
+          this.isUpdateModalOpen = true;
         }
       },
       error: (error) => {
-        this.propertyInsStatus = "Error Updating Property.";
+        this.propertyInsStatus = 'Error updating property status.';
         this.isUpdateModalOpen = true;
-        console.error("Error details:", error);
+        console.error('Error details:', error);
       }
     });
   }
-
-
-
-  updatePropertySoldOutStatus(PropId: string, SoldOutStatus: string): void {
-    // this.http.put(`https://localhost:7190/api/Users/updatePropertySoldOutStatus/${PropId}?SoldOutStatus=${SoldOutStatus}`, {}).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode == "200") {
-    //       // this.propertyInsStatus = "Property sold out status updated successfully!";
-    //       if (SoldOutStatus === "1") {
-    //         this.propertyInsStatus = "Property marked as Sold Out successfully!";
-    //       } else {
-    //         this.propertyInsStatus = "Property marked as Unsold successfully!";
-    //       }
-    //       this.isUpdateModalOpen = true;
-
-    this.apiurls.put(`updatePropertySoldOutStatus/${PropId}?SoldOutStatus=${SoldOutStatus}`, {}).subscribe({
+  
+  updatePropertySoldOutStatus(propId: string, SoldOutStatus: string): void {
+    const data = {
+      PropID: propId,
+      propertySaleStatus: SoldOutStatus,  
+      Flag: '11',                         
+      ModifiedBy: localStorage.getItem('email') || '',
+      ModifiedDate: new Date().toISOString(),
+    };
+  
+    this.apiurls.post('Tbl_Properties_CRUD_Operations', data).subscribe({
       next: (response: any) => {
-        if (response.statusCode == "200") {
-          this.propertyInsStatus = SoldOutStatus === "1"
-            ? "Property marked as Sold Out successfully!"
-            : "Property marked as Unsold successfully!";
-            
+        if (response.statusCode === 200) {
+          this.propertyInsStatus = SoldOutStatus === '1'
+            ? 'Property marked as Sold Out successfully!'
+            : 'Property marked as Unsold successfully!';
+  
           this.isUpdateModalOpen = true;
-
           this.editclicked = false;
           this.addnewPropertyclicked = false;
           this.fetchProperties();
           this.cdRef.detectChanges();
+        } else {
+          this.propertyInsStatus = 'Unexpected response from server.';
+          this.isUpdateModalOpen = true;
+          console.warn('Unexpected response:', response);
         }
       },
       error: (error) => {
-        this.propertyInsStatus = "Error Updating Property.";
+        this.propertyInsStatus = 'Error updating property sale status.';
         this.isUpdateModalOpen = true;
-        console.error("Error details:", error);
+        console.error('Error details:', error);
       }
     });
   }
-
-      getPropertyDetailsByStatus(status: string): void {
-        
-        this.apiurls.get<any>(`GetPropertiesByStatus?status=${status}`)
-          .subscribe((response: any) => {
-      
-            this.properties = response.map((property: any) => {
-              let PropertyStatus: string = '';
-      
-              if (property.activeStatus === "2") {
-                PropertyStatus = "Not Approved";
-              } else if (property.activeStatus === "1") {
-                PropertyStatus = "Approved";
-              } else if (property.activeStatus === "0") {
-                PropertyStatus = "Pending";
-              }
-              else{
-                
-              }
-              let PropertySaleStatus: string = '';
-              if (property.propertySaleStatus === "1") {
-                PropertySaleStatus = "Sold Out";
-              } else if (property.propertySaleStatus === "0") {
-                PropertySaleStatus = "Unsold";
-              }
-      
-              return {
-                propID: property.propID,          
-                propname: property.propname,
-                developedby: property.developedby,
-                status: PropertyStatus,
-                SaleStatus:PropertySaleStatus
-                          
-              };
-            });
-      
-          }, error => {
-            console.error('Error fetching properties:', error);
-          });
-      }
   
-     fetchFilteredProperties(whose: string, status: string, IsActivestatus: string, SoldOutstatus: string, search: string): void {
-        let params = new HttpParams()
-            .set('whose', whose)
-            .set('UserID', this.userID || '') 
-            .set('status', status || '')
-            .set('IsActivestatus', IsActivestatus || '')
-            .set('SoldOutstatus', SoldOutstatus || '')
-            .set('search', search || '');
 
-        // const url = `https://localhost:7190/api/Users/GetFilteredProperties?${params.toString()}`;
+  // updatePropertySoldOutStatus(PropId: string, SoldOutStatus: string): void {
+  //   this.apiurls.put(`updatePropertySoldOutStatus/${PropId}?SoldOutStatus=${SoldOutStatus}`, {}).subscribe({
+  //     next: (response: any) => {
+  //       if (response.statusCode == "200") {
+  //         this.propertyInsStatus = SoldOutStatus === "1"
+  //           ? "Property marked as Sold Out successfully!"
+  //           : "Property marked as Unsold successfully!";
+            
+  //         this.isUpdateModalOpen = true;
 
-        // this.http.get(url).subscribe(
-        //     (response: any) => {
-        //         console.log('API Response:', response); 
-        //         if (response.statusCode === 200) {
-        //             this.properties = response.data.map((property: any) => ({
-        //                 propID: property.propID,
-        //                 propname: property.propname,
-        //                 developedby: property.developedby,
+  //         this.editclicked = false;
+  //         this.addnewPropertyclicked = false;
+  //         this.fetchProperties();
+  //         this.cdRef.detectChanges();
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.propertyInsStatus = "Error Updating Property.";
+  //       this.isUpdateModalOpen = true;
+  //       console.error("Error details:", error);
+  //     }
+  //   });
+  // }
 
-        const endpoint = `GetFilteredProperties?${params.toString()}`;
-        this.apiurls.get(endpoint).subscribe(
-          (response: any) => {
-              console.log('API Response:', response); 
-              if (response.statusCode === 200) {
-                  this.properties = response.data.map((property: any) => ({
-                      propID: property.propID,
-                      propname: property.propname,
-                      developedby: property.developedby,
-                        status: this.getPropertyStatus(property.activeStatus),
-                        IsActiveStatus: this.getPropertyIsActiveStatus(property.propActiveStatus),
-                        IsActiveStatusBoolean: property.propActiveStatus,
-                        SaleStatus: property.propertySaleStatus === "1" ? "Sold Out" : "Unsold"
-                      }));
-                    this.filteredPropertiesNotNull = false;
-                    this.currentPage = 1;
-                } else if (response.statusCode === 404) {
-                    this.filteredPropertiesNotNull = true;
-                } else {
-                    this.properties = [];
-                }
-            },
-            error => {
-                console.error('Error fetching properties:', error);
-                this.filteredPropertiesNotNull = true;
-                this.properties = [];
-            }
-        );
-     }
+
+  getPropertyDetailsByStatus(status: string): void {
+    const requestBody = {
+      ActiveStatus: status,
+      Flag: '9'
+    };
+
+    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', requestBody)
+      .subscribe((response: any) => {
+        this.properties = response.map((property: any) => {
+          let PropertyStatus: string = '';
+          if (property.activeStatus === "2") {
+            PropertyStatus = "Not Approved";
+          } else if (property.activeStatus === "1") {
+            PropertyStatus = "Approved";
+          } else if (property.activeStatus === "0") {
+            PropertyStatus = "Pending";
+          }
+  
+          let PropertySaleStatus: string = '';
+          if (property.propertySaleStatus === "1") {
+            PropertySaleStatus = "Sold Out";
+          } else if (property.propertySaleStatus === "0") {
+            PropertySaleStatus = "Unsold";
+          }
+  
+          return {
+            propID: property.propID,
+            propname: property.propname,
+            developedby: property.developedby,
+            status: PropertyStatus,
+            SaleStatus: PropertySaleStatus
+          };
+        });
+      }, error => {
+        console.error('Error fetching properties:', error);
+      });
+  }
+
+  fetchFilteredProperties(
+    whose: string,
+    status: string,
+    IsActivestatus: string,
+    SoldOutstatus: string,
+    search: string
+  ): void {
+    const requestBody: any = {
+      userID: this.userID || '',
+      whose: whose || '',
+      ActiveStatus: IsActivestatus || '',       
+      PropActiveStatus: status || '',             
+      propertySaleStatus: SoldOutstatus || '',
+      KeyWord: search || '',
+      Flag: '13'
+    };
+  
+    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', requestBody)
+      .subscribe(
+        (response: any) => {
+          console.log('API Response:', response);
+          if (response.statusCode === 200) {
+            this.properties = response.data.map((property: any) => ({
+              propID: property.propID,
+              propname: property.propname,
+              developedby: property.developedby,
+              status: this.getPropertyStatus(property.activeStatus),
+              IsActiveStatus: this.getPropertyIsActiveStatus(property.propActiveStatus),
+              IsActiveStatusBoolean: property.propActiveStatus,
+              SaleStatus: property.propertySaleStatus === "1" ? "Sold Out" : "Unsold"
+            }));
+            this.filteredPropertiesNotNull = false;
+            this.currentPage = 1;
+          } else if (response.statusCode === 404) {
+            this.filteredPropertiesNotNull = true;
+            this.properties = [];
+          } else {
+            this.properties = [];
+          }
+        },
+        error => {
+          console.error('Error fetching properties:', error);
+          this.filteredPropertiesNotNull = true;
+          this.properties = [];
+        }
+      );
+  }
+  
+  
+    //   getPropertyDetailsByStatus(status: string): void {
+        
+    //     this.apiurls.get<any>(`GetPropertiesByStatus?status=${status}`)
+    //       .subscribe((response: any) => {
+      
+    //         this.properties = response.map((property: any) => {
+    //           let PropertyStatus: string = '';
+      
+    //           if (property.activeStatus === "2") {
+    //             PropertyStatus = "Not Approved";
+    //           } else if (property.activeStatus === "1") {
+    //             PropertyStatus = "Approved";
+    //           } else if (property.activeStatus === "0") {
+    //             PropertyStatus = "Pending";
+    //           }
+    //           else{
+                
+    //           }
+    //           let PropertySaleStatus: string = '';
+    //           if (property.propertySaleStatus === "1") {
+    //             PropertySaleStatus = "Sold Out";
+    //           } else if (property.propertySaleStatus === "0") {
+    //             PropertySaleStatus = "Unsold";
+    //           }
+      
+    //           return {
+    //             propID: property.propID,          
+    //             propname: property.propname,
+    //             developedby: property.developedby,
+    //             status: PropertyStatus,
+    //             SaleStatus:PropertySaleStatus
+                          
+    //           };
+    //         });
+      
+    //       }, error => {
+    //         console.error('Error fetching properties:', error);
+    //       });
+    //   }
+
+
+  
+    //  fetchFilteredProperties(whose: string, status: string, IsActivestatus: string, SoldOutstatus: string, search: string): void {
+    //     let params = new HttpParams()
+    //         .set('whose', whose)
+    //         .set('UserID', this.userID || '') 
+    //         .set('status', status || '')
+    //         .set('IsActivestatus', IsActivestatus || '')
+    //         .set('SoldOutstatus', SoldOutstatus || '')
+    //         .set('search', search || '');
+
+    //     const endpoint = `GetFilteredProperties?${params.toString()}`;
+    //     this.apiurls.get(endpoint).subscribe(
+    //       (response: any) => {
+    //           console.log('API Response:', response); 
+    //           if (response.statusCode === 200) {
+    //               this.properties = response.data.map((property: any) => ({
+    //                   propID: property.propID,
+    //                   propname: property.propname,
+    //                   developedby: property.developedby,
+    //                     status: this.getPropertyStatus(property.activeStatus),
+    //                     IsActiveStatus: this.getPropertyIsActiveStatus(property.propActiveStatus),
+    //                     IsActiveStatusBoolean: property.propActiveStatus,
+    //                     SaleStatus: property.propertySaleStatus === "1" ? "Sold Out" : "Unsold"
+    //                   }));
+    //                 this.filteredPropertiesNotNull = false;
+    //                 this.currentPage = 1;
+    //             } else if (response.statusCode === 404) {
+    //                 this.filteredPropertiesNotNull = true;
+    //             } else {
+    //                 this.properties = [];
+    //             }
+    //         },
+    //         error => {
+    //             console.error('Error fetching properties:', error);
+    //             this.filteredPropertiesNotNull = true;
+    //             this.properties = [];
+    //         }
+    //     );
+    //  }
 
 
     filteredPropertiesCount: number = 0;
     currentStatusLabel: string = '';
-
 
 
   onWhosePropertySelectionChange(event: any): void {
@@ -2244,10 +2676,8 @@ editorConfig = {
 
   makeImageDefault(propID: string, imageID: number) {
     const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
-  
     if (selectedImage) {
       selectedImage.DefaultImage = "1"; 
-  
       this.uploadedImages1.forEach(img => {
         if (img.id !== imageID) {
           img.DefaultImage = "0"; 
@@ -2263,14 +2693,6 @@ editorConfig = {
     }
   }
   
-  // updateDefaultImageInDatabase(propID: string, imageID: number) {
-  //   this.http.put(`https://localhost:7190/api/Users/update-default-image/${propID}/${imageID}`, {})
-  //     .subscribe(response => {
-  //       console.log('Default image updated successfully');
-  //     }, error => {
-  //       console.error('Error updating default image:', error);
-  //     });
-  // }
 
   updateDefaultImageInDatabase(propID: string, imageID: number): void {
     const endpoint = `update-default-image/${propID}/${imageID}`;
@@ -2293,12 +2715,18 @@ editorConfig = {
       this.isUpdateButtonEnabled = false;
     }
   }
+  onOrderChangeFloor(): void {
+    const validationFloorError = this.validateOrdersfloor();
   
+    if (!validationFloorError) {
+      this.isUpdateButtonEnabled = true;
+    } else {
+      this.isUpdateButtonEnabled = false;
+    }
+  }
   submitCustomOrder() {
     const validationError = this.validateOrders();
     if (validationError) {
-      // alert(validationError); 
-      // return; 
       this.propertyInsStatus = validationError;
       this.isUpdateModalOpen = true;
       return; 
@@ -2308,33 +2736,45 @@ editorConfig = {
       imageOrder: image.customOrder.toString(),  
       defaultImage: image.DefaultImage === "1" ? "1" : "0" 
     }));  
-    // this.propertyInsStatus = "order submitted successfully!";
-    // this.isUpdateModalOpen = true;
     this.updateImageOrderInDatabase(updatedImages);
     this.isUpdateButtonEnabled = true;
 
   }
+
+  submitFloorImagesCustomOrder() {
+    const validationFloorError = this.validateOrdersfloor();
   
+    if (validationFloorError) {
+      this.propertyInsStatus = validationFloorError;
+      this.isUpdateModalOpen = true;
+      return; 
+    }
+    const uploadedFloorImages = this.uploadedFloorImages1.map(image => ({
+      id: image.id,
+      imageOrder: image.customOrder.toString(),  
+      defaultImage: image.DefaultImage === "1" ? "1" : "0"  
+    }));
+       this.cdRef.detectChanges();
+      this.updateFloorImageOrderInDatabase(uploadedFloorImages);
+      this.isUpdateButtonEnabled=true;
+  }
+
+
   
   validateOrders(): string | null {
     const seenOrders = new Set<number>();
     const orderNumbers = this.uploadedImages1.map(image => image.customOrder).sort((a, b) => a - b);
     for (let i = 0; i < orderNumbers.length; i++) {
       if (seenOrders.has(orderNumbers[i])) {
-
-        // return 'There are duplicate order numbers. Please ensure all order numbers are unique in Images.';
         this.propertyInsStatus = 'There are duplicate order numbers. Please ensure all order numbers are unique in Images.';
         this.isUpdateModalOpen = true; 
         return this.propertyInsStatus;
       }
-  
       if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
-        // return 'Order numbers must be in sequence (no gaps). Please correct the sequence in Images.';
         this.propertyInsStatus = 'Order numbers must be in sequence (no gaps). Please correct the sequence in Images.';
         this.isUpdateModalOpen = true; 
         return this.propertyInsStatus;
       }
-  
       seenOrders.add(orderNumbers[i]);
 
     }
@@ -2354,18 +2794,14 @@ editorConfig = {
       }
   
       if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
-        // return 'Order numbers must be in sequence (no gaps). Please correct the sequence in floorimage.';
         this.propertyInsStatus = 'Order numbers must be in sequence (no gaps). Please correct the sequence in floorimage.';
         this.isUpdateModalOpen = true; 
         return this.propertyInsStatus;
       }
-  
       seenOrders.add(orderNumbers[i]);
 
     }
-  
     if (hasDuplicate) {
-      // return 'There are duplicate order numbers. Please ensure all order numbers are unique in floorimage.';
       this.propertyInsStatus = 'There are duplicate order numbers. Please ensure all order numbers are unique in floorimage.';
       this.isUpdateModalOpen = true; 
       return this.propertyInsStatus;
@@ -2431,7 +2867,6 @@ editorConfig = {
       if (charCode === 44 && (lastChar === ',' || value === '')) {
         return false;
       }
-  
       return true;
     }
   
@@ -2608,72 +3043,85 @@ editorConfig = {
     return true;
   }
 
+  // updateImageOrderInDatabase(updatedImages: any[]) {
+  //   this.apiurls.put(`update-image-order-and-default/${this.propID}`, updatedImages)
+  //     .subscribe(
+  //       response => {
+  //         // this.propertyInsStatus = "Order updated successfully!";
+  //         // this.isUpdateModalOpen = true;
+  //         this.cdRef.detectChanges();
+  //         this.isUpdateButtonEnabled=true;
+  //       },
+  //       error => {
+  //         console.error('Error updating image order and default image:', error);
+  //       }
+  //     );
+  // }
+
+
   updateImageOrderInDatabase(updatedImages: any[]) {
-    // this.http.put(`https://localhost:7190/api/Users/update-image-order-and-default/${this.propID}`, updatedImages)
-    //   .subscribe(
-    //     response => {
-    //       this.propertyInsStatus = "order updated successfully!";
-    //       this.isUpdateModalOpen = true;
-    this.apiurls.put(`update-image-order-and-default/${this.propID}`, updatedImages)
-      .subscribe(
-        response => {
-          // this.propertyInsStatus = "Order updated successfully!";
-          // this.isUpdateModalOpen = true;
-          this.cdRef.detectChanges();
-          this.isUpdateButtonEnabled=true;
-        },
-        error => {
-          console.error('Error updating image order and default image:', error);
-        }
-      );
-  }
-
-
-  submitFloorImagesCustomOrder() {
-    const validationError = this.validateOrdersfloor();
+    const formData = new FormData();
+    formData.append("flag", "3");
+    formData.append("propID", this.propID);
+    formData.append("imageOrderUpdateJson", JSON.stringify(updatedImages));
   
-    if (validationError) {
-      // alert(validationError); 
-      // return; 
-      this.propertyInsStatus = validationError;
-      this.isUpdateModalOpen = true;
-      return; 
-    }
-    const updatedImages = this.uploadedFloorImages1.map(image => ({
-      id: image.id,
-      imageOrder: image.customOrder.toString(),  
-      defaultImage: image.DefaultImage === "1" ? "1" : "0"  
-    }));
-    // this.propertyInsStatus = "order submitted successfully!";
-    //   this.isUpdateModalOpen = true;
-      this.cdRef.detectChanges();
-      this.isUpdateButtonEnabled=true;
-      this.updateFloorImageOrderInDatabase(updatedImages);
-  }
-  
-  
-  updateFloorImageOrderInDatabase(updatedImages: any[]) {
-    // this.http.put(`https://localhost:7190/api/Users/update-floor-image-order-and-default/${this.propID}`, updatedImages)
-    //   .subscribe(
-    //     response => {
-    //       console.log('Image order and default image updated successfully');
-          
-    //       this.propertyInsStatus = "Property updated successfully!";
-    //       this.isUpdateModalOpen = true;
-    this.apiurls.put(`update-floor-image-order-and-default/${this.propID}`, updatedImages)
-    .subscribe(
-      response => {
-        console.log('Image order and default image updated successfully');
-        this.propertyInsStatus = "Property updated successfully!";
+    this.apiurls.post("Tbl_PropFiles_CRUD_Operations", formData).subscribe({
+      next: (response) => {
+        console.log("Image order updated successfully:", response);
         this.cdRef.detectChanges();
-        this.isUpdateModalOpen = true;
-
-        },
-        error => {
-          console.error('Error updating image order and default image:', error);
-        }
-      );
+        this.isUpdateButtonEnabled = true;
+      },
+      error: (error) => {
+        console.error("Error updating image order:", error);
+      }
+    });
   }
+  
+
+  // updateFloorImageOrderInDatabase(updatedImages: any[]) {
+  //   this.apiurls.put(`update-floor-image-order-and-default/${this.propID}`, updatedImages)
+  //   .subscribe(
+  //     response => {
+  //       console.log('Image order and default image updated successfully');
+  //       this.propertyInsStatus = "Property updated successfully!";
+  //       this.cdRef.detectChanges();
+  //       this.isUpdateModalOpen = true;
+
+  //       },
+  //       error => {
+  //         console.error('Error updating image order and default image:', error);
+  //       }
+  //     );
+  // }
+
+  updateFloorImageOrderInDatabase(updatedImages: any[]) {
+    const formData = new FormData();
+    formData.append("flag", "3");
+    formData.append("propID", this.propID);
+    formData.append("imageOrderUpdateJson", JSON.stringify(
+      updatedImages.map(image => ({
+        ID: image.ID,
+        PropID: this.propID,
+        ImageOrder: image.ImageOrder,
+        DefaultImage: image.DefaultImage || "0",
+        Flag: "3"
+      }))
+    ));
+  
+    this.apiurls.post("Tbl_PropFiles_CRUD_Operations", formData).subscribe({
+      next: (response) => {
+        console.log(" Floor image order updated:", response);
+        this.cdRef.detectChanges();
+        this.isUpdateButtonEnabled = true;
+
+      },
+      error: (error) => {
+        console.error(" Floor image update error:", error);
+      }
+    });
+  }
+  
+  
 
 
   areaValidator(control: AbstractControl): ValidationErrors | null {

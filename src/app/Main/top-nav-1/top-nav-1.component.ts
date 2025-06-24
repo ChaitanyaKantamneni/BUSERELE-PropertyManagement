@@ -7,6 +7,8 @@ interface navlists{
   navurl:string
 }
 
+
+
 @Component({
   selector: 'app-top-nav-1',
   standalone: true,

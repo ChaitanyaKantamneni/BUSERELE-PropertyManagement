@@ -67,25 +67,42 @@ export class AddAminities1Component implements OnInit {
     this.viewAminitieClicked=true;
   }
 
-  getAminitieDet(aminitieID: string) {
-    this.apiurls.get<any[]>(`GetAminitieDetailsById/${aminitieID}`).subscribe(
+  getAminitieDet(aminitieID: string): void {
+    const data = {
+      AminitieID: aminitieID,
+      name: "",
+      Description: "",
+      AminitieIcon: "",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "4",
+      Status: ""
+    };
+  
+    this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe(
       (response: any) => {
-        if (response) {
+        if (response && Array.isArray(response.data) && response.data.length > 0) {
+          const aminitie = response.data[0];
           this.aminitiesform.patchValue({
-            id: response.aminitieID,
-            name: response.name,
-            description: response.description,
-            icon:response.aminitieIcon
+            id: aminitie.aminitieID,
+            name: aminitie.name,
+            description: aminitie.description,
+            icon: aminitie.aminitieIcon
           });
         } else {
-          console.error('Error: Response is null or undefined');
+          console.error('No data found for the given AminitieID.');
         }
       },
       error => {
-        console.error('Error fetching review details:', error);
+        console.error('Error fetching aminity details:', error);
       }
     );
   }
+  
  
   previousPage(): void {
     if (this.currentPage > 1) {
@@ -125,7 +142,21 @@ export class AddAminities1Component implements OnInit {
 
 
   getreviews(): void {
-    this.apiurls.get<any>('GetAllAminities')
+    const data = {
+      AminitieID: "",
+      name: "",
+      Description: "",
+      AminitieIcon:"",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "3",
+      Status: ""
+    };
+    this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations',data)
       .subscribe((response: any) => {
         console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
@@ -168,68 +199,146 @@ export class AddAminities1Component implements OnInit {
   propertyInsStatus: any = '';
   editclicked: boolean = false;
 
-  submitAminitieDet(){
+  // submitAminitieDet(){
+  //   const data = {
+  //     AminitieID: this.aminitiesform.get('id')?.value || '0',
+  //     Name: this.aminitiesform.get('name')?.value || '',
+  //     Description: this.aminitiesform.get('description')?.value || '',
+  //     AminitieIcon: this.aminitiesform.get('icon')?.value || '',
+  //     CreatedBy: localStorage.getItem('email') || '',
+  //     CreatedIP: "",        
+  //     CreatedDate: "",       
+  //     ModifiedBy: "",
+  //     ModifiedIP: "",
+  //     ModifiedDate: "",
+  //     Flag: "2",            
+  //     Status: "",
+  //     GeneratedID:""
+  //   };
+    
+  //   this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe({
+  //     next: (response) => {
+  //       if (response.statusCode === 200) {
+  //         this.AminityInsStatus = response.Message;
+  //         this.AminityInsStatus = "Aminity submitted successfully!";
+  //         this.isModalOpen = true;
+  //         this.aminitiesform.reset();
+  //         this.aminitiesform.markAsPristine();
+  //         this.editclicked = false;
+          
+  //       }
+  //       this.aminitiesform.reset();
+  //     },
+  //     error: (error) => {
+  //       console.error("Error details:", error);
+  //       this.AminityInsStatus = "Error Updating Aminity.";
+  //       this.isModalOpen = true;
+  //     },
+  //     complete: () => {
+  //     }
+  //   });
+  // }
+
+  // generateAminitieID(): void {
+  //   const data = {
+  //     AminitieID: "",
+  //     name: "",
+  //     Description: "",
+  //     AminitieIcon: "",
+  //     CreatedBy: "",
+  //     CreatedIP: "",
+  //     CreatedDate: null,
+  //     ModifiedBy: "",
+  //     ModifiedIP: "",
+  //     ModifiedDate: null,
+  //     Flag: "1", 
+  //     Status: ""
+  //   };
+  
+  //   this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe({
+  //     next: (response: any) => {
+  //       console.log('Generated Amenity ID:', response);
+  
+  //       if (response && Array.isArray(response.data) && response.data.length > 0) {
+  //         const generatedID = response.data[0].aminitieID;
+  //         this.aminitiesform.patchValue({ id: generatedID }); 
+  //       } else {
+  //         console.error('Amenity ID generation returned empty result.');
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching Amenity ID:', error);
+  //     }
+  //   });
+  // }
+  submitAminitieDet() {
     const data = {
-      ID: 0,
-      AminitieID: this.aminitiesform.get('id')?.value,
-      name: this.aminitiesform.get('name')?.value,
-      Description: new String(this.aminitiesform.get('description')?.value).toString() || null,
-      AminitieIcon:new String(this.aminitiesform.get('icon')?.value).toString() || null,
-      CreatedBy:localStorage.getItem('email') as string
+      AminitieID: this.aminitiesform.get('id')?.value || '0',
+      Name: this.aminitiesform.get('name')?.value || '',
+      Description: this.aminitiesform.get('description')?.value || '',
+      AminitieIcon: this.aminitiesform.get('icon')?.value || '',
+      CreatedBy: localStorage.getItem('email') || '',
+      CreatedIP: "",        
+      CreatedDate: new Date().toISOString(), 
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: new Date().toISOString(), 
+      Flag: "2",            
+      Status: "",
+      GeneratedID: null    
     };
-    // this.apihttp.post("https://localhost:7190/api/Users/InsAminities", data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if(response.statusCode==200){
-    //       this.AminityInsStatus = response.Message;
-    //       this.isModalOpen = true;  
-    this.apiurls.post<any>('InsAminities', data).subscribe({
+  
+    this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe({
       next: (response) => {
         if (response.statusCode === 200) {
-          this.AminityInsStatus = response.Message;
-          this.propertyInsStatus = "Aminity submitted successfully!";
+          this.AminityInsStatus = "Amenity submitted successfully!";
           this.isModalOpen = true;
           this.aminitiesform.reset();
           this.aminitiesform.markAsPristine();
           this.editclicked = false;
-            // this.AminityInsStatus = response.Message;
-          // this.isModalOpen = true;
-          // this.aminitiesform.reset(); 
-          // this.aminitiesform.markAsPristine();
-          // this.propertyInsStatus = "aminities submitted successfully!";
-          // this.isUpdateModalOpen = true;
-          // this.editclicked = false;
-          // this.addnewclickClicked = false;
         }
-        this.aminitiesform.reset();
       },
       error: (error) => {
         console.error("Error details:", error);
         this.AminityInsStatus = "Error Updating Aminity.";
         this.isModalOpen = true;
-      },
-      complete: () => {
       }
     });
   }
   
 
-  // generateAminitieID(){
-  //   this.apihttp.get("getautoaminitieID", { responseType: 'text' }).subscribe((response: string) => {
-  //     this.aminitiesform.patchValue({ id: response });
-  // console.log(response);
-  //   },
-  //    error => {
-  //     console.error('Error fetching property ID:', error);
-  //   });
-  // }
+  
+  generateAminitieID(): void {
+    const data = {
+      AminitieID: "",
+      Name: "",
+      Description: "",
+      AminitieIcon: "",
+      CreatedBy: "",
+      CreatedIP: "",
+      CreatedDate: null,
+      ModifiedBy: "",
+      ModifiedIP: "",
+      ModifiedDate: null,
+      Flag: "1",
+      Status: "",
+      GeneratedID:""
+    };
+  
 
-  generateAminitieID() {
-    this.apiurls.get<string>('getautoaminitieID', 'text').subscribe({
-      next: (response: string) => {
+    this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe({
+      next: (response: any) => {
         console.log('Generated Amenity ID:', response);
-        this.aminitiesform.patchValue({ id: response });
+        if (response && Array.isArray(response.data) && response.data.length > 0) {
+          const generatedID = response.data[0].generatedID;
+          if (generatedID) {
+            this.aminitiesform.patchValue({ id: generatedID });
+          } else {
+            console.error('Generated ID not found in response.');
+          }
+        } else {
+          console.error('Amenity ID generation returned empty or unexpected result.');
+        }
       },
       error: (error) => {
         console.error('Error fetching Amenity ID:', error);
@@ -237,63 +346,55 @@ export class AddAminities1Component implements OnInit {
     });
   }
   
-  // generateAminitieID() {
-  //   this.apiurls.get<string>('getautoaminitieID').subscribe({
-  //     next: (response: string) => {
-  //       this.aminitiesform.patchValue({ id: response });
-  //       console.log(response);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error fetching Aminitie ID:', error);
-  //     }
-  //   });
-  // }
-  
 
-  updateAminitie() {
-    const data = {
-      AminitieID: this.aminitiesform.get('id')?.value, 
-      name: this.aminitiesform.get('name')?.value,
-      Description: this.aminitiesform.get('description')?.value || null,
-      AminitieIcon:this.aminitiesform.get('icon')?.value || null,
-      CreatedBy: 0,  
-      CreatedIP: "", 
-      CreatedDate: null,  
-      ModifiedBy: 0,  
-      // ModifiedBy: new String(localStorage.getItem('email')).toString(),
-      ModifiedIP: "",  
-      ModifiedDate: new Date().toISOString() 
-    };
+updateAminitie() {
+  if (!this.aminitiesform.valid) {
+    this.AminityInsStatus = "Please fill all required fields correctly.";
+    this.isModalOpen = true;
+    return;
+  }
 
-    const aminitieID: string = (this.aminitiesform.get('id')?.value).trim();
+  const aminitieID = this.aminitiesform.get('id')?.value?.trim();
+  if (!aminitieID) {
+    this.AminityInsStatus = "Invalid Aminitie ID.";
+    this.isModalOpen = true;
+    return;
+  }
 
-    // this.apihttp.put(`https://localhost:7190/api/Users/updateAmititieDet/${aminitieID}`, data, {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).subscribe({
-    //   next: (response: any) => {
-    //     if (response.statusCode === 200) {
-    //       this.AminityInsStatus = response.message;
-    //       this.isModalOpen = true;
-    this.apiurls.put<any>(`updateAmititieDet/${aminitieID}`, data).subscribe({
-      next: (response: any) => {
-        if (response.statusCode === 200) {
-          this.AminityInsStatus = response.message;
-          this.propertyInsStatus = "Aminity Updated successfully!";
-          this.isModalOpen = true;
-          this.aminitiesform.markAsPristine(); 
-        }
-      },
-      error: (error) => {
-        console.error("Error details:", error);
-        this.AminityInsStatus = "Error Updating Aminity.";
+  const data = {
+    AminitieID: aminitieID,
+    name: this.aminitiesform.get('name')?.value,
+    Description: this.aminitiesform.get('description')?.value || null,
+    AminitieIcon: this.aminitiesform.get('icon')?.value || null,
+    ModifiedBy: localStorage.getItem('email') || 'system',
+    ModifiedIP: '',
+    ModifiedDate: new Date().toISOString(), 
+    Flag: "5",
+    Status: ""
+  };
+
+  this.apiurls.post<any>('Tbl_Aminities_CRUD_Operations', data).subscribe({
+    next: (response: any) => {
+      if (response.statusCode === 200) {
+        this.AminityInsStatus = "Aminity updated successfully!";
+        this.AminityInsStatus = "Aminity updated successfully!";
         this.isModalOpen = true;
-      },
-      complete: () => {
-        console.log('Request completed.');
+        this.aminitiesform.markAsPristine(); 
+      } else {
+        this.AminityInsStatus = response.message || "Failed to update aminity.";
+        this.isModalOpen = true;
       }
-    });
+    },
+    error: (error) => {
+      console.error("Error updating aminity:", error);
+      this.AminityInsStatus = "Error Updating Aminity.";
+      this.isModalOpen = true;
+    },
+    complete: () => {
+      console.log('Update aminity request completed.');
+    }
+  });
 }
-
 
 backclick(event: Event): void {
   event.preventDefault();
