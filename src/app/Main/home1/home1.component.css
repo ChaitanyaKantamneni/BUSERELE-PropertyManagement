@@ -177,7 +177,7 @@ section{
   transform: translate(-50%, -50%);
   z-index: 1000;
 }
-
+/* 
 .AdvertisingPropertiesAdds{
   height: 100%;
   width: 25%;
@@ -198,6 +198,10 @@ section{
 .AdvertisingPropertiesAdds .propertyFulldet{
   border-radius: 15px;
 }
+/* 
+.AdvertisingPropertiesAdds .propertyFulldet img{
+    border-radius: 15px 0px 0px 15px;
+} */
 
 .AdvertisingPropertiesAdds .propertyFulldet .propertyDetails{
   border-radius: 0px 15px 15px 0px;
@@ -215,6 +219,11 @@ section{
   height: 86px;
   width: 70%;
 }
+
+
+/* .AdvertisingPropertiesAdds .propertyDetails h5{
+    font-size: 17px;
+} */
 
 .AdvertisingPropertiesAdds .propertyDetails i,.AdvertisingPropertiesAdds .propertyDetails .ms-2{
   font-size: 11px;

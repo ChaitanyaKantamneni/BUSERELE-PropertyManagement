@@ -300,9 +300,10 @@ export class AddPropertyComponentComponent implements OnInit {
     NumberofBalconies: new FormControl(''),
     NumberofParkings: new FormControl(''),
     AreaType: new FormControl('', [Validators.required]),
-    TotalArea: new FormControl('', [Validators.required, Validators.min(1)]),
+    TotalArea: new FormControl('', [Validators.required, Validators.min(1),this.areaValidator]),
+    
     CarpetArea: new FormControl(''),
-    PriceFor: new FormControl('', [Validators.required, Validators.min(1)]),
+    PriceFor: new FormControl('', [Validators.required, Validators.min(1),this.priceForValidator]),
     PropertyTotalPrice: new FormControl({ value: '', disabled: true }),
     AmenitiesCharges: new FormControl(''),
     MaintenanceCharges: new FormControl(''),
@@ -1746,7 +1747,6 @@ getPropertyDocument(propID: string): void {
   }
 
 
-
   submitpropertyDet() {
     Object.keys(this.propertyform.controls).forEach(key => {
       this.propertyform.get(key)?.enable();
@@ -2827,9 +2827,36 @@ editorConfig = {
     }
   
     return false;
-}
+  }
+  
 
-  OnlyNumbersAllowed1(event: KeyboardEvent): boolean {
+
+  // OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
+  //   const charCode = event.which ? event.which : event.keyCode;
+  
+  //   if (charCode !== 32 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
+  //     return false; 
+  //   }
+    
+  //   return true; 
+  // }
+
+  
+  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
+  //   const charCode = event.which ? event.which : event.keyCode;
+  //   const inputElement = event.target as HTMLInputElement;
+    
+  //   if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+  //     return false;
+  //   }
+    
+  //   if (inputElement.value.length >= 10) {
+  //     return false; 
+  //   }
+  //   return true;
+  // }
+
+  OnlyNumbersAllowed(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
     const inputElement = event.target as HTMLInputElement;
     let value = inputElement.value;
@@ -2849,31 +2876,29 @@ editorConfig = {
   }
   
 
-  OnlyNumbersAllowed2(event: KeyboardEvent) {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
-  }
+  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
+  //   const charCode = event.which ? event.which : event.keyCode;
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const value = inputElement.value;
   
-  validateLength(event: any) {
-    const input = event.target as HTMLInputElement;
-    if (input.value.length > 4) {
-      input.value = input.value.slice(0, 4); 
-    }
-  }
+  //   if (
+  //     (charCode >= 48 && charCode <= 57) ||   
+  //     charCode === 44 ||                     
+  //     charCode === 46                       
+  //   ) {
+  //     if (value.length >= 10) {
+  //       return false;
+  //     }
+  //     if (charCode === 44 || charCode === 46) {
+  //       if (value.includes(',') || value.includes('.')) {
+  //         return false;
+  //       }
+  //     }
   
-
-  OnlyNumbersAllowed(event: KeyboardEvent): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    const inputElement = event.target as HTMLInputElement;
-    const value = inputElement.value;
-    if ((charCode >= 48 && charCode <= 57) || charCode === 8 || charCode === 46) {
-      return true;
-    }
-    
-    return false;
-  }
+  //     return true;
+  //   }
+  //   return false;
+  // }
   
 
   OnlypostelNumbersAllowed(event: KeyboardEvent): void {
@@ -2891,6 +2916,40 @@ editorConfig = {
   }
   
 
+//   OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
+//     const inputChar = event.key;
+//     const currentValue = (event.target as HTMLInputElement).value;
+//     if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+//         return;
+//     }
+//     if (inputChar >= '0' && inputChar <= '9') {
+//         const parts = currentValue.split('-');
+
+//         if (parts.length === 1) {
+//             if (parts[0].length >= 6) {
+//                 event.preventDefault();
+//             }
+//         }
+//         if (parts.length === 2) {
+//             if (parts[1].length >= 7) {
+//                 event.preventDefault();
+//             }
+//         }
+//         return;
+//     }
+//     if (inputChar === '-') {
+//         const parts = currentValue.split('-');
+//         if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
+//             return;
+//         }
+//     }
+//     event.preventDefault();
+//     console.log('Form valid:', this.propertyform.valid);
+//     console.log('TotalArea valid:', this.propertyform.get('TotalArea')?.valid);
+//     console.log('TotalArea errors:', this.propertyform.get('TotalArea')?.errors);
+//  }
+
+
   OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
     const inputChar = event.key;
     const currentValue = (event.target as HTMLInputElement).value;
@@ -2899,6 +2958,7 @@ editorConfig = {
     }
     if (inputChar >= '0' && inputChar <= '9') {
         const parts = currentValue.split('-');
+
         if (parts.length === 1) {
             if (parts[0].length >= 6) {
                 event.preventDefault();
@@ -2913,50 +2973,68 @@ editorConfig = {
     }
     if (inputChar === '-') {
         const parts = currentValue.split('-');
-        if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
+        if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
             return;
-        }
-        if (parts.length > 1) {
-            event.preventDefault();
         }
     }
     event.preventDefault();
+ }
+
+
+ OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
+  const inputChar = event.key;
+  const currentValue = (event.target as HTMLInputElement).value;
+  if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+      return;
+  }
+  if (inputChar >= '0' && inputChar <= '9') {
+      const parts = currentValue.split('-');
+      if (parts.length === 1) {
+          if (parts[0].length >= 7) {
+              event.preventDefault();
+          }
+      }
+      if (parts.length === 2) {
+          if (parts[1].length >= 8) {
+              event.preventDefault();
+          }
+      }
+      return;
   }
 
-
-  OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
-    const inputChar = event.key;
-    const currentValue = (event.target as HTMLInputElement).value;
-    if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
-        return;
-    }
-    if (inputChar >= '0' && inputChar <= '9') {
-        const parts = currentValue.split('-');
-        if (parts.length === 1) {
-            if (parts[0].length >= 7) {
-                event.preventDefault();
-            }
-        }
-        if (parts.length === 2) {
-            if (parts[1].length >= 8) {
-                event.preventDefault();
-            }
-        }
-        return;
-    }
-    if (inputChar === '-') {
+  // Handle hyphen entry
+  if (inputChar === '-') {
       const parts = currentValue.split('-');
-      if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
+
+      // Allow the hyphen only if it's not already present and exactly 7 digits exist before it
+      if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 7) {
           return;
       }
-      if (parts.length > 1) {
-          event.preventDefault();
-      }
   }
-  event.preventDefault();
-  }
-    
 
+  // Prevent any other character input
+  event.preventDefault();
+}
+  
+  
+  
+  
+  // OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
+  //   const inputChar = event.key;
+  //   if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(inputChar)) {
+  //     return;
+  //   }
+  //   if (inputChar >= '0' && inputChar <= '9') {
+  //     return;
+  //   }
+  //   const currentValue = (event.target as HTMLInputElement).value;
+  //   if (inputChar === '-' && !currentValue.includes('-') && currentValue.length > 0) {
+  //     return;
+  //   }
+  //   event.preventDefault();
+  // }
+
+  
   OnlyValidEmailChars(event: KeyboardEvent): boolean {
     const charCode = event.key;
     const allowedCharsRegex = /^[a-zA-Z0-9@._+-]$/;
@@ -3056,7 +3134,6 @@ editorConfig = {
     return { invalidArea: true };
   }
 
-  
   priceForValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     
@@ -3072,7 +3149,6 @@ editorConfig = {
     return { invalidPrice: true };
   }
 
-  
   calculateTotalPrice() {
     const totalArea = this.propertyform.get('TotalArea')?.value;
     const priceFor = this.propertyform.get('PriceFor')?.value;

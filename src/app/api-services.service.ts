@@ -10,7 +10,7 @@ export class ApiServicesService {
   constructor(private http: HttpClient) { }
   // private baseUrl = 'https://localhost:7190/api/Users';
   // private baseUrl = 'https://localhost:7117/api/Employee';
-   private baseUrl = 'https://localhost:7051/api/Buserele';
+   private baseUrl = 'https://localhost:7039/api/BUsereleProcedures';
 
   get<T>(endpoint: string, responseType: 'json' | 'text' = 'json'): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}/${endpoint}`, {
@@ -43,16 +43,16 @@ export class ApiServicesService {
   }
 
   getImageUrl(filePath: string): string {
-    return filePath ? `https://localhost:7051${filePath}` : 'assets/images/empty.png';
+    return filePath ? `https://localhost:7039${filePath}` : 'assets/images/empty.png';
   }
 
   getviewimage(filePath: string): string {
-    return filePath ? `https://localhost:7051${filePath}` : '';
+    return filePath ? `https://localhost:7039${filePath}` : '';
   }
 
 
   getImageUrlblog(filePath: string): string {
-    return filePath ? `https://localhost:7051${filePath}` : 'assets/images/villa4.jpg';
+    return filePath ? `https://localhost:7039${filePath}` : 'assets/images/villa4.jpg';
   }
   
 }

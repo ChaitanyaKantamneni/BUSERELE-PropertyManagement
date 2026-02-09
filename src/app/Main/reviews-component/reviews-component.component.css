@@ -74,7 +74,7 @@ html, body {
 .Testimonials {
     /* background: linear-gradient(180deg, #007b8f 0%, #002147 100%); */
     color: white;
-    padding: 20px;
+    padding: 0px 20px;
     border-radius: 10px;
     width: 100%;
 }
@@ -147,25 +147,34 @@ html, body {
 }
 .review-content .d-flex {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     height: 40px;
+    margin-bottom: 10px;
 }
 
 .username {
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 15px;
     color: #002147;
-    
-    
+    margin-bottom: 0px;
 }
-
+.username1{
+    font-weight: bold;
+    font-size: 13px;
+    color: #002147;
+    margin-bottom: 0px;
+}
 .date {
-    font-size: 0.9rem;
+    font-size: 12px;
     color: #555;
-    text-align: right;
+    margin-bottom: 0px;
 }
-
+.date1{
+    font-size: 10px;
+    color: #555;
+    /* text-align: right; */
+    margin-bottom: 0px;
+}
 .review-content .content {
     font-size: 14px;
     margin-bottom:0px;

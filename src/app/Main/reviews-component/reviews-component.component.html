@@ -6,32 +6,26 @@
   <app-top-nav-1></app-top-nav-1>
           <div class="container-fluid full-gradient-bg">
             <div *ngIf="reviewWithReviewID" class="withReviewId">
+              <h5 class="bold-text">What our clients say...</h5>
               <div class="row">
                 <div class="col-md-8 testimonials-container">
-                  <div class="Testimonials">
-                    <h5 class="bold-text">What our clients say...</h5>
-                
+                  <div class="Testimonials">   
                     <div *ngIf="reviewDetails.length > 0">
                       <div *ngFor="let reviewDetailsItem of reviewDetails">
                         <div class="review-card1 d-flex" >
                           <div class="review-content">
-                            
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-3">
                               <div class="h-100">
                                 <img [src]="reviewDetailsItem.imageurl" alt="userimage" class="img-fluid rounded-circle h-100">
                               </div>
-                              <div>
-                                <h5 class="username">{{ reviewDetailsItem?.Name || 'Anonymous' }}</h5>
+                              <div class="h-100">
+                                <p class="username">{{ reviewDetailsItem?.Name || 'Anonymous' }}</p>
                                 <p class="date">{{ reviewDetailsItem?.date || 'N/A' }}</p>
                               </div>
-                              
                             </div>
-                
-                            
                             <p class="content">“{{ reviewDetailsItem?.review || 'No review available.' }}”</p>
-                
                             <div class="stars" style="font-size: 15px;">
-                              <span *ngFor="let star of stars; let i = index" 
+                              <span *ngFor="let star of stars; let i = index"
                                     [class.filled]="i < (reviewDetailsItem?.rating || 5)" 
                                     class="star">
                                 <i class="fa fa-star"></i>
@@ -54,12 +48,12 @@
                            (click)="openReview(reviewitem)"> 
                         <div class="review-content">
                           <div class="d-flex align-items-center">
-                            <div class="image me-3 h-100">
+                            <div class="image h-100">
                               <img [src]="reviewitem.imageurl" alt="userimage" class="img-fluid rounded-circle">
                             </div>
                             <div class="user-details">
-                              <h5 class="username">{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</h5>
-                              <p class="date">{{ reviewitem.posteddate }}</p>
+                              <p class="username1">{{ reviewitem.username ? reviewitem.username.toUpperCase() : 'N/A' }}</p>
+                              <p class="date1">{{ reviewitem.posteddate }}</p>
                             </div>
                           </div>
                           <p class="content">
