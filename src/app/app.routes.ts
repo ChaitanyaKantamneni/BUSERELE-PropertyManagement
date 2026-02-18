@@ -60,18 +60,18 @@ export const routes: Routes = [
         children:
         [
             {path:'',component:DashboardcomponentComponent},
-            {path:'amenities',component:AddAminities1Component},
-            {path:'profile',component:ProfileComponent},
+            {path:'Amenities',component:AddAminities1Component},
+            {path:'MyProfile',component:ProfileComponent},
             {path:'membership-details',component:MembershipDetComponent},
             // {path:'addpropertysample',component:AddpropertysampleComponent},
-            {path:'addproperty',component:AddPropertyComponentComponent},
-            {path:'dashboarddet',component:DashboardcomponentComponent},
-            {path:'userReviews',component:Review1Component},
-            {path:'addpropertytype',component:PropertyForComponent},
-            {path:'blog',component:BlogComponentComponent},
-            {path: 'whichlist', component: WhichlistComponent },
-            {path:'view-property/:propertyID',component:ViewpropertydashboardComponent},
-            {path: 'user-properties', component: UserpropertiesComponent },
+            {path:'AddProperty',component:AddPropertyComponentComponent},
+            {path:'AdminDashboard',component:DashboardcomponentComponent},
+            {path:'UserReviews',component:Review1Component},
+            {path:'AddPropertyType',component:PropertyForComponent},
+            {path:'Blog',component:BlogComponentComponent},
+            {path: 'Wishlist', component: WhichlistComponent },
+            {path:'View-Property/:propertyID',component:ViewpropertydashboardComponent},
+            {path: 'UserProperties', component: UserpropertiesComponent },
 
            
         ]
@@ -81,15 +81,15 @@ export const routes: Routes = [
         children:
         [
             {path:'',component:UserDashboardViewComponent},
-            {path:'profile',component:UserProfileComponent},
+            {path:'MyProfile',component:UserProfileComponent},
             //{path:'membership-details',component:MembershipDetComponent},
             // {path:'addpropertysample',component:AddpropertysampleComponent},
             {path:'UserAddProperty',component:AddPropertyByUserComponent},
-            {path:'UserDashboardDet',component:UserDashboardViewComponent},
-            {path:'userReviews',component:Review1Component},
+            {path:'Dashboard',component:UserDashboardViewComponent},
+            {path:'UserReviews',component:Review1Component},
             // {path:'descriptions',component:DescriptionComponentComponent}
-            {path:'userwhichlist',component:UserwhichlistComponent},
-            {path:'viewuserdashboard/:propertyID',component:ViewuserdashboardComponent}
+            {path:'UserWishlist',component:UserwhichlistComponent},
+            {path:'ViewUserDashboardProperty/:propertyID',component:ViewuserdashboardComponent}
 
         ]
     },

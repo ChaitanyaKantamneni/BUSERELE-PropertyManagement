@@ -71,7 +71,6 @@ export class ViewPropertyComponent implements OnInit {
       if (encodedID) {
         try {
           this.selectedPropertyID = atob(encodedID);
-          console.log('Decoded Property ID:', this.selectedPropertyID);
           this.loadPropertyDetailsByPropertyID(this.selectedPropertyID);
         } catch (e) {
           alert("Invalid Property ID");
@@ -101,14 +100,21 @@ export class ViewPropertyComponent implements OnInit {
       usernumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       usermessage: ['', [Validators.required, Validators.minLength(10)]],
     });
-  
-   
-    
-     this.route.queryParams.subscribe(params => {
-      this.showBackButton = params['fromSearch'] === 'true';
-    });
 
-    
+    this.userEnquiryform=this.fb.group({
+      name:['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      email:['', [
+        Validators.required,
+        Validators.email,
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@gmail\\.com$')
+      ]],
+      phone:['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      message:['', [Validators.required, Validators.minLength(10)]],
+    });
+  
+    this.route.queryParams.subscribe(params => {
+      this.showBackButton = params['fromSearch'] === 'true';
+    }); 
   }
 
 
@@ -120,10 +126,6 @@ export class ViewPropertyComponent implements OnInit {
     phone:new FormControl('',[Validators.pattern('^[0-9]{10}$')]),
     message:new FormControl('',[Validators.required,Validators.minLength(10), Validators.pattern(/\S{10,}/)])
   })
-
-     // this.route.queryParams.subscribe(params => {
-    //   this.showBackButton = params['fromSearch'] === 'true';
-    // });
 
   propertytypes:any[]=[{
     icon:'fa-building',
@@ -245,7 +247,6 @@ OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; 
   const inputElement = event.target as HTMLInputElement;
   
   if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    console.log('charCode restricted is ' + charCode);
     return false;
   }
   if (inputElement.value.length >= 10) {
@@ -288,7 +289,6 @@ checkIfPropertyInWishlist() {
         }
       },
       error: (error) => {
-        console.error('Error checking wishlist status:', error);
       }
     });
   }
@@ -318,17 +318,14 @@ toggleHeart() {
       flag:'1'
     };
 
-    console.log('Adding to wishlist:', wishlistRequest);
     this.apiurls.post('Proc_Tbl_Wishlist', wishlistRequest).subscribe({
       next: (response: any) => {
-        console.log('Added to wishlist:', response);
         this.isLiked = true; 
         localStorage.setItem('wishlist_' + this.selectedPropertyID, 'true');
         this.propertyInsStatus = " Successfully added to your Wishlist";
         this.isUpdateModalOpen = true; 
       },
       error: (error) => {
-        console.error('Error adding to wishlist:', error);
         this.propertyInsStatus = "Already in wishlist. Try again later!";
         this.isUpdateModalOpen = true; 
       }
@@ -355,12 +352,8 @@ toggleHeart() {
       activatedstatus: '0',
       Flag:'4'
     };
-
-    console.log('Removing from wishlist:', wishlistRequest);
-
     this.apiurls.post('Proc_Tbl_Wishlist',wishlistRequest).subscribe({
       next: (response: any) => {
-        console.log('Removed from wishlist:', response);
         this.isLiked = false;
         localStorage.removeItem('wishlist_' + this.selectedPropertyID);
         
@@ -368,8 +361,6 @@ toggleHeart() {
         this.isUpdateModalOpen = true; 
       },
       error: (error) => {
-        console.error('Error removing from wishlist:', error);
-        
         this.propertyInsStatus = " Failed to remove from wishlist. Try again later!";
         this.isUpdateModalOpen = true;
       }
@@ -385,30 +376,18 @@ toggleHeart() {
 
     this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', data).subscribe(
       (response: any) => {
-        console.log('API Response:', response);
-
         if (response) {
           let imageUrls: string[] = [];
-          // if (response.data[0].propImages && Array.isArray(response.data[0].propImages) && response.data[0].propImages.length > 0) {
-          //   imageUrls = response.data[0].propImages.map((img: any) => this.apiurls.getImageUrl(img.filePath));
-          //   console.log("Generated Image URLs:", imageUrls);
-          // } else {
-          //   imageUrls = ['assets/images/empty.png'];
-          // }
-
           if (
             response.data[0].propImages &&
             Array.isArray(response.data[0].propImages) &&
             response.data[0].propImages.length > 0
           ) {
-            // Sort by ImageOrder first
             const sortedImages = response.data[0].propImages.sort((a: any, b: any) => {
               return a.ImageOrder - b.ImageOrder;
             });
           
-            // Map to URLs
             imageUrls = sortedImages.map((img: any) => this.apiurls.getImageUrl(img.filePath));
-            console.log("Generated Image URLs (sorted):", imageUrls);
           } else {
             imageUrls = ['assets/images/empty.png'];
           }
@@ -417,13 +396,11 @@ toggleHeart() {
           let floorImages: string[] = [];
           if (response.data[0].floorImages && Array.isArray(response.data[0].floorImages) && response.data[0].floorImages.length > 0) {
             floorImages = response.data[0].floorImages.map((img: any) => this.apiurls.getImageUrl(img.filePath));
-            console.log("Generated Floor Image URLs:", floorImages);
           }
 
           let videoUrls: string[] = [];
           if (response.data[0].propVideos && Array.isArray(response.data[0].propVideos) && response.data[0].propVideos.length > 0) {
             videoUrls = response.data[0].propVideos.map((video: any) => this.apiurls.getImageUrl(video.filePath));
-            console.log("Generated Video URLs:", videoUrls);
           }
 
           let propertyBadge = '';
@@ -528,14 +505,8 @@ toggleHeart() {
           }
 
           this.selectedImage = this.propertydetails[0]?.propertyImages[0] || null;
-          console.log('selected Image', this.selectedImage);
-
           this.selectedFloorImage = this.propertydetails[0]?.floorImages[0] || null;
-          console.log('selected floor Image', this.selectedFloorImage);
-
           this.selectedVideo = this.propertydetails[0]?.propertyVideos[0] || null;
-          console.log('selected video', this.selectedVideo);
-
           this.isLoading = false;
         } else {
           alert("No Properties Available with this Property Type.");
@@ -548,7 +519,6 @@ toggleHeart() {
           this.router.navigate(['/home']);
         } else {
           alert("An error occurred while fetching property details.");
-          console.error("Error fetching property details:", error);
         }
       }
     );
@@ -581,9 +551,7 @@ toggleHeart() {
 
         const blob = new Blob([byteArray], { type: image.mimeType });
         propertyImage = URL.createObjectURL(blob);
-        console.log(propertyImage);
       } catch (error) {
-        console.error('Error decoding image data:', error);
       }
     }
 
@@ -604,9 +572,8 @@ toggleHeart() {
 
         const blob = new Blob([byteArray], { type: video.mimeType });
         propertyVideo = URL.createObjectURL(blob);
-        console.log(propertyVideo);
+
       } catch (error) {
-        console.error('Error decoding image data:', error);
       }
     }
 
@@ -639,6 +606,7 @@ toggleHeart() {
       usermessage: this.userReviewform.get('usermessage')?.value,
       rating: rating, 
       reviewstatus: '0',
+      CreatedDate:new Date().toISOString(),
       CreatedBy:localStorage.getItem('email'),
       flag:'1'
     };
@@ -657,12 +625,10 @@ toggleHeart() {
 
   selectMainImage(image: string) {
     this.selectedImage = image;
-    console.log(this.selectedImage)
   }
 
   selectMainVideo(video: string) {
     this.selectedVideo = video;
-    console.log(this.selectedVideo)
   }
 
 
@@ -688,12 +654,10 @@ toggleHeart() {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error("Error details:", error);
         this.propertyInsStatus = 'Failed to submit enquiry. Try again later...!';
         this.isUpdateModalOpen = true;
       },
       complete: () => {
-        console.log("Request completed");
       }
     });
   }
@@ -722,8 +686,9 @@ toggleHeart() {
     }
   }
 
+  // 'propertyID',
   propertyKeys = [
-    'propertyID', 'developedby', 'propname', 'mobileNumber', 'emailID', 
+   'developedby', 'propname', 'mobileNumber', 'emailID', 
     'country', 'reraCertificateNumber', 
     'propertyApprovedBy', 'propertyType', 'propertyFor', 'propertyStatus',
     'propertyfacing', 'totalBlocks', 'totalFloors', 'noOfFlats', 
@@ -818,8 +783,6 @@ toggleHeart() {
     this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
         .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
-
           this.FeaturedProperties = response.data.map((property: any) => {
             let propertyImage = 'assets/images/empty.png';
             let defaultPropImage = 'assets/images/empty.png';
@@ -885,7 +848,6 @@ toggleHeart() {
           }, 20000);
         },
         (error) => {
-          console.error('Error fetching property details:', error);
           this.FeaturedProperties = [];
           this.isLoadingFeaProperty = false;
         }

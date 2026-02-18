@@ -1,16 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, NgIf,NgFor} from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from "../../Main/footer/footer.component";
 import { ApiServicesService } from '../../api-services.service';
 
+interface navlists{
+  navname:string,
+  navurl:string
+}
+
 @Component({
   selector: 'app-sign-in',
   standalone: true,
   providers: [ApiServicesService],
-  imports: [ReactiveFormsModule, NgClass, NgIf, HttpClientModule, RouterLink,FooterComponent],
+  imports: [ReactiveFormsModule, NgClass, NgIf, HttpClientModule, RouterLink,FooterComponent,NgFor],
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css']
 })
@@ -20,12 +25,23 @@ export class SignInComponent implements OnInit {
 
   ngOnInit(): void {
     localStorage.clear();
-    console.log("Local storage cleared on component initialization.");
     this.generateCaptcha(); 
     this.addSessionTimeoutListeners();
-    // this.checkSessionExpiration();
   }
 
+  public navitems:navlists[]=[{
+    navname:'HOME',
+    navurl:'/'
+  },
+  {
+    navname:'ABOUT',
+    navurl:'/about-us'
+  },
+  {
+    navname:'CONTACT',
+    navurl:'/contact-us'
+  }
+  ];
 
   generateCaptcha(): void {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -38,54 +54,106 @@ export class SignInComponent implements OnInit {
   }
 
 
-drawCaptcha(): void {
-  const canvas: HTMLCanvasElement = document.getElementById('captchaCanvas') as HTMLCanvasElement;
-  const context = canvas.getContext('2d');
-  if (context) {
-    canvas.width = 200;  
-    canvas.height = 60;  
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    this.addBackgroundNoise(context, canvas);
-    context.fillStyle = this.getRandomColor();
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.font = '40px Arial';
-    context.textBaseline = 'middle';
-    for (let i = 0; i < this.captchaCode.length; i++) {
-      const char = this.captchaCode.charAt(i);
-      context.fillStyle = this.getRandomColor();
-      const x = 30 + i * 30 + Math.random() * 5;  
-      const y = 30 + Math.random() * 10; 
-      const angle = (Math.random() - 0.5) * Math.PI / 5; 
-      context.save();
-      context.translate(x, y);
-      context.rotate(angle);
-      context.fillText(char, 0, 0);  
-      context.restore();
+  drawCaptcha(): void {
+    const canvas: HTMLCanvasElement = document.getElementById('captchaCanvas') as HTMLCanvasElement;
+    const context = canvas.getContext('2d');
+    if (context) {
+      canvas.width = 220;  
+      canvas.height = 70; 
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+      gradient.addColorStop(0, '#6a11cb');
+      gradient.addColorStop(1, '#2575fc');
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+  
+      // this.addBackgroundNoise(context, canvas);
+  
+      context.font = 'bold 45px "Arial Black", Gadget, sans-serif';
+      context.textBaseline = 'middle';
+      context.textAlign = 'center';
+  
+      const charSpacing = canvas.width / (this.captchaCode.length + 1);
+  
+      for (let i = 0; i < this.captchaCode.length; i++) {
+        const char = this.captchaCode.charAt(i);
+        const charGradient = context.createLinearGradient(0, 0, 0, canvas.height);
+        charGradient.addColorStop(0, this.getRandomColor());
+        charGradient.addColorStop(1, this.getRandomColor());
+        context.fillStyle = charGradient;
+  
+        const x = charSpacing * (i + 1);
+        const y = canvas.height / 2;
+  
+        const angle = (Math.random() - 0.5) * Math.PI / 8; 
+  
+        context.save();
+        context.translate(x, y);
+        context.rotate(angle);
+        context.fillText(char, 0, 0);
+        context.restore();
+      }
+  
+      this.addRandomLines(context, canvas); 
     }
-    this.addRandomLines(context, canvas);
   }
-}
+  
+// drawCaptcha(): void {
+//   const canvas: HTMLCanvasElement = document.getElementById('captchaCanvas') as HTMLCanvasElement;
+//   const context = canvas.getContext('2d');
+//   if (context) {
+//     canvas.width = 200;  
+//     canvas.height = 60;  
+//     context.clearRect(0, 0, canvas.width, canvas.height);
+//     this.addBackgroundNoise(context, canvas);
+//     context.fillStyle = this.getRandomColor();
+//     context.fillRect(0, 0, canvas.width, canvas.height);
+//     context.font = '40px Arial';
+//     context.textBaseline = 'middle';
+//     for (let i = 0; i < this.captchaCode.length; i++) {
+//       const char = this.captchaCode.charAt(i);
+//       context.fillStyle = this.getRandomColor();
+//       const x = 30 + i * 30 + Math.random() * 5;  
+//       const y = 30 + Math.random() * 10; 
+//       const angle = (Math.random() - 0.5) * Math.PI / 5; 
+//       context.save();
+//       context.translate(x, y);
+//       context.rotate(angle);
+//       context.fillText(char, 0, 0);  
+//       context.restore();
+//     }
+//     this.addRandomLines(context, canvas);
+//   }
+// }
+
+// getRandomColor(): string {
+//   const letters = '0123456789ABCDEF';
+//   let color = '#';
+//   for (let i = 0; i < 6; i++) {
+//     color += letters[Math.floor(Math.random() * 16)];
+//   }
+//   return color;
+// }
+
 
 getRandomColor(): string {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+  const h = Math.floor(Math.random() * 360); 
+  const s = 70 + Math.random() * 30;  
+  const l = 30 + Math.random() * 30;  
+  return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
-addBackgroundNoise(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
-  const numDots = 30;
-  for (let i = 0; i < numDots; i++) {
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * canvas.height;
-    context.beginPath();
-    context.arc(x, y, 2, 0, Math.PI * 2);
-    context.fillStyle = this.getRandomColor();
-    context.fill();
-  }
-}
+// addBackgroundNoise(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+//   const numDots = 30;
+//   for (let i = 0; i < numDots; i++) {
+//     const x = Math.random() * canvas.width;
+//     const y = Math.random() * canvas.height;
+//     context.beginPath();
+//     context.arc(x, y, 2, 0, Math.PI * 2);
+//     context.fillStyle = this.getRandomColor();
+//     context.fill();
+//   }
+// }
 
 addRandomLines(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
   const numLines = 5;
@@ -205,13 +273,11 @@ addRandomLines(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): vo
         }
       },
       error: (error) => {
-        console.error('Login error:', error);
         this.propertyInsStatus = error?.error?.message || "Login failed due to server error.";
         this.color = { red: true, green: false };
         this.isUpdateModalOpen = true;
       },
       complete: () => {
-        console.log('Login request completed');
       }
     });
   }
@@ -237,7 +303,6 @@ addRandomLines(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): vo
       clearTimeout(sessionTimeoutId);
       sessionTimeoutId = setTimeout(() => {
         localStorage.clear();
-        console.log("Session expired, localStorage cleared.");
       }, sessionTimeoutDuration);
     };
 
@@ -250,20 +315,6 @@ addRandomLines(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): vo
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible; 
   }
-
-  // private checkSessionExpiration(): void {
-  //   const expiration = localStorage.getItem("sessionExpiration");
-  //   if (expiration && Date.now() > parseInt(expiration, 10)) {
-  //     this.logoutUser();
-  //   }
-  // }
-
-
-//  private logoutUser(): void {
-//   localStorage.clear();
-//   console.log("Session expired. User logged out.");
-//   this.routes.navigate(['/signin']);
-// }
 
 
 }

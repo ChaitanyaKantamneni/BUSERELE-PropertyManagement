@@ -1,477 +1,498 @@
-.mainReview{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.mainReview {
+  position: relative;
+  height: calc(100vh - 35px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 35px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+.w-100 {
+  overflow: hidden;
+}
+
+.footer-bottom {
+  background-color: #e8e8e8b5;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.footer-bottom p{
+  margin: 0px;
 }
 
 .reviewcard,.reviewview{
-    height: auto;
-    width: 100%;
-    padding: 20px;
-    background-color: white;
-    border-radius: 20px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  height: auto;
+  width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 
 .filtersSearch{
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-    margin: 15px 0px;
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  margin: 15px 0px;
 }
 
 .searchreview,.reviewStatus{
-    width: 49%;
-    margin: 0px;
+  width: 49%;
+  margin: 0px;
 }
 
 .reviewstable{
-  height: auto;
-  width: 100%;
-  overflow: auto;
-  max-height: 275px;
+height: auto;
+width: 100%;
+overflow: auto;
+max-height: 275px;
 }
 
 td {
-  text-align: center;
-  vertical-align: middle;
-  padding: 10px;
+text-align: center;
+vertical-align: middle;
+padding: 10px;
 }
+
 .input-container{
-  width: 49%;
+width: 49%;
 }
+
 .viewbtn{
-    padding: 0px 10px;
-    /* border-right: 0.5px solid black; */
-    border-radius: 0px;
+  padding: 0px 10px;
+  border-radius: 0px;
 }
 
 
 .checkbtn{
-    padding: 0px 10px;
-    border-radius: 0px;
+  padding: 0px 10px;
+  border-radius: 0px;
 }
 
 .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table th, .table td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ddd;
-  }
-  
-  .table th {
-    font-weight: bold;
-  }
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  .btn-secondary{
-    background-color: #2495FD;
-    border: none;
-  }
+.table th, .table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
 
-  .btn-secondary:hover{
-    background-color: #2495FD;
-    border: 1px solid #2495FD;
-  }
+.table th {
+  font-weight: bold;
+}
 
-  .formrow{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.btn-secondary{
+  background-color: #2495FD;
+  border: none;
+}
 
-  .formrow .form-group{
-    width:49%;
-  }
+.btn-secondary:hover{
+  background-color: #2495FD;
+  border: 1px solid #2495FD;
+}
 
-  .updatestatusbuttons{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-  }
+.formrow{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .updatestatusbuttons .decline{
-    margin-right: 20px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-  }
+.formrow .form-group{
+  width:49%;
+}
 
-  .updatestatusbuttons .approve{
-    margin-right: 20px;
-    background-color: green;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-  }
+.updatestatusbuttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
 
-  .updatestatusbuttons i{
-    margin-right: 10px;
-  }
+.updatestatusbuttons .decline{
+  margin-right: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
 
-  .PageHeading{
-    width: 100%;
-    /* background-color: #e8e8e8; */
-    background-color: #8cc8ffd1;
+.updatestatusbuttons .approve{
+  margin-right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.updatestatusbuttons i{
+  margin-right: 10px;
+}
+
+.PageHeading{
+  width: 100%;
+    background-color: white;
     display: flex;
     align-items: center;
     padding: 10px;
     border-radius: 10px;
-  }
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
 
-  .PageHeading h5{
-    padding-left: 10px;
-  }
+.PageHeading h5{
+  padding-left: 10px;
+}
 
-  form{
-    padding: 20px 30px;
-  }
-  .form-group label{
-    font-family: 'Roboto', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  
+form{
+  padding: 20px 30px;
+}
+.form-group label{
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
 
-  .form-group input,.form-group textarea{
-    border: none;
-    border-bottom: 1px solid gray;
-    font-family: 'Roboto', sans-serif;
-    font-size: 11px;
-    border-radius: 0px;
-  }
 
-  .form-group input:focus{
-    border-bottom: 1px solid blue;
-    outline: none; 
-  }
+.form-group input,.form-group textarea{
+  border: none;
+  border-bottom: 1px solid gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  border-radius: 0px;
+}
 
-  a{
-    text-decoration: none;
-    color:black
-  }
-  a h5{
-    font-family: fangsong;
-    font-weight: 600;
-    font-size: 18px;
-    margin: 0px;
-  }
-  a p{
-    font-family: 'Roboto', sans-serif;
-    font-size: 10px;
-  }
+.form-group input:focus{
+  border-bottom: 1px solid blue;
+  outline: none; 
+}
 
-  .backLabel{
-    width: fit-content;
-  }
+a{
+  text-decoration: none;
+  color:black
+}
+a h5{
+  font-family: fangsong;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0px;
+}
+a p{
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+}
 
-  table thead{
-   font-family:'Roboto', sans-serif;
-   font-size: 12px;
-  }
+.backLabel{
+  width: fit-content;
+}
 
-  table thead tr th{
-    text-align: center;
-    background-color: #1E3A5F;
-    color: white;
-  }
+table thead{
+ font-family:'Roboto', sans-serif;
+ font-size: 12px;
+}
 
-  table tbody{
-    font-family:'Roboto', sans-serif;
-    font-size: 10px;
-   }
- 
-   table tbody tr td{
-     text-align: center;
-   }
+table thead tr th{
+  text-align: center;
+  background-color: #1E3A5F;
+  color: white;
+}
+
+table tbody{
+  font-family:'Roboto', sans-serif;
+  font-size: 10px;
+ }
+
+ table tbody tr td{
+   text-align: center;
+ }
 
 @media (max-width: 768px){
-    .mainReview{
-        height: 90vh;
-    }
-    .filtersSearch{
-        display: flex;
-        justify-content:space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        flex-wrap: wrap;
-    }
-    .searchreview,.reviewStatus{
-        width:100%;
-        margin-bottom: 10px;
-    }
+  .mainReview{
+      height: 90vh;
+  }
+  .filtersSearch{
+      display: flex;
+      justify-content:space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+  }
+  .searchreview,.reviewStatus{
+      width:100%;
+      margin-bottom: 10px;
+  }
 
-    .table thead {
-        display: block; 
-      }
-    
-      .table tbody {
-        display: block;
-      }
-    
-      .table tbody tr {
-        display: block;
-        margin-bottom: 10px;
-      }
-    
-      .table tbody td {
-        width: 100%; 
-        padding: 15px 8px 8px 8px; 
-        box-sizing: border-box;
-        position: relative;
-        display: block;
-        border: 1px solid #ddd;
-      }
-    
-      .table tbody td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        position: absolute;
-        top: 5px;
-        left: 8px;
-        color: #555;
-        margin-right: 10px;
-        text-transform: uppercase;
-        font-size: 12px;  
-        z-index: 1;
-      }
-    
-      .table tbody td {
-        padding-left: 20px; 
-        padding-top: 25px; 
-      }
-    
-      .table tbody td .btn {
-        padding: 5px;
-      }
+  .table thead {
+      display: block; 
+    }
+  
+    .table tbody {
+      display: block;
+    }
+  
+    .table tbody tr {
+      display: block;
+      margin-bottom: 10px;
+    }
+  
+    .table tbody td {
+      width: 100%; 
+      padding: 15px 8px 8px 8px; 
+      box-sizing: border-box;
+      position: relative;
+      display: block;
+      border: 1px solid #ddd;
+    }
+  
+    .table tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      color: #555;
+      margin-right: 10px;
+      text-transform: uppercase;
+      font-size: 12px;  
+      z-index: 1;
+    }
+  
+    .table tbody td {
+      padding-left: 20px; 
+      padding-top: 25px; 
+    }
+  
+    .table tbody td .btn {
+      padding: 5px;
+    }
 }
 
 
 
 .star {
-  font-size: 20px; 
-  color: #d3d3d3; 
+font-size: 20px; 
+color: #d3d3d3; 
 }
 
 .star.filled {
-  color: gold; 
+color: gold; 
 }
 
 
 
 .searchreview {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
+position: relative;
+display: flex;
+align-items: center;
+width: 100%;
 }
 
 .search-input {
-  width: 75%;
-  padding: 1px 10px 10px 35px; 
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
+width: 75%;
+padding: 1px 10px 10px 35px; 
+border: 1px solid #ccc;
+border-radius: 5px;
+outline: none;
 }
 
 .search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: black;
-  font-size: 15px;
-  pointer-events: none; 
+position: absolute;
+left: 10px;
+top: 50%;
+transform: translateY(-50%);
+color: black;
+font-size: 15px;
+pointer-events: none; 
 }
 
 
 
 .NoDataFound{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
 }
 
 .NoDataFoundImg{
-  height: 180px;
-  width:250px;
+height: 180px;
+width:250px;
 }
 
 
 
 button[data-tooltip] {
-  position: relative;
+position: relative;
 }
 
 button[data-tooltip]:hover::after {
-  content: attr(data-tooltip);  
-  position: absolute;
-  top: -30px;  
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.3s;
-  visibility: hidden; 
-  pointer-events: none;
+content: attr(data-tooltip);  
+position: absolute;
+top: -30px;  
+left: 50%;
+transform: translateX(-50%);
+background-color: #333;
+color: #fff;
+padding: 5px 10px;
+border-radius: 5px;
+font-size: 12px;
+white-space: nowrap;
+opacity: 0;
+transition: opacity 0.3s;
+visibility: hidden; 
+pointer-events: none;
 }
 
 button[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
+opacity: 1;
+visibility: visible;
 }
 
 
 .reviewStatus {
-  position: relative;
-  display: inline-block;
-  width: 100%;
+position: relative;
+display: inline-block;
+width: 100%;
 }
 
 .dropdown-with-icon {
-  appearance: none; 
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 30px; 
-  width: 100%;
+appearance: none; 
+-webkit-appearance: none;
+-moz-appearance: none;
+padding-right: 30px; 
+width: 100%;
 }
 
 .dropdown-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none; 
-  font-size: 16px;
-  color:#999;
+position: absolute;
+right: 10px;
+top: 50%;
+transform: translateY(-50%);
+pointer-events: none; 
+font-size: 16px;
+color:#999;
 }
 
 
 
 .floating-label {
-  position: absolute;
-  left: 35px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #999;
-  font-size: 14px;
-  pointer-events: none;
-  transition: 0.2s ease all;
+position: absolute;
+left: 35px;
+top: 50%;
+transform: translateY(-50%);
+color: #999;
+font-size: 14px;
+pointer-events: none;
+transition: 0.2s ease all;
 }
 
 .floating-label.active {
-  top: -7px;
-  left: 0px;
-  padding: 0 4px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  color: black;
-  opacity: 1;
+top: -7px;
+left: 0px;
+padding: 0 4px;
+font-family: 'Roboto', sans-serif;
+font-size: 11px;
+font-weight: 600;
+color: black;
+opacity: 1;
 }
 
 
-  
+
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);  
-  z-index: 1040;  
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0, 0, 0, 0.5);
+backdrop-filter: blur(5px);  
+z-index: 1040;  
 }
 
 .modal-content {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1050;  
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+z-index: 1050;  
 }
 
 
 
 @media (max-width: 768px) {
 
-  .mainReview {
-    height: 90vh;
-    flex-direction: column;
-    padding: 10px;
-  }
+.mainReview {
+  height: 90vh;
+  flex-direction: column;
+  padding: 10px;
+}
 
-  .filtersSearch {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-  }
+.filtersSearch {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
 
-  .searchreview,
-  .reviewStatus {
-    width: 100%;
-    margin-bottom: 10px;
-  }
+.searchreview,
+.reviewStatus {
+  width: 100%;
+  margin-bottom: 10px;
+}
 
-  .formrow {
-    flex-wrap: wrap;
-  }
+.formrow {
+  flex-wrap: wrap;
+}
 
-  .formrow .form-group {
-    width: 100%;
-  }
+.formrow .form-group {
+  width: 100%;
+}
 
-  .table thead {
-    display: none;
-  }
+.table thead {
+  display: none;
+}
 
-  .table tbody {
-    display: block;
-  }
+.table tbody {
+  display: block;
+}
 
-  .table tbody tr {
-    display: block;
-    margin-bottom: 10px;
-  }
+.table tbody tr {
+  display: block;
+  margin-bottom: 10px;
+}
 
-  .table tbody td {
-    display: block;
-    width: 100%;
-    border: 1px solid #ddd;
-    padding: 25px 8px 8px 20px;
-    box-sizing: border-box;
-    position: relative;
-  }
+.table tbody td {
+  display: block;
+  width: 100%;
+  border: 1px solid #ddd;
+  padding: 25px 8px 8px 20px;
+  box-sizing: border-box;
+  position: relative;
+}
 
-  .table tbody td::before {
-    content: attr(data-label);
-    position: absolute;
-    top: 5px;
-    left: 8px;
-    font-weight: bold;
-    font-size: 12px;
-    color: #555;
-    text-transform: uppercase;
-    z-index: 1;
-  }
+.table tbody td::before {
+  content: attr(data-label);
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #555;
+  text-transform: uppercase;
+  z-index: 1;
+}
 
-  .table tbody td .btn {
-    padding: 5px;
-  }
+.table tbody td .btn {
+  padding: 5px;
+}
 }
 

@@ -1,323 +1,305 @@
 <div *ngIf="isLoading" class="preloader">
-    <img src="assets/images/load.gif" alt="Loading...">
+  <img src="assets/images/load.gif" alt="Loading...">
 </div>
 <div *ngIf="!isLoading">
-   <div class="backLabel mt-4">
-    <a href="javascript:void(0);" (click)="backClick($event)" class="back-button">
-        <h5 class="title">Welcome back to the Property Hub</h5>
-        <p class="subtitle">Ready to jump back in?</p>
-    </a>
-</div>
-    <div class="container">
+  <div class="backLabel mt-4">
+      <a href="javascript:void(0);" (click)="backClick($event)" class="back-button">
+          <h5 class="title">Welcome back to the Property Hub</h5>
+          <p class="subtitle">Ready to jump back in?</p>
+      </a>
+  </div>
+  
+  
+  <div class="container">
 
-        <div class="maincontainer" *ngFor="let propertydetailsitem of propertydetails">
-            <div class="propTitlePrice">
-                <h5 class="propertyTitle" style="flex: 1; margin: 0;">{{propertydetailsitem.propertyName}}</h5>
-                <h5 *ngIf="isVisible">{{propertydetailsitem.UserID}}</h5>
+      <div class="maincontainer" *ngFor="let propertydetailsitem of propertydetails">
+          <div class="propTitlePrice">
+              <h5 class="propertyTitle" style="flex: 1; margin: 0;">{{propertydetailsitem.propertyName}}</h5>
+              <h5 *ngIf="isVisible">{{propertydetailsitem.UserID}}</h5>
 
-                
-                <div class="propPriceDet">
-                 <div style="display: flex; align-items: center; margin-right: 20px;">
-                        <h5 style="margin: 0; font-size: 12px; color: #888; font-weight: 400">
-                            Sft Price
-                            <span style="font-size: 22px; margin-left: 5px;">/</span>
-                        </h5>
-                        <h5 style="margin: 0; font-size: 20px; font-weight: 700; color: #6449e7; margin-left: 5px;">
-                            Rs {{propertydetailsitem.propertyArea}}
-                        </h5>
-                    </div>
-                    <div style="display: flex; align-items: center; margin-right: 20px;">
-                        <h5 style="margin: 0; font-size: 12px; color: #888; font-weight: 400">
-                           Price
-                            <span style="font-size: 22px; margin-left: 5px;">/</span>
-                        </h5>
-                        <h5 style="margin: 0; font-size: 20px; font-weight: 700; color: #6449e7;margin-left: 5px;">
-                            Rs {{convertToCrores(propertydetailsitem.propertyPrice)}}
-                        </h5>
-                    </div>
+              
+              <div class="propPriceDet">
+               <div style="display: flex; align-items: center; margin-right: 20px;">
+                      <h5 style="margin: 0; font-size: 12px; color: #888; font-weight: 400">
+                          Sft Price
+                          <span style="font-size: 22px; margin-left: 5px;">/</span>
+                      </h5>
+                      <h5 style="margin: 0; font-size: 20px; font-weight: 700; color: #6449e7; margin-left: 5px;">
+                          Rs {{propertydetailsitem.propertyArea}}
+                      </h5>
+                  </div>
 
-                   
-                    <div class="wishlist-container">
-                       
-                        <div style="margin-right: 20px;" class="wishlist-container">
+                  <div style="display: flex; align-items: center; margin-right: 20px;">
+                      <h5 style="margin: 0; font-size: 12px; color: #888; font-weight: 400">
+                         Price
+                          <span style="font-size: 22px; margin-left: 5px;">/</span>
+                      </h5>
+                      <h5 style="margin: 0; font-size: 20px; font-weight: 700; color: #6449e7;margin-left: 5px;">
+                          Rs {{convertToCrores(propertydetailsitem.propertyPrice)}}
+                      </h5>
+                  </div>
+                  <div class="wishlist-container">
+                     
+                      <div style="margin-right: 20px;" class="wishlist-container">
+                        <i 
+                          id="heartIcon"
+                          class="fas fa-heart"
+                          [ngStyle]="{ 'color': isLiked ? 'red' : 'grey' }"
+                          title="Add to Wishlist"
+                          (click)="toggleHeart()"
+                          style="cursor: pointer;">
+                        </i>
+                      </div>
+                    
+                      <div class="share-container" style="display: inline-block; position: relative;">
                           <i 
-                            id="heartIcon"
-                            class="fas fa-heart"
-                            [ngStyle]="{ 'color': isLiked ? 'red' : 'grey' }"
-                            title="Add to Wishlist"
-                            (click)="toggleHeart()"
-                            style="cursor: pointer;">
+                            class="fas fa-share-alt share-icon"
+                            title="Share"
+                            style="cursor: pointer; font-size: 15px;"
+                            (mouseenter)="openShareMenu()"
+                            (mouseleave)="closeShareMenu()">
                           </i>
-                        </div>
-                       
-                        <div class="share-container" style="display: inline-block; position: relative;">
-                            <i 
-                              class="fas fa-share-alt share-icon"
-                              title="Share"
-                              style="cursor: pointer; font-size: 15px;"
-                              (mouseenter)="openShareMenu()"
-                              (mouseleave)="closeShareMenu()">
-                            </i>
-                          
-                            <div *ngIf="isShareMenuVisible" 
-                                 class="share-menu" 
-                                 style="display: block;" 
-                                 (mouseenter)="openShareMenu()"
-                                 (mouseleave)="closeShareMenu()">
-                              <a (click)="shareOnWhatsApp()" title="Share on WhatsApp" style="cursor: pointer;">
-                                <i class="fab fa-whatsapp" style="color: #25D366;"></i>
-                              </a>
-                              <a (click)="shareOnInstagram()" title="Share on Instagram" style="cursor: pointer;">
-                                <i class="fab fa-instagram" style="color: #E1306C;"></i>
-                              </a>
-                              <a (click)="shareOnFacebook()" title="Share on Facebook" style="cursor: pointer;">
-                                <i class="fab fa-facebook" style="color: #1877F2;"></i>
-                              </a>
-                            </div>
-                          </div>
-                      </div>
-                      
-                </div>
-                
-            </div>
-            
-            
-
-            <div class="propertyimagecontainer d-flex flex-wrap justify-content-between align-items-start p-0 mb-4">
-
-             
-                <div class="imagecon">
-
-                    <div class="property-for">
-                        <p class="property-status" [ngStyle]="{'color': propertydetails[0]?.propertyBadgeColor}" >
-                            {{ propertydetails[0]?.propertyFor }}
-                          </p>
-                         </div>
-                  
-                    <div class="imagecontainer">
-                        <img *ngIf="selectedImage; else noImage" [src]="selectedImage">
                         
-                        <ng-template #noImage>
-                            <img *ngIf="propertydetails[0]?.propertyImages?.length > 0 || propertydetails[0]?.floorImages?.length > 0; else noImagesAvailable"
-                                [src]="propertydetails[0]?.propertyImages[0] || propertydetails[0]?.floorImages[0]"
-                                [alt]="'Property or Floor Image'"
-                                class="property-image">
-                        </ng-template>
-                    
-                        <ng-template #noImagesAvailable>
-                            <p>No images available.</p>
-                        </ng-template>
-                    </div>
-
-                    <div class="image-list-container mt-3 d-flex flex-wrap position-relative">
-                      <div 
-                        #scrollContainer
-                        class="d-flex overflow-x-auto overflow-y-hidden"
-                        [ngClass]="{ 'scrollable-images-container': showScrollButtons }"
-                        (window:resize)="checkScroll()" >
-                        <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
-                             class="thumbnail"
-                             (click)="selectMainImage(image)">
-                          <img [src]="image"
-                               [alt]="'Property Thumbnail ' + (i + 1)"
-                               class="thumbnail-image"
-                               (load)="checkScroll()" 
-                               [class.selected]="image === selectedImage">
-                        </div>
-                        <div *ngFor="let floorImage of propertydetails[0]?.floorImages; let j = index"
-                             class="thumbnail"
-                             (click)="selectMainImage(floorImage)">
-                          <img [src]="floorImage"
-                               [alt]="'Floor Plan Thumbnail ' + (j + 1)"
-                               class="thumbnail-image"
-                               (load)="checkScroll()"  
-                               [class.selected]="floorImage === selectedImage">
-                        </div>
-                      </div>
-                      <button class="scroll-button left" *ngIf="showScrollButtons" (click)="scrollLeft(scrollContainer)">
-                        <i class="fa fa-chevron-left"></i>
-                      </button>
-                      <button class="scroll-button right" *ngIf="showScrollButtons" (click)="scrollRight(scrollContainer)">
-                        <i class="fa fa-chevron-right"></i>
-                      </button>
-                    </div> 
-                </div>
-        
-            </div>
-
-            <div class="PropertyContentMain">
-                <div class="propertydetails">
-                  
-                      <div class="propertyoverview">
-                        <div class="headings">
-                          <p>Overview</p>
-                        </div>
-                        <div class="body">
-                            <div class="grid-container">    
-                                <ng-container *ngFor="let key of propertyKeys">
-                                  <div *ngIf="propertydetailsitem[key]" class="grid-item">
-                                    <div class="propertytype">
-                                      <p class="heading">{{ getLabel(key) }}:</p>
-                                      <p class="value" [ngStyle]="getValueStyle(key)">
-                                        {{ propertydetailsitem[key] }}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </ng-container>
-                              </div>    
-                        </div>
-                      </div>
-                      
-                      
-                    
-                      <div class="propertyoverview">
-                        <div class="headings">
-                          <p>Address</p>
-                        </div>
-                        <div class="body">
-                          <div class="grid-container">
-                            <ng-container *ngFor="let key of ['propertyAddress', 'nearBy', 'landMark', 'propertyCity', 'state', 'propertyZipCode']">
-                              <div *ngIf="propertydetailsitem[key]" class="grid-item">
-                                <div class="propertytype">
-                                  <p class="heading">{{ getLabel(key) }}:</p>
-                                  <p class="value">{{ propertydetailsitem[key] }}</p>
-                                </div>
-                              </div>
-                            </ng-container>
+                          <div *ngIf="isShareMenuVisible" 
+                               class="share-menu" 
+                               style="display: block;" 
+                               (mouseenter)="openShareMenu()"
+                               (mouseleave)="closeShareMenu()">
+                            <a (click)="shareOnWhatsApp()" title="Share on WhatsApp" style="cursor: pointer;">
+                              <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                            </a>
+                            <a (click)="shareOnInstagram()" title="Share on Instagram" style="cursor: pointer;">
+                              <i class="fab fa-instagram" style="color: #E1306C;"></i>
+                            </a>
+                            <a (click)="shareOnFacebook()" title="Share on Facebook" style="cursor: pointer;">
+                              <i class="fab fa-facebook" style="color: #1877F2;"></i>
+                            </a>
                           </div>
                         </div>
-                      </div>
-                   
-               <div *ngIf="propertydetailsitem.propertydescription" class="propertyoverview PropertyDescriptionMain  ">
-                <div class="headings">
-                <p>Description</p>
-                </div>
-                <div class="body">
-                <p class="PropertyDescriptionContent w-100 no-wrap" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
-                </div>
-            </div>
-  
-            <div *ngIf="propertydetailsitem.propertyspecificDescription" class="propertyoverview PropertyDescriptionMain">
-                <div class="headings">
-                <p>Specific Description</p>
-                </div>
-                <div class="body">
-                <p class="PropertyDescriptionContent w-100 no-wrap" [innerHTML]="sanitizeHtml(propertydetailsitem.propertyspecificDescription)"></p>
-                </div>
-            </div>
-  
-                   
-                <div *ngIf="selectedAmenities.length > 0" class="propertyoverview propertyfeatures">
-                    <div class="headings">
-                      <p>Features</p>
                     </div>
-                    <div class="body">
-                      <div *ngFor="let amenity of selectedAmenities">
-                        <p>
-                          <span class="icon-circle">
-                            <i [ngClass]="amenity.icon"></i>
-                          </span>
-                          {{ amenity.name }}
+
+              </div>
+          </div>
+
+          <div class="propertyimagecontainer d-flex flex-wrap justify-content-between align-items-start p-0 mb-4">
+              <div class="imagecon">
+                  <div class="property-for">
+                      <p class="property-status" [ngStyle]="{'color': propertydetails[0]?.propertyBadgeColor}">
+                          {{ propertydetails[0]?.propertyFor }}
                         </p>
+                       </div>
+                  <div class="imagecontainer">
+                      <img *ngIf="selectedImage; else noImage" [src]="selectedImage">
+                      
+                      <ng-template #noImage>
+                          <img *ngIf="propertydetails[0]?.propertyImages?.length > 0 || propertydetails[0]?.floorImages?.length > 0; else noImagesAvailable"
+                              [src]="propertydetails[0]?.propertyImages[0] || propertydetails[0]?.floorImages[0]"
+                              [alt]="'Property or Floor Image'"
+                              class="property-image">
+                      </ng-template>
+                  
+                      <ng-template #noImagesAvailable>
+                          <p>No images available.</p>
+                      </ng-template>
+                  </div>                 
+                  
+                  <div class="image-list-container mt-3 d-flex flex-wrap position-relative">
+                    <div 
+                      #scrollContainer
+                      class="d-flex overflow-x-auto overflow-y-hidden"
+                      [ngClass]="{ 'scrollable-images-container': showScrollButtons }"
+                      (window:resize)="checkScroll()" >
+                      <div *ngFor="let image of propertydetails[0]?.propertyImages; let i = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(image)">
+                        <img [src]="image"
+                             [alt]="'Property Thumbnail ' + (i + 1)"
+                             class="thumbnail-image"
+                             (load)="checkScroll()" 
+                             [class.selected]="image === selectedImage">
+                      </div>
+                      <div *ngFor="let floorImage of propertydetails[0]?.floorImages; let j = index"
+                           class="thumbnail"
+                           (click)="selectMainImage(floorImage)">
+                        <img [src]="floorImage"
+                             [alt]="'Floor Plan Thumbnail ' + (j + 1)"
+                             class="thumbnail-image"
+                             (load)="checkScroll()"  
+                             [class.selected]="floorImage === selectedImage">
                       </div>
                     </div>
+                    <button class="scroll-button left" *ngIf="showScrollButtons" (click)="scrollLeft(scrollContainer)">
+                      <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <button class="scroll-button right" *ngIf="showScrollButtons" (click)="scrollRight(scrollContainer)">
+                      <i class="fa fa-chevron-right"></i>
+                    </button>
                   </div>
                   
-  
-                <div *ngIf="selectedVideo" class="propertyoverview propertyVideo">
-                    <div class="headings">
-                    <p>Video</p>
-                    </div>
-                    <div class="body">
-                    <div class="video-container">
-                        <video width="100%" controls>
-                        <source [src]="selectedVideo" type="video/mp4">
-                        Your browser does not support the video tag.
-                        </video>
-                    </div>
-                    </div>
-                </div>
-  
 
-                 
-                <div *ngIf="iframeHtml" class="propertyoverview">
-                    <div class="headings">
-                    <p>Location</p>
-                    </div>
-                    <div class="body">
-                    <div class="locationMap iframe" [innerHTML]="iframeHtml"></div>
-                    </div>
                 </div>
-                
-            <div *ngIf="propertydetailsitem.websiteurl || propertydetailsitem.pinteresturl || propertydetailsitem.facebookurl || propertydetailsitem.twitterurl" class="propertyoverview">
-              <div class="headings">
-                <p>Social Networks</p>
-              </div>
-                <div class="body propSocialLinks">
+          </div>
+
+          <div class="PropertyContentMain">
+              <div class="propertydetails">
+                    <div class="propertyoverview">
+                      <div class="headings">
+                        <p>OVERVIEW</p>
+                      </div>
+                      <div class="body">
+                          <div class="grid-container">    
+                              <ng-container *ngFor="let key of propertyKeys">
+                                <div *ngIf="propertydetailsitem[key]" class="grid-item">
+                                  <div class="propertytype">
+                                    <p class="heading">{{ getLabel(key) }}:</p>
+                                    <p class="value" [ngStyle]="getValueStyle(key)">
+                                      {{ propertydetailsitem[key] }}
+                                    </p>
+                                  </div>
+                                </div>
+                              </ng-container>
+                            </div> 
+                      </div>
+                    </div>
                     
-                    <div *ngIf="propertydetailsitem.websiteurl?.trim()">
-                      <a href="{{propertydetailsitem.websiteurl}}" target="_blank" class="social-icon website">
-                        <i class="fas fa-link"></i> 
-                        <p class="value">WEBSITE</p> 
-                      </a>
+                    
+                    <div class="propertyoverview">
+                      <div class="headings">
+                        <p>ADDRESS</p>
+                      </div>
+                      <div class="body">
+                        <div class="grid-container">
+                          <ng-container *ngFor="let key of ['propertyAddress', 'nearBy', 'landMark', 'propertyCity', 'state', 'propertyZipCode']">
+                            <div *ngIf="propertydetailsitem[key]" class="grid-item">
+                              <div class="propertytype">
+                                <p class="heading">{{ getLabel(key) }}:</p>
+                                <p class="value">{{ propertydetailsitem[key] }}</p>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
                     </div>
-                
-                    <div *ngIf="propertydetailsitem.pinteresturl?.trim()">
-                      <a href="{{propertydetailsitem.pinteresturl}}" target="_blank" class="social-icon pinterest">
-                        <i class="fab fa-pinterest"></i> 
-                        <p class="value">PINTEREST</p> 
-                      </a>
-                    </div>
-                
-                    <div *ngIf="propertydetailsitem.facebookurl?.trim()">
-                      <a href="{{propertydetailsitem.facebookurl}}" target="_blank" class="social-icon facebook">
-                        <i class="fab fa-facebook"></i> 
-                        <p class="value">FACEBOOK</p> 
-                      </a>
-                    </div>
-                
-                    <div *ngIf="propertydetailsitem.twitterurl?.trim()">
-                      <a href="{{propertydetailsitem.twitterurl}}" target="_blank" class="social-icon twitter">
-                        <i class="fab fa-twitter"></i> 
-                        <p class="value">TWITTER</p> 
-                      </a>
-                    </div>
-                
-                </div>
-            </div>
-        </div>
+                    
                   
+          <div *ngIf="propertydetailsitem.propertydescription" class="propertyoverview PropertyDescriptionMain  ">
+              <div class="headings">
+              <p>DESCRIPTION</p>
+              </div>
+              <div class="body">
+              <p class="PropertyDescriptionContent w-100 no-wrap" [innerHTML]="sanitizeHtml(propertydetailsitem.propertydescription)"></p>
+              </div>
+          </div>
+
+          <div *ngIf="propertydetailsitem.propertyspecificDescription" class="propertyoverview PropertyDescriptionMain">
+              <div class="headings">
+              <p>SPECIFIC DESCRIPTION</p>
+              </div>
+              <div class="body">
+              <p class="PropertyDescriptionContent w-100 no-wrap" [innerHTML]="sanitizeHtml(propertydetailsitem.propertyspecificDescription)"></p>
+              </div>
+          </div>
+
+                  
+              <div *ngIf="selectedAmenities.length > 0" class="propertyoverview propertyfeatures">
+                  <div class="headings">
+                    <p>AMINITIES</p>
+                  </div>
+                  <div class="body">
+                    <div *ngFor="let amenity of selectedAmenities">
+                      <p>
+                        <span class="icon-circle">
+                          <i [ngClass]="amenity.icon"></i>
+                        </span>
+                        {{ amenity.name }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              <div *ngIf="selectedVideo" class="propertyoverview propertyVideo">
+                  <div class="headings">
+                  <p>VIDEO</p>
+                  </div>
+                  <div class="body">
+                  <div class="video-container">
+                      <video width="100%" controls>
+                      <source [src]="selectedVideo" type="video/mp4">
+                      Your browser does not support the video tag.
+                      </video>
+                  </div>
+                  </div>
+              </div>
+                <div *ngIf="iframeHtml" class="propertyoverview" >
+                  <div class="headings">
+                  <p>LOCATION</p>
+                  </div>
+                  <div class="body" style="width: 100%;">
+                  <div class="locationMap "  [innerHTML]="iframeHtml"></div>
+                  </div>
+              </div>
+              <div *ngIf="propertydetailsitem.websiteurl || propertydetailsitem.pinteresturl || propertydetailsitem.facebookurl || propertydetailsitem.twitterurl" class="propertyoverview">
+                  <div class="headings">
+                  <p>SOCIAL NETWORKS</p>
+                  </div>
+                  <div class="body propSocialLinks">
+                  
+                  <div *ngIf="propertydetailsitem.websiteurl?.trim()">
+                      <a href="{{propertydetailsitem.websiteurl}}" target="_blank" class="social-icon website">
+                      <i class="fas fa-link"></i> 
+                      <p class="value">WEBSITE</p> 
+                      </a>
+                  </div>
+              
+                  <div *ngIf="propertydetailsitem.pinteresturl?.trim()">
+                      <a href="{{propertydetailsitem.pinteresturl}}" target="_blank" class="social-icon pinterest">
+                      <i class="fab fa-pinterest"></i> 
+                      <p class="value">PINTEREST</p> 
+                      </a>
+                  </div>
+              
+                  <div *ngIf="propertydetailsitem.facebookurl?.trim()">
+                      <a href="{{propertydetailsitem.facebookurl}}" target="_blank" class="social-icon facebook">
+                      <i class="fab fa-facebook"></i> 
+                      <p class="value">FACEBOOK</p> 
+                      </a>
+                  </div>
+              
+                  <div *ngIf="propertydetailsitem.twitterurl?.trim()">
+                      <a href="{{propertydetailsitem.twitterurl}}" target="_blank" class="social-icon twitter">
+                      <i class="fab fa-twitter"></i> 
+                      <p class="value">TWITTER</p> 
+                      </a>
+                  </div>
+              
+                  </div>
+              </div>
+              
       </div>
+          </div>
+      </div>
+  </div>
+  <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
+      <p> ©2025 GVR Infosystems. All rights reserved.</p>
+  </div>
+  <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
+<div class="modal-dialog" role="document">
+  <div class="modal-content" style="margin-top: 35%;">
+    <div class="modal-header">
+      <h5 class="modal-title">Status</h5>
+      <button type="button" class="close" aria-label="Close" style="cursor: pointer; border-radius: 5px; color: red;" (click)="UpdatecloseModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>{{ propertyInsStatus }}</p> 
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
     </div>
   </div>
-    <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
-        <p> ©2025 GVR Infosystems. All rights reserved.</p>
-    </div>
-    <!-- <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
-        <p>© <a href="https://www.gvrinfosystems.com/" target="_blank" rel="noopener noreferrer">GVR INFOSYSTEMS PVT LTD</a> 2025, All Rights Reserved.</p>
-    </div> -->
-    <!-- <app-footer></app-footer> -->
-
-    <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
-    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content" style="margin-top: 35%;">
-            <div class="modal-header">
-              <h5 class="modal-title">Status</h5>
-              <button type="button" class="close" aria-label="Close" style="cursor: pointer;
-              border-radius: 5px;
-              color: red;"  (click)="UpdatecloseModal()">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>{{ propertyInsStatus }}</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-            </div>
-          </div>
-        </div>
-      </div>
+</div>
+</div>
 </div>
 

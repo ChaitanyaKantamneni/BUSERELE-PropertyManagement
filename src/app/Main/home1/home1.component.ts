@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { TopNav1Component } from "../top-nav-1/top-nav-1.component";
 import { CommonModule, NgStyle } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -101,7 +101,13 @@ export class Home1Component implements OnInit,AfterViewInit  {
     emailjs.init('uZT6kwr7RPQM3n5lj');
   }
   
+  isMobile: boolean = false;
+
   ngOnInit(): void {
+
+    
+    this.checkScreenSize();
+    // this.getIpInfoFromClient();
     this.route.paramMap.subscribe(params => {
       this.propertyType = params.get('propertyType');
       this.propertyForType = params.get('propertyFor');
@@ -158,6 +164,15 @@ export class Home1Component implements OnInit,AfterViewInit  {
     window.scrollTo(0, 0);
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 570;
+  }
+  
   private getValidParam(param: string | null, defaultValue: string): string | null {
     return param === defaultValue ? null : param;
   }
@@ -179,18 +194,18 @@ export class Home1Component implements OnInit,AfterViewInit  {
     };
     this.apiurls.post<any>('Tbl_PropertyType_CRUD_Operations',data) 
       .subscribe((response: any) => {
-        console.log('API response:', response);
+
         if (response && Array.isArray(response.data)) {
           this.propertytypes = response.data.map((data: any) => ({
             propertyTypeID: data.propertyTypeID,
             name: data.name
           }));
         } else {
-          console.error('Unexpected response format or no reviews found');
+
           this.propertytypes = [];
         }
       }, error => {
-        console.error('Error fetching reviews:', error);
+
       });
   }
 
@@ -198,19 +213,19 @@ export class Home1Component implements OnInit,AfterViewInit  {
     this.apiurls.get<any>('GetUniqueCities') 
           .subscribe(
         (response: any) => {
-          console.log('API response:', response);
+
           if (response && Array.isArray(response)) {
             this.cities = response.map((cities: string) => ({
               cityID: cities,  
               CityName: cities 
             }));
           } else {
-            console.error('Unexpected response format or no cities found');
+
             this.cities = []; 
           }
         },
         (error) => {
-          console.error('Error fetching cities:', error);
+
         }
       );
   }
@@ -221,10 +236,10 @@ export class Home1Component implements OnInit,AfterViewInit  {
               .subscribe(
           (response) => {
             this.properties = response; 
-            console.log('Properties in selected city:', this.properties);
+
           },
           (error) => {
-            console.error('Error fetching properties:', error);
+
           }
         );
     }
@@ -254,7 +269,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
     const inputElement = event.target as HTMLInputElement;
     
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      console.log('charCode restricted is ' + charCode);
+
       return false;
     }
     if (inputElement.value.length >= 10) {
@@ -309,13 +324,12 @@ export class Home1Component implements OnInit,AfterViewInit  {
     .subscribe(
       (response: any) => {        
         this.Reviews = response.data.map((testimonial: any) => {
-          console.log('Reviews',testimonial)
+
           return {
             reviewID: testimonial.reviewID || 'N/A',
             username: testimonial.username || 'N/A',
             posteddate: this.formatDate(testimonial.createdDate) || 'N/A',
             review: testimonial.usermessage || 'N/A',
-            // imageurl:  'assets/images/usericon.jpg',
             imageurl: testimonial.profileImage || 'assets/images/usericon.jpg', 
 
             rating: testimonial.rating || 0,  
@@ -323,7 +337,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
         });
       },
       (error) => {
-        console.error('Error fetching property details:', error);
       }
     );
   }
@@ -338,7 +351,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
   
   selectOption(option: string): void {
     this.propertyFor = option;
-    console.log(option);
+
   }
 
   onKeywordChange() {
@@ -353,8 +366,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
           this.suggestions = response;
         },
         (error) => {
-          console.error('Error fetching keyword suggestions:', error);
-          this.suggestions = [];
+         this.suggestions = [];
         }
       );
     } else {
@@ -381,22 +393,22 @@ export class Home1Component implements OnInit,AfterViewInit  {
     this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
     .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
-  
+
+          
           this.propertydetails = response.data.map((property: any) => {
             let propertyImage: string = 'assets/images/empty.png'; 
             let defaultPropImage: string = '';
   
-            console.log('Full Property:', property);
-  
+
+            
             if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {
-              console.log('Property Images:', property.propImages);
-  
+
+              
               const firstImage = property.propImages[0];
   
               if (firstImage.fileData) {
-                console.log('First Image File Data:', firstImage.fileData);
-  
+
+                
                 try {
                   const byteCharacters = atob(firstImage.fileData);
                   const byteArray = new Uint8Array(byteCharacters.length);
@@ -409,22 +421,18 @@ export class Home1Component implements OnInit,AfterViewInit  {
   
                   propertyImage = URL.createObjectURL(blob);
   
-                  console.log('Generated Image URL:', propertyImage);
+
                 } catch (error) {
-                  console.error('Error decoding first image data:', error);
+
                 }
               } else {
                 propertyImage = 'assets/images/empty.png'; 
               }
             } else {
               defaultPropImage = 'assets/images/empty.png'; 
-              console.log('images property is missing, not an array, or empty.');
+
             }
   
-            // if (property.image && property.image.filePath) {
-            //   defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-            //   console.log('Generated Default Image URL:', defaultPropImage);
-            // } 
             if (property.image && property.image.filePath) {
               defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
             }
@@ -485,7 +493,7 @@ export class Home1Component implements OnInit,AfterViewInit  {
           this.isLoadingAdvProperty = false;
         },
         (error) => {
-          console.error('Error fetching property details:', error);
+
           this.propertydetails = [];
           this.isLoadingAdvProperty = false; 
         }
@@ -505,26 +513,16 @@ export class Home1Component implements OnInit,AfterViewInit  {
     this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
     .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
-  
           this.FeaturedProperties = response.data.map((property: any) => {
             let propertyImage: string = 'assets/images/empty.png'; 
             let defaultPropImage: string = '';
-  
-            console.log('Full Property:', property);
-  
             if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {
-              console.log('Property Images:', property.propImages);
-  
               const firstImage = property.propImages[0];
   
               if (firstImage.fileData) {
-                console.log('First Image File Data:', firstImage.fileData);
-  
                 try {
                   const byteCharacters = atob(firstImage.fileData);
                   const byteArray = new Uint8Array(byteCharacters.length);
-  
                   for (let i = 0; i < byteCharacters.length; i++) {
                     byteArray[i] = byteCharacters.charCodeAt(i);
                   }
@@ -532,23 +530,15 @@ export class Home1Component implements OnInit,AfterViewInit  {
                   const blob = new Blob([byteArray], { type: firstImage.mimeType });
   
                   propertyImage = URL.createObjectURL(blob);
-  
-                  console.log('Generated Image URL:', propertyImage);
                 } catch (error) {
-                  console.error('Error decoding first image data:', error);
                 }
               } else {
                 propertyImage = 'assets/images/empty.png'; 
               }
             } else {
               defaultPropImage = 'assets/images/empty.png'; 
-              console.log('images property is missing, not an array, or empty.');
             }
   
-            // if (property.image && property.image.filePath) {
-            //   defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-            //   console.log('Generated Default Image URL:', defaultPropImage);
-            // }
             if (property.image && property.image.filePath) {
               defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
             }
@@ -609,7 +599,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
           this.isLoadingFeaProperty = false;
         },
         (error) => {
-          console.error('Error fetching property details:', error);
           this.FeaturedProperties = [];
           this.isLoadingFeaProperty = false; 
         }
@@ -633,11 +622,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
   
       this.propertyInsStatus = 'Search successful!';
       this.isUpdateModalOpen = true;
-  
-      console.log("encodedPropertyType", encodedPropertyType);
-      console.log("encodedPropertyFor", encodedPropertyFor);
-      console.log("City", city);
-      console.log("Keyword", keyword);
     } else {
       this.propertyInsStatus = 'Please select a property type or property for or city or enter a keyword.';
       this.isUpdateModalOpen = true;
@@ -715,7 +699,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
     };
     this.apiurls.post<any>('Tbl_Enquiry_CRUD_Operations', data).subscribe({
       next: (response) => {
-        console.log('Enquiry response:', response);
         if(response.statusCode==200){
           this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
           this.isUpdateModalOpen = true;
@@ -726,7 +709,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
         } 
       },
       error: (error) => {
-        console.error("Error details:", error);
         this.propertyInsStatus = 'Something went wrong while submitting your enquiry. Please try again later.';
         this.isUpdateModalOpen = true;
         setTimeout(() => {
@@ -769,18 +751,14 @@ export class Home1Component implements OnInit,AfterViewInit  {
       userID: localStorage.getItem('email'),
       activatedstatus: '1',
     };
-
-    console.log('Adding to wishlist:', wishlistRequest);
     this.apiurls.post<any>('AddToWishlist', wishlistRequest).subscribe({
       next: (response) => {
-        console.log('Added to wishlist:', response);
         this.likedProperties[propertyID] = true;
         localStorage.setItem('wishlist_' + propertyID, 'true');  
         this.propertyInsStatus = "Property added to your wishlist!";
         this.isUpdateModalOpen = true;
       },
       error: (error) => {
-        console.error('Error adding to wishlist:', error);
         this.propertyInsStatus = "Already in wishlist. Try again later!";
         this.isUpdateModalOpen = true;
       }
@@ -794,16 +772,12 @@ export class Home1Component implements OnInit,AfterViewInit  {
       activatedstatus: '0',
     };
 
-    console.log('Removing from wishlist:', wishlistRequest);
-
   this.apiurls.post<any>('RemoveFromWishlist', wishlistRequest).subscribe({
     next: (response) => {
-      console.log('Removed from wishlist:', response);
       this.likedProperties[propertyID] = false;
         localStorage.removeItem('wishlist_' + propertyID);  
       },
       error: (error) => {
-        console.error('Error removing from wishlist:', error);
       }
     });
   }
@@ -822,19 +796,40 @@ export class Home1Component implements OnInit,AfterViewInit  {
     }
   }
 
+  // fscrollLeft() {
+  //   const scrollContainer = document.querySelector('.fscrollable-properties');
+  //   if (scrollContainer) {
+  //     scrollContainer.scrollBy({ left: -300, behavior: 'smooth' }); 
+  //   }
+  // }
+
+  // fscrollRight() {
+  //   const scrollContainer = document.querySelector('.fscrollable-properties');
+  //   if (scrollContainer) {
+  //     scrollContainer.scrollBy({ left: 300, behavior: 'smooth' }); 
+  //   }
+  // }
+
   fscrollLeft() {
     const scrollContainer = document.querySelector('.fscrollable-properties');
-    if (scrollContainer) {
-      scrollContainer.scrollBy({ left: -300, behavior: 'smooth' }); 
+    const card = scrollContainer?.querySelector('.property-card') as HTMLElement;
+  
+    if (scrollContainer && card) {
+      const scrollAmount = card.offsetWidth + 10; // 10px gap
+      scrollContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
     }
   }
-
+  
   fscrollRight() {
     const scrollContainer = document.querySelector('.fscrollable-properties');
-    if (scrollContainer) {
-      scrollContainer.scrollBy({ left: 300, behavior: 'smooth' }); 
+    const card = scrollContainer?.querySelector('.property-card') as HTMLElement;
+  
+    if (scrollContainer && card) {
+      const scrollAmount = card.offsetWidth + 10; // 10px gap
+      scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   }
+  
 
   truncateContent(content: string, limit: number): string {
     if (content.length > limit) {
@@ -857,7 +852,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
     this.apiurls.post<any>('Proc_Tbl_AddBlogs', formData)
       .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
           const approvedBlogs = response.data.filter((blog: Blog) => blog.blogStatus === '1');
           this.blogdetails = approvedBlogs.map((blog: Blog, index: number) => {
             this.expandedblogContent[index] = false;
@@ -879,7 +873,6 @@ export class Home1Component implements OnInit,AfterViewInit  {
           });
         },
         (error) => {
-          console.error('Error fetching blog details:', error);
           this.blogdetails = [];
         }
       );
@@ -923,4 +916,44 @@ export class Home1Component implements OnInit,AfterViewInit  {
     return atob(encoded);
   }
 
+
+  // getIpInfoFromClient() {
+  //   fetch('https://ipinfo.io/json?token=ecad3b6d9bfa89')
+  //     .then(res => {
+  //       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  //       return res.json();
+  //     })
+  //     .then(ipInfo => {
+  //       this.sendToBackend(ipInfo);
+  //     })
+  //     .catch(err => console.error('Failed to get IP info:', err));
+  // }
+  
+  sendToBackend(ipInfo: any) {
+    this.apiurls.post('crudoperation', {
+      TypeFlag: '1',      
+      Ip: ipInfo.ip || null,
+      Hostname: ipInfo.hostname || null,
+      City: ipInfo.city || null,
+      Region: ipInfo.region || null,
+      Country: ipInfo.country || null,
+      Loc: ipInfo.loc || null,
+      Org: ipInfo.org || null,
+      Postal: ipInfo.postal || null
+    }).subscribe({
+      next: res => console.log('IP info sent to backend:', res),
+      error: err => console.error('Failed to send IP info:', err)
+    });
+  }
+  
+
+  sendVisitorCount(visitorCount: number) {
+    this.apiurls.post('crudoperation', {
+      TypeFlag: '2', 
+      VisitorCount: visitorCount
+    }).subscribe({
+      next: res => console.log('VisitorCount sent to backend:', res),
+      error: err => console.error('Failed to send visitor count:', err)
+    });
+  }
 }

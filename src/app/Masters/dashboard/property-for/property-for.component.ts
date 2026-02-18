@@ -12,6 +12,7 @@ import { ApiServicesService } from '../../../api-services.service';
   templateUrl: './property-for.component.html',
   styleUrl: './property-for.component.css'
 })
+
 export class PropertyForComponent implements OnInit {
   aminities: Array<{ propertyTypeID: string, name: string, description: string,flag:string }> = [];
   currentPage = 1;
@@ -23,11 +24,18 @@ export class PropertyForComponent implements OnInit {
   aminitiesdetails: any = {};
   AminityInsStatus: any = '';
   isModalOpen = false;
-
+  IPAddress = '';
  
-  constructor(private apihttp:HttpClient,private apiurls: ApiServicesService) {}
+  constructor(public http:HttpClient,private apihttp:HttpClient,private apiurls: ApiServicesService) {}
 
   ngOnInit(): void {
+    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
+      next: (res) => {
+        this.IPAddress = res.ip;
+      },
+      error: (err) => {
+      }
+    });
     this.getreviews();
     this.aminitiesform.reset();
   }
@@ -43,8 +51,6 @@ export class PropertyForComponent implements OnInit {
     return this.filteredAminities.slice(start, start + this.pageSize);
   }
   
-  
-
   get filteredAminities() {
     return this.aminities.filter(aminitie => 
       aminitie.propertyTypeID.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -59,7 +65,6 @@ export class PropertyForComponent implements OnInit {
   }
 
   editreview(aminitieID: string): void {
-    console.log(aminitieID);
     this.getAminitieDet(aminitieID);
     this.viewAminitieClicked=true;
   }
@@ -91,11 +96,9 @@ export class PropertyForComponent implements OnInit {
             description: item.description
           });
         } else {
-          console.error("Error: Response is null or invalid");
         }
       },
       error => {
-        console.error("Error fetching amenity details:", error);
       }
     );
   }
@@ -144,8 +147,6 @@ onSearchChange(): void {
 
 
   getreviews(): void {
-
-    console.log('getreviews() called');
     const data = {
       PropertyTypeID: "",
       Name: "",
@@ -161,7 +162,6 @@ onSearchChange(): void {
     };
     this.apiurls.post<any>('Tbl_PropertyType_CRUD_Operations',data)
       .subscribe((response: any) => {
-        console.log('API response:', response);
         if (response && Array.isArray(response.data)) {
           this.aminities = response.data.map((data: any) => ({
             propertyTypeID: data.propertyTypeID,
@@ -176,11 +176,9 @@ onSearchChange(): void {
             });
           }
         } else {
-          console.error('Unexpected response format or no reviews found');
           this.aminities = [];
         }
       }, error => {
-        console.error('Error fetching reviews:', error);
       });
   }
   
@@ -204,11 +202,8 @@ onSearchChange(): void {
       Name: this.aminitiesform.get('name')?.value,
       Description: new String(this.aminitiesform.get('description')?.value).toString() || null,
       CreatedBy:localStorage.getItem('email') as string,
-      CreatedIP: "",        
+      CreatedIP: this.IPAddress,        
       CreatedDate: new Date().toISOString(), 
-      ModifiedBy: "",
-      ModifiedIP: "",
-      ModifiedDate: new Date().toISOString(), 
       Flag: "2",            
       Status: "",
       GeneratedID: null    
@@ -227,7 +222,6 @@ onSearchChange(): void {
         this.aminitiesform.reset();
       },
       error: (error) => {
-        console.error("Error details:", error);
         this.AminityInsStatus = "Error Updating Aminity.";
         this.isModalOpen = true;
       },
@@ -256,17 +250,13 @@ onSearchChange(): void {
 
     this.apiurls.post<any>("Tbl_PropertyType_CRUD_Operations", data).subscribe({
       next: (response: any) => {
-        console.log("Generate ID response:", response);
         const id = response?.data?.[0]?.generatedID || response?.data?.[0]?.generatedID;
         if (id) {
           this.aminitiesform.patchValue({ id });  
-          console.log("Generated PropertyTypeID:", id);
         } else {
-          console.error("ID not generated or missing in response:", response);
         }
       },
       error: (error) => {
-        console.error("Error generating PropertyTypeID:", error);
       }
     });
   }
@@ -282,7 +272,7 @@ onSearchChange(): void {
       Description: this.aminitiesform.get('description')?.value?.trim() || null,
       Flag: '5',
       ModifiedBy: localStorage.getItem('email') || 'system',
-      ModifiedIP: '', 
+      ModifiedIP: this.IPAddress, 
       ModifiedDate: new Date().toISOString() 
     };
   
@@ -299,7 +289,6 @@ onSearchChange(): void {
         }
       },
       error: (error) => {
-        console.error('Error updating property type:', error);
         this.AminityInsStatus = 'Error updating property type.';
         this.isModalOpen = true;
       }

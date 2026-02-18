@@ -1,24 +1,23 @@
-
-
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
   <div class="container-fluid">
       <a class="navbar-brand" href="/"><img class="h-100" src="assets/images/logo_1.png"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <ng-container *ngFor="let navItem of navitems">
+                  <li class="nav-item">
+                      <a class="nav-link" [routerLink]="navItem.navurl" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{navItem.navname}}</a>
+                  </li>
+              </ng-container>
+          </ul>
+      </div>
   </div>
 </nav>
 <div class="container gradient-background">
   <div class="content-wrapper">
-    <!-- <div class="image-section">
-      <img src="assets/images/signimage.jpg" alt="House Image" class="full-height-img">
-    </div> -->
 
-  <!-- <div class="image-section">
-    <img src="assets/images/signimage.jpg" alt="House Image" style="height: 400px;
-    width: 100%;
-    border-radius: 3px;">
-</div> -->
   <form [formGroup]="signupform" class="form-grid">
     <h2 class="headerwell">Welcome</h2>
     <h2 class="subtext">Create an account</h2>
@@ -47,29 +46,6 @@
         </div>
       </div>
 
-      <!-- <div class="form-group">
-        <div class="input-container">
-          <input type="text" id="mobile" formControlName="Mobile" placeholder="Mobile" required />
-          <label for="mobile">Mobile</label>
-          <!-- <div class="error-message">
-            <div *ngIf="signupform.get('Mobile')?.invalid && signupform.get('Mobile')?.touched">
-              <p class="text-danger fw-bold">Mobile is required.</p>
-            </div>
-          </div>
-           --
-           <div class="error-message">
-            <div *ngIf="signupform.get('Mobile')?.touched && signupform.get('Mobile')?.invalid">
-              <p *ngIf="signupform.get('Mobile')?.hasError('required')" class="text-danger fw-bold">
-                Mobile is required.
-              </p>
-              <p *ngIf="signupform.get('Mobile')?.hasError('pattern')" class="text-danger fw-bold">
-                Enter valid mobile Number.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
       <div class="form-group">
         <div class="input-container mobile-wrapper">
           <input 
@@ -94,21 +70,6 @@
           </div>
         </div>
       </div>
-      
-
-      <!-- <div class="form-group">
-        <div class="input-container">
-          <input type="email" id="email" formControlName="Email" placeholder="Email" required />
-          <label for="email">Email</label>
-          <div class="error-message">
-            <div *ngIf="signupform.get('Email')?.invalid && signupform.get('Email')?.touched">
-              <p class="text-danger fw-bold" >Email is required and should be valid.</p>
-            </div>
-          </div>
-          <!-- [ngClass]="clr" --
-         
-        </div>
-      </div> -->
 
       <div class="form-group">
         <div class="input-container email-wrapper">
@@ -143,17 +104,12 @@
               <p *ngIf="signupform.get('Password')?.hasError('required')" class="text-danger fw-bold">
                 <span class="text-danger">*</span>Password is required.
               </p>
-              <!-- <p *ngIf="signupform.get('Password')?.hasError('minlength')" class="text-danger fw-bold">
-                Password must be at least 6 characters long.
-              </p> -->
               <p *ngIf="signupform.get('Password')?.hasError('pattern')" class="text-danger fw-bold">
                 Password must contain at least one uppercase letter and one number.
               </p>
           
             </div>
           </div>
-          
-          <!-- [ngClass]="clr" -->
         </div>
       </div>
       <div class="form-group">
@@ -177,8 +133,6 @@
             <p class="text-danger fw-bold">Password & Confirm Password must match.</p>
           </div>
         </div>
-        <!-- [ngClass]="clr"
-        [ngClass]="clr" -->
         </div>
       </div>
       

@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, NgIf,NgFor } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
@@ -7,11 +7,16 @@ import { response } from 'express';
 import { FooterComponent } from "../../Main/footer/footer.component";
 import { ApiServicesService } from '../../api-services.service';
 
+interface navlists{
+  navname:string,
+  navurl:string
+}
+
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
   providers: [ApiServicesService],
-  imports: [HttpClientModule, ReactiveFormsModule, NgClass, RouterLink, NgIf, FooterComponent],
+  imports: [HttpClientModule, ReactiveFormsModule, NgClass, RouterLink, NgIf, FooterComponent,NgFor],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css'
 })
@@ -41,20 +46,33 @@ export class ForgotPasswordComponent {
     }, { validators: this.passwordMatchValidator });
   }
 
+  public navitems:navlists[]=[{
+    navname:'HOME',
+    navurl:'/'
+  },
+  {
+    navname:'ABOUT',
+    navurl:'/about-us'
+  },
+  {
+    navname:'CONTACT',
+    navurl:'/contact-us'
+  }
+  ];
+
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('Password')?.value;
     const confirmPassword = control.get('ConfirmPassword')?.value;
     return password && confirmPassword && password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
-}
+  }
 
-toggleConfirmPasswordVisibility() {
-    this.confirmPasswordVisible = !this.confirmPasswordVisible;
-}
+  toggleConfirmPasswordVisibility() {
+      this.confirmPasswordVisible = !this.confirmPasswordVisible;
+  }
 
   startTimer() {
     this.timeLeft = 60; 
@@ -72,9 +90,7 @@ toggleConfirmPasswordVisibility() {
   }
   
   sendOTPClick() {
-   
     const email = this.signupform.get('Email')?.value;
-  
     if (!email || !this.signupform.get('Email')?.valid) {
       this.passwordChangeStatus = "Please enter a valid email address.";
       this.isUpdateModalOpen = true;
@@ -99,7 +115,6 @@ toggleConfirmPasswordVisibility() {
         this.startTimer();
       },
       error: (error) => {
-        console.error("Error details:", error);
         this.passwordChangeStatus = "Email was not registered. Please try again later.";
         this.isUpdateModalOpen = true;
       }
@@ -132,11 +147,9 @@ toggleConfirmPasswordVisibility() {
         }
       },
       error: (error) => {
-        console.error("Error details:", error);
       }
     });
   }
-
 
   verifyOTPClick() {
     if (!this.otpSent) {
@@ -174,11 +187,9 @@ toggleConfirmPasswordVisibility() {
         }
       },
       error: (error) => {
-        console.error("Error details:", error);
         this.passwordChangeStatus = "Otp was invalid. Please try again.";
         this.isUpdateModalOpen = true;
       }
     });
-  }
-    
+  }   
 }

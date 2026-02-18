@@ -40,7 +40,6 @@ export class ViewblogComponent {
         const decodedBlogId = this.decodeID(encodedBlogId);
         this.fetchBlogById(decodedBlogId); 
       } else {
-        console.error('Blog ID is missing or invalid');
       }
       this.fetchAllBlogs(); 
     });
@@ -92,12 +91,10 @@ export class ViewblogComponent {
           this.updateDisplayedBlogs();
           this.startRotation();
         } else {
-          console.error('Error: Invalid response data');
         }
         this.isLoadingBlogs = false;
       },
       (error) => {
-        console.error('Error fetching blogs:', error);
         this.isLoadingBlogs = false;
       }
     );
@@ -124,12 +121,10 @@ export class ViewblogComponent {
     this.apiurls.post<any>('Proc_Tbl_AddBlogs', formData).subscribe(
       (response:any) => {
         const blogData = response.data[0];
-        console.log('blog response',blogData);
         let parsedDate: Date | null = null;
         if (blogData?.createdDate) {
           parsedDate = new Date(blogData.createdDate);
           if (isNaN(parsedDate.getTime())) {
-            console.error('Invalid date format:', blogData.createdDate);
             parsedDate = null;
           }
         }
@@ -147,7 +142,6 @@ export class ViewblogComponent {
         };
       },
       (error) => {
-        console.error('Error fetching blog:', error);
       }
     );
   }

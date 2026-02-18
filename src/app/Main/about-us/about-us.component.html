@@ -1,14 +1,9 @@
-
 <app-top-nav-1></app-top-nav-1>
-
     <div class="about-header">
       <h1 style="font-size: 32px;">About Us</h1>
       <p routerLink="/home" style="font-size: 12px;">HOME / ABOUT US</p>
     </div>
       <div class="container">
-        <!-- <div class="video" >
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/EFB33r7u4tY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div> -->
         <div class="video" (click)="playVideo()">
           <img *ngIf="!videoPlaying" src="assets/images/aboutbackground.jpg" class="video-thumbnail" alt="Real Estate Video">
           <div *ngIf="!videoPlaying" class="play-button">

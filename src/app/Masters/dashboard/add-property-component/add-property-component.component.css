@@ -1,8 +1,33 @@
 .mainReviewCentered {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  margin-top: 35px;
   align-items: center;
-  height: 100vh;
+  height: calc(110vh - 35px);
+  flex-direction: column;
+  font-family: 'Roboto', sans-serif;
+}
+
+.footer-bottom {
+  background-color: #e8e8e8b5;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.footer-bottom p{
+  margin: 0px;
+}
+
+.mainReview {
+  position: relative;
+  height: calc(100vh - 35px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 35px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .mainReview {
@@ -42,27 +67,24 @@
 }
 
 .reviewStatus{
-display: flex;
-justify-content: end;
-align-items: center;
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }
 
 .reviewStatus button{
-background-color: #2495FD;
-color: white;
-border: none;
+  background-color: #2495FD;
+  color: white;
+  border: none;
 }
 
 .reviewStatus button:hover{
-background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .reviewstable{
-height: auto;
-width: 100%;
-/* overflow: auto; */
-/* max-height: 250px; */
-/* max-height: 321px; */
+  height: auto;
+  width: 100%;
 }
 
 .viewbtn{
@@ -94,7 +116,6 @@ td {
   vertical-align: middle;
   padding: 10px;
 }
-
 
 .table th, .table td {
   padding: 8px;
@@ -146,13 +167,10 @@ form{
   margin-left: 25px;  
 }
 
-
-
 .select-buttons button {
   background-color: #2495FD;
   color: white;
   border: none;
-  /* padding: 10px 20px; */
   margin: 5px;
   border-radius: 5px;
   cursor: pointer;
@@ -207,10 +225,10 @@ ul.AvailabilityOptions-row label {
   justify-content: space-evenly;
   gap: 10px; 
 }
+
 .singleamenity {
   flex: 1 1 30%;  
   min-width: 200px; 
-  /* margin-bottom: 10px; */
   box-sizing: border-box;
 }
 
@@ -265,13 +283,12 @@ ul.AvailabilityOptions-row label {
 
 .PageHeading{
   width: 100%;
-  /* background-color: #e8e8e8; */
-  /* background-color: #2495FD; */
-  background-color: #8cc8ffd1;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 10px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .PageHeading h5{
@@ -304,7 +321,6 @@ form{
   font-size: 18px; 
 }
 
-
 .form-group input,.form-group textarea,.form-group select{
   border: none;
   border-bottom: 1px solid gray;
@@ -312,6 +328,7 @@ form{
   font-size: 11px;
   border-radius: 0px;
 }
+
 input:focus,textarea:focus,select:focus {
   border-color: #5c9dfc;
 }
@@ -340,24 +357,25 @@ textarea:not(:placeholder-shown) + label
     color: black;
     opacity: 1;
 }
+
 input:placeholder-shown + label,
 textarea:placeholder-shown + label
 {
-    opacity: 0;
+  opacity: 0;
 }
 
 select.filled + label,
 select:focus + label {
-top: -10px;
-font-family: 'Roboto', sans-serif;
-font-size: 11px;
-font-weight: 600;
-color: black;
-opacity: 1; 
+  top: -10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: black;
+  opacity: 1; 
 }
 
 select:not(:focus):not(.filled) + label {
-opacity: 0;
+  opacity: 0;
 }
 
 .date .input-container {
@@ -367,14 +385,14 @@ opacity: 0;
 
 .search-icon {
   position: absolute;
-  /* left: 405px;  */
   left: 7px;
   top: 53%;
   transform: translateY(-50%);
   font-size: 16px;
   color: #888; 
 }
- input[type="date"] {
+
+input[type="date"] {
   padding: .375rem .75rem;
   font-size: 16px;
   color: #333;
@@ -392,64 +410,61 @@ opacity: 0;
   opacity: 1;
 }
 
- input[type="date"]:focus + .date label,
- input[type="date"]:valid + .date label,
- input[type="date"]:not(:empty) + .date label {
+input[type="date"]:focus + .date label,
+input[type="date"]:valid + .date label,
+input[type="date"]:not(:empty) + .date label {
   top: -10px;
   font-size: 12px;
   color: black;
   opacity: 1;
 }
 
- input[type="date"]:not(:focus):not(:placeholder-shown) + .date label {
+input[type="date"]:not(:focus):not(:placeholder-shown) + .date label {
   top: 50%;
   font-size: 16px;
   color: #aaa; 
   opacity: 1; 
 }
 
+  a{
+    text-decoration: none;
+    color:black
+  }
 
-a{
-  text-decoration: none;
-  color:black
-}
-a h5{
-  font-family: fangsong;
-  font-weight: 600;
-  font-size: 18px;
-  margin: 0px;
-}
-a p{
-  font-family: 'Roboto', sans-serif;
-  font-size: 10px;
-}
+  a h5{
+    font-family: fangsong;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0px;
+  }
+  a p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+  }
 
-.backLabel{
-  width: fit-content;
-  
-}
+  .backLabel{
+    width: fit-content;
+  }
 
-table thead{
- font-family:'Roboto', sans-serif;
- font-size: 12px;
-}
+  table thead{
+    font-family:'Roboto', sans-serif;
+    font-size: 12px;
+  }
 
-table thead tr th{
-  text-align: center;
-  background-color: #1E3A5F;
-  color: white;
+  table thead tr th{
+    text-align: center;
+    background-color: #1E3A5F;
+    color: white;
+  }
 
-}
+  table tbody{
+    font-family:'Roboto', sans-serif;
+    font-size: 10px;
+  }
 
-table tbody{
-  font-family:'Roboto', sans-serif;
-  font-size: 10px;
- }
-
- table tbody tr td{
-   text-align: center;
-   
- }
+  table tbody tr td{
+    text-align: center; 
+  }
 
  .modal {
   display: none;
@@ -493,6 +508,7 @@ table tbody{
   overflow: scroll;
   overflow-x: auto;
 }
+
 .image-table table{
   height: 100%;
   overflow: scroll;
@@ -519,7 +535,6 @@ table tbody{
 }
 
 .updateButton,.SubmitButton{
-  /* margin-right: 20px; */
   background-color: #2495FD;
   color: white;
   border: none;
@@ -577,16 +592,6 @@ table tbody{
 .statusButtons i,.updateButton i,.SubmitButton i{
   margin-right: 10px;
 }
-/* 
-.addnewButton button{
-  background-color: #2495FD;
-  color: white;
-  border: none;
-}
-
-.addnewButton button:hover{
-  background-color: #0056b3;
-} */
 
 .addnewButton button {
   background-color: #2495FD;
@@ -607,8 +612,6 @@ table tbody{
   transform: translateY(-2px); 
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
-
-
 
 .addnewButton button:focus {
   outline: none; 
@@ -641,7 +644,6 @@ table tbody{
   background-color: #fff;
   font-size: 1.1em;
   box-sizing: border-box;
-
   white-space: normal; 
   word-wrap: break-word; 
   hyphens: auto; 
@@ -654,7 +656,6 @@ table tbody{
   height: 100px;
   overflow-y: scroll;
 }
-
 
 .ql-container {
   height: auto;
@@ -708,7 +709,6 @@ table tbody{
       padding: 15px 8px 8px 8px; 
       box-sizing: border-box;
       position: relative;
-      /* display: block; */
       border: 1px solid #ddd;
     }
   
@@ -724,6 +724,7 @@ table tbody{
       font-size: 12px;  
       z-index: 1; 
     }
+
     .table tbody td {
       padding-left: 20px; 
       padding-top: 25px; 
@@ -751,11 +752,8 @@ table tbody{
   margin-bottom: 20px;
 }
 
-
-
 .back-button {
-  /* background-color: #007bff;  */
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  BACKGROUND-COLOR: #1e3a5f;
   color: #fff; 
   padding: 10px 20px; 
   font-size: 16px; 
@@ -784,12 +782,10 @@ table tbody{
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); 
 }
 
-
 .back-button:active {
   background-color: #004085; 
   transform: translateY(0); 
 }
-
 
 .clear-btn {
   background-color :red; 
@@ -802,12 +798,11 @@ table tbody{
   transition: background-color 0.3s ease, transform 0.2s ease; 
   margin-left: 0px;
 }
+
 .clear-btn:active {
   background-color: red; 
   transform: scale(0.98); 
 }
-
-
 
 button[data-tooltip] {
   position: relative;
@@ -836,8 +831,6 @@ button[data-tooltip]:hover::after {
   visibility: visible;
 }
 
-
-
 .dropdown-icons {
   position: absolute;
   right: 10px;
@@ -846,23 +839,6 @@ button[data-tooltip]:hover::after {
   pointer-events: none;
   color: #999;
 }
-
-
-
-
-
-/* .table-container {
-  max-height: 400px;
-  overflow-y: auto;
-  position: relative;
-}
-
-.table thead {
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 2;
-} */
 
 .table-container {
   max-height: 400px; 
@@ -905,7 +881,6 @@ button[data-tooltip]:hover::after {
   z-index: 20; 
 }
 
-
 .email-wrapper {
   position: relative;
 }
@@ -923,7 +898,6 @@ button[data-tooltip]:hover::after {
 .email-wrapper input {
   padding-right: 35px; 
 }
-
 
 .go-top-btn {
   position: fixed;
@@ -950,14 +924,6 @@ button[data-tooltip]:hover::after {
 .show {
   display: block;
 }
-
-
-
-
-
-
-
-
 
 @media (max-width: 1024px) {
 
@@ -997,7 +963,6 @@ button[data-tooltip]:hover::after {
       padding: 15px 8px;
       box-sizing: border-box;
       position: relative;
-      /* display: block; */
       border: 1px solid #ddd;
   }
 
@@ -1103,7 +1068,6 @@ button[data-tooltip]:hover::after {
       padding: 15px 8px;
       box-sizing: border-box;
       position: relative;
-      /* display: block; */
       border: 1px solid #ddd;
   }
 
@@ -1213,7 +1177,6 @@ button[data-tooltip]:hover::after {
       padding: 15px 8px;
       box-sizing: border-box;
       position: relative;
-      /* display: block; */
       border: 1px solid #ddd;
   }
 
@@ -1289,8 +1252,6 @@ button[data-tooltip]:hover::after {
   }
 }
 
-
-
 @media (max-width: 768px) {
   .table thead {
     display: block; 
@@ -1300,7 +1261,6 @@ button[data-tooltip]:hover::after {
   .table tbody, 
   .table tr, 
   .table td {
-    /* display: block; */
     width: 100%;
   }
 
@@ -1320,7 +1280,6 @@ button[data-tooltip]:hover::after {
     border-bottom: 1px solid #eee;
   }
 
-  
   .table td::before {
     content: attr(data-label);
     position: absolute;
@@ -1332,5 +1291,3 @@ button[data-tooltip]:hover::after {
     white-space: nowrap;
   }
 }
-
-

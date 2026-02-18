@@ -22,6 +22,7 @@ interface Amenity {
   styleUrl: './add-property-component.component.css'
 })
 export class AddPropertyComponentComponent implements OnInit {
+  IPAddress = '';
   isModalOpen: any;
   isVideoModalOpen:any;
   isDocumnetModalOpen:any;
@@ -42,6 +43,7 @@ export class AddPropertyComponentComponent implements OnInit {
   selectedAreaType:string|null=null;
   amenities: any[] = [];
   selectedAmenities: any[] = [];
+  originalAmenities: string = '';
   propertyImagesClicked:boolean=false;
   propertyFloorImagesClicked:boolean=false;
   propertyVideosClicked:boolean=false;
@@ -112,6 +114,14 @@ export class AddPropertyComponentComponent implements OnInit {
   constructor(public http:HttpClient,private cdRef: ChangeDetectorRef,private sanitizer: DomSanitizer,private apiurls: ApiServicesService){}
  
   ngOnInit(): void {
+    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
+      next: (res) => {
+        this.IPAddress = res.ip;
+      },
+      error: (err) => {
+      }
+    });
+
     this.propertyform.get('TotalArea')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.propertyform.get('PriceFor')?.valueChanges.subscribe(() => this.calculateTotalPrice());
     this.fetchProperties();
@@ -121,12 +131,6 @@ export class AddPropertyComponentComponent implements OnInit {
     });
 
     this.isUpdateButtonEnabled = false;
-    // if(this.isUpdateButtonEnabled==true){
-    //   this.isUpdateButtonEnabled=false;
-    // }
-    // else{
-    //   this.isUpdateButtonEnabled=false;
-    // }
   }
  
   isFormModified() {
@@ -140,22 +144,16 @@ export class AddPropertyComponentComponent implements OnInit {
     };
   
     this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', data).subscribe({
-      next: (response) => {
-        console.log('Full API response:', response);
-  
+      next: (response) => {  
         if (response && response.statusCode === 200 && response.data?.length > 0) {
           const generatedPropID = response.data[0].generatedID;
   
           this.propID = generatedPropID;
           this.propertyform.patchValue({ id: generatedPropID });
-  
-          console.log('Generated Property ID:', generatedPropID);
         } else {
-          console.warn('Unexpected API response format:', response);
         }
       },
       error: (error) => {
-        console.error('Error fetching property ID:', error);
       }
     });
   }
@@ -264,7 +262,6 @@ export class AddPropertyComponentComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Error fetching properties:', err);
       }
     });
   }
@@ -289,8 +286,6 @@ export class AddPropertyComponentComponent implements OnInit {
     PropertyStatus: new FormControl(''),
     PropertyFacing: new FormControl(''),
     TotalBlocks: new FormControl(''),
-    // , Validators.min(1), Validators.max(10)
-    // TotalFloors: new FormControl('',[Validators.required]),
     TotalFloors: new FormControl('', [Validators.required,Validators.pattern('^[0-9]+$'),Validators.min(1)]),    
     TotalNoOfFlats: new FormControl(''),
     BlockName: new FormControl(''),
@@ -300,10 +295,9 @@ export class AddPropertyComponentComponent implements OnInit {
     NumberofBalconies: new FormControl(''),
     NumberofParkings: new FormControl(''),
     AreaType: new FormControl('', [Validators.required]),
-    TotalArea: new FormControl('', [Validators.required, Validators.min(1),this.areaValidator]),
-    
+    TotalArea: new FormControl('', [Validators.required, Validators.min(1)]),
     CarpetArea: new FormControl(''),
-    PriceFor: new FormControl('', [Validators.required, Validators.min(1),this.priceForValidator]),
+    PriceFor: new FormControl('', [Validators.required, Validators.min(1)]),
     PropertyTotalPrice: new FormControl({ value: '', disabled: true }),
     AmenitiesCharges: new FormControl(''),
     MaintenanceCharges: new FormControl(''),
@@ -357,7 +351,6 @@ export class AddPropertyComponentComponent implements OnInit {
     defaultImage: string;
   }> = [];
   
-
   uploadedVideos1:Array<{ 
     id: number, 
     propID: string, 
@@ -376,48 +369,6 @@ export class AddPropertyComponentComponent implements OnInit {
     DocumentUrl: string 
   }> = [];
 
-  // loadCountries(): void {
-  //   this.apiurls.get<any>('Countries')
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.countries = data;
-  //       },
-  //       error: (err) => {
-  //         console.error('Failed to load countries:', err);
-  //       }
-  //     });
-  // }
-
-  // loadStates(): void {
-  //   if (this.selectedCountry) {
-  //     this.apiurls.get<any>(`States/${this.selectedCountry}`)
-  //       .subscribe({
-  //         next: (data) => {
-  //           this.states = data; 
-           
-  //         },
-  //         error: (err) => {
-  //           console.error('Failed to load states:', err);
-  //         }
-  //       });
-  //   }
-  // }
-
-  // loadCities(): void {
-  //   if (this.selectedState) {
-  //     this.apiurls.get<any>(`cities/${this.selectedState}`)
-  //       .subscribe({
-  //         next: (data) => {
-  //           this.cities = data;  
-  //         },
-  //         error: (err) => {
-  //           console.error('Failed to load cities:', err);
-  //         }
-  //       });
-  //   }
-  // }
-
-
 
   loadCountries(): void {
     const data = {
@@ -429,7 +380,6 @@ export class AddPropertyComponentComponent implements OnInit {
         this.countries = response.data;
       },
       error: (err) => {
-        console.error('Failed to load countries:', err);
       }
     });
   }
@@ -438,7 +388,7 @@ export class AddPropertyComponentComponent implements OnInit {
     if (this.selectedCountry) {
       const data = {
         Type: 'state',
-        ParentId: this.selectedCountry   // ✅ Correct key name
+        ParentId: this.selectedCountry
       };
   
       this.apiurls.post<any>('Tbl_Locations_CRUD_Operations', data).subscribe({
@@ -446,7 +396,6 @@ export class AddPropertyComponentComponent implements OnInit {
           this.states = response.data;
         },
         error: (err) => {
-          console.error('Failed to load states:', err);
         }
       });
     }
@@ -464,14 +413,11 @@ export class AddPropertyComponentComponent implements OnInit {
           this.cities = response.data;
         },
         error: (err) => {
-          console.error('Failed to load cities:', err);
         }
       });
     }
   }
   
-  
-
   onCountryChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement; 
     if (selectElement) {
@@ -486,35 +432,34 @@ export class AddPropertyComponentComponent implements OnInit {
     }
   }
 
- onStateChange(event: Event): void {
-  const selectElement = event.target as HTMLSelectElement;
-  if (selectElement) {
-    this.selectedStateId = selectElement.value;
-    const stateId = selectElement.value;
-    this.selectedState = Number(stateId);
-    const selectedState = this.states.find(state => state.id === this.selectedState);
-    if (selectedState) {
-      this.SelectedStateName = selectedState.name;
-    }
-    this.loadCities();
-  }
- }
-
- onCityChange(event: Event): void {
-  const selectElement = event.target as HTMLSelectElement;
-  if (selectElement) {
-    this.selectedCityId = selectElement.value;
-
-    const CityId = selectElement.value;
-    this.selectedCity = Number(CityId);
-    const selectedCity = this.cities.find(city => city.id === this.selectedCity);
-    if (selectedCity) {
-      this.SelectedCityName = selectedCity.name;
-    } else {
-      console.error('City not found');
+  onStateChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement) {
+      this.selectedStateId = selectElement.value;
+      const stateId = selectElement.value;
+      this.selectedState = Number(stateId);
+      const selectedState = this.states.find(state => state.id === this.selectedState);
+      if (selectedState) {
+        this.SelectedStateName = selectedState.name;
+      }
+      this.loadCities();
     }
   }
-}
+
+  onCityChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement) {
+      this.selectedCityId = selectElement.value;
+
+      const CityId = selectElement.value;
+      this.selectedCity = Number(CityId);
+      const selectedCity = this.cities.find(city => city.id === this.selectedCity);
+      if (selectedCity) {
+        this.SelectedCityName = selectedCity.name;
+      } else {
+      }
+    }
+  }
 
   getPropertTypes(): void {
     const data = {
@@ -539,11 +484,9 @@ export class AddPropertyComponentComponent implements OnInit {
             description: data.description
           }));
         } else {
-          console.error('Unexpected response format or no reviews found');
           this.propertytypes = [];
         }
       }, error => {
-        console.error('Error fetching reviews:', error);
       });
   }
 
@@ -643,15 +586,11 @@ export class AddPropertyComponentComponent implements OnInit {
             icon:data.aminitieIcon
           }));
         } else {
-          console.error('Unexpected response format or no reviews found');
           this.amenities = [];
         }
       }, error => {
-        console.error('Error fetching reviews:', error);
       });
   }
-
-  
 
   isSelected(amenity: any): boolean {
     return this.selectedAmenities.some(item => item.id === amenity.aminitieID);
@@ -673,7 +612,7 @@ export class AddPropertyComponentComponent implements OnInit {
       }
     }
     this.selectedAmenities = this.selectedAmenities.filter(item => item.id && item.name && item.icon);
-    console.log(this.selectedAmenities);
+    this.checkForChanges();
   }
 
   propertyImagesClick(){
@@ -681,12 +620,8 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyFloorImagesClicked=false;
     this.propertyVideosClicked=false;
     this.propertyDocumentsClicked=false;
-    if (!this.hasImageListChanged()) {
-      const propID: string = (this.propertyform.get('id')?.value).toString();
+    const propID: string = (this.propertyform.get('id')?.value).toString();
       this.getPropertyImagesForProperty(propID);
-    } else {
-      console.log("Images have changed — skipping refresh.");
-    }
   }
   
   propertyFloorImagesClick(){
@@ -698,7 +633,6 @@ export class AddPropertyComponentComponent implements OnInit {
       const propID: string = (this.propertyform.get('id')?.value).toString();
       this.getPropertyFloorImagesForProperty(propID);
     } else {
-      console.log("Floor images have changed — skipping refresh.");
     }
   }
 
@@ -727,202 +661,187 @@ export class AddPropertyComponentComponent implements OnInit {
     this.propertyDocumentsClicked=false;
   }
 
+  uploadPropertyImages(): void {
+    this.propertyImagesUploadButtonClick = true;
 
-
-uploadPropertyImages(): void {
-  this.propertyImagesUploadButtonClick = true;
-
-  if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
-    console.error('Property ID is required and you must select images.');
-    this.propertyImagesUploadButtonClick = false;
-    return;
-  }
-
-  const formData = new FormData();
-  const createdBy = localStorage.getItem('email') || 'Unknown User';
-  const fileType = '1';    
-  const flag = '1';       
-             
-  formData.append('propID', this.propID);
-  formData.append('createdBy', createdBy);
-  formData.append('fileType', fileType);
-  formData.append('flag', flag);
-
-  Array.from(this.selectedPropertyFiles).forEach((file: File) => {
-    formData.append('images', file, file.name);
-  });
-  
-  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
-    next: (response) => {
-      this.PropertyOnfileClicked = false;
+    if (!this.propID || !this.selectedPropertyFiles || this.selectedPropertyFiles.length === 0) {
       this.propertyImagesUploadButtonClick = false;
-      this.propertyImagesUploadedSuccesful = true;
-
-      this.getPropertyImagesForProperty(this.propID); 
-
-      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-      if (fileInput) fileInput.value = ''; 
-    },
-    error: (err) => {
-      console.error('Upload failed:', err);
-      this.propertyImagesUploadButtonClick = false;
+      return;
     }
-  });
-}
 
+    const formData = new FormData();
+    const createdBy = localStorage.getItem('email') || 'Unknown User';
+    const fileType = '1';    
+    const flag = '1';       
+              
+    formData.append('propID', this.propID);
+    formData.append('createdBy', createdBy);
+    formData.append('fileType', fileType);
+    formData.append('flag', flag);
 
-uploadPropertyFloorImages(): void {
-  this.propertyfloorImagesUploadButtonClick = true;
-  if (!this.propID || !this.selectedPropertyFloorFiles || this.selectedPropertyFloorFiles.length === 0) {
-    console.error('Property ID is required and you must select images.');
-    this.propertyfloorImagesUploadButtonClick = false;
-    return;
+    Array.from(this.selectedPropertyFiles).forEach((file: File) => {
+      formData.append('images', file, file.name);
+    });
+    
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
+      next: (response) => {
+        this.PropertyOnfileClicked = false;
+        this.propertyImagesUploadButtonClick = false;
+        this.propertyImagesUploadedSuccesful = true;
+
+        this.getPropertyImagesForProperty(this.propID); 
+
+        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+        if (fileInput) fileInput.value = ''; 
+      },
+      error: (err) => {
+        this.propertyImagesUploadButtonClick = false;
+      }
+    });
   }
 
-  const formData = new FormData();
-  formData.append('propID', this.propID);
-  formData.append('fileType', '2'); 
-  const createdBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('createdBy', createdBy);
-  formData.append('flag', '1'); 
-
-  Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
-    formData.append('images', file, file.name);
-  });
-  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
-    response => {
-      this.PropertyFloorImageOnFileClicked = false;
+  uploadPropertyFloorImages(): void {
+    this.propertyfloorImagesUploadButtonClick = true;
+    if (!this.propID || !this.selectedPropertyFloorFiles || this.selectedPropertyFloorFiles.length === 0) {
       this.propertyfloorImagesUploadButtonClick = false;
-      this.propertyFloorImagesUploadedSuccesful = true;
-      this.getPropertyFloorImagesForProperty(this.propID); 
-
-      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-      if (fileInput) {
-        fileInput.value = '';
-      }
-    },
-    error => {
-      console.error('Upload failed:', error);
-      this.propertyfloorImagesUploadButtonClick = false;
+      return;
     }
-  );
-}
 
-uploadPropertyVideos(): void {
-  this.propertyVideoUploadButtonClick = true;
-  if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
-    console.error('Property ID is required and you must select a video.');
-    this.propertyVideoUploadButtonClick = false;
-    return;
+    const formData = new FormData();
+    formData.append('propID', this.propID);
+    formData.append('fileType', '2'); 
+    const createdBy = localStorage.getItem('email') || 'Unknown User';
+    formData.append('createdBy', createdBy);
+    formData.append('flag', '1'); 
+
+    Array.from(this.selectedPropertyFloorFiles).forEach((file: File) => {
+      formData.append('images', file, file.name);
+    });
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+      response => {
+        this.PropertyFloorImageOnFileClicked = false;
+        this.propertyfloorImagesUploadButtonClick = false;
+        this.propertyFloorImagesUploadedSuccesful = true;
+        this.getPropertyFloorImagesForProperty(this.propID); 
+
+        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+      },
+      error => {
+        this.propertyfloorImagesUploadButtonClick = false;
+      }
+    );
   }
 
-  const formData = new FormData();
-  formData.append('propID', this.propID);
-  formData.append('fileType', '4');      
-  formData.append('flag', '1');  
-
-  const createdBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('createdBy', createdBy);
-  formData.append('modifiedBy', createdBy);
-  Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
-    formData.append('images', file, file.name);
-  });
-  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
-    response => {
-      this.PropertyVideoOnFileClicked = false;
+  uploadPropertyVideos(): void {
+    this.propertyVideoUploadButtonClick = true;
+    if (!this.propID || !this.selectedPropertyVideoFiles || this.selectedPropertyVideoFiles.length === 0) {
       this.propertyVideoUploadButtonClick = false;
-      this.propertyVideosUploadedSuccesful = true;
-      this.getPropertyVideo(this.propID);  
-
-      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-      if (fileInput) {
-        fileInput.value = '';
-      }
-    },
-    error => {
-      console.error('Upload failed:', error);
-      this.propertyVideoUploadButtonClick = false;
+      return;
     }
-  );
-}
 
-uploadPropertyDocuments(): void {
-  this.propertydocumenetUploadButtonClick = true;
-  if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
-    console.error('Property ID is required and you must select a document.');
-    this.propertydocumenetUploadButtonClick = false;
-    return;
+    const formData = new FormData();
+    formData.append('propID', this.propID);
+    formData.append('fileType', '4');      
+    formData.append('flag', '1');  
+
+    const createdBy = localStorage.getItem('email') || 'Unknown User';
+    formData.append('createdBy', createdBy);
+    formData.append('modifiedBy', createdBy);
+    Array.from(this.selectedPropertyVideoFiles).forEach((file: File) => {
+      formData.append('images', file, file.name);
+    });
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+      response => {
+        this.PropertyVideoOnFileClicked = false;
+        this.propertyVideoUploadButtonClick = false;
+        this.propertyVideosUploadedSuccesful = true;
+        this.getPropertyVideo(this.propID);  
+
+        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+      },
+      error => {
+        this.propertyVideoUploadButtonClick = false;
+      }
+    );
   }
-  const formData = new FormData();
-  formData.append('propID', this.propID);
-  formData.append('fileType', '3');  
-  formData.append('flag', '1');              
 
-  const createdBy = localStorage.getItem('email') || 'Unknown User';
-  formData.append('createdBy', createdBy);
-  formData.append('modifiedBy', createdBy);
-
-  Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
-    formData.append('images', file, file.name); 
-  });
-  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
-    response => {
-      this.PropertyDocumentOnFileClicked = false;
+  uploadPropertyDocuments(): void {
+    this.propertydocumenetUploadButtonClick = true;
+    if (!this.propID || !this.selectedPropertyDocumentFiles || this.selectedPropertyDocumentFiles.length === 0) {
       this.propertydocumenetUploadButtonClick = false;
-      this.propertyDocumentsUploadedSuccesful = true;
-      this.getPropertyDocument(this.propID);
-
-      const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
-      if (fileInput) {
-        fileInput.value = '';
-      }
-    },
-    error => {
-      console.error('Upload failed:', error);
-      this.propertydocumenetUploadButtonClick = false;
+      return;
     }
-  );
-}
+    const formData = new FormData();
+    formData.append('propID', this.propID);
+    formData.append('fileType', '3');  
+    formData.append('flag', '1');              
 
-getPropertyImagesForProperty(propID: string): void {
-  const formData = new FormData();
-  formData.append('propID', propID);
-  formData.append('flag', '2');      
-  formData.append('fileType', '1'); 
+    const createdBy = localStorage.getItem('email') || 'Unknown User';
+    formData.append('createdBy', createdBy);
+    formData.append('modifiedBy', createdBy);
 
-  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
-    (response: any) => {
-      if (response.statusCode === 200 && response.data && Array.isArray(response.data)) {
-        this.uploadedImages1 = response.data.map((image: any) => {
-          const imageUrls = this.apiurls.getImageUrl(image.filePath);
-          const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+    Array.from(this.selectedPropertyDocumentFiles).forEach((file: File) => {
+      formData.append('images', file, file.name); 
+    });
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+      response => {
+        this.PropertyDocumentOnFileClicked = false;
+        this.propertydocumenetUploadButtonClick = false;
+        this.propertyDocumentsUploadedSuccesful = true;
+        this.getPropertyDocument(this.propID);
 
-          return {
-            ...image,
-            propID: propID,
-            imageUrls,           
-            ImageOrder: image.imageOrder,  
-            customOrder          
-          };
-        });
-
-        this.originalUploadedImages1 = this.uploadedImages1.map(img => ({
-          id: img.id,
-          imageOrder: img.customOrder,
-          defaultImage: img.DefaultImage 
-        }));
-      } else {
-        console.warn('No images returned or unexpected response format.', response);
+        const fileInput = document.getElementById('gallery-upload') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+      },
+      error => {
+        this.propertydocumenetUploadButtonClick = false;
       }
-    },
-    error => {
-      console.error('Error fetching images:', error);
-    }
-  );
-}
+    );
+  }
 
+  getPropertyImagesForProperty(propID: string): void {
+    const formData = new FormData();
+    formData.append('propID', propID);
+    formData.append('flag', '2');      
+    formData.append('fileType', '1'); 
 
-  
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && response.data && Array.isArray(response.data)) {
+          this.uploadedImages1 = response.data.map((image: any) => {
+            const imageUrls = this.apiurls.getImageUrl(image.filePath);
+            const customOrder = image.imageOrder ? parseInt(image.imageOrder, 10) : 0;
+
+            return {
+              ...image,
+              propID: propID,
+              imageUrls,           
+              ImageOrder: image.imageOrder,  
+              customOrder          
+            };
+          });
+
+          this.originalUploadedImages1 = this.uploadedImages1.map(img => ({
+            id: img.id,
+            imageOrder: img.customOrder,
+            defaultImage: img.DefaultImage 
+          }));
+        } else {
+        }
+      },
+      error => {
+      }
+    );
+  }
+
   hasImageListChanged(): boolean {
     if (this.uploadedImages1.length !== this.originalUploadedImages1.length) {
       return true;
@@ -951,7 +870,6 @@ getPropertyImagesForProperty(propID: string): void {
     this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
       (response: any) => {
         if (!response || !Array.isArray(response.data)) {
-          console.error('Unexpected response structure:', response);
           return;
         }
   
@@ -975,12 +893,10 @@ getPropertyImagesForProperty(propID: string): void {
         }));
       },
       (error) => {
-        console.error('Error fetching floor images:', error);
       }
     );
   }
   
-
   hasFloorImageListChanged(): boolean {
     if (this.uploadedFloorImages1.length !== this.originalUploadedFloorImages1.length) {
       return true;
@@ -998,68 +914,62 @@ getPropertyImagesForProperty(propID: string): void {
   
     return false;
   }
-  
 
-getPropertyVideo(propID: string): void {
-  const formData = new FormData();
-  formData.append('propID', propID);
-  formData.append('flag', '2');        
-  formData.append('fileType', '4');     
+  getPropertyVideo(propID: string): void {
+    const formData = new FormData();
+    formData.append('propID', propID);
+    formData.append('flag', '2');        
+    formData.append('fileType', '4');     
 
-  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
-    (response: any) => {
-      if (response?.statusCode === 200 && Array.isArray(response.data)) {
-        this.uploadedVideos1 = response.data.map((video: any) => {
-          const videoUrl = this.apiurls.getImageUrl(video.filePath); 
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+      (response: any) => {
+        if (response?.statusCode === 200 && Array.isArray(response.data)) {
+          this.uploadedVideos1 = response.data.map((video: any) => {
+            const videoUrl = this.apiurls.getImageUrl(video.filePath); 
 
-          return {
-            ...video,
-            propID: propID,
-            videoUrl 
-          };
-        });
-      } else {
-        console.warn('No videos found or response format invalid.', response);
-        this.uploadedVideos1 = [];
+            return {
+              ...video,
+              propID: propID,
+              videoUrl 
+            };
+          });
+        } else {
+          this.uploadedVideos1 = [];
+        }
+      },
+      error => {
       }
-    },
-    error => {
-      console.error('Error fetching video files:', error);
-    }
-  );
-}
+    );
+  }
 
+  getPropertyDocument(propID: string): void {
+    const formData = new FormData();
+    formData.append('propID', propID);
+    formData.append('flag', '2');            
+    formData.append('fileType', '3');        
 
-getPropertyDocument(propID: string): void {
-  const formData = new FormData();
-  formData.append('propID', propID);
-  formData.append('flag', '2');            
-  formData.append('fileType', '3');        
+    this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
+      (response: any) => {
+        if (response?.statusCode === 200 && Array.isArray(response.data)) {
+          this.uploadedDocuments1 = response.data.map((doc: any) => {
+            const documentUrl = this.apiurls.getImageUrl(doc.filePath);
+            const safeDocumentUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentUrl);
 
-  this.apiurls.post<any>('Tbl_PropFiles_CRUD_Operations', formData).subscribe(
-    (response: any) => {
-      if (response?.statusCode === 200 && Array.isArray(response.data)) {
-        this.uploadedDocuments1 = response.data.map((doc: any) => {
-          const documentUrl = this.apiurls.getImageUrl(doc.filePath);
-          const safeDocumentUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentUrl);
-
-          return {
-            ...doc,
-            propID: propID,
-            documentUrl,         
-            safeDocumentUrl     
-          };
-        });
-      } else {
-        console.warn('No documents found or response format invalid.', response);
-        this.uploadedDocuments1 = [];
+            return {
+              ...doc,
+              propID: propID,
+              documentUrl,         
+              safeDocumentUrl     
+            };
+          });
+        } else {
+          this.uploadedDocuments1 = [];
+        }
+      },
+      error => {
       }
-    },
-    error => {
-      console.error('Error fetching documents:', error);
-    }
-  );
-}
+    );
+  }
 
   deleteImage(image: any): void {
     const index = this.uploadedImages.indexOf(image);
@@ -1094,7 +1004,6 @@ getPropertyDocument(propID: string): void {
     }
   }
 
-
   deleteVideoSelected(video: any): void {
     const index = this.uploadedVideos.indexOf(video);
     if (index !== -1) {
@@ -1127,9 +1036,6 @@ getPropertyDocument(propID: string): void {
     }
   }
   
-
-  
-
   deleteImage1(propertyId: string, imageId: number): void {
     const formData = new FormData();
     formData.append('flag', '4');
@@ -1152,66 +1058,11 @@ getPropertyDocument(propID: string): void {
         this.getPropertyImagesForProperty(this.propID);
       },
       error: (error) => {
-        console.error('Error deleting image:', error);
-        console.log('Error response:', error.error);
       },
       complete: () => {
-        console.log('Delete request completed');
       }
     });
   }
-  
-  
-  
-
-  // deleteImage1(propertyId: string, imageId: number): void {
-  //   const endpoint = `delete-image/${propertyId}/${imageId}`;
-  //   this.apiurls.delete<string>(endpoint).subscribe({
-  //     next: (response: string) => {
-  //       const index = this.uploadedImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
-  //       if (index !== -1) {
-  //         this.uploadedImages1.splice(index, 1);
-  //         this.propertyInsStatus = "Image deleted successfully!";
-  //         this.isUpdateModalOpen = true;
-  //       }
-      
-  //       this.getPropertyImagesForProperty(this.propID);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error deleting image:', error);
-  //       console.log('Error response:', error.error);
-  //     },
-  //     complete: () => {
-  //       console.log('Delete request completed');
-  //     }
-  //   });
-    
-   
-  // }
-
-  // deleteFloorImage1(propertyId: string, imageId: number): void {
-  //   const endpoint = `delete-Floorimage/${propertyId}/${imageId}`;
-  //   this.apiurls.delete<string>(endpoint).subscribe({
-  //     next: (response: string) => {
-  //       const index = this.uploadedFloorImages1.findIndex(image => image.id === imageId && image.propID === propertyId);
-  //       if (index !== -1) {
-  //         this.uploadedFloorImages1.splice(index, 1);
-  //         this.propertyInsStatus = "Image deleted successfully!";
-  //         this.isUpdateModalOpen = true;
-  //       }
-  //       this.getPropertyFloorImagesForProperty(this.propID);
-  //     },
-  //       error: (error) => {
-  //         console.error('Error deleting image:', error);
-  //         console.log('Error response:', error.error);
-  //       },
-  //       complete: () => {
-  //         console.log('Delete request completed');
-  //       }
-  //     });
-    
-   
-  // }
 
   deleteFloorImage1(propertyId: string, imageId: number): void {
     const formData = new FormData();
@@ -1234,38 +1085,11 @@ getPropertyDocument(propID: string): void {
         this.getPropertyFloorImagesForProperty(this.propID);
       },
       error: (error) => {
-        console.error('Error deleting floor image:', error);
-        console.log('Error response:', error.error);
       },
       complete: () => {
-        console.log('Delete floor image request completed');
       }
     });
   }
-  
-
-  // deleteVideo(propertyId: string, VideoId: number): void {
-  //   const endpoint = `delete-PropertyVideo/${propertyId}/${VideoId}`;
-  //   this.apiurls.delete<string>(endpoint).subscribe({
-  //     next: (response: string) => {
-  //       console.log('Video deleted from database:', response);
-  //       const index = this.uploadedVideos1.findIndex(video => video.id === VideoId && video.propID === propertyId);
-  //       if (index !== -1) {
-  //         this.uploadedVideos1.splice(index, 1);
-  //         this.propertyInsStatus = "Video deleted successfully!";
-  //         this.isUpdateModalOpen = true;
-  //       }
-  //       this.getPropertyVideo(this.propID);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error deleting image:', error);
-  //       console.log('Error response:', error.error);
-  //     },
-  //     complete: () => {
-  //       console.log('Delete request completed');
-  //     }
-  //   });
-  // }
 
   deleteVideo(propertyId: string, videoId: number): void {
     const formData = new FormData();
@@ -1279,7 +1103,6 @@ getPropertyDocument(propID: string): void {
   
     this.apiurls.post('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
       next: (response: any) => {
-        console.log('Video deleted from database:', response);
         const index = this.uploadedVideos1.findIndex(video => video.id === videoId && video.propID === propertyId);
         if (index !== -1) {
           this.uploadedVideos1.splice(index, 1);
@@ -1289,11 +1112,8 @@ getPropertyDocument(propID: string): void {
         this.getPropertyVideo(this.propID);
       },
       error: (error) => {
-        console.error('Error deleting video:', error);
-        console.log('Error response:', error.error);
       },
       complete: () => {
-        console.log('Delete video request completed');
       }
     });
   }
@@ -1310,7 +1130,6 @@ getPropertyDocument(propID: string): void {
   
     this.apiurls.post('Tbl_PropFiles_CRUD_Operations', formData).subscribe({
       next: (response: any) => {
-        console.log('Document deleted from database:', response);
         const index = this.uploadedDocuments1.findIndex(document => document.id === documentId && document.propID === propertyId);
         if (index !== -1) {
           this.uploadedDocuments1.splice(index, 1);
@@ -1320,37 +1139,11 @@ getPropertyDocument(propID: string): void {
         this.getPropertyDocument(this.propID);
       },
       error: (error) => {
-        console.error('Error deleting document:', error);
-        console.log('Error response:', error.error);
       },
       complete: () => {
-        console.log('Delete document request completed');
       }
     });
   }
-  
-  // deleteDocument(propertyId:string, DocumentID: number): void {
-  //   const endpoint = `delete-PropertyDocument/${propertyId}/${DocumentID}`;
-  //   this.apiurls.delete<string>(endpoint).subscribe({
-  //     next: (response: string) => {
-  //       console.log('Document deleted from database:', response);
-  //       const index = this.uploadedDocuments1.findIndex(document => document.id === DocumentID && document.propID === propertyId);
-  //       if (index !== -1) {
-  //         this.uploadedDocuments1.splice(index, 1);
-  //         this.propertyInsStatus = "Documenet deleted successfully!";
-  //         this.isUpdateModalOpen = true;
-  //       }
-  //       this.getPropertyDocument(this.propID);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error deleting document:', error);
-  //       console.log('Error response:', error.error);
-  //     },
-  //     complete: () => {
-  //       console.log('Delete request completed');
-  //     }
-  //   });
-  // }
 
   openModal(imagePath: string): void {
     this.selectedImage = imagePath;  
@@ -1366,12 +1159,12 @@ getPropertyDocument(propID: string): void {
     this.selecteddocumnet=DocumentPath;
     this.isDocumnetModalOpen=true;
   }
- 
 
   closeModaldocumnet(): void {
     this.isDocumnetModalOpen = false;  
     this.selecteddocumnet = ''; 
   }
+
   closeModal(): void {
     this.isModalOpen = false; 
     this.selectedImage = ''; 
@@ -1415,10 +1208,8 @@ getPropertyDocument(propID: string): void {
         }
         this.propertyImagesUploadButtonClick = false;
       } else {
-        console.error('No files selected');
       }
     } else {
-      console.error('No files in the input');
     }
   }
   
@@ -1454,14 +1245,11 @@ getPropertyDocument(propID: string): void {
         }
         this.propertyfloorImagesUploadButtonClick = false;
       } else {
-        console.error('No files selected');
       }
     } else {
-      console.error('No files in the input');
     }
   }
  
-
   onVideoFileSelect(event: any): void {
     this.PropertyVideoOnFileClicked = true;
   
@@ -1489,15 +1277,11 @@ getPropertyDocument(propID: string): void {
           }
         });
       } else {
-        console.error('No files selected');
       }
     } else {
-      console.error('No files in the input');
     }
   }
   
-  
-
   onDocumentFileSelect(event: any): void {
     this.PropertyDocumentOnFileClicked = true;
   
@@ -1528,17 +1312,19 @@ getPropertyDocument(propID: string): void {
           }
         });
       } else {
-        console.error('No files selected');
       }
     } else {
-      console.error('No files in the input');
     }
   }
   
-
   editproperty(propertyID: string): void {
     this.editclicked = true;
     this.propID = propertyID;  
+    this.propertyImagesClicked=false;
+    this.propertyFloorImagesClicked=false;
+    this.propertyVideosClicked=false;
+    this.propertyDocumentsClicked=false;
+    this.clearSelections(); 
     this.getTotalPropertyDet(propertyID);
     this.fetchAminities();
     this.loadCountries();
@@ -1549,7 +1335,7 @@ getPropertyDocument(propID: string): void {
     } else {
       this.isUpdateButtonEnabled = false;  
     }
-}
+  }
 
   DeActivateproperty(propertyID: string): void {
     this.propID = propertyID;
@@ -1562,26 +1348,6 @@ getPropertyDocument(propID: string): void {
     const Status="1";
     this.updatePropertyIsActiveStatus(this.propID,Status);
   }
-
-
-  // updatePropertyIsActiveStatus(PropId: string, Status: string): void {
-  //   const endpoint = `updatePropertyIsActiveStatus/${PropId}?Status=${status}`;
-  //   this.apiurls.put(endpoint, {}).subscribe({
-  //     next: (response: any) => {
-  //       if (response.statusCode == "200") {
-  //         this.propertyInsStatus = "Property IsActive Status updated successfully!";
-  //         this.isUpdateModalOpen = true;
-  //         this.fetchProperties();
-  //         this.cdRef.detectChanges();
-  //       }
-  //     },
-  //     error: (error) => {
-  //       this.propertyInsStatus = "Error Updating Property.";
-  //       this.isUpdateModalOpen = true;
-  //       console.error("Error details:", error);
-  //     }
-  //   });
-  // }
 
   updatePropertyIsActiveStatus(propId: string, isActiveStatus: string): void {
     const data = {
@@ -1605,19 +1371,15 @@ getPropertyDocument(propID: string): void {
         } else {
           this.propertyInsStatus = 'Unexpected response from server.';
           this.isUpdateModalOpen = true;
-          console.warn('Unexpected response:', response);
         }
       },
       error: (error) => {
         this.propertyInsStatus = 'Error updating property active status.';
         this.isUpdateModalOpen = true;
-        console.error('Error details:', error);
       }
     });
   }
   
-
-
   getTotalPropertyDet(propID: string): void {  
     const data = {
           propID: propID,
@@ -1660,7 +1422,7 @@ getPropertyDocument(propID: string): void {
               return { id, name, icon };  
             })
             .filter((amenity: Amenity) => amenity.id && amenity.name && amenity.icon);
-  
+          this.originalAmenities = JSON.stringify(this.selectedAmenities);
           this.propertyform.patchValue({
             id: property.propID,
             PropertyTitle: property.propname,
@@ -1726,17 +1488,13 @@ getPropertyDocument(propID: string): void {
           this.SoldOutProperty = property.propertySaleStatus !== "1";
   
         } else {
-          console.warn('No property data found or error:', response.message);
         }
       }, 
       error => {
-        console.error('Error fetching property details:', error);
       }
     );
   }
   
-
-
   convertBlobToBase64(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -1745,7 +1503,6 @@ getPropertyDocument(propID: string): void {
       reader.readAsDataURL(blob);  
     });
   }
-
 
   submitpropertyDet() {
     Object.keys(this.propertyform.controls).forEach(key => {
@@ -1817,11 +1574,8 @@ getPropertyDocument(propID: string): void {
       AvailabilityOptions: String(this.propertyform.get('AvailabilityOptions')?.value || ''),
       UserID: currentUserEmail,
       CreatedBy: currentUserEmail,
-      CreatedIP: '',
+      CreatedIP: this.IPAddress,
       CreatedDate: now,
-      ModifiedBy: '',
-      ModifiedIP: '',
-      ModifiedDate: now,
       ActiveStatus: '1',
       CountryName: this.SelectedCountryName || '',
       StateName: this.SelectedStateName || '',
@@ -1834,14 +1588,10 @@ getPropertyDocument(propID: string): void {
       GeneratedID: '',
       KeyWord: '',
       UserActiveStatus: '1'
-    };
-  
-    console.log('Submitting Property Data:', data);
-  
+    };  
     this.apiurls.post("Tbl_Properties_CRUD_Operations", data).subscribe({
       next: (response: any) => {
         if (response.statusCode === 200) {
-          console.log('Property saved successfully:', response.message);
           const orderValidationError = this.validateOrders();
           if (orderValidationError) {
             alert(orderValidationError);
@@ -1859,32 +1609,29 @@ getPropertyDocument(propID: string): void {
           this.uploadPropertyVideos();
           this.uploadPropertyDocuments();
   
+          
           this.propertyInsStatus = "Property submitted successfully!";
           this.isUpdateModalOpen = true;
-          this.propertyImagesClicked = false;
-          this.propertyFloorImagesClicked = false;
-          this.propertyVideosClicked = false;
-          this.propertyDocumentsClicked = false;
+          
           this.editclicked = false;
           this.addnewPropertyclicked = false;
+          this.propertyImagesClicked=false;
+          this.propertyFloorImagesClicked=false;
+          this.propertyVideosClicked=false;
+          this.propertyDocumentsClicked=false;
+          this.clearSelections(); 
           this.cdRef.detectChanges();
         } else {
-          console.warn("Unexpected response:", response);
         }
       },
       error: (error) => {
-        console.error("Error inserting property:", error);
         this.propertyInsStatus = "Error Inserting Property.";
         this.isUpdateModalOpen = true;
       }
     });
   }
   
-
-
   isOrderSubmitEnabled: boolean = false;
-
-
 
   updatePropertyDet() {
     Object.keys(this.propertyform.controls).forEach(key => {
@@ -1898,11 +1645,8 @@ getPropertyDocument(propID: string): void {
     const selectedAmenitiesString = this.selectedAmenities
       .map(amenity => `${amenity.id} - ${amenity.name} - ${amenity.icon}`)
       .join(',');
-  
     const now = new Date().toISOString();
     const currentUserEmail = localStorage.getItem('email') || '';
-  
-  
     const data = {
       id: 0,
       PropID: this.propertyform.get('id')?.value || '',
@@ -1956,12 +1700,8 @@ getPropertyDocument(propID: string): void {
       Twitterurl: String(this.propertyform.get('Twitterurl')?.value || ''),
       GoogleLocationurl: String(this.propertyform.get('GoogleLocationurl')?.value || ''),
       AvailabilityOptions: String(this.propertyform.get('AvailabilityOptions')?.value || ''),
-      UserID: currentUserEmail,
-      CreatedBy: currentUserEmail,
-      CreatedIP: '',
-      CreatedDate: now,
-      ModifiedBy: '',
-      ModifiedIP: '',
+      ModifiedBy: currentUserEmail,
+      ModifiedIP: this.IPAddress,
       ModifiedDate: now,
       ActiveStatus: '',
       CountryName: this.SelectedCountryName || '',
@@ -1980,20 +1720,13 @@ getPropertyDocument(propID: string): void {
     this.apiurls.post("Tbl_Properties_CRUD_Operations", data).subscribe({
       next: (response: any) => {
         if (response.statusCode == "200") {
-          this.uploadPropertyImages();
-  
+          this.uploadPropertyImages();  
           const validationError = this.validateOrders();
           if (validationError) {
             this.propertyInsStatus = validationError;
             this.isUpdateModalOpen = true;
             return;
           }
-          // const updatedImages = this.uploadedImages1.map(image => ({
-          //   id: image.id,
-          //   imageOrder: image.customOrder.toString(),
-          //   defaultImage: image.DefaultImage === "1" ? "1" : "0"
-          // }));
-          // this.updateImageOrderInDatabase(updatedImages);
           const updatedImages = this.uploadedImages1.map(image => ({
             ID: image.id,
             PropID: this.propID,
@@ -2002,18 +1735,13 @@ getPropertyDocument(propID: string): void {
             Flag: "3"
           }));
           this.updateImageOrderInDatabase(updatedImages);
-          
-          
-          
           this.uploadPropertyFloorImages();
-  
           const validationFloorError = this.validateOrdersfloor();
           if (validationFloorError) {
             this.propertyInsStatus = validationFloorError;
             this.isUpdateModalOpen = true;
             return;
           }
-  
           const uploadedFloorImages = this.uploadedFloorImages1.map(image => ({
             ID: image.id,
             PropID: this.propID,
@@ -2028,33 +1756,33 @@ getPropertyDocument(propID: string): void {
           this.uploadPropertyVideos();
           this.uploadPropertyDocuments();
   
+          
           this.propertyInsStatus = "Property updated successfully!";
           this.isUpdateModalOpen = true;
           this.editclicked = false;
+          
           this.addnewPropertyclicked = false;
           this.isOrderSubmitEnabled = true;
           this.cdRef.detectChanges();
         } else {
-          console.warn("Unexpected response while updating:", response);
         }
       },
       error: (error) => {
         this.propertyInsStatus = "Error Updating Property.";
         this.isUpdateModalOpen = true;
-        console.error("Error details:", error);
       }
     });
   }
  
-  
   checkForChanges() {
-    this.isUpdateButtonEnabled = this.propertyform.dirty;
+    // this.isUpdateButtonEnabled = this.propertyform.dirty;
+    // this.amenities 
+    const amenitiesChanged = JSON.stringify(this.selectedAmenities) !== this.originalAmenities;
+    this.isUpdateButtonEnabled = this.propertyform.dirty || amenitiesChanged;
   }
   
-
   addNewProperty(){
-    this.addnewPropertyclicked=true;
- 
+    this.addnewPropertyclicked=true; 
     this.editclicked=false;
     this.propertyform.reset();
     this.selectedCountryId="";
@@ -2071,13 +1799,16 @@ getPropertyDocument(propID: string): void {
     this.loadCities();
     this.fetchAminities();
     this.getPropertTypes();
+    this.propertyImagesClicked=false;
+    this.propertyFloorImagesClicked=false;
+    this.propertyVideosClicked=false;
+    this.propertyDocumentsClicked=false;
     this.clearSelections(); 
     this.uploadedImages1=[];
     this.uploadedFloorImages1=[];
     this.uploadedDocuments1=[];
     this.uploadedVideos1=[]; 
-}
-
+  }
 
   clearSelections(): void {
     this.selectedAmenities = [];
@@ -2086,40 +1817,6 @@ getPropertyDocument(propID: string): void {
     this.uploadedDocuments1=[];
     this.uploadedVideos1=[];
   }
-  
-  // getownProperties(){
-  //   this.apiurls.get<any>(`GetAllPropertyDetailsWithUserID?userID=${this.userID}`)
-  //   .subscribe((response: any) => {
-  //     this.properties = response.map((property: any) => ({
-  //       propID: property.propID,
-  //       propname: property.propname,
-  //       developedby: property.developedby
-  //     }));
-
-  //   }, error => {
-  //     console.error('Error fetching properties:', error);
-  //   });
-    
-  // }
-
-
-
-  // getUserProperties(){
-  //   this.apiurls.get<any>(`GetAllUsersPropertyDetails?userID=${this.userID}`) 
-  //   .subscribe((response: any) => {
-  //     this.properties = response.map((property: any) => ({
-  //       propID: property.propID,
-  //       propname: property.propname,
-  //       developedby: property.developedby
-  //     }));
-
-  //   }, error => {
-  //     console.error('Error fetching properties:', error);
-  //   });
-    
-  // }
-
-  
 
   getownProperties() {
     const data = { 
@@ -2135,7 +1832,6 @@ getPropertyDocument(propID: string): void {
           }));
         },
         error => {
-          console.error('Error fetching properties:', error);
         }
       );
   }
@@ -2155,11 +1851,9 @@ getPropertyDocument(propID: string): void {
           }));
         },
         error => {
-          console.error('Error fetching properties:', error);
         }
       );
   }
-  
   
   get filteredProperties() {
     return this.properties.filter(property => 
@@ -2167,7 +1861,6 @@ getPropertyDocument(propID: string): void {
       property.propname.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       property.developedby.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
-    console.log(this.searchQuery.toLowerCase());
   }
 
   get totalPages(): number {
@@ -2182,41 +1875,39 @@ getPropertyDocument(propID: string): void {
     return filteredProperties.slice(start, end);
   }
 
-
   setPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
     }
   }
 
-
   previousPage(): void {
     if (this.currentPage > 1) {
         this.currentPage--;
     }
-}
-
-getVisiblePages(): number[] {
-  let startPage = Math.max(1, this.currentPage - Math.floor(this.visiblePageCount / 2));
-  let endPage = Math.min(this.totalPages, startPage + this.visiblePageCount - 1);
-
-  if (endPage - startPage < this.visiblePageCount - 1) {
-      startPage = Math.max(1, endPage - this.visiblePageCount + 1);
   }
 
-  let pages: number[] = [];
-  for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-  }
-  return pages;
-}
+  getVisiblePages(): number[] {
+    let startPage = Math.max(1, this.currentPage - Math.floor(this.visiblePageCount / 2));
+    let endPage = Math.min(this.totalPages, startPage + this.visiblePageCount - 1);
 
+    if (endPage - startPage < this.visiblePageCount - 1) {
+        startPage = Math.max(1, endPage - this.visiblePageCount + 1);
+    }
+
+    let pages: number[] = [];
+    for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+    }
+    return pages;
+  }
 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
         this.currentPage++;
     }
   }
+
   onPropertiesChange(newProperties: any[]) {
     this.properties = newProperties;
   }
@@ -2228,6 +1919,11 @@ getVisiblePages(): number[] {
       this.editclicked = false;
       this.addnewPropertyclicked=false;
       this.propertyform.reset();
+      this.propertyImagesClicked=false;
+      this.propertyFloorImagesClicked=false;
+      this.propertyVideosClicked=false;
+      this.propertyDocumentsClicked=false;
+      // this.clearSelections(); 
       this.fetchProperties();
       if(this.isUpdateButtonEnabled=true){
         this.isUpdateButtonEnabled=false;
@@ -2239,994 +1935,726 @@ getVisiblePages(): number[] {
     this.searchQuery = '';
   }
 
-
   declineProperty(){
     const PropId=this.propertyform.get('id')?.value
     this.updatePropertyStatus(PropId,'2');
   }
 
   ApproveProperty(){
-    const PropId=this.propertyform.get('id')?.value
-    this.updatePropertyStatus(PropId,'1');
+      const PropId=this.propertyform.get('id')?.value
+      this.updatePropertyStatus(PropId,'1');
   }
 
   SoldOutPropertyClick(){
-    const PropId=this.propertyform.get('id')?.value
-    this.updatePropertySoldOutStatus(PropId,'1');
+      const PropId=this.propertyform.get('id')?.value
+      this.updatePropertySoldOutStatus(PropId,'1');
   }
-
 
   UnSoldPropertyClick(){
-    const PropId=this.propertyform.get('id')?.value
-    this.updatePropertySoldOutStatus(PropId,'0');
+      const PropId=this.propertyform.get('id')?.value
+      this.updatePropertySoldOutStatus(PropId,'0');
   }
 
-
-    selectAll(): void {
-      this.selectedAmenities = this.amenities.map(amenity => ({
-        id: amenity.aminitieID,
-        name: amenity.name,
-        icon: amenity.icon
-      }));
-      console.log("aminities list",this.amenities);
-      console.log(this.selectedAmenities);
-    }
+  selectAll(): void {
+    this.selectedAmenities = this.amenities.map(amenity => ({
+      id: amenity.aminitieID,
+      name: amenity.name,
+      icon: amenity.icon
+    }));
+  }
   
-    deselectAll(): void {
-      this.selectedAmenities = [];
-      console.log('All amenities deselected');
-    }
-
+  deselectAll(): void {
+    this.selectedAmenities = [];
+  }
 
   updatePropertyStatus(propId: string, status: string): void {
-    const data = {
-      PropID: propId,
-      ActiveStatus: status,
-      Flag: '11',
-      ModifiedBy: localStorage.getItem('email') || '',
-      ModifiedDate: new Date().toISOString(),
-    }; 
+      const data = {
+        PropID: propId,
+        ActiveStatus: status,
+        Flag: '11',
+        ModifiedBy: localStorage.getItem('email') || '',
+        ModifiedIP:this.IPAddress,
+        ModifiedDate: new Date().toISOString(),
+      }; 
 
-    this.apiurls.post('Tbl_Properties_CRUD_Operations', data).subscribe({
-      next: (response: any) => {
-        if (response.statusCode === 200) {
-          this.propertyInsStatus = 'Property status updated successfully!';
-          this.isUpdateModalOpen = true;
-          this.editclicked = false;
-          this.addnewPropertyclicked = false;
-  
-          this.fetchProperties();
-          this.cdRef.detectChanges();
-        } else {
-          console.warn('Unexpected status while updating property:', response);
-          this.propertyInsStatus = 'Unexpected response from server.';
+      this.apiurls.post('Tbl_Properties_CRUD_Operations', data).subscribe({
+        next: (response: any) => {
+          if (response.statusCode === 200) {
+            this.propertyInsStatus = 'Property status updated successfully!';
+            this.isUpdateModalOpen = true;
+            this.editclicked = false;
+            this.addnewPropertyclicked = false;
+    
+            this.fetchProperties();
+            this.cdRef.detectChanges();
+          } else {
+            this.propertyInsStatus = 'Unexpected response from server.';
+            this.isUpdateModalOpen = true;
+          }
+        },
+        error: (error) => {
+          this.propertyInsStatus = 'Error updating property status.';
           this.isUpdateModalOpen = true;
         }
-      },
-      error: (error) => {
-        this.propertyInsStatus = 'Error updating property status.';
-        this.isUpdateModalOpen = true;
-        console.error('Error details:', error);
-      }
-    });
+      });
   }
-  
+    
   updatePropertySoldOutStatus(propId: string, SoldOutStatus: string): void {
-    const data = {
-      PropID: propId,
-      propertySaleStatus: SoldOutStatus,  
-      Flag: '11',                         
-      ModifiedBy: localStorage.getItem('email') || '',
-      ModifiedDate: new Date().toISOString(),
-    };
-  
-    this.apiurls.post('Tbl_Properties_CRUD_Operations', data).subscribe({
-      next: (response: any) => {
-        if (response.statusCode === 200) {
-          this.propertyInsStatus = SoldOutStatus === '1'
-            ? 'Property marked as Sold Out successfully!'
-            : 'Property marked as Unsold successfully!';
-  
+      const data = {
+        PropID: propId,
+        propertySaleStatus: SoldOutStatus,  
+        Flag: '11',                         
+        ModifiedBy: localStorage.getItem('email') || '',
+        ModifiedIP:this.IPAddress,
+        ModifiedDate: new Date().toISOString(),
+      };
+    
+      this.apiurls.post('Tbl_Properties_CRUD_Operations', data).subscribe({
+        next: (response: any) => {
+          if (response.statusCode === 200) {
+            this.propertyInsStatus = SoldOutStatus === '1'
+              ? 'Property marked as Sold Out successfully!'
+              : 'Property marked as Unsold successfully!';
+    
+            this.isUpdateModalOpen = true;
+            this.editclicked = false;
+            this.addnewPropertyclicked = false;
+            this.fetchProperties();
+            this.cdRef.detectChanges();
+          } else {
+            this.propertyInsStatus = 'Unexpected response from server.';
+            this.isUpdateModalOpen = true;
+          }
+        },
+        error: (error) => {
+          this.propertyInsStatus = 'Error updating property sale status.';
           this.isUpdateModalOpen = true;
-          this.editclicked = false;
-          this.addnewPropertyclicked = false;
-          this.fetchProperties();
-          this.cdRef.detectChanges();
-        } else {
-          this.propertyInsStatus = 'Unexpected response from server.';
-          this.isUpdateModalOpen = true;
-          console.warn('Unexpected response:', response);
         }
-      },
-      error: (error) => {
-        this.propertyInsStatus = 'Error updating property sale status.';
-        this.isUpdateModalOpen = true;
-        console.error('Error details:', error);
-      }
-    });
-  }
-  
-
-  // updatePropertySoldOutStatus(PropId: string, SoldOutStatus: string): void {
-  //   this.apiurls.put(`updatePropertySoldOutStatus/${PropId}?SoldOutStatus=${SoldOutStatus}`, {}).subscribe({
-  //     next: (response: any) => {
-  //       if (response.statusCode == "200") {
-  //         this.propertyInsStatus = SoldOutStatus === "1"
-  //           ? "Property marked as Sold Out successfully!"
-  //           : "Property marked as Unsold successfully!";
-            
-  //         this.isUpdateModalOpen = true;
-
-  //         this.editclicked = false;
-  //         this.addnewPropertyclicked = false;
-  //         this.fetchProperties();
-  //         this.cdRef.detectChanges();
-  //       }
-  //     },
-  //     error: (error) => {
-  //       this.propertyInsStatus = "Error Updating Property.";
-  //       this.isUpdateModalOpen = true;
-  //       console.error("Error details:", error);
-  //     }
-  //   });
-  // }
-
-
-  getPropertyDetailsByStatus(status: string): void {
-    const requestBody = {
-      ActiveStatus: status,
-      Flag: '9'
-    };
-
-    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', requestBody)
-      .subscribe((response: any) => {
-        this.properties = response.map((property: any) => {
-          let PropertyStatus: string = '';
-          if (property.activeStatus === "2") {
-            PropertyStatus = "Not Approved";
-          } else if (property.activeStatus === "1") {
-            PropertyStatus = "Approved";
-          } else if (property.activeStatus === "0") {
-            PropertyStatus = "Pending";
-          }
-  
-          let PropertySaleStatus: string = '';
-          if (property.propertySaleStatus === "1") {
-            PropertySaleStatus = "Sold Out";
-          } else if (property.propertySaleStatus === "0") {
-            PropertySaleStatus = "Unsold";
-          }
-  
-          return {
-            propID: property.propID,
-            propname: property.propname,
-            developedby: property.developedby,
-            status: PropertyStatus,
-            SaleStatus: PropertySaleStatus
-          };
-        });
-      }, error => {
-        console.error('Error fetching properties:', error);
       });
   }
 
-  fetchFilteredProperties(
-    whose: string,
-    status: string,
-    IsActivestatus: string,
-    SoldOutstatus: string,
-    search: string
-  ): void {
-    const requestBody: any = {
-      userID: this.userID || '',
-      whose: whose || '',
-      ActiveStatus: IsActivestatus || '',       
-      PropActiveStatus: status || '',             
-      propertySaleStatus: SoldOutstatus || '',
-      KeyWord: search || '',
-      Flag: '13'
-    };
-  
-    this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', requestBody)
-      .subscribe(
-        (response: any) => {
-          console.log('API Response:', response);
-          if (response.statusCode === 200) {
-            this.properties = response.data.map((property: any) => ({
+  getPropertyDetailsByStatus(status: string): void {
+      const requestBody = {
+        ActiveStatus: status,
+        Flag: '9'
+      };
+
+      this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', requestBody)
+        .subscribe((response: any) => {
+          this.properties = response.map((property: any) => {
+            let PropertyStatus: string = '';
+            if (property.activeStatus === "2") {
+              PropertyStatus = "Not Approved";
+            } else if (property.activeStatus === "1") {
+              PropertyStatus = "Approved";
+            } else if (property.activeStatus === "0") {
+              PropertyStatus = "Pending";
+            }
+    
+            let PropertySaleStatus: string = '';
+            if (property.propertySaleStatus === "1") {
+              PropertySaleStatus = "Sold Out";
+            } else if (property.propertySaleStatus === "0") {
+              PropertySaleStatus = "Unsold";
+            }
+    
+            return {
               propID: property.propID,
               propname: property.propname,
               developedby: property.developedby,
-              status: this.getPropertyStatus(property.activeStatus),
-              IsActiveStatus: this.getPropertyIsActiveStatus(property.propActiveStatus),
-              IsActiveStatusBoolean: property.propActiveStatus,
-              SaleStatus: property.propertySaleStatus === "1" ? "Sold Out" : "Unsold"
-            }));
-            this.filteredPropertiesNotNull = false;
-            this.currentPage = 1;
-          } else if (response.statusCode === 404) {
+              status: PropertyStatus,
+              SaleStatus: PropertySaleStatus
+            };
+          });
+        }, error => {
+        });
+  }
+
+  fetchFilteredProperties(whose: string,status: string,IsActivestatus: string,SoldOutstatus: string,search: string): void {
+    const requestBody = {
+      userID: this.userID || '',
+      Whose: whose || '',
+      ActiveStatus: IsActivestatus || '',
+      PropActiveStatus: status || '',
+      propertySaleStatus: SoldOutstatus || '',
+      KeyWord: search || '',
+      Flag: '15'
+    };
+      this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', requestBody)
+        .subscribe(
+          (response: any) => {
+            if (response.statusCode === 200) {
+              this.properties = response.data.map((property: any) => ({
+                propID: property.propID,
+                propname: property.propname,
+                developedby: property.developedby,
+                status: this.getPropertyStatus(property.activeStatus),
+                IsActiveStatus: this.getPropertyIsActiveStatus(property.propActiveStatus),
+                IsActiveStatusBoolean: property.propActiveStatus,
+                SaleStatus: property.propertySaleStatus === "1" ? "Sold Out" : "Unsold"
+              }));
+              this.filteredPropertiesNotNull = false;
+              this.currentPage = 1;
+            } else if (response.statusCode === 404) {
+              this.filteredPropertiesNotNull = true;
+              this.properties = [];
+            } else {
+              this.properties = [];
+            }
+          },
+          error => {
             this.filteredPropertiesNotNull = true;
             this.properties = [];
-          } else {
-            this.properties = [];
           }
-        },
-        error => {
-          console.error('Error fetching properties:', error);
-          this.filteredPropertiesNotNull = true;
-          this.properties = [];
-        }
-      );
+        );
   }
-  
-  
-    //   getPropertyDetailsByStatus(status: string): void {
-        
-    //     this.apiurls.get<any>(`GetPropertiesByStatus?status=${status}`)
-    //       .subscribe((response: any) => {
-      
-    //         this.properties = response.map((property: any) => {
-    //           let PropertyStatus: string = '';
-      
-    //           if (property.activeStatus === "2") {
-    //             PropertyStatus = "Not Approved";
-    //           } else if (property.activeStatus === "1") {
-    //             PropertyStatus = "Approved";
-    //           } else if (property.activeStatus === "0") {
-    //             PropertyStatus = "Pending";
-    //           }
-    //           else{
-                
-    //           }
-    //           let PropertySaleStatus: string = '';
-    //           if (property.propertySaleStatus === "1") {
-    //             PropertySaleStatus = "Sold Out";
-    //           } else if (property.propertySaleStatus === "0") {
-    //             PropertySaleStatus = "Unsold";
-    //           }
-      
-    //           return {
-    //             propID: property.propID,          
-    //             propname: property.propname,
-    //             developedby: property.developedby,
-    //             status: PropertyStatus,
-    //             SaleStatus:PropertySaleStatus
-                          
-    //           };
-    //         });
-      
-    //       }, error => {
-    //         console.error('Error fetching properties:', error);
-    //       });
-    //   }
 
-
-  
-    //  fetchFilteredProperties(whose: string, status: string, IsActivestatus: string, SoldOutstatus: string, search: string): void {
-    //     let params = new HttpParams()
-    //         .set('whose', whose)
-    //         .set('UserID', this.userID || '') 
-    //         .set('status', status || '')
-    //         .set('IsActivestatus', IsActivestatus || '')
-    //         .set('SoldOutstatus', SoldOutstatus || '')
-    //         .set('search', search || '');
-
-    //     const endpoint = `GetFilteredProperties?${params.toString()}`;
-    //     this.apiurls.get(endpoint).subscribe(
-    //       (response: any) => {
-    //           console.log('API Response:', response); 
-    //           if (response.statusCode === 200) {
-    //               this.properties = response.data.map((property: any) => ({
-    //                   propID: property.propID,
-    //                   propname: property.propname,
-    //                   developedby: property.developedby,
-    //                     status: this.getPropertyStatus(property.activeStatus),
-    //                     IsActiveStatus: this.getPropertyIsActiveStatus(property.propActiveStatus),
-    //                     IsActiveStatusBoolean: property.propActiveStatus,
-    //                     SaleStatus: property.propertySaleStatus === "1" ? "Sold Out" : "Unsold"
-    //                   }));
-    //                 this.filteredPropertiesNotNull = false;
-    //                 this.currentPage = 1;
-    //             } else if (response.statusCode === 404) {
-    //                 this.filteredPropertiesNotNull = true;
-    //             } else {
-    //                 this.properties = [];
-    //             }
-    //         },
-    //         error => {
-    //             console.error('Error fetching properties:', error);
-    //             this.filteredPropertiesNotNull = true;
-    //             this.properties = [];
-    //         }
-    //     );
-    //  }
-
-
-    filteredPropertiesCount: number = 0;
-    currentStatusLabel: string = '';
-
+  filteredPropertiesCount: number = 0;
+  currentStatusLabel: string = '';
 
   onWhosePropertySelectionChange(event: any): void {
-    this.selectedWhoseProperties = event.target.value;
-    this.applyFilters();
-    this.currentPage = 1;
+      this.selectedWhoseProperties = event.target.value;
+      this.applyFilters();
+      this.currentPage = 1;
   }
 
   onWhosePropertyStatusSelectionChange(event: any): void {
-    let selectedStatus = event.target.value;
-    console.log("Selected Status:", selectedStatus);
-    console.log("Selected Whose Properties:", this.selectedWhoseProperties);
-
-    if (selectedStatus == "0") {        
-        if (this.selectedWhoseProperties && this.selectedWhoseProperties !== "0") {
-            this.applyFilters();
-            this.currentPage = 1;
-        } else {
-            this.fetchProperties();
-        }
-    } else if (selectedStatus == "1") {
-        this.selectedPropertyStatus1 = "1"; 
-         this.selectedIsActiveStatus1 = ''; 
-         this.propertySoldOutStatus1='';
-        this.applyFilters();
-        this.currentPage = 1;
-    } else if (selectedStatus == "2") {
-        this.selectedPropertyStatus1 = "2"; 
-        this.selectedIsActiveStatus1 = ''; 
-        this.propertySoldOutStatus1='';
-        this.applyFilters();
-        this.currentPage = 1;
-    } else if (selectedStatus == "3") {
+      let selectedStatus = event.target.value;
+      if (selectedStatus == "0") {        
+          if (this.selectedWhoseProperties && this.selectedWhoseProperties !== "0") {
+              this.applyFilters();
+              this.currentPage = 1;
+          } else {
+              this.fetchProperties();
+          }
+      } else if (selectedStatus == "1") {
+          this.selectedPropertyStatus1 = ''; 
+          this.selectedIsActiveStatus1 = "1"; 
+          this.propertySoldOutStatus1='';
+          this.applyFilters();
+          this.currentPage = 1;
+      } else if (selectedStatus == "2") {
+          this.selectedPropertyStatus1 = ''; 
+          this.selectedIsActiveStatus1 = "2"; 
+          this.propertySoldOutStatus1='';
+          this.applyFilters();
+          this.currentPage = 1;
+      } else if (selectedStatus == "3") {
+          this.selectedPropertyStatus1 = "1"; 
+          this.selectedIsActiveStatus1 = ''; 
+          this.propertySoldOutStatus1=''; 
+          this.applyFilters();
+          this.currentPage = 1;
+      } else if (selectedStatus == "4") {
+          this.selectedPropertyStatus1 = "0"; 
+          this.selectedIsActiveStatus1 = ''; 
+          this.propertySoldOutStatus1='';
+          this.applyFilters();
+          this.currentPage = 1;
+      } else if (selectedStatus == "5") {
         this.selectedPropertyStatus1 = ""; 
-        this.selectedIsActiveStatus1 = '1'; 
-        this.propertySoldOutStatus1=''; 
-        this.applyFilters();
-        this.currentPage = 1;
-    } else if (selectedStatus == "4") {
-      this.selectedPropertyStatus1 = ""; 
-          this.selectedIsActiveStatus1 = '0'; 
-        this.propertySoldOutStatus1='';
-        this.applyFilters();
-        this.currentPage = 1;
-    } else if (selectedStatus == "5") {
-      this.selectedPropertyStatus1 = ""; 
-        this.selectedIsActiveStatus1 = ''; 
-         this.propertySoldOutStatus1='1';
-        this.applyFilters();
-        this.currentPage = 1;
-    }
-    
+          this.selectedIsActiveStatus1 = ''; 
+          this.propertySoldOutStatus1='1';
+          this.applyFilters();
+          this.currentPage = 1;
+      }  
   }
-  
+    
   applyFilters(): void {
-    this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.selectedIsActiveStatus1,this.propertySoldOutStatus1, this.searchQuery);
+      this.fetchFilteredProperties(this.selectedWhoseProperties, this.selectedPropertyStatus1, this.selectedIsActiveStatus1,this.propertySoldOutStatus1, this.searchQuery);
   }
 
   onSearchChange(): void {
-    this.applyFilters();
+      this.applyFilters();
   }
 
   getPropertyStatus(activeStatus: string): string {
-    switch (activeStatus) {
-      case '1': return 'Approved';
-      case '2': return 'Declined';
-      case '0': return 'Pending';
-      default: return 'Unknown';
-    }
+      switch (activeStatus) {
+        case '1': return 'Approved';
+        case '2': return 'Declined';
+        case '0': return 'Pending';
+        default: return 'Unknown';
+      }
   }
 
   getPropertyIsActiveStatus(IsActiveStatus: string): string {
-    switch (IsActiveStatus) {
-      case '1': return 'Active';
-      case '0': return 'InActive';
-      default: return 'Unknown';
-    }
+      switch (IsActiveStatus) {
+        case '1': return 'Active';
+        case '0': return 'InActive';
+        default: return 'Unknown';
+      }
   }
 
   UpdatecloseModal() {
-    this.isUpdateModalOpen = false;
+      this.isUpdateModalOpen = false;
   }
 
   handleOk() {
-    this.UpdatecloseModal();
-    if(!this.propertyImagesClicked && !this.propertyFloorImagesClicked && !this.propertyVideosClicked && !this.propertyDocumentsClicked){
-      this.editclicked = false;
-      this.addnewPropertyclicked = false;
-      this.propertyform.reset();
-      this.fetchProperties();
-      if(this.isUpdateButtonEnabled=true){
-        this.isUpdateButtonEnabled=false;
-      }
-      else{
-        this.isUpdateButtonEnabled=false;
-      }
-    }
-    
+      this.UpdatecloseModal();
+      if(!this.propertyImagesClicked && !this.propertyFloorImagesClicked && !this.propertyVideosClicked && !this.propertyDocumentsClicked){
+        this.editclicked = false;
+        this.addnewPropertyclicked = false;
+        this.propertyform.reset();
+        this.fetchProperties();
+        if(this.isUpdateButtonEnabled=true){
+          this.isUpdateButtonEnabled=false;
+        }
+        else{
+          this.isUpdateButtonEnabled=false;
+        }
+      }  
   }
 
- 
-editorConfig = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote'],
-      [{ header: 1 }, { header: 2 }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ color: [] }, { background: [] }],
-      // ['image'],
-      // ['clean'],
-      
-      //  'code-block'
-    ],
+  editorConfig = {
+      toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote'],
+        [{ header: 1 }, { header: 2 }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ size: ['small', false, 'large', 'huge'] }],
+        [{ color: [] }, { background: [] }],
+        // ['image'],
+        // ['clean'],
+        
+        //  'code-block'
+      ],
   };
-  
+    
   clearContent(editorId: string): void {
-    if (editorId === 'Description') {
-      this.propertyform.controls['Description'].setValue('');
-      const quillEditor = document.getElementById('Description') as any;
-      if (quillEditor && quillEditor.__quill) {
-        quillEditor.__quill.root.innerHTML = '';  
+      if (editorId === 'Description') {
+        this.propertyform.controls['Description'].setValue('');
+        const quillEditor = document.getElementById('Description') as any;
+        if (quillEditor && quillEditor.__quill) {
+          quillEditor.__quill.root.innerHTML = '';  
+        }
+      } else if (editorId === 'SpecificDescription') {
+        this.propertyform.controls['SpecificDescription'].setValue('');
+        const quillEditor = document.getElementById('SpecificDescription') as any;
+        if (quillEditor && quillEditor.__quill) {
+          quillEditor.__quill.root.innerHTML = '';  
+        }
       }
-    } else if (editorId === 'SpecificDescription') {
-      this.propertyform.controls['SpecificDescription'].setValue('');
-      const quillEditor = document.getElementById('SpecificDescription') as any;
-      if (quillEditor && quillEditor.__quill) {
-        quillEditor.__quill.root.innerHTML = '';  
-      }
-    }
   }
-  
-
+    
   makeImageDefault(propID: string, imageID: number) {
-    const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
-    if (selectedImage) {
-      selectedImage.DefaultImage = "1"; 
-      this.uploadedImages1.forEach(img => {
-        if (img.id !== imageID) {
-          img.DefaultImage = "0"; 
-        }
-      });
-  
-      this.uploadedImages1 = [
-        selectedImage, 
-        ...this.uploadedImages1.filter(img => img.id !== imageID)
-      ];
-  
-      this.updateDefaultImageInDatabase(propID, imageID);
-    }
+      const selectedImage = this.uploadedImages1.find(img => img.id === imageID);
+      if (selectedImage) {
+        selectedImage.DefaultImage = "1"; 
+        this.uploadedImages1.forEach(img => {
+          if (img.id !== imageID) {
+            img.DefaultImage = "0"; 
+          }
+        });
+    
+        this.uploadedImages1 = [
+          selectedImage, 
+          ...this.uploadedImages1.filter(img => img.id !== imageID)
+        ];
+    
+        this.updateDefaultImageInDatabase(propID, imageID);
+      }
   }
-  
-
+    
   updateDefaultImageInDatabase(propID: string, imageID: number): void {
-    const endpoint = `update-default-image/${propID}/${imageID}`;
-    this.apiurls.put(endpoint, {}).subscribe(
-        response => {
-            console.log('Default image updated successfully');
-        },
-        error => {
-            console.error('Error updating default image:', error);
-        }
-    );
-   }
-
-   onOrderChange(): void {
-    const validationError = this.validateOrders();
-  
-    if (!validationError) {
-      this.isUpdateButtonEnabled = true;
-    } else {
-      this.isUpdateButtonEnabled = false;
-    }
+      const endpoint = `update-default-image/${propID}/${imageID}`;
+      this.apiurls.put(endpoint, {}).subscribe(
+          response => {
+          },
+          error => {
+          }
+      );
   }
+
+  onOrderChange(): void {
+      const validationError = this.validateOrders();
+    
+      if (!validationError) {
+        this.isUpdateButtonEnabled = true;
+      } else {
+        this.isUpdateButtonEnabled = false;
+      }
+  }
+
   onOrderChangeFloor(): void {
-    const validationFloorError = this.validateOrdersfloor();
-  
-    if (!validationFloorError) {
-      this.isUpdateButtonEnabled = true;
-    } else {
-      this.isUpdateButtonEnabled = false;
-    }
+      const validationFloorError = this.validateOrdersfloor();
+    
+      if (!validationFloorError) {
+        this.isUpdateButtonEnabled = true;
+      } else {
+        this.isUpdateButtonEnabled = false;
+      }
   }
-  submitCustomOrder() {
-    const validationError = this.validateOrders();
-    if (validationError) {
-      this.propertyInsStatus = validationError;
-      this.isUpdateModalOpen = true;
-      return; 
-    }
-    const updatedImages = this.uploadedImages1.map(image => ({
-      id: image.id,
-      imageOrder: image.customOrder.toString(),  
-      defaultImage: image.DefaultImage === "1" ? "1" : "0" 
-    }));  
-    this.updateImageOrderInDatabase(updatedImages);
-    this.isUpdateButtonEnabled = true;
 
+  submitCustomOrder() {
+      const validationError = this.validateOrders();
+      if (validationError) {
+        this.propertyInsStatus = validationError;
+        this.isUpdateModalOpen = true;
+        return; 
+      }
+      const updatedImages = this.uploadedImages1.map(image => ({
+        id: image.id,
+        imageOrder: image.customOrder.toString(),  
+        defaultImage: image.DefaultImage === "1" ? "1" : "0" 
+      }));  
+      this.updateImageOrderInDatabase(updatedImages);
+      this.isUpdateButtonEnabled = true;
   }
 
   submitFloorImagesCustomOrder() {
-    const validationFloorError = this.validateOrdersfloor();
-  
-    if (validationFloorError) {
-      this.propertyInsStatus = validationFloorError;
-      this.isUpdateModalOpen = true;
-      return; 
-    }
-    const uploadedFloorImages = this.uploadedFloorImages1.map(image => ({
-      id: image.id,
-      imageOrder: image.customOrder.toString(),  
-      defaultImage: image.DefaultImage === "1" ? "1" : "0"  
-    }));
-       this.cdRef.detectChanges();
-      this.updateFloorImageOrderInDatabase(uploadedFloorImages);
-      this.isUpdateButtonEnabled=true;
+      const validationFloorError = this.validateOrdersfloor();
+    
+      if (validationFloorError) {
+        this.propertyInsStatus = validationFloorError;
+        this.isUpdateModalOpen = true;
+        return; 
+      }
+      const uploadedFloorImages = this.uploadedFloorImages1.map(image => ({
+        id: image.id,
+        imageOrder: image.customOrder.toString(),  
+        defaultImage: image.DefaultImage === "1" ? "1" : "0"  
+      }));
+        this.cdRef.detectChanges();
+        this.updateFloorImageOrderInDatabase(uploadedFloorImages);
+        this.isUpdateButtonEnabled=true;
   }
 
-
-  
   validateOrders(): string | null {
-    const seenOrders = new Set<number>();
-    const orderNumbers = this.uploadedImages1.map(image => image.customOrder).sort((a, b) => a - b);
-    for (let i = 0; i < orderNumbers.length; i++) {
-      if (seenOrders.has(orderNumbers[i])) {
-        this.propertyInsStatus = 'There are duplicate order numbers. Please ensure all order numbers are unique in Images.';
-        this.isUpdateModalOpen = true; 
-        return this.propertyInsStatus;
-      }
-      if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
-        this.propertyInsStatus = 'Order numbers must be in sequence (no gaps). Please correct the sequence in Images.';
-        this.isUpdateModalOpen = true; 
-        return this.propertyInsStatus;
-      }
-      seenOrders.add(orderNumbers[i]);
+      const seenOrders = new Set<number>();
+      const orderNumbers = this.uploadedImages1.map(image => image.customOrder).sort((a, b) => a - b);
+      for (let i = 0; i < orderNumbers.length; i++) {
+        if (seenOrders.has(orderNumbers[i])) {
+          this.propertyInsStatus = 'There are duplicate order numbers. Please ensure all order numbers are unique in Images.';
+          this.isUpdateModalOpen = true; 
+          return this.propertyInsStatus;
+        }
+        if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
+          this.propertyInsStatus = 'Order numbers must be in sequence (no gaps). Please correct the sequence in Images.';
+          this.isUpdateModalOpen = true; 
+          return this.propertyInsStatus;
+        }
+        seenOrders.add(orderNumbers[i]);
 
-    }
-    this.isUpdateButtonEnabled = true;
-    return null;  
+      }
+      this.isUpdateButtonEnabled = true;
+      return null;  
   }
-  
-  
+    
   validateOrdersfloor(): string | null {
-    const seenOrders = new Set<number>();
-    const orderNumbers = this.uploadedFloorImages1.map(image => image.customOrder).sort((a, b) => a - b);
-    let hasDuplicate = false;  
-  
-    for (let i = 0; i < orderNumbers.length; i++) {
-      if (seenOrders.has(orderNumbers[i])) {
-        hasDuplicate = true;  
+      const seenOrders = new Set<number>();
+      const orderNumbers = this.uploadedFloorImages1.map(image => image.customOrder).sort((a, b) => a - b);
+      let hasDuplicate = false;  
+    
+      for (let i = 0; i < orderNumbers.length; i++) {
+        if (seenOrders.has(orderNumbers[i])) {
+          hasDuplicate = true;  
+        }
+    
+        if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
+          this.propertyInsStatus = 'Order numbers must be in sequence (no gaps). Please correct the sequence in floorimage.';
+          this.isUpdateModalOpen = true; 
+          return this.propertyInsStatus;
+        }
+        seenOrders.add(orderNumbers[i]);
+
       }
-  
-      if (i > 0 && orderNumbers[i] !== orderNumbers[i - 1] + 1) {
-        this.propertyInsStatus = 'Order numbers must be in sequence (no gaps). Please correct the sequence in floorimage.';
+      if (hasDuplicate) {
+        this.propertyInsStatus = 'There are duplicate order numbers. Please ensure all order numbers are unique in floorimage.';
         this.isUpdateModalOpen = true; 
         return this.propertyInsStatus;
       }
-      seenOrders.add(orderNumbers[i]);
-
-    }
-    if (hasDuplicate) {
-      this.propertyInsStatus = 'There are duplicate order numbers. Please ensure all order numbers are unique in floorimage.';
-      this.isUpdateModalOpen = true; 
-      return this.propertyInsStatus;
-    }
-    this.isUpdateButtonEnabled = true;
-    return null;  
+      this.isUpdateButtonEnabled = true;
+      return null;  
   }
-
   
   OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (
-      (charCode >= 48 && charCode <= 57) ||  
-      (charCode >= 65 && charCode <= 90) || 
-      (charCode >= 97 && charCode <= 122) || 
-      charCode === 32 ||  
-      charCode === 44 ||  
-      charCode === 46     
-    ) {
-      return true;
-    }
-  
-    return false;
+      const charCode = event.which ? event.which : event.keyCode;
+      if (
+        (charCode >= 48 && charCode <= 57) ||  
+        (charCode >= 65 && charCode <= 90) || 
+        (charCode >= 97 && charCode <= 122) || 
+        charCode === 32 ||  
+        charCode === 44 ||  
+        charCode === 46     
+      ) {
+        return true;
+      }
+    
+      return false;
   }
-  
 
-
-  // OnlyAlphabetsAndSpacesAllowed(event: { which: any; keyCode: any; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  
-  //   if (charCode !== 32 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
-  //     return false; 
-  //   }
+  OnlyNumbersAllowed1(event: KeyboardEvent): boolean {
+      const charCode = event.which ? event.which : event.keyCode;
+      const inputElement = event.target as HTMLInputElement;
+      let value = inputElement.value;
+      if ((charCode >= 48 && charCode <= 57) || charCode === 44 || charCode === 8) {
+        let numbersOnly = value.replace(/,/g, ''); 
+        let lastChar = value.charAt(value.length - 1);
+        if (numbersOnly.length >= 10 && charCode !== 8) {
+          return false;
+        }
+        if (charCode === 44 && (lastChar === ',' || value === '')) {
+          return false;
+        }
+        return true;
+      }  
+      return false;
+  }
     
-  //   return true; 
-  // }
-
-  
-  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  //   const inputElement = event.target as HTMLInputElement;
+  OnlyNumbersAllowed2(event: KeyboardEvent) {
+      const charCode = event.which ? event.which : event.keyCode;
+      if (charCode < 48 || charCode > 57) {
+        event.preventDefault();
+      }
+  }
     
-  //   if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-  //     return false;
-  //   }
+  validateLength(event: any) {
+      const input = event.target as HTMLInputElement;
+      if (input.value.length > 4) {
+        input.value = input.value.slice(0, 4); 
+      }
+  }
     
-  //   if (inputElement.value.length >= 10) {
-  //     return false; 
-  //   }
-  //   return true;
-  // }
-
   OnlyNumbersAllowed(event: KeyboardEvent): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    const inputElement = event.target as HTMLInputElement;
-    let value = inputElement.value;
-    if ((charCode >= 48 && charCode <= 57) || charCode === 44 || charCode === 8) {
-      let numbersOnly = value.replace(/,/g, ''); 
-      let lastChar = value.charAt(value.length - 1);
-      if (numbersOnly.length >= 10 && charCode !== 8) {
-        return false;
+      const charCode = event.which ? event.which : event.keyCode;
+      const inputElement = event.target as HTMLInputElement;
+      const value = inputElement.value;
+      if ((charCode >= 48 && charCode <= 57) || charCode === 8 || charCode === 46) {
+        return true;
       }
-      if (charCode === 44 && (lastChar === ',' || value === '')) {
-        return false;
-      }
-      return true;
-    }
-  
-    return false;
+      
+      return false;
   }
-  
-
-  // OnlyNumbersAllowed(event: { which: any; keyCode: any; target: HTMLInputElement; }): boolean {
-  //   const charCode = event.which ? event.which : event.keyCode;
-  //   const inputElement = event.target as HTMLInputElement;
-  //   const value = inputElement.value;
-  
-  //   if (
-  //     (charCode >= 48 && charCode <= 57) ||   
-  //     charCode === 44 ||                     
-  //     charCode === 46                       
-  //   ) {
-  //     if (value.length >= 10) {
-  //       return false;
-  //     }
-  //     if (charCode === 44 || charCode === 46) {
-  //       if (value.includes(',') || value.includes('.')) {
-  //         return false;
-  //       }
-  //     }
-  
-  //     return true;
-  //   }
-  //   return false;
-  // }
-  
-
+    
   OnlypostelNumbersAllowed(event: KeyboardEvent): void {
-    const inputChar = event.key;
-    const inputElement = event.target as HTMLInputElement;
+      const inputChar = event.key;
+      const inputElement = event.target as HTMLInputElement;
 
-    if (inputElement.value.length >= 6 && inputChar !== 'Backspace') {
-      event.preventDefault(); 
-      return;
-    }
+      if (inputElement.value.length >= 6 && inputChar !== 'Backspace') {
+        event.preventDefault(); 
+        return;
+      }
 
-    if (!/[0-9]/.test(inputChar) && inputChar !== 'Backspace') {
-      event.preventDefault(); 
-    }
+      if (!/[0-9]/.test(inputChar) && inputChar !== 'Backspace') {
+        event.preventDefault(); 
+      }
   }
-  
-
-//   OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
-//     const inputChar = event.key;
-//     const currentValue = (event.target as HTMLInputElement).value;
-//     if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
-//         return;
-//     }
-//     if (inputChar >= '0' && inputChar <= '9') {
-//         const parts = currentValue.split('-');
-
-//         if (parts.length === 1) {
-//             if (parts[0].length >= 6) {
-//                 event.preventDefault();
-//             }
-//         }
-//         if (parts.length === 2) {
-//             if (parts[1].length >= 7) {
-//                 event.preventDefault();
-//             }
-//         }
-//         return;
-//     }
-//     if (inputChar === '-') {
-//         const parts = currentValue.split('-');
-//         if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
-//             return;
-//         }
-//     }
-//     event.preventDefault();
-//     console.log('Form valid:', this.propertyform.valid);
-//     console.log('TotalArea valid:', this.propertyform.get('TotalArea')?.valid);
-//     console.log('TotalArea errors:', this.propertyform.get('TotalArea')?.errors);
-//  }
-
-
+    
   OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
-    const inputChar = event.key;
-    const currentValue = (event.target as HTMLInputElement).value;
-    if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
-        return;
-    }
-    if (inputChar >= '0' && inputChar <= '9') {
-        const parts = currentValue.split('-');
+      const inputChar = event.key;
+      const currentValue = (event.target as HTMLInputElement).value;
+      if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+          return;
+      }
+      if (inputChar >= '0' && inputChar <= '9') {
+          const parts = currentValue.split('-');
+          if (parts.length === 1) {
+              if (parts[0].length >= 6) {
+                  event.preventDefault();
+              }
+          }
+          if (parts.length === 2) {
+              if (parts[1].length >= 7) {
+                  event.preventDefault();
+              }
+          }
+          return;
+      }
+      if (inputChar === '-') {
+          const parts = currentValue.split('-');
+          if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
+              return;
+          }
+          if (parts.length > 1) {
+              event.preventDefault();
+          }
+      }
+      event.preventDefault();
+  }
 
-        if (parts.length === 1) {
-            if (parts[0].length >= 6) {
-                event.preventDefault();
-            }
-        }
-        if (parts.length === 2) {
-            if (parts[1].length >= 7) {
-                event.preventDefault();
-            }
-        }
-        return;
-    }
-    if (inputChar === '-') {
+  OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
+      const inputChar = event.key;
+      const currentValue = (event.target as HTMLInputElement).value;
+      if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
+          return;
+      }
+      if (inputChar >= '0' && inputChar <= '9') {
+          const parts = currentValue.split('-');
+          if (parts.length === 1) {
+              if (parts[0].length >= 7) {
+                  event.preventDefault();
+              }
+          }
+          if (parts.length === 2) {
+              if (parts[1].length >= 8) {
+                  event.preventDefault();
+              }
+          }
+          return;
+      }
+      if (inputChar === '-') {
         const parts = currentValue.split('-');
-        if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 6) {
+        if (parts.length === 1 && parts[0].length >= 1 && parts[0].length <= 6) {
             return;
+        }
+        if (parts.length > 1) {
+            event.preventDefault();
         }
     }
     event.preventDefault();
- }
-
-
- OnlyNumbersAllowedforrangeforprice(event: KeyboardEvent): void {
-  const inputChar = event.key;
-  const currentValue = (event.target as HTMLInputElement).value;
-  if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(inputChar)) {
-      return;
   }
-  if (inputChar >= '0' && inputChar <= '9') {
-      const parts = currentValue.split('-');
-      if (parts.length === 1) {
-          if (parts[0].length >= 7) {
-              event.preventDefault();
-          }
-      }
-      if (parts.length === 2) {
-          if (parts[1].length >= 8) {
-              event.preventDefault();
-          }
-      }
-      return;
-  }
-
-  // Handle hyphen entry
-  if (inputChar === '-') {
-      const parts = currentValue.split('-');
-
-      // Allow the hyphen only if it's not already present and exactly 7 digits exist before it
-      if (!currentValue.includes('-') && parts.length === 1 && parts[0].length === 7) {
-          return;
-      }
-  }
-
-  // Prevent any other character input
-  event.preventDefault();
-}
-  
-  
-  
-  
-  // OnlyNumbersAllowedforrange(event: KeyboardEvent): void {
-  //   const inputChar = event.key;
-  //   if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(inputChar)) {
-  //     return;
-  //   }
-  //   if (inputChar >= '0' && inputChar <= '9') {
-  //     return;
-  //   }
-  //   const currentValue = (event.target as HTMLInputElement).value;
-  //   if (inputChar === '-' && !currentValue.includes('-') && currentValue.length > 0) {
-  //     return;
-  //   }
-  //   event.preventDefault();
-  // }
-
-  
+      
   OnlyValidEmailChars(event: KeyboardEvent): boolean {
-    const charCode = event.key;
-    const allowedCharsRegex = /^[a-zA-Z0-9@._+-]$/;
-    if (!allowedCharsRegex.test(charCode)) {
-      event.preventDefault();
-      return false;
-    }
-    return true;
+      const charCode = event.key;
+      const allowedCharsRegex = /^[a-zA-Z0-9@._+-]$/;
+      if (!allowedCharsRegex.test(charCode)) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
   }
-
-  // updateImageOrderInDatabase(updatedImages: any[]) {
-  //   this.apiurls.put(`update-image-order-and-default/${this.propID}`, updatedImages)
-  //     .subscribe(
-  //       response => {
-  //         // this.propertyInsStatus = "Order updated successfully!";
-  //         // this.isUpdateModalOpen = true;
-  //         this.cdRef.detectChanges();
-  //         this.isUpdateButtonEnabled=true;
-  //       },
-  //       error => {
-  //         console.error('Error updating image order and default image:', error);
-  //       }
-  //     );
-  // }
-
 
   updateImageOrderInDatabase(updatedImages: any[]) {
-    const formData = new FormData();
-    formData.append("flag", "3");
-    formData.append("propID", this.propID);
-    formData.append("imageOrderUpdateJson", JSON.stringify(updatedImages));
-  
-    this.apiurls.post("Tbl_PropFiles_CRUD_Operations", formData).subscribe({
-      next: (response) => {
-        console.log("Image order updated successfully:", response);
-        this.cdRef.detectChanges();
-        this.isUpdateButtonEnabled = true;
-      },
-      error: (error) => {
-        console.error("Error updating image order:", error);
-      }
-    });
+      const formData = new FormData();
+      formData.append("flag", "3");
+      formData.append("propID", this.propID);
+      formData.append("imageOrderUpdateJson", JSON.stringify(updatedImages));
+    
+      this.apiurls.post("Tbl_PropFiles_CRUD_Operations", formData).subscribe({
+        next: (response) => {
+          this.cdRef.detectChanges();
+          this.isUpdateButtonEnabled = true;
+        },
+        error: (error) => {
+        }
+      });
   }
-  
-
-  // updateFloorImageOrderInDatabase(updatedImages: any[]) {
-  //   this.apiurls.put(`update-floor-image-order-and-default/${this.propID}`, updatedImages)
-  //   .subscribe(
-  //     response => {
-  //       console.log('Image order and default image updated successfully');
-  //       this.propertyInsStatus = "Property updated successfully!";
-  //       this.cdRef.detectChanges();
-  //       this.isUpdateModalOpen = true;
-
-  //       },
-  //       error => {
-  //         console.error('Error updating image order and default image:', error);
-  //       }
-  //     );
-  // }
-
+    
   updateFloorImageOrderInDatabase(updatedImages: any[]) {
-    const formData = new FormData();
-    formData.append("flag", "3");
-    formData.append("propID", this.propID);
-    formData.append("imageOrderUpdateJson", JSON.stringify(
-      updatedImages.map(image => ({
-        ID: image.ID,
-        PropID: this.propID,
-        ImageOrder: image.ImageOrder,
-        DefaultImage: image.DefaultImage || "0",
-        Flag: "3"
-      }))
-    ));
-  
-    this.apiurls.post("Tbl_PropFiles_CRUD_Operations", formData).subscribe({
-      next: (response) => {
-        console.log(" Floor image order updated:", response);
-        this.cdRef.detectChanges();
-        this.isUpdateButtonEnabled = true;
+      const formData = new FormData();
+      formData.append("flag", "3");
+      formData.append("propID", this.propID);
+      formData.append("imageOrderUpdateJson", JSON.stringify(
+        updatedImages.map(image => ({
+          ID: image.ID,
+          PropID: this.propID,
+          ImageOrder: image.ImageOrder,
+          DefaultImage: image.DefaultImage || "0",
+          Flag: "3"
+        }))
+      ));
+    
+      this.apiurls.post("Tbl_PropFiles_CRUD_Operations", formData).subscribe({
+        next: (response) => {
+          this.cdRef.detectChanges();
+          this.isUpdateButtonEnabled = true;
 
-      },
-      error: (error) => {
-        console.error(" Floor image update error:", error);
-      }
-    });
+        },
+        error: (error) => {
+        }
+      });
   }
-  
-  
-
-
+    
   areaValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (typeof value === 'number' && value >= 1500 && value <= 3500) {
-      return null; 
-    }
-    return { invalidArea: true };
+      const value = control.value;
+      if (typeof value === 'number' && value >= 1500 && value <= 3500) {
+        return null; 
+      }
+      return { invalidArea: true };
   }
 
   priceForValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    
-    if (typeof value === 'number') {
-      return null; 
-    }
+      const value = control.value;
+      
+      if (typeof value === 'number') {
+        return null; 
+      }
 
-    const priceRangePattern = /^\d{4,5}-\d{4,5}$/; 
-    if (priceRangePattern.test(value)) {
-      return null; 
-    }
+      const priceRangePattern = /^\d{4,5}-\d{4,5}$/; 
+      if (priceRangePattern.test(value)) {
+        return null; 
+      }
 
-    return { invalidPrice: true };
+      return { invalidPrice: true };
   }
 
   calculateTotalPrice() {
-    const totalArea = this.propertyform.get('TotalArea')?.value;
-    const priceFor = this.propertyform.get('PriceFor')?.value;
+      const totalArea = this.propertyform.get('TotalArea')?.value;
+      const priceFor = this.propertyform.get('PriceFor')?.value;
 
-    let totalAreaMin = 0;
-    let totalAreaMax = 0;
-    let priceForMin = 0;
-    let priceForMax = 0;
+      let totalAreaMin = 0;
+      let totalAreaMax = 0;
+      let priceForMin = 0;
+      let priceForMax = 0;
 
-    if (totalArea && typeof totalArea === 'string' && totalArea.includes('-')) {
-        const [minArea, maxArea] = totalArea.split('-').map(Number);
-        totalAreaMin = minArea;
-        totalAreaMax = maxArea;
-    } else if (totalArea && !isNaN(totalArea)) {
-        totalAreaMin = totalArea;       
-        totalAreaMax = totalArea;
-    }
+      if (totalArea && typeof totalArea === 'string' && totalArea.includes('-')) {
+          const [minArea, maxArea] = totalArea.split('-').map(Number);
+          totalAreaMin = minArea;
+          totalAreaMax = maxArea;
+      } else if (totalArea && !isNaN(totalArea)) {
+          totalAreaMin = totalArea;       
+          totalAreaMax = totalArea;
+      }
 
-    if (priceFor && typeof priceFor === 'string' && priceFor.includes('-')) {
-        const [minPrice, maxPrice] = priceFor.split('-').map(Number);
-        priceForMin = minPrice;
-        priceForMax = maxPrice;
-    } else if (priceFor && !isNaN(priceFor)) {
-        priceForMin = priceFor;        
-        priceForMax = priceFor;
-    }
+      if (priceFor && typeof priceFor === 'string' && priceFor.includes('-')) {
+          const [minPrice, maxPrice] = priceFor.split('-').map(Number);
+          priceForMin = minPrice;
+          priceForMax = maxPrice;
+      } else if (priceFor && !isNaN(priceFor)) {
+          priceForMin = priceFor;        
+          priceForMax = priceFor;
+      }
 
-    if (!isNaN(totalAreaMin) && !isNaN(priceForMin) && totalAreaMin > 0 && priceForMin > 0) {
-        const totalPriceMin = totalAreaMin * priceForMin;
-        const totalPriceMax = totalAreaMax * priceForMax;
+      if (!isNaN(totalAreaMin) && !isNaN(priceForMin) && totalAreaMin > 0 && priceForMin > 0) {
+          const totalPriceMin = totalAreaMin * priceForMin;
+          const totalPriceMax = totalAreaMax * priceForMax;
 
-        if (totalPriceMin !== totalPriceMax) {
-            this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}-${totalPriceMax}`);
-        } else {
-            this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}`);
-        }
+          if (totalPriceMin !== totalPriceMax) {
+              this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}-${totalPriceMax}`);
+          } else {
+              this.propertyform.get('PropertyTotalPrice')?.setValue(`${totalPriceMin}`);
+          }
+      } else {
+          this.propertyform.get('PropertyTotalPrice')?.setValue('');
+      }
+  }
+
+  onPageSizeInput(event: any) {
+    const inputVal = +event.target.value;
+
+    if (!event.target.value) {
+      this.pageSize = 5;
+      this.filteredPropertiesNotNull = false;
+    } else if (inputVal > 0 && inputVal <= this.properties.length) {
+      this.pageSize = inputVal;
+      this.filteredPropertiesNotNull = false;
     } else {
-        this.propertyform.get('PropertyTotalPrice')?.setValue('');
+      this.filteredPropertiesNotNull = true;
     }
-}
-
-onPageSizeInput(event: any) {
-  const inputVal = +event.target.value;
-
-  if (!event.target.value) {
-    this.pageSize = 5;
-    this.filteredPropertiesNotNull = false;
-  } else if (inputVal > 0 && inputVal <= this.properties.length) {
-    this.pageSize = inputVal;
-    this.filteredPropertiesNotNull = false;
-  } else {
-    this.filteredPropertiesNotNull = true;
   }
-}
 
-getPaginatedProperties1() {
-  return this.properties.slice(0, this.pageSize);
-}
-
-private scrolling: boolean = false;  
-@HostListener('window:scroll', [])
-onWindowScroll() {
-  const goTopBtn = document.getElementById('goTopBtn');
-  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    goTopBtn?.classList.add('show');
-  } else {
-    goTopBtn?.classList.remove('show');
+  getPaginatedProperties1() {
+    return this.properties.slice(0, this.pageSize);
   }
-}
-scrollToTop() {
-  if (this.scrolling) return; 
-  this.scrolling = true;  
-  window.scrollTo({ top: 0, behavior: 'auto' });
-  setTimeout(() => {
-    this.scrolling = false;
-  }, 300); 
-}
 
+  private scrolling: boolean = false;  
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const goTopBtn = document.getElementById('goTopBtn');
+    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+      goTopBtn?.classList.add('show');
+    } else {
+      goTopBtn?.classList.remove('show');
+    }
+  }
+  scrollToTop() {
+    if (this.scrolling) return; 
+    this.scrolling = true;  
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    setTimeout(() => {
+      this.scrolling = false;
+    }, 300); 
+  }
 
 }
 

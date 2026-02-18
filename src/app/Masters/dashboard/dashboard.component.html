@@ -7,44 +7,35 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/dashboarddet"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
+          <a class="nav-link DashboardMenuLi" routerLink="/dashboard/AdminDashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="propertyDropdown" role="button" data-bs-toggle="dropdown">
+          <a class="nav-link dropdown-toggle DashboardMenuLi" href="#" id="propertyDropdown" role="button" data-bs-toggle="dropdown">
             <i class="fa fa-building"></i> Property Details
           </a>
           <ul class="dropdown-menu" aria-labelledby="propertyDropdown">
-            <li><a class="dropdown-item" routerLink="/dashboard/addproperty"><i class="fa fa-plus"></i> Add Property</a></li>
-            <li><a class="dropdown-item" routerLink="/dashboard/amenities"><i class="fa fa-plus"></i> Add Amenities</a></li>
-            <li><a class="dropdown-item" routerLink="/dashboard/user-properties"><i class="fa fa-plus"></i> Users Properties</a></li>
-
-          </ul>
-
-          
+            <li><a class="dropdown-item DashboardMenuLi" routerLink="/dashboard/AddProperty"><i class="fa fa-plus"></i> Add Property</a></li>
+            <li><a class="dropdown-item DashboardMenuLi" routerLink="/dashboard/Amenities"><i class="fa fa-plus"></i> Add Amenities</a></li>
+            <li><a class="dropdown-item DashboardMenuLi" routerLink="/dashboard/UserProperties"><i class="fa fa-plus"></i> Users Properties</a></li>
+          </ul>          
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/addpropertytype"><i class="fas fa-user"></i> Property Type</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/userReviews"><i class="fas fa-user"></i>User Reviews</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/blog"><i class="fas fa-user"></i> Blog</a>
+          <a class="nav-link DashboardMenuLi" routerLink="/dashboard/AddPropertyType"><i class="fas fa-user"></i> Property Type</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/profile"><i class="fas fa-user"></i> My Profile</a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/blog"><i class="fas fa-user"></i>Blog</a>
-        </li> -->
-      
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/whichlist"><i class="fas fa-user"></i>Whichilist</a>
+          <a class="nav-link DashboardMenuLi" routerLink="/dashboard/UserReviews"><i class="fas fa-user"></i>User Reviews</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="logout()"><i class="fa fa-sign-out-alt"></i> Logout</a>
+          <a class="nav-link DashboardMenuLi" routerLink="/dashboard/Blog"><i class="fas fa-user"></i> Blog</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link DashboardMenuLi" routerLink="/dashboard/MyProfile"><i class="fas fa-user"></i> My Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link DashboardMenuLi" routerLink="/dashboard/Wishlist"><i class="fas fa-user"></i>Whichilist</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link DashboardMenuLi" (click)="logout()"><i class="fa fa-sign-out-alt"></i> Logout</a>
         </li>
       </ul>
     </div>
@@ -64,49 +55,49 @@
       </button>
       <div class="d-flex flex-column">
         <ul class="menu">
-          <li routerLink="/dashboard/dashboarddet">
+          <li routerLink="/dashboard/AdminDashboard">
             <i class="fa fa-tachometer-alt"></i>
-            <span *ngIf="isExpanded">Dashboard</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Dashboard</span>
           </li>
-          <li routerLink="/dashboard/user-properties">
+          <li routerLink="/dashboard/UserProperties">
             <i class="fa fa-user"></i>
-            <span *ngIf="isExpanded">Users Properties</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Users Properties</span>
           </li>
-          <li routerLink="/dashboard/addproperty">
+          <li routerLink="/dashboard/AddProperty">
             <i class="fa fa-plus-circle"></i>
-            <span *ngIf="isExpanded">Add Property</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Add Property</span>
           </li>
           
-          <li routerLink="/dashboard/amenities">
+          <li routerLink="/dashboard/Amenities">
             <i class="fa fa-plus-circle"></i>
-            <span *ngIf="isExpanded">Add Amenities</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Add Amenities</span>
           </li>
-          <li routerLink="/dashboard/addpropertytype">
+          <li routerLink="/dashboard/AddPropertyType">
             <i class="fa fa-plus-circle"></i>
-            <span *ngIf="isExpanded">Property Type</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Property Type</span>
           </li>
-          <li routerLink="/dashboard/userReviews">
+          <li routerLink="/dashboard/UserReviews">
             <i class="fas fa-comment"></i>
-            <span *ngIf="isExpanded">User Reviews</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">User Reviews</span>
           </li>
 
-          <li routerLink="/dashboard/whichlist">
+          <li routerLink="/dashboard/Wishlist">
             <i class="fa-solid fa-heart"></i>
-            <span *ngIf="isExpanded">Whichlist</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Wishlist</span>
           </li>
-          <li routerLink="/dashboard/blog">
+          <li routerLink="/dashboard/Blog">
             <i class="fas fa-info-circle"></i>
-            <span *ngIf="isExpanded">Blog</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Blog</span>
           </li>
         </ul>
         <ul class="menu">
-          <li routerLink="/dashboard/profile">
+          <li routerLink="/dashboard/MyProfile">
             <i class="fas fa-user"></i>
-            <span *ngIf="isExpanded">My Profile</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">My Profile</span>
           </li>
           <li (click)="logout()">
             <i class="fa fa-sign-out-alt"></i>
-            <span *ngIf="isExpanded">Logout</span>
+            <span *ngIf="isExpanded" class="DashboardMenuLi">Logout</span>
           </li>
         </ul>
       </div>
@@ -116,108 +107,3 @@
     <router-outlet class="full-page-content"></router-outlet>
   </div>
 </div>
-
-<!-- <div class="row justify-content-center align-items-center m-0 w-100 totalcard">
-  <nav class="navbar navbar-expand-md navbar-light bg-light d-md-none col-12">
-    <a class="navbar-brand" href="/home" data-bs-toggle="tooltip" title="Go to Home"><img class="h-100" src="assets/images/logo_1.png"></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" data-bs-toggle="tooltip" title="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/dashboarddet" data-bs-toggle="tooltip" title="View Dashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="propertyDropdown" role="button" data-bs-toggle="dropdown" data-bs-toggle="tooltip" title="Property Details">
-            <i class="fa fa-building"></i> Property Details
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="propertyDropdown">
-            <li><a class="dropdown-item" routerLink="/dashboard/add-property" data-bs-toggle="tooltip" title="Add Property"><i class="fa fa-plus"></i> Add Property</a></li>
-            <li><a class="dropdown-item" routerLink="/dashboard/amenities" data-bs-toggle="tooltip" title="Add Amenities"><i class="fa fa-plus"></i> Add Amenities</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/blog" data-bs-toggle="tooltip" title="Blog"><i class="fas fa-user"></i> Blog</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/profile" data-bs-toggle="tooltip" title="My Profile"><i class="fas fa-user"></i> My Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/blog" data-bs-toggle="tooltip" title="Blog"><i class="fas fa-user"></i> Blog</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/whichlist" data-bs-toggle="tooltip" title="Whichlist"><i class="fas fa-user"></i> Whichlist</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="logout()" data-bs-toggle="tooltip" title="Logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <div class="sidenavbar col-12 col-md-3" [ngClass]="{'collapsed': !isExpanded}">
-    <div class="logo">
-      <a href="/home">
-        <img *ngIf="!isExpanded" src="assets/images/logo_2.png" alt="BUSERELE" />
-        <img *ngIf="isExpanded" src="assets/images/logo_1.png" alt="BUSERELE" />
-      </a>
-    </div>
-    <div class="sidebar d-none d-md-block h-100">
-      <button class="toggle-btn" (click)="toggleSidebar()" data-bs-toggle="tooltip" title="Toggle Sidebar">
-        <i class="fa" [ngClass]="isExpanded ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
-      </button>
-      <div class="d-flex flex-column">
-        <ul class="menu">
-          <li routerLink="/dashboard/dashboarddet" data-bs-toggle="tooltip" title="View Dashboard">
-            <i class="fa fa-tachometer-alt"></i>
-            <span *ngIf="isExpanded">Dashboard</span>
-          </li>
-          <li routerLink="/dashboard/user-properties" data-bs-toggle="tooltip" title="View User Properties">
-            <i class="fa fa-user"></i>
-            <span *ngIf="isExpanded">Users Properties</span>
-          </li>
-          <li routerLink="/dashboard/addproperty" data-bs-toggle="tooltip" title="Add Property ">
-            <i class="fa fa-plus-circle"></i>
-            <span *ngIf="isExpanded">Add Property</span>
-          </li>
-          <li routerLink="/dashboard/amenities" data-bs-toggle="tooltip" title="Add Amenities">
-            <i class="fa fa-plus-circle"></i>
-            <span *ngIf="isExpanded">Add Amenities</span>
-          </li>
-          <li routerLink="/dashboard/addpropertytype" data-bs-toggle="tooltip" title="Add Property Type">
-            <i class="fa fa-plus-circle"></i>
-            <span *ngIf="isExpanded">Property Type</span>
-          </li>
-          <li routerLink="/dashboard/userReviews" data-bs-toggle="tooltip" title="View User Reviews">
-            <i class="fas fa-comment"></i>
-            <span *ngIf="isExpanded">User Reviews</span>
-          </li>
-
-          <li routerLink="/dashboard/whichlist" data-bs-toggle="tooltip" title="View Whichlist">
-            <i class="fa-solid fa-heart"></i>
-            <span *ngIf="isExpanded">Whichlist</span>
-          </li>
-          <li routerLink="/dashboard/blog" data-bs-toggle="tooltip" title="View Blog">
-            <i class="fas fa-info-circle"></i>
-            <span *ngIf="isExpanded">Blog</span>
-          </li>
-        </ul>
-        <ul class="menu">
-          <li routerLink="/dashboard/profile" data-bs-toggle="tooltip" title="My Profile">
-            <i class="fas fa-user"></i>
-            <span *ngIf="isExpanded">My Profile</span>
-          </li>
-          <li (click)="logout()" data-bs-toggle="tooltip" title="Logout">
-            <i class="fa fa-sign-out-alt"></i>
-            <span *ngIf="isExpanded">Logout</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="maincontent col-12 col-md-9">
-    <router-outlet class="full-page-content"></router-outlet>
-  </div>
-</div> -->
-
