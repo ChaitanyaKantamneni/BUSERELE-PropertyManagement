@@ -59,7 +59,4 @@ export class AboutUsComponent {
   playVideo() {
     this.videoPlaying = true;
   }
-
-  
-
 }

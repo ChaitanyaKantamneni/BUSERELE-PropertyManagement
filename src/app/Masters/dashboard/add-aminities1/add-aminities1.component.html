@@ -36,7 +36,6 @@
             <tr *ngFor="let aminitie of getPaginatedAminities()">
               <td data-label="PropertyID" class="visually-hidden">{{ aminitie.aminitieID }}</td>
               <td data-label="User Name">{{ aminitie.name }}</td>
-              <!-- <td data-label="Review">{{ truncateText(aminitie.description, 20) }}</td> -->
               <td data-label="Actions">
                 <div class="d-flex justify-content-center align-items-center h-100">
                   <button class="btn checkbtn" (click)="editreview(aminitie.aminitieID)" data-tooltip="Edit">
@@ -47,10 +46,7 @@
             </tr>
           </tbody>
         </table>
-      
-        <!-- <div *ngIf="filteredAminities.length === 0">
-          <p>No Amenities found for the given search or filter criteria.</p>
-        </div> -->
+
         <div *ngIf="filteredAminities.length === 0" class="NoDataFound">
           <div class="NoDataFoundImg">
             <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
@@ -58,7 +54,6 @@
           <p>No Aminities found for the given search or filter criteria.</p>
         </div>
       </div>
-      
       
       <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination justify-content-center">
@@ -78,10 +73,8 @@
             <button class="page-link" (click)="setPage(totalPages)" [disabled]="currentPage === totalPages">Last</button>
           </li>
         </ul>
-      </nav>
-    
+      </nav>    
     </div>
-  
     <div *ngIf="addnewclickClicked || viewAminitieClicked" class="reviewview">
         <div class="PageHeading">
           <h5 class="text-center m-0"><b>AMINITIE</b></h5>
@@ -110,9 +103,9 @@
               </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group" style="margin-top: 15px;">
               <div class="input-container">
-                <textarea id="description" type="text" placeholder="Description" rows="4" formControlName="description" class="form-control" required></textarea> 
+                <textarea id="description" type="text" placeholder="Description" rows="4" formControlName="description" class="form-control"></textarea> 
                 <label for="description">Description</label>
               </div>
             </div>
@@ -130,14 +123,12 @@
                       [disabled]="!aminitiesform.get('name')?.value">
                   Submit
               </button>
-
-             </div>
-          
+            </div>  
         </form>
-
-          <!-- <div><p>{{AminityInsStatus}}</p></div> -->
     </div>
     
+    
+
     <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
     <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
       <div class="modal-dialog" role="document">
@@ -157,8 +148,9 @@
         </div>
       </div>
     </div>
-    
+
+  </div>
+  <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
+    <p> ©2025 GVR Infosystems. All rights reserved.</p>
   </div>
 </div>
-    
-  

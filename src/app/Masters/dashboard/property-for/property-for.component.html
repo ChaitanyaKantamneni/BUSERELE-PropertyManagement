@@ -1,163 +1,139 @@
 <div class="mainReview">
-    <div class="w-100">
-      <div *ngIf="addnewclickClicked || viewAminitieClicked" class="backLabel">
-        <a href="" (click)="backclick($event)">
-          <h5>Add and Edit Property Type</h5>
-          <p>Ready to jump back in?</p>
-        </a>
+  <div class="w-100">
+    <div *ngIf="addnewclickClicked || viewAminitieClicked" class="backLabel">
+      <a href="" (click)="backclick($event)">
+        <h5>Add and Edit Property Type</h5>
+        <p>Ready to jump back in?</p>
+      </a>
+    </div>
+    <div *ngIf="!viewAminitieClicked && !addnewclickClicked" >
+      <div class="PageHeading">
+        <h5 class="text-center m-0"><b>UPLOADED PROPERTY TYPE</b></h5>
       </div>
-      <!-- class="reviewcard" -->
-      <div *ngIf="!viewAminitieClicked && !addnewclickClicked" >
-        <div class="PageHeading">
-          <h5 class="text-center m-0"><b>UPLOADED PROPERTY TYPE</b></h5>
-        </div>
-        <div class="filtersSearch">
-          
-        <div class="searchreview input-container" >
-          <input type="text" id="searchQuery" class="form-control floating-input" 
-            [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search PropertyTypes... "style="padding-left: 30px;"  />
-          <label for="searchQuery">Search PropertyTypes</label>
-          <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
-        </div>
-          
+      <div class="filtersSearch">
+        
+      <div class="searchreview input-container" >
+        <input type="text" id="searchQuery" class="form-control floating-input" 
+          [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search PropertyTypes... "style="padding-left: 30px;"  />
+        <label for="searchQuery">Search PropertyTypes</label>
+        <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
+      </div>
+        
 
-          <div class="reviewStatus">
-            <button (click)="addnewclick()">Add New</button>
-          </div>
+        <div class="reviewStatus">
+          <button (click)="addnewclick()">Add New</button>
         </div>
-    
-        <div class="reviewstable">
-          <table   *ngIf="filteredAminities.length != 0" class="table table-bordered">
-            <thead>
-              <tr>
-                <th class="visually-hidden">PropertyType ID</th>
-                <th>PropertyType Name</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let aminitie of getPaginatedAminities()">
-                <td data-label="PropertyID" class="visually-hidden">{{ aminitie.aminitieID }}</td>
-                <td data-label="User Name">{{ aminitie.name }}</td>
-                <!-- <td data-label="Review">{{ truncateText(aminitie.description, 20) }}</td> -->
-                <td data-label="Actions">
-                  <div class="d-flex justify-content-center align-items-center h-100">
-                    <button class="btn checkbtn" (click)="editreview(aminitie.propertyTypeID)" data-tooltip="Edit">
-                      <i class="fa fa-edit"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="filteredAminities.length === 0" class="NoDataFound">
-            <div class="NoDataFoundImg">
-              <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
-            </div>
-            <p>No properties found for the given search or filter criteria.</p>
-          </div>
-        </div>
+      </div>
   
-        <!-- <nav aria-label="Page navigation example" class="mt-3">
-          <ul class="pagination justify-content-center">
-              <li class="page-item" [class.disabled]="currentPage === 1">
-                  <button class="page-link" (click)="setPage(1)" [disabled]="currentPage === 1">First</button>
-              </li>
-              <li class="page-item" [class.disabled]="currentPage === 1">
-                  <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-              </li>
-              <li *ngFor="let page of getVisiblePages()" class="page-item" [class.active]="currentPage === page">
-                  <button class="page-link" (click)="setPage(page)">{{ page }}</button>
-              </li>
-              <li class="page-item" [class.disabled]="currentPage === totalPages">
-                  <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-              </li>
-              <li class="page-item" [class.disabled]="currentPage === totalPages">
-                  <button class="page-link" (click)="setPage(totalPages)" [disabled]="currentPage === totalPages">Last</button>
-              </li>
-          </ul>
-        </nav> -->
-        <nav aria-label="Page navigation example" class="mt-3">
-          <ul class="pagination justify-content-center">
-            <li class="page-item" [class.disabled]="currentPage === 1">
-              <button class="page-link" (click)="setPage(1)" [disabled]="currentPage === 1">First</button>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === 1">
-              <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-            </li>
-            <li *ngFor="let page of getVisiblePages()" class="page-item" [class.active]="currentPage === page">
-              <button class="page-link" (click)="setPage(page)">{{ page }}</button>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <button class="page-link" (click)="setPage(totalPages)" [disabled]="currentPage === totalPages">Last</button>
-            </li>
-          </ul>
-        </nav>        
+      <div class="reviewstable">
+        <table   *ngIf="filteredAminities.length != 0" class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="visually-hidden">PropertyType ID</th>
+              <th>PropertyType Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let aminitie of getPaginatedAminities()">
+              <td data-label="PropertyID" class="visually-hidden">{{ aminitie.aminitieID }}</td>
+              <td data-label="User Name">{{ aminitie.name }}</td>
+              <td data-label="Actions">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                  <button class="btn checkbtn" (click)="editreview(aminitie.propertyTypeID)" data-tooltip="Edit">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="filteredAminities.length === 0" class="NoDataFound">
+          <div class="NoDataFoundImg">
+            <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
+          </div>
+          <p>No properties found for the given search or filter criteria.</p>
+        </div>
       </div>
       
-      <div *ngIf="addnewclickClicked || viewAminitieClicked" class="reviewview">
-          <div class="PageHeading">
-            <h5 class="text-center m-0"><b>PROPERTY TYPE</b></h5>
-          </div>
-          
-          <form [formGroup]="aminitiesform">
-              <div class="formrow">
-                <div class="form-group">
-                  <div class="input-container">
-                    <input id="id" type="text" placeholder="PropertyType ID" formControlName="id" class="form-control" readonly />
-                    <label for="id">PropertyType ID</label>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="input-container">
-                    <input id="name" type="text" placeholder="PropertyType Name" formControlName="name" class="form-control" required />
-                    <label for="name">PropertyType Name</label>
-                  </div>
-                </div>
-              </div>
+      <nav aria-label="Page navigation example" class="mt-3">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="setPage(1)" [disabled]="currentPage === 1">First</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+          </li>
+          <li *ngFor="let page of getVisiblePages()" class="page-item" [class.active]="currentPage === page">
+            <button class="page-link" (click)="setPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="setPage(totalPages)" [disabled]="currentPage === totalPages">Last</button>
+          </li>
+        </ul>
+      </nav>        
+    </div>
+    
+    <div *ngIf="addnewclickClicked || viewAminitieClicked" class="reviewview">
+        <div class="PageHeading">
+          <h5 class="text-center m-0"><b>PROPERTY TYPE</b></h5>
+        </div>
         
+        <form [formGroup]="aminitiesform">
+            <div class="formrow">
               <div class="form-group">
                 <div class="input-container">
-                  <textarea id="description" type="text" placeholder="Description" rows="4" formControlName="description" class="form-control" required></textarea> 
-                  <label for="description">Description</label>
+                  <input id="id" type="text" placeholder="PropertyType ID" formControlName="id" class="form-control" readonly />
+                  <label for="id">PropertyType ID</label>
                 </div>
               </div>
-  
-              <div class="updatestatusbuttons">
-                  <button *ngIf="viewAminitieClicked" class="btn btn-primary" (click)="updatePropertyFor(aminitiesdetails?.aminitieID)" [disabled]="!aminitiesform.dirty">Update</button>
-                  <button *ngIf="addnewclickClicked" class="btn btn-primary" (click)="submitAminitieDet()" [disabled]="!aminitiesform.get('name')?.value">Submit</button>
+              <div class="form-group">
+                <div class="input-container">
+                  <input id="name" type="text" placeholder="PropertyType Name" formControlName="name" class="form-control" required />
+                  <label for="name">PropertyType Name</label>
+                </div>
               </div>
-            
-            </form>
-  
-            <!-- <div><p>{{AminityInsStatus}}</p></div> -->
-      </div>
-      <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
-      <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Success</h5>
-              <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            </div>
+      
+            <div class="form-group" style="margin-top: 15px;">
+              <div class="input-container">
+                <textarea id="description" type="text" placeholder="Description" rows="4" formControlName="description" class="form-control" required></textarea> 
+                <label for="description">Description</label>
+              </div>
             </div>
 
-            
-            <div class="modal-body">
-              <p>{{ AminityInsStatus }}</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
-            </div>
+            <div class="updatestatusbuttons">
+                <button *ngIf="viewAminitieClicked" class="btn btn-primary" (click)="updatePropertyFor(aminitiesdetails?.aminitieID)" [disabled]="!aminitiesform.dirty">Update</button>
+                <button *ngIf="addnewclickClicked" class="btn btn-primary" (click)="submitAminitieDet()" [disabled]="!aminitiesform.get('name')?.value">Submit</button>
+            </div>          
+          </form>
+    </div>
+    <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
+    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" [style.display]="isModalOpen ? 'block' : 'none'">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Success</h5>
+            <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <p>{{ AminityInsStatus }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="handleOk()">OK</button>
           </div>
         </div>
       </div>
-      
     </div>
-</div>
-      
     
+  </div>
+  <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
+    <p> ©2025 GVR Infosystems. All rights reserved.</p>
+  </div>
+</div>

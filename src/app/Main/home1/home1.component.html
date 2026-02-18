@@ -2,38 +2,11 @@
   <img src="assets/images/load.gif" alt="Loading...">
 </div>
 
-<!-- <button class="floating-chat-btn" (click)="toggleSidebar()" title="Have a query? Ask me!">
-<i class="fas fa-comment-dots"></i>
-</button>
-
-<div class="contact-sidebar" *ngIf="isSidebarOpen">
-<div class="header">
-  <img src="assets/logo.png" alt="Logo" class="logo">
-  <div>
-    
-    <strong>Buserele Team</strong><br>
-    <span><i class="fas fa-phone"></i> +91 8688802505</span><br>
-    <a href="#" class="listings-link">View Listings</a>
-  </div>
-  <button class="close-btn" (click)="toggleSidebar()">×</button>
-</div>
-
-<form #contactForm="ngForm" (ngSubmit)="sendMessage()">
-  <input type="text" name="name" [(ngModel)]="contact.name" placeholder="Your name" required>
-  <input type="text" name="phone" [(ngModel)]="contact.phone" placeholder="Phone" required>
-  <input type="email" name="email" [(ngModel)]="contact.email" placeholder="Email" required>
-  <textarea name="description" [(ngModel)]="contact.description" placeholder="Description"></textarea>
-  <button type="submit" class="submit-btn">Send Message</button>
-</form>
-</div> -->
-
 <div class="call-icon-fixed">
 <a href="tel:+918688802505" title="Call Now">
   <img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call" />
 </a>
 </div>
-
-
 
 <div *ngIf="!isLoadingFeaProperty && !isLoadingAdvProperty" class="pagestartContainer">
 <section class="maincontainerSection">
@@ -52,61 +25,62 @@
                         <li class="nav-item">
                             <button class="nav-link" (click)="selectOption('')" [class.active]="propertyFor === ''" [ngClass]="{'bg-white text-primary': propertyFor === '', 'bg-primary text-white': propertyFor !== ''}">ALL UNITS</button>
                         </li>
-                        <!-- <li class="nav-item">
-                            <button class="nav-link" (click)="selectOption('2')" [class.active]="propertyFor === '2'" [ngClass]="{'bg-white text-primary': propertyFor === '2', 'bg-primary text-white': propertyFor !== '2'}">FOR RENT</button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" (click)="selectOption('1')" [class.active]="propertyFor === '1'" [ngClass]="{'bg-white text-primary': propertyFor === '1', 'bg-primary text-white': propertyFor !== '1'}">FOR SALE</button>
-                        </li> -->
                     </ul>
                 </div>
                 
-                <div class="row justify-content-center align-items-center h-100 m-0 bg-white rounded">
-                    <div class="col-12 col-md-2">
-                        <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Search KeyWord"
-                        [(ngModel)]="keyword"
-                        (keyup)="onKeywordChange()"
-                        />
-                        <div *ngIf="suggestions.length > 0" class="suggestions-dropdown">
-                        <ul>
-                            <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
-                            {{ suggestion }}
-                            </li>
-                        </ul>
-                        </div>
+                <div class="row h-100 m-0 bg-white rounded searchMainDiv" *ngIf="!isMobile">
+                  <div class="row justify-content-center align-items-center">
+
+                    <div class="col-12 col-md-2 position-relative input-container cityTextbox p-0">
+                      <select class="form-control" [(ngModel)]="selectedcityName">
+                      <option value="" >City Name</option>
+                      <ng-container *ngFor="let city of cities">
+                          <option [value]="city.cityID">{{ city.CityName }}</option>
+                      </ng-container>
+                      </select>
+                      <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
                     </div>
-
-                    
-                    <div class="col-12 col-md-2 position-relative input-container">
-                        
-                        <select class="form-control" [(ngModel)]="selectedPropertyType">
-                        <option value="">Property Type</option>
-                        <ng-container *ngFor="let property of propertytypes">
-                            <option [value]="property.propertyTypeID">{{ property.name }}</option>
-                        </ng-container>
-                        </select>
-                        <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
-                        <!-- <i class="fa fa-caret-down position-absolute" style="right: 24px; top: 50%; transform: translateY(-50%);"></i> -->
-
-                    </div>
-                    
-                      <div class="col-12 col-md-2 position-relative input-container">
-                        <select class="form-control" [(ngModel)]="selectedcityName">
-                        <option value="" >City Name</option>
-                        <ng-container *ngFor="let city of cities">
-                            <option [value]="city.cityID">{{ city.CityName }}</option>
-                        </ng-container>
-                        </select>
-                        <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
-
-                        <!-- <i class="fa fa-caret-down position-absolute" style="right: 24px; top: 50%; transform: translateY(-50%);"></i> -->
+  
+                    <div class="col-12 col-md-2 searchTextbox">
+                      <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search KeyWord"
+                      [(ngModel)]="keyword"
+                      (keyup)="onKeywordChange()"
+                      />
+                      <div *ngIf="suggestions.length > 0" class="suggestions-dropdown">
+                      <ul>
+                          <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                          {{ suggestion }}
+                          </li>
+                      </ul>
                       </div>
+                    </div>
+  
+  
+                    <div class="col-12 col-md-2 p-0">
+                      <button class="btn w-100" (click)="searchclick()" 
+                              style="border: none; background-color: #2495FD; padding: 6px; height: 40px; border-radius: 0px;">
+                        <i class="fa fa-search"></i> Search
+                      </button>
+                    </div>
 
+                  </div>
                   
-                    <div class="col-12 col-md-2 position-relative input-container">
+                  <div class="row justify-content-lg-start align-items-center searchDiv2">
+                    <div class="col-12 col-md-2 position-relative input-container cityTextbox p-0">                        
+                      <select class="form-control" [(ngModel)]="selectedPropertyType">
+                      <option value="">Property Type</option>
+                      <ng-container *ngFor="let property of propertytypes">
+                          <option [value]="property.propertyTypeID">{{ property.name }}</option>
+                      </ng-container>
+                      </select>
+                      <i class="fa fa-caret-down position-absolute dropdown-icon "></i>
+                    </div>
+                  
+  
+                    <div class="col-12 col-md-2 position-relative input-container cityTextbox">
                         <select class="form-control" [(ngModel)]="selectedPropertyFor">
                           <option value="" >Property For</option>
                           <option value="1">For Buy</option>
@@ -115,19 +89,68 @@
                           <option value="4">For lease</option>                                      
                         </select>
                         <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
-
-                        <!-- <i class="fa fa-caret-down position-absolute" style="right: 24px; top: 50%; transform: translateY(-50%);"></i> -->
-
                     </div>
-              
-                    <div class="col-12 col-md-2">
-                      <button class="btn w-100" (click)="searchclick()" 
-                              style="border: none; background-color: #2495FD; padding: 6px;">
-                              <!-- color: white; -->
-                        <i class="fa fa-search"></i> Search
-                      </button>
-                    </div>
+                  </div>
                 </div>
+
+                <div class="row justify-content-center align-items-center h-100 m-0 bg-white rounded" *ngIf="isMobile">
+                  <div class="col-12 col-md-2">
+                      <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search KeyWord"
+                      [(ngModel)]="keyword"
+                      (keyup)="onKeywordChange()"
+                      />
+                      <div *ngIf="suggestions.length > 0" class="suggestions-dropdown">
+                      <ul>
+                          <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                          {{ suggestion }}
+                          </li>
+                      </ul>
+                      </div>
+                  </div>
+
+                  <div class="col-12 col-md-2 position-relative input-container">                      
+                    <select class="form-control" [(ngModel)]="selectedPropertyType">
+                    <option value="">Property Type</option>
+                    <ng-container *ngFor="let property of propertytypes">
+                        <option [value]="property.propertyTypeID">{{ property.name }}</option>
+                    </ng-container>
+                    </select>
+                    <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+                  </div>
+                
+                  <div class="col-12 col-md-2 position-relative input-container">
+                    <select class="form-control" [(ngModel)]="selectedcityName">
+                    <option value="" >City Name</option>
+                    <ng-container *ngFor="let city of cities">
+                        <option [value]="city.cityID">{{ city.CityName }}</option>
+                    </ng-container>
+                    </select>
+                    <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+                  </div>
+
+                  <div class="col-12 col-md-2 position-relative input-container">
+                      <select class="form-control" [(ngModel)]="selectedPropertyFor">
+                        <option value="" >Property For</option>
+                        <option value="1">For Buy</option>
+                        <option value="2">For sale</option>
+                        <option value="3">For Rent</option>
+                        <option value="4">For lease</option>                                      
+                      </select>
+                      <i class="fa fa-caret-down position-absolute dropdown-icon"></i>
+                  </div>
+            
+                  <div class="col-12 col-md-2">
+                    <button class="btn w-100" (click)="searchclick()" 
+                            style="border: none; background-color: #2495FD; padding: 6px;">
+                            <!-- color: white; -->
+                      <i class="fa fa-search"></i> Search
+                    </button>
+                  </div>
+              </div>
+                
             </div>
         </div>
     </div>
@@ -145,10 +168,9 @@
               </div>
               <div class="PropertiesList">
                     <div class="property-container">
-                      <div class="fscrollable-properties" [ngClass]="{'center': FeaturedProperties.length < 3}">
+                      <div class="fscrollable-properties" [ngClass]="{'center': FeaturedProperties.length < 3}" [ngStyle]="{gap:propertydetails.length <= 3? '16px': propertydetails.length === 4? '20px': '30px'}">
                         <ng-container *ngFor="let propertyitem of FeaturedProperties; let i = index">
                           <div *ngIf="i < 5" class="property-card">
-                            <!-- <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black"> -->
                             <a [routerLink]="['/view-property', encodeID(propertyitem.propertyID)]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
                               <div class="propertyFulldet d-flex">
                                 <div class="propertyImage position-relative">
@@ -156,14 +178,6 @@
                                   <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">
                                     {{ propertyitem.propertyAvailability }}
                                   </span>
-                                  <!-- <div class="wishlist-container position-absolute end-0 top-0 m-2">
-                                    <i id="heartIcon" class="fas fa-heart"
-                                      [ngStyle]="{ 'color': likedProperties[propertyitem.propertyID] ? 'red' : 'grey' }"
-                                      title="Add to Wishlist"
-                                      (click)="toggleHeart($event, propertyitem.propertyID)"
-                                      style="cursor: pointer;">
-                                    </i>
-                                  </div> -->
                                  
                                 </div>
                                 
@@ -230,11 +244,6 @@
                           </div>
                         </ng-container>
                       </div>
-                  
-                      <!-- <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
-                        <button class="scroll-btn left" (click)="fscrollLeft()">&#8592;</button>
-                        <button class="scroll-btn right" (click)="fscrollRight()">&#8594;</button>
-                      </div> -->
                       <div *ngIf="FeaturedProperties?.length > 3" class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
                         <button class="scroll-btn left" (click)="fscrollLeft()">&#8592;</button>
                         <button class="scroll-btn right" (click)="fscrollRight()">&#8594;</button>
@@ -243,7 +252,6 @@
                     </div>                      
                   <div class="browsemoreproperties row justify-content-center align-items-center m-0">
                       <button class="btn" [routerLink]="['/search-properties', encodeID('2')]" routerLinkActive="router-link-active">Browse More Properties</button>
-                      <!-- <button class="btn" [routerLink]="['/search-properties',  encodeParams()]" routerLinkActive="router-link-active">Browse More Properties</button> -->
                   </div>              
               </div>
           </div>  
@@ -259,10 +267,9 @@
                 </div>
                 <div class="PropertiesList">
                       <div class="property-container">
-                        <div class="scrollable-properties" [ngClass]="{'center': propertydetails.length < 3}">
+                        <div class="scrollable-properties" [ngClass]="{'center': propertydetails.length < 3}" [ngStyle]="{gap:propertydetails.length <= 3? '16px': propertydetails.length === 4? '20px': '24px'}">
                           <ng-container *ngFor="let propertyitem of propertydetails; let i = index">
                             <div *ngIf="i < 5" class="property-card">
-                              <!-- <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black"> -->
                               <a [routerLink]="['/view-property', encodeID(propertyitem.propertyID)]" routerLinkActive="router-link-active" class="text-decoration-none text-black">
                                 <div class="propertyFulldet d-flex">
                                   <div class="propertyImage position-relative">
@@ -270,15 +277,7 @@
                                     <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">
                                       {{ propertyitem.propertyAvailability }}
                                     </span>
-                                    <!-- <div class="wishlist-container position-absolute end-0 top-0 m-2">
-                                      <i id="heartIcon" class="fas fa-heart"
-                                        [ngStyle]="{ 'color': likedProperties[propertyitem.propertyID] ? 'red' : 'grey' }"
-                                        title="Add to Wishlist"
-                                        (click)="toggleHeart($event, propertyitem.propertyID)"
-                                        style="cursor: pointer;">
-                                      </i>
-                                    </div>
-                                    -->
+                                    
                                   </div>
                                   
                                   <div class="propertyDetails">
@@ -345,74 +344,16 @@
                             </div>
                           </ng-container>
                         </div>
-                    
-                        <!-- <div class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
-                          <button class="scroll-btn left" (click)="scrollLeft()">&#8592;</button>
-                          <button class="scroll-btn right" (click)="scrollRight()">&#8594;</button>
-                        </div> -->
                         <div *ngIf="propertydetails?.length > 3" class="scroll-buttons text-end" style="display: flex; justify-content: flex-end; gap: 5px; margin: 5px;">
                           <button class="scroll-btn left" (click)="scrollLeft()">&#8592;</button>
                           <button class="scroll-btn right" (click)="scrollRight()">&#8594;</button>
                         </div>
-                        
-                        
-                      </div>
-                                      
+                      </div>                
                     <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                      <!-- <button class="btn" [routerLink]="['/search-properties', encodeParams()]" routerLinkActive="router-link-active">Browse More Properties</button> -->
                       <button class="btn" [routerLink]="['/search-properties', encodeID('1')]" routerLinkActive="router-link-active">Browse More Properties</button>
                   </div>        
                 </div>
-            </div>                
-            <!-- Featured Properties -->
-            <!-- <div class="AdvertisingPropertiesAdds">
-                <div class="ExploreFeaturedProperties">
-                    <div class="container">
-                        <div class="headding">
-                            <h5 class="bold-text d-flex justify-content-center align-items-center">Featured Listings</h5>
-                        </div>
-                        <div class="PropertiesList">
-                          <div class="properties row g-2 justify-content-center align-items-center m-0">
-                                <ng-container *ngFor="let propertyitem of displayedProperties; let i = index">
-                                  <div *ngIf="i < 4" class="p-0 mb-3 rounded-2">
-                                    <a [routerLink]="['/view-property', propertyitem.propertyID]" routerLinkActive="router-link-active" class="text-decoration-none text-black">    
-                                      <div class="propertyFulldet">
-                                        <div class="propertyImage position-relative">
-                                          <img [src]="propertyitem.defaultPropImage" class="img-fluid w-100 h-100" alt="Property Image">
-                                          <span class="badge position-absolute top-0 start-0 m-2" [style.background-color]="propertyitem.propertyBadgeColor">{{propertyitem.propertyAvailability}}</span>
-                                        </div>
-                                      
-                                        <div class="propertyDetails">
-                                          <div>
-                                            <h5 class="mb-0" [ngStyle]="{'font-size': propertyitem.propertyname.length > 12 ? '13px' : '15px','font-weight':'bold'}">{{propertyitem.propertyname}}</h5>
-                                          </div>
-                                          <div class="propertyaddress d-flex align-items-center mt-1 mb-1">
-                                            <i class="fa fa-location"></i>
-                                            <p class="mb-0 ms-2">
-                                              {{ propertyitem.propertyNearBy.length > 10 ? (propertyitem.propertyNearBy | slice:0:10) + '...' : propertyitem.propertyNearBy }}
-                                            </p>
-                                          </div>
-                                          <div class="d-flex justify-content-end align-items-center">
-                                            <div class="price">
-                                              <p class="mb-0 m-lg-1">Price: </p>
-                                            </div>
-                                            <p class="mb-0 m-lg-1">{{convertToCrores(propertyitem.propertyprice)}}</p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </a>
-                                  </div>
-                                </ng-container>  
-                            </div>
-                              
-                            <div class="browsemoreproperties row justify-content-center align-items-center m-0">
-                                <button class="btn" routerLink="/search-properties">Browse More Properties</button>
-                            </div>                    
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
+            </div> 
           </div>
       </section>
 
@@ -447,7 +388,7 @@
 
                     <div class="contactformdiv">
                         <div class="contactform">
-                            <p class="p-text">Real Estate Enquiry Form</p>
+                            <p class="p-text">REAL ESTATE ENQUIRY FORM</p>
                             <form [formGroup]="userEnquiryform">
                                 <div class="form-group">
                                   <label for="contactname">Name</label>
@@ -463,7 +404,6 @@
                                   <input type="email" id="contactEmail" class="form-control" formControlName="email" name="email" placeholder="Enter Email" required>
                                   
                                   <div *ngIf="userEnquiryform.get('email')?.touched && userEnquiryform.get('email')?.invalid" class="error-message">
-                                    <!-- <small *ngIf="userEnquiryform.get('email')?.hasError('required')">Email is required.</small> -->
                                     <small *ngIf="userEnquiryform.get('email')?.hasError('email')">Please enter a valid email address.</small>
                                     <p class="error-message" [ngClass]="clr">Email is required and should be valid.</p>
 
@@ -522,12 +462,6 @@
                         <p *ngIf="expandedContent[i]">{{ blog.BlogDescription }}</p>
                       </div>
                     </div>
-                    <!-- <div class="blogposteddate">
-                      <button class="button" [routerLink]="'/viewblog/' + blog.BlogID">Read More</button>
-                      <p class="date" *ngIf="blog.BlogCreatedDate">
-                        <i class="fas fa-calendar-alt"></i> {{ blog.BlogCreatedDate }}
-                      </p>
-                    </div> -->
                     <div class="blogposteddate">
                       <button class="button" [routerLink]="'/viewblog/' + encodeID(blog.BlogID)">Read More</button>
                       <p class="date" *ngIf="blog.BlogCreatedDate">
@@ -544,10 +478,6 @@
             <button class="scrollbtn-left btns" (click)="scrollLeftblog()">&#8592;</button>
             <button class="scrollbtn-right btns" (click)="scrollRightblog()">&#8594;</button>
         </div>
-        <!-- <div *ngIf="getDisplayedBlogs()?.length >= 4" class="scrollbtn text-end" style="display: flex; justify-content: flex-end; gap: 5px;">
-          <button class="scrollbtn-left btns" (click)="scrollLeftblog()">&#8592;</button>
-          <button class="scrollbtn-right btns" (click)="scrollRightblog()">&#8594;</button>
-        </div> -->
         
         </div>
       </section>
@@ -639,9 +569,7 @@
                               </p>
                             </div>
                           </div>
-                          <div
-                            class="content w-100 d-flex justify-content-center align-items-center"
-                          >
+                          <div class="content w-100 d-flex justify-content-center align-items-center">
                             <p class="review-text-content">
                               “{{ truncateText(reviewitem.review, 20) }}”
                             </p>
@@ -653,19 +581,10 @@
                 </div>
               </div>
             
-              <!-- <div
-                class="browsemoreproperties row justify-content-center align-items-center mt-5"
-                style="width: 40%;">
+              <div class="browse-more-container  d-flex justify-content-center align-items-center mt-5">
                 <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
-              </div> -->
-              <div
-              class="browse-more-container  d-flex justify-content-center align-items-center mt-5">
-              <button class="btn" routerLink="/view-reviews">Browse More Reviews</button>
-            </div>
-
-              
-            </div>
-            
+              </div>
+            </div>           
           </div>
         </div>
       </section>

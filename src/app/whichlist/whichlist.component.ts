@@ -92,15 +92,10 @@ export class WhichlistComponent {
     const data = {
       Flag: '3',
       userID: UserID
-    };
-  
-    console.log("Calling API with:", data);
-  
+    };  
     this.apiurls.post<any>('Proc_Tbl_Wishlist', data)
       .subscribe(
-        (response) => {
-          console.log('Raw API Response:', response);
-  
+        (response) => {  
           const properties = response?.data || [];
   
           if (properties.length > 0) {
@@ -171,133 +166,12 @@ export class WhichlistComponent {
           this.isLoading = false;
         },
         (error) => {
-          console.error('Error fetching property details:', error);
           this.EmptyPropertydetails = true;
           this.NoDataFound = "Error fetching data. Please try again later.";
           this.isLoading = false;
         }
       );
   }
-  
-  
-  
-// getownProperties(UserID: string) {
-//   this.isLoading = true;
-//  this.apiurls.get<any>(`GetWishlistByUserID/${UserID}`)
-//     .subscribe(
-//       (response: any[]) => {
-//         if (response.length > 0) {
-//           this.EmptyPropertydetails = false;
-//           console.log('API Response:', response);
-
-//           this.propertydetails = response.map((property: any) => {
-//             let propertyImage: string = '';
-//             let defaultPropImage: string = '';
-
-//             console.log('Full Property:', property);
-
-//             if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-//               console.log('Property Images:', property.images);
-//               const firstImage = property.images[0];
-//               if (firstImage.fileData) {
-//                 console.log('First Image File Data:', firstImage.fileData);
-//                 try {
-//                   const byteCharacters = atob(firstImage.fileData);
-//                   const byteArray = new Uint8Array(byteCharacters.length);
-//                   for (let i = 0; i < byteCharacters.length; i++) {
-//                     byteArray[i] = byteCharacters.charCodeAt(i);
-//                   }
-//                   const blob = new Blob([byteArray], { type: firstImage.mimeType });
-//                   propertyImage = URL.createObjectURL(blob);
-//                   console.log('Generated Image URL:', propertyImage);
-//                 } catch (error) {
-//                   console.error('Error decoding first image data:', error);
-//                 }
-//               } else {
-//                 propertyImage = 'assets/images/empty.png'; 
-//               }
-//             } else {
-//               defaultPropImage = 'assets/images/empty.png'; 
-//               console.log('Property images are missing or not an array.');
-//             }
-
-//             if (property.image && property.image.filePath) {
-//               const firstImage = property.image;
-//               try {
-//                 // defaultPropImage = `https://localhost:7190${property.image.filePath}`;
-//                 defaultPropImage=this.apiurls.getImageUrl(property.image.filePath) || 'assets/images/empty.png';
-
-//                 console.log('Generated Default Image URL:', defaultPropImage);
-//               } catch (error) {
-//                 console.error('Error generating default image URL:', error);
-//               }
-//             } else {
-//               defaultPropImage = 'assets/images/empty.png'; 
-//             }
-
-//             let propertyBadge = '';
-//             let propertyBadgeColor = '';
-
-//             if (property.propertyFor === '1') {
-//               propertyBadge = 'For Buy';
-//               propertyBadgeColor = 'green';
-//             } else if (property.propertyFor === '2') {
-//               propertyBadge = 'For Sell';
-//               propertyBadgeColor = 'red';
-//             } else if (property.propertyFor === '3') {
-//               propertyBadge = 'For Rent';
-//               propertyBadgeColor = 'blue';
-//             } else if (property.propertyFor === '4') {
-//               propertyBadge = 'For Lease';
-//               propertyBadgeColor = 'orange';
-//             }
-
-//             let PropertyFacing = '';
-//             if (property.propertyFacing === '1') {
-//               PropertyFacing = 'North';
-//             } else if (property.propertyFacing === '2') {
-//               PropertyFacing = 'South';
-//             } else if (property.propertyFacing === '3') {
-//               PropertyFacing = 'East';
-//             } else if (property.propertyFacing === '4') {
-//               PropertyFacing = 'West';
-//             } else {
-//               PropertyFacing = 'N/A';
-//             }
-
-//             return {
-//               propertyID: property.propID || 'N/A',
-//               propertyname: property.propname || 'N/A',
-//               propertyprice: property.propertyTotalPrice || 'N/A',
-//               propertyaddress: property.landMark || 'N/A',
-//               propertyarea: property.totalArea || 'N/A',
-//               propertybeds: property.noOfBedrooms || 'N/A',
-//               propertybathrooms: property.noOfBathrooms || 'N/A',
-//               propertytype: property.propertyType || 'Unknown Type',
-//               propertyimage: defaultPropImage,
-//               propertyfor: property.propertyFor || 'N/A',
-//               propertyparking: property.noOfParkings || 'N/A',
-//               PropertyTypeName: property.propertyTypeName,
-//               propertyfacing: PropertyFacing,
-//               propertyAvailability: propertyBadge,
-//               propertyBadgeColor: propertyBadgeColor
-//             };
-//           });
-//           this.isLoading = false;
-//         } else {
-//           this.EmptyPropertydetails = true;
-//           this.NoDataFound = "There are no properties to display at the moment.";
-//           this.isLoading = false;
-//         }
-//       },
-//       (error) => {
-//         console.error('Error fetching property details:', error);
-//         this.EmptyPropertydetails = true;
-//         this.NoDataFound = "Error fetching data. Please try again later.";
-//         this.isLoading = false;
-//       }
-//     );
-// }
 
   convertToCrores(value: number | string): string {
     if (!value) return 'N/A'; 
@@ -339,7 +213,6 @@ export class WhichlistComponent {
   
     this.apiurls.post('Proc_Tbl_Wishlist', data).subscribe(
       response => {
-        console.log(`Successfully removed property ${propertyID} from wishlist`);
         if (this.propertydetails.length === 0) {
           this.EmptyPropertydetails = true;
           this.NoDataFound = "There are no properties in your wishlist.";
@@ -347,7 +220,6 @@ export class WhichlistComponent {
         this.isLoading = false;
       },
       error => {
-        console.error(`Error removing property ${propertyID}:`, error);
         this.isLoading = false;
       }
     );
@@ -376,10 +248,8 @@ export class WhichlistComponent {
   
       this.apiurls.post('Proc_Tbl_Wishlist', data).subscribe(
         response => {
-          console.log(`Successfully removed property ${item.propertyID} from wishlist`);
         },
         error => {
-          console.error(`Error removing property ${item.propertyID}:`, error);
         }
       );
     });

@@ -41,7 +41,6 @@ export class ReviewsComponentComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const encodedReviewId = params.get('reviewID');
-      console.log('encodedReviewId',encodedReviewId);
       if (encodedReviewId) {
         const decodedReviewId = this.decodeID(encodedReviewId); 
         this.loadReviewDetailsByReviewID(decodedReviewId); 
@@ -56,10 +55,8 @@ export class ReviewsComponentComponent implements OnInit {
   decodeID(encodedID: string): string {
     try {
       const ID= atob(encodedID); 
-      console.log('encodedID',ID);
       return ID;
     } catch (error) {
-      console.error('Error decoding ID:', error);
       return ''; 
     }
   }
@@ -87,7 +84,6 @@ export class ReviewsComponentComponent implements OnInit {
           this.remainingReviews = [...this.Reviews];
         },
         (error) => {
-          console.error('Error fetching property details:', error);
           this.isLoadingReviews = false;
         }
       );
@@ -131,7 +127,6 @@ export class ReviewsComponentComponent implements OnInit {
     this.apiurls.post<any>('Tbl_Reviews_CRUD_Operations', data).subscribe(
       (response: any) => {
         const review = response?.data?.[0];
-        console.log('review',review);
         if (review) {
           const formattedDate = this.formatDate(review.createdDate);
   

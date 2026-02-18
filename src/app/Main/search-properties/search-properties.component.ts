@@ -35,18 +35,6 @@ interface propertyDet{
   styleUrl: './search-properties.component.css'
 })
 export class SearchPropertiesComponent implements OnInit {
-  // selectedPropertyType:string|null='';
-  // selectedPropertyFor:string|null='';
-  // propID: string | null = '';
-  // isLoading: boolean = false;
-  // CityName:string|null=null;
-  // propertyType:string|null=null;
-  // propertyFor:string|null=null;
-  // keyword: string | null = '';
-  // selectedcityName:string | null = '';
-  // propertyAvailabilityOptions:string|null='';
-  // propertydetails: any[] = []
-
   selectedPropertyType: string | null = '';
   selectedPropertyFor: string | null = '';
   propID: string | null = '';
@@ -61,38 +49,6 @@ export class SearchPropertiesComponent implements OnInit {
 
   constructor(public apiurl:HttpClient,private route: ActivatedRoute,public router:Router,private apiurls: ApiServicesService){}
   
-  // ngOnInit(): void {
-  //   this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-  //     const encodedAvailability = params.get('propertyAvailabilityOptions');
-  //     const encodedType = params.get('propertyType');
-  //     const encodedFor = params.get('propertyFor');
-  
-  //     this.propertyAvailabilityOptions = encodedAvailability ? this.decodeID(encodedAvailability) : null;
-  //     this.propertyType = encodedType ? this.getValidParam(this.decodeID(encodedType), 'defaultType') : null;
-  //     this.propertyFor = encodedFor ? this.getValidParam(this.decodeID(encodedFor), 'defaultFor') : null;
-  
-  //     this.keyword = this.getValidParam(params.get('keyword'), 'defaultKeyword');
-  //     this.CityName = this.getValidParam(params.get('CityName'), 'defaultCity');
-  
-  //     console.log("Decoded Availability Option:", this.propertyAvailabilityOptions);
-  
-  //     if (this.propertyAvailabilityOptions) {
-  //       this.loadPropertyDetailsByPropertyAvailabilityOptions(this.propertyAvailabilityOptions);
-  //     }
-  //     else if (this.propertyType || this.propertyFor || this.CityName || this.keyword) {
-  //       this.loadPropertyDetailsByFilters(
-  //         this.propertyType || '',
-  //         this.propertyFor || '',
-  //         this.CityName || '',
-  //         this.keyword || ''
-  //       );
-  //     } else {
-  //       this.loadPropertyDetails();
-  //     }
-  //   });
-  // }
-  
-
   ngOnInit(): void {
     this.route.paramMap.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       const encodedAvailability = params.get('propertyAvailabilityOptions');
@@ -124,12 +80,11 @@ export class SearchPropertiesComponent implements OnInit {
           this.keyword || ''
         );
       } else {
-        this.loadPropertyDetails(); // fallback
+        this.loadPropertyDetails(); 
       }
     });
   }
   
-
   private getValidParam(param: string | null, defaultValue: string): string | null {
     return param === defaultValue ? null : param;
   }
@@ -189,21 +144,13 @@ export class SearchPropertiesComponent implements OnInit {
     this.apiurls.get<any>('GetAllPropertyDetailsWithImages')
           .subscribe(
         (response: any[]) => {
-          console.log('API Response:', response);
           this.propertydetails = response.map((property: any) => {
             let propertyImage: string = 'assets/images/empty.png'; 
             let defaultPropImage: string = '';
-  
-            console.log('Full Property:', property);
-  
             if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-              console.log('Property Images:', property.images);
-  
               const firstImage = property.images[0];
   
-              if (firstImage.fileData) {
-                console.log('First Image File Data:', firstImage.fileData);
-  
+              if (firstImage.fileData) {  
                 try {
                   const byteCharacters = atob(firstImage.fileData);
                   const byteArray = new Uint8Array(byteCharacters.length);
@@ -215,36 +162,28 @@ export class SearchPropertiesComponent implements OnInit {
                   const blob = new Blob([byteArray], { type: firstImage.mimeType });
   
                   propertyImage = URL.createObjectURL(blob);
-  
-                  console.log('Generated Image URL:', propertyImage);
                 } catch (error) {
-                  console.error('Error decoding first image data:', error);
                 }
               } else {
                 propertyImage='assets/images/empty.png';
               }
             } else {
               defaultPropImage='assets/images/empty.png';
-              console.log('images property is missing, not an array, or empty.');
             }
 
             if (property.image && property.image.filePath) {
               const firstImage = property.image;
   
               try {
-                // defaultPropImage=`https://localhost:7190${property.image.filePath}`;
                 defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
-                console.log('Generated Default Image URL:', defaultPropImage);
               } 
             
               catch (error) {
-                console.error('Error decoding default image data:', error);
               }
 
             }
             else {
               defaultPropImage='assets/images/empty.png';
-              console.log('images property is missing, not an array, or empty.');
             }
 
             let propertyBadge = '';
@@ -306,7 +245,6 @@ export class SearchPropertiesComponent implements OnInit {
           this.isLoading=false;
         },
         (error) => {
-          console.error('Error fetching property details:', error);
         }
       );
 
@@ -316,22 +254,14 @@ export class SearchPropertiesComponent implements OnInit {
     this.apiurls.get<any[]>(`GetAllPropertyDetailsWithImagesByPropertyType/${propertytype}`)
       .subscribe(
         (response: any[]) => {
-          console.log('API Response:', response);
-
-
           if(Array.isArray(response) && response.length > 0){
             this.propertydetails = response.map((property: any) => {
               let propertyImage: string = ''; 
-    
-              console.log('Full Property:', property);
-    
               if (property.images && Array.isArray(property.images) && property.images.length > 0) {
-                console.log('Property Images:', property.images);
     
                 const firstImage = property.images[0];
     
                 if (firstImage.fileData) {
-                  console.log('First Image File Data:', firstImage.fileData);
     
                   try {
                     const byteCharacters = atob(firstImage.fileData);
@@ -344,16 +274,12 @@ export class SearchPropertiesComponent implements OnInit {
                     const blob = new Blob([byteArray], { type: firstImage.mimeType });
     
                     propertyImage = URL.createObjectURL(blob);
-    
-                    console.log('Generated Image URL:', propertyImage);
                   } catch (error) {
-                    console.error('Error decoding first image data:', error);
                   }
                 } else {
                   propertyImage='assets/images/empty.png';
                 }
               } else {
-                console.log('images property is missing, not an array, or empty.');
               }
 
               let propertyBadge = '';
@@ -407,7 +333,6 @@ export class SearchPropertiesComponent implements OnInit {
           }
         },
         (error) => {
-          console.error('Error fetching property details:', error);
         }
       );
   }
@@ -425,38 +350,25 @@ export class SearchPropertiesComponent implements OnInit {
     this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
       .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
           if (response.data.length > 0) {
             this.propertydetails = response.data.map((property: any) => {
               let propertyImage: string = 'assets/images/empty.png';  
               let defaultPropImage: string = '';
-  
-              console.log('Full Property:', property);
-  
-              if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {
-                console.log('Property Images:', property.propImages);
-  
+              if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {  
                 const firstImage = property.propImages[0];
   
                 if (firstImage.filePath) {
-                  // propertyImage = `https://localhost:7190${firstImage.filePath}`;
                   propertyImage = this.apiurls.getImageUrl(firstImage.filePath); 
-
-                  console.log('Generated Image URL:', propertyImage);
                 }
 
               } else {
-                console.log('images property is missing, not an array, or empty.');
               }
   
               if (property.image && property.image.filePath) {
-                // defaultPropImage = `https://localhost:7190${property.image.filePath}`;
                 defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
 
-                console.log('Generated Default Image URL:', defaultPropImage);
               } else {
                 defaultPropImage = 'assets/images/empty.png';
-                console.log('images property is missing, not an array, or empty.');
               }
   
               let propertyBadge = '';
@@ -510,7 +422,6 @@ export class SearchPropertiesComponent implements OnInit {
                 selectedcityName:property.CityName
               };
             });
-            console.log(this.propertydetails);
             this.isLoading = false;
           } else {
             alert("No properties match the applied filters. Please adjust your criteria and try again.");
@@ -518,93 +429,12 @@ export class SearchPropertiesComponent implements OnInit {
           }
         },
         (error) => {
-          console.error('Error fetching property details:', error);
           alert("No properties match the applied filters. Please adjust your criteria and try again.");
           this.router.navigate(['/home']);
         }
       );
   }
-  
-  // loadPropertyDetailsByFilters(finalPropertyType: string, finalPropertyFor: string, finalCityName: string, finalKeyword: string) {
-  //   this.isLoading = true;
-  
-  //   const data = {
-  //     city: finalCityName ?? '',
-  //     propertyType: finalPropertyType ?? '',
-  //     propertyFor: finalPropertyFor ?? '',
-  //     keyWord: finalKeyword ?? '',
-  //     flag: '7'
-  //   };
-  
-  //   console.log("Sending Filter Request:", data);
-  
-  //   this.apiurls.post<any>('Tbl_Properties_CRUD_Operations', data).subscribe({
-  //     next: (response) => {
-  //       console.log('Filter API Response:', response);
-  
-  //       if (response.statusCode === 200 && response.data?.length > 0) {
-  //         this.propertydetails = response.data.map((property: any) => {
-  //           const propertyImage = property.images?.[0]?.filePath
-  //             ? this.apiurls.getImageUrl(property.images[0].filePath)
-  //             : 'assets/images/empty.png';
-  
-  //           const defaultPropImage = property.image?.filePath
-  //             ? this.apiurls.getImageUrl(property.image.filePath)
-  //             : 'assets/images/empty.png';
-  
-  //           const propertyBadgeMap: any = {
-  //             'Buy': { label: 'For Buy', color: 'green' },
-  //             'Sale': { label: 'For Sale', color: 'red' },
-  //             'Rent': { label: 'For Rent', color: 'blue' },
-  //             'Lease': { label: 'For Lease', color: 'orange' }
-  //           };
-  
-  //           const facingMap: any = {
-  //             'North': 'North',
-  //             'South': 'South',
-  //             'East': 'East',
-  //             'West': 'West'
-  //           };
-  
-  //           return {
-  //             propertyID: property.propID || 'N/A',
-  //             propertyname: property.propname || 'N/A',
-  //             propertyprice: property.propertyTotalPrice || 'N/A',
-  //             propertyaddress: property.address || 'N/A',
-  //             propertyarea: property.totalArea || 'N/A',
-  //             propertybeds: property.noOfBedrooms || 'N/A',
-  //             propertybathrooms: property.noOfBathrooms || 'N/A',
-  //             propertytype: property.propertyType || 'Unknown',
-  //             propertyfor: property.propertyFor,
-  //             propertytypeName: this.getPropertyTypeName(property.propertyType),
-  //             propertyimage: propertyImage,
-  //             defaultPropImage: defaultPropImage,
-  //             propertyparking: property.noOfParkings,
-  //             propertyfacing: facingMap[property.propertyFacing] || property.propertyFacing || 'N/A',
-  //             propertyAvailability: propertyBadgeMap[property.propertyFor]?.label || '',
-  //             propertyBadgeColor: propertyBadgeMap[property.propertyFor]?.color || '',
-  //             PropertyTypeName: property.propertyTypeName,
-  //             selectedcityName: property.cityName
-  //           };
-  //         });
-  //       } else {
-  //         alert("No Properties Available.");
-  //         this.router.navigate(['/home']);
-  //       }
-  
-  //       this.isLoading = false;
-  //     },
-  //     error: (error) => {
-  //       console.error('Error in filter API:', error);
-  //       alert("An error occurred while fetching properties.");
-  //       this.isLoading = false;
-  //       this.router.navigate(['/home']);
-  //     }
-  //   });
-  // }
-  
-  
-  
+
   encodeID(id: string): string {
     return btoa(id).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
@@ -617,9 +447,6 @@ export class SearchPropertiesComponent implements OnInit {
     return atob(encoded);
   }
 
-
-  
-
   loadPropertyDetailsByPropertyAvailabilityOptions(finalPropertyAvialabilityOptions: string) {
     this.isLoading = true;
     const data={
@@ -629,38 +456,25 @@ export class SearchPropertiesComponent implements OnInit {
     this.apiurls.post<any>('Tbl_Properties_CRUD_Operations',data)
       .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
           if (response.data.length > 0) {
             this.propertydetails = response.data.map((property: any) => {
               let propertyImage: string = 'assets/images/empty.png';  
               let defaultPropImage: string = '';
-  
-              console.log('Full Property:', property);
-  
-              if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {
-                console.log('Property Images:', property.propImages);
-  
+              if (property.propImages && Array.isArray(property.propImages) && property.propImages.length > 0) {  
                 const firstImage = property.propImages[0];
   
                 if (firstImage.filePath) {
-
-                  // propertyImage = `https://localhost:7190${firstImage.filePath}`;
                   propertyImage = this.apiurls.getImageUrl(firstImage.filePath); 
 
-                  console.log('Generated Image URL:', propertyImage);
                 }
               } else {
-                console.log('images property is missing, not an array, or empty.');
               }
   
               if (property.image && property.image.filePath) {
-                // defaultPropImage = `https://localhost:7190${property.image.filePath}`;
                 defaultPropImage = this.apiurls.getImageUrl(property.image.filePath); 
 
-                console.log('Generated Default Image URL:', defaultPropImage);
               } else {
                 defaultPropImage = 'assets/images/empty.png';
-                console.log('images property is missing, not an array, or empty.');
               }
   
               let propertyBadge = '';
@@ -714,7 +528,6 @@ export class SearchPropertiesComponent implements OnInit {
                 selectedcityName:property.CityName
               };
             });
-            console.log(this.propertydetails);
             this.isLoading = false;
           } else {
             alert("No Properties Available.");
@@ -722,8 +535,6 @@ export class SearchPropertiesComponent implements OnInit {
           }
         },
         (error) => {
-          console.error('Error fetching property details:', error);
-          // alert("An error occurred while fetching property details.");
           this.router.navigate(['/search-properties']);
         }
       );

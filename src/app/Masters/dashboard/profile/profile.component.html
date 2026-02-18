@@ -1,4 +1,3 @@
-
 <div class="mainReview">
     <div class="w-100">
         <div class="reviewview">
@@ -6,7 +5,6 @@
                 <div class="PageHeading">
                     <h5 class="text-center m-0"><b>CONTACT INFORMATION</b></h5>
                 </div>
-
                 <form [formGroup]="profileform">
                     <div class="formrow">
                         <div class="form-group">
@@ -24,23 +22,16 @@
                     </div>
 
                     <div class="formrow">
-                        <!-- <div class="form-group">
-                            <div class="input-container">
-                                <input id="email" type="text" placeholder="Email" formControlName="email" class="form-control" readonly />
-                                <label for="email">Email</label>
-                            </div>
-                        </div> -->
                         <div class="form-group">
-                            <div class="input-container email-wrapper"> 
+                            <div class="input-container email-wrapper">
                               <input 
                                 id="email" 
                                 type="text" 
                                 placeholder="Email" 
                                 formControlName="email" 
                                 class="form-control" 
-                                readonly 
-                              />
-                              <label for="email">Email</label>
+                                readonly />
+                                <label for="email">Email</label>
                               <i class="fas fa-envelope"></i> 
                             </div>
                           </div>
@@ -58,13 +49,9 @@
                             <button class="btn changepswd" (click)="changepassword()">Change Password</button>
                             <button class="btn deactivate" (click)="deactivateAccount()">Deactivate Account</button>
                         </div>
-                        <!-- <div [ngClass]="changePasswordClicked ? 'w-100 text-align-end' : 'w-none'" class="updatestatusbuttons2">
-                            <button class="btn" (click)="updateProfileDet()">Update Details</button>
-                        </div> -->
                         <div [ngClass]="changePasswordClicked ? 'w-100 text-align-end' : 'w-none'" class="updatestatusbuttons2">
                             <button class="btn" [disabled]="!isFormChanged" (click)="updateProfileDet()">Update Details</button>
                           </div>
-                          
                     </div>
                 </form>
                 <form *ngIf="changePasswordClicked" [formGroup]="profilePasswordChangeform">
@@ -109,8 +96,10 @@
                                     New Password must be different from Old Password.
                                   </p>
                                 </div>
+
                             </div>
                         </div>
+                        
                         <div class="form-group">
                             <div class="input-container">
                                 <div class="password-wrapper">
@@ -127,22 +116,21 @@
                                        (click)="toggleConfirmPasswordVisibility()">
                                     </i>
                                 </div>
-                                <!-- <div class="validation-message">
-                                    <p *ngIf="profilePasswordChangeform.get('ConfirmPassword')?.invalid && profilePasswordChangeform.get('ConfirmPassword')?.touched" class="text-danger fw-bold" [ngClass]="clr">Confirm Password is required.</p>
-                                    <p *ngIf="profilePasswordChangeform.hasError('passwordMismatch') && profilePasswordChangeform.get('ConfirmPassword')?.touched" class="text-danger fw-bold" [ngClass]="clr">New Password & Confirm Password must match.</p>
-                                </div> -->
                                 <div class="validation-message">
-                                    <div *ngIf="profilePasswordChangeform.get('ConfirmPassword')?.invalid && profilePasswordChangeform.get('ConfirmPassword')?.touched">
-                                      <p class="text-danger fw-bold">Confirm Password is required.</p>
-                                    </div>
-                                    <div *ngIf="profilePasswordChangeform.hasError('passwordMismatch') && profilePasswordChangeform.get('ConfirmPassword')?.touched && !profilePasswordChangeform.get('ConfirmPassword')?.errors?.['required']">
-                                      <p class="text-danger fw-bold">New Password & Confirm Password must match.</p>
-                                    </div>
-                                  </div> 
+                                    <p 
+                                      *ngIf="profilePasswordChangeform.get('ConfirmPassword')?.errors?.['required'] && profilePasswordChangeform.get('ConfirmPassword')?.touched" 
+                                      class="text-danger fw-bold" 
+                                      [ngClass]="clr">
+                                      Confirm Password is required.
+                                    </p>
+                                    <p 
+                                      *ngIf="profilePasswordChangeform.hasError('passwordMismatch') && profilePasswordChangeform.get('ConfirmPassword')?.touched && !profilePasswordChangeform.get('ConfirmPassword')?.errors?.['required']" class="text-danger fw-bold" [ngClass]="clr">New Password & Confirm Password must match.
+                                    </p>
+                                  </div>
+                                  
                             </div>
                         </div>
                     </div>
-                    
                     
                     <div class="updatestatusbuttons mt-3">
                         <div class="updatestatusbuttons1">
@@ -158,14 +146,25 @@
             <div [ngClass]="changePasswordClicked ? 'height-80vh' : 'height-100'" class="profilePicture">
                 <div class="form-group">
 
-
-                    
+                    <!-- <div *ngIf="!imagePreview" class="image-preview photo">
+                        <img [src]="profilePhotoUrl" alt="Profile Picture Preview" />
+                        <div class="edit-icon" (click)="triggerFileInput()">Upload</div>
+                        <button class="delete-btn" (click)="removeImage()">
+                            <i class="bi bi-trash3"></i> Delete Image
+                        </button>
+                    </div> -->
                     <div *ngIf="!imagePreview" class="image-preview photo">
                         <img [src]="profilePhotoUrl" alt="Profile Picture Preview" />
-                        <div class="edit-icon" (click)="triggerFileInput()">Edit</div>
-                    </div>
+                        <div class="edit-icon" (click)="triggerFileInput()">Upload</div>
+                      </div>
+                      <div class="delete-button-container">
+                        <button class="delete-btn" (click)="removeImage()">
+                          <i class="bi bi-trash3"></i> Delete Image
+                        </button>
+                      </div>
 
                     <input type="file" id="profilePhoto" (change)="onProfilePhotoChange($event)" class="upload-btn" accept="image/*">
+
                     <button type="button" class="btn btn-secondary mt-2" (click)="uploadImage()" *ngIf="imagePreview">
                         Upload Image
                     </button>
@@ -191,5 +190,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center w-100">
+        <p> ©2025 GVR Infosystems. All rights reserved.</p>
     </div>
 </div>

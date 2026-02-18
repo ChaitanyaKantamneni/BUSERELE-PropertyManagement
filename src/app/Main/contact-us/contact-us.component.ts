@@ -22,11 +22,6 @@ export class ContactUsComponent  implements OnInit {
   ngOnInit(): void {
     this.userEnquiryform = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      // email: new FormControl('', [
-      //   Validators.required,
-      //   Validators.email,
-      //   Validators.pattern('^[a-zA-Z0-9._%+-]+@gmail\\.com$') 
-      // ]),
       email: new FormControl('', [
         Validators.required,
         Validators.email
@@ -73,7 +68,6 @@ export class ContactUsComponent  implements OnInit {
     };
     this.apiurls.post<any>('Tbl_Enquiry_CRUD_Operations', data).subscribe({
       next: (response) => {
-        console.log('Enquiry response:', response);
         if(response.statusCode==200){
           this.propertyInsStatus = 'We have received your enquiry. Our team will contact you soon...!';
           this.isUpdateModalOpen = true;
@@ -84,7 +78,6 @@ export class ContactUsComponent  implements OnInit {
         } 
       },
       error: (error) => {
-        console.error("Error details:", error);
         this.propertyInsStatus = 'Something went wrong while submitting your enquiry. Please try again later.';
         this.isUpdateModalOpen = true;
         setTimeout(() => {
@@ -111,5 +104,4 @@ export class ContactUsComponent  implements OnInit {
     
     window.open(googleMapsUrl, '_blank');
   }
-  
 }

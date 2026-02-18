@@ -2,8 +2,8 @@
   'mainReviewCentered': !editclicked && !addnewPropertyclicked,
   'mainReview': editclicked || addnewPropertyclicked
 }">
+
   <div class="w-100">
-    <!-- class="reviewcard" -->
     <div *ngIf="!editclicked && !addnewPropertyclicked">
       <div class="PageHeading">
         <h5 class="text-center m-0"><b>UPLOADED PROPERTIES</b></h5>
@@ -56,26 +56,11 @@
           <i class="fa fa-caret-down dropdown-icons"></i>
         </div>
 
-         
-        <!-- <div *ngIf="filteredPropertiesCount > 0 || selectedPropertyStatus1 !== '' || selectedIsActiveStatus1 !== '' || propertySoldOutStatus1 !== ''"
-          class="property-count-label" 
-          style="margin-top: 10px; font-weight: bold;">
-         Total No. of {{ currentStatusLabel }}: {{ filteredPropertiesCount }} {{ filteredPropertiesCount === 1 ? '' : '' }}
-        </div> -->
-     
-
         <div class="addnewButton">
           <button (click)="addNewProperty()">Add New</button>
         </div>
       </div>
       
-      <!-- <select (change)="onPageSizeChange($event)">
-        <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
-      </select> -->
-      <!-- <input type="number" [(ngModel)]="pageSize" (input)="onPageSizeChange()" min="1" max="100" placeholder="Enter page size" /> -->
-      <!-- <input type="number" (input)="onPageSizeInput($event)" placeholder="Enter number of properties to show"> -->
-
-      <!-- *ngIf="!filteredPropertiesNotNull"  -->
       <div class="reviewstable">
         <table *ngIf="!filteredPropertiesNotNull && getPaginatedProperties().length > 0"  class="table table-bordered">
           <thead>
@@ -111,9 +96,7 @@
             </tr>
           </tbody>
         </table>
-
-
-        <!-- *ngIf="filteredPropertiesNotNull" -->
+        
         <div *ngIf="filteredPropertiesNotNull || getPaginatedProperties().length === 0" class="NoDataFound">
           <div class="NoDataFoundImg">
             <img class="h-100 w-100" src="assets/images/IconsImages/NoDataFound.jpg" alt="">
@@ -162,7 +145,7 @@
         <form [formGroup]="propertyform">
           <div class="PropertyDetails reviewcardPropertyView">
             <div class="PageHeading mb-3">
-              <h5 class="text-center m-0"><b>PROPERTY DETAILS</b></h5>
+              <h5 class="text-center  m-0"><b>PROPERTY DETAILS</b></h5>
             </div>
             <div class="formrow">
               <div class="form-group" style="display: none;">
@@ -194,19 +177,6 @@
             </div>
   
             <div class="formrow">
-             
-              <!-- <div class="form-group">
-                <div class="input-container">
-                  <input id="EmailID" type="email" placeholder="Email" formControlName="EmailID" class="form-control"  (keypress)="OnlyValidEmailChars($event)" pattern=""/>
-                  <label for="EmailID">Email</label>
-
-                  <div *ngIf="email?.invalid && email?.touched" class="error-message">
-                    <div *ngIf="email?.hasError('required')">Email is required.</div>
-                    <div *ngIf="email?.hasError('email')">Please enter a valid email address.</div>
-                    <div *ngIf="email?.hasError('invalidEmailStructure')">Please enter a valid email address without consecutive dots (..).</div>
-                  </div>
-                </div>
-              </div> -->
               <div class="form-group">
                 <div class="input-container email-wrapper">
                   <input 
@@ -424,7 +394,7 @@
               </div>
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalBlocks" type="text" placeholder="Total Blocks" formControlName="TotalBlocks" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="TotalBlocks" type="text" placeholder="Total Blocks" formControlName="TotalBlocks" class="form-control" (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="TotalBlocks">Total Blocks</label>
                 </div>
               </div>
@@ -435,7 +405,7 @@
              
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalFloors" type="text" placeholder="Total Floors" formControlName="TotalFloors" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="TotalFloors" type="text" placeholder="Total Floors" formControlName="TotalFloors" class="form-control" (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="TotalFloors">Total Floors</label>
                 </div>
               </div>
@@ -481,14 +451,14 @@
              
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NumberofBalconies" type="text" placeholder="Number of Balconies" formControlName="NumberofBalconies" class="form-control" (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
+                  <input id="NumberofBalconies" type="text" placeholder="Number of Balconies" formControlName="NumberofBalconies" class="form-control" (keypress)="OnlyNumbersAllowed1($event)"/>
                   <label for="NumberofBalconies">Number of Balconies</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="NumberofParkings" type="text" placeholder="Number of Parkings" formControlName="NumberofParkings" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"/>
+                  <input id="NumberofParkings" type="text" placeholder="Number of Parkings" formControlName="NumberofParkings" class="form-control"  (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="NumberofParkings">Number of Parkings</label>
                 </div>
               </div>
@@ -515,20 +485,19 @@
 
               <div class="form-group">
                 <div class="input-container">
-                  <input id="TotalArea" type="text" placeholder="Total Area" formControlName="TotalArea" class="form-control"  (keypress)="OnlyNumbersAllowedforrange($event)" />
+                  <input id="TotalArea" type="text" placeholder="Total Area" formControlName="TotalArea" class="form-control" (keypress)="OnlyNumbersAllowedforrange($event)" />
                   <label for="TotalArea">Total Area</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="CarpetArea" type="text" placeholder="Carpet Area" formControlName="CarpetArea" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"  />
+                  <input id="CarpetArea" type="text" placeholder="Carpet Area" formControlName="CarpetArea" class="form-control"  (keypress)="OnlyNumbersAllowed1($event)"  />
                   <label for="CarpetArea">Carpet Area</label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-container">
-                  <!-- (keypress)="OnlyNumbersAllowed1forrangeforprice($event)" -->
                   <input id="PriceFor" type="text" placeholder="Price For SqFt" formControlName="PriceFor" class="form-control"  maxlength="17" (keypress)="OnlyNumbersAllowedforrangeforprice($event)"  />
                   <label for="PriceFor">Price For SqFt</label>
                 </div>
@@ -546,13 +515,13 @@
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="AmenitiesCharges" type="text" placeholder="Amenities Charges" formControlName="AmenitiesCharges" class="form-control"   (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="AmenitiesCharges" type="text" placeholder="Amenities Charges" formControlName="AmenitiesCharges" class="form-control"   (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="AmenitiesCharges">Amenities Charges</label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-container">
-                  <input id="MaintenanceCharges" type="text" placeholder="Maintenance Charges" formControlName="MaintenanceCharges" class="form-control"   (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="MaintenanceCharges" type="text" placeholder="Maintenance Charges" formControlName="MaintenanceCharges" class="form-control"   (keypress)="OnlyNumbersAllowed1($event)"/>
                   <label for="MaintenanceCharges">Maintenance Charges</label>
                 </div>
               </div>
@@ -562,14 +531,14 @@
               
               <div class="form-group">
                 <div class="input-container">
-                  <input id="CorpusFund" type="text" placeholder="Corpus Fund" formControlName="CorpusFund" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$" />
+                  <input id="CorpusFund" type="text" placeholder="Corpus Fund" formControlName="CorpusFund" class="form-control"  (keypress)="OnlyNumbersAllowed1($event)" />
                   <label for="CorpusFund">Corpus Fund</label>
                 </div>
               </div>
   
               <div class="form-group">
                 <div class="input-container">
-                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control"  (keypress)="OnlyNumbersAllowed($event)" pattern="^[0-9]{10}$"  />
+                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control" minlength="4" maxlength="4"  (keypress)="OnlyNumbersAllowed2($event)"   />
                   <label for="BuildYear">Build Year</label>
                 </div>
               </div>
@@ -606,18 +575,14 @@
               </div>
   
               <div class="form-group">
-                <!-- <div class="input-container">
-                  <input id="BuildYear" type="text" placeholder="Build Year" formControlName="BuildYear" class="form-control" />
-                  <label for="BuildYear">Build Year</label>
-                </div> -->
               </div>
             </div>
             
           </div>
 
           <div class="propertyAminities reviewcardPropertyView mt-4">
-            <div class="PageHeading mb-3">
-              <h5 class="text-center m-0"><b>AMINITIES</b></h5>
+            <div class="mb-3">
+              <h5 class="m-0"><b>AMINITIES</b></h5>
             </div>
 
             <div class="select-buttons text-center mb-3" style="display: flex; flex-direction: row;">
@@ -630,8 +595,6 @@
             </div>
 
             <div class="amenity-row">
-            
-            
               <div class="amenity-row">
                 <ng-container *ngFor="let amenity of amenities">
                   <div class="singleamenity">
@@ -641,9 +604,7 @@
                         [value]="amenity.aminitieID" 
                         (change)="onAmenityChange($event, amenity)" 
                         [checked]="isSelected(amenity)">
-                      {{ amenity.name }}
-                      <!-- <i *ngIf="amenity.icon" [ngClass]="amenity.icon"></i> -->
-                      
+                      {{ amenity.name }}                      
                     </label>
                   </div>
                 </ng-container>
@@ -652,8 +613,8 @@
             </div>
           </div>
           <div class="formDescriptions reviewcardPropertyView mt-4">
-            <div class="PageHeading mb-3">
-              <h5 class="text-center m-0"><b>PROPERTY DESCRIPTION</b></h5>
+            <div class="mb-3">
+              <h5 class="m-0"><b>PROPERTY DESCRIPTION</b></h5>
             </div>
             <div class="form-group">
               <div class="input-container">
@@ -671,7 +632,6 @@
             </div>
             <div class="form-group">
               <div class="input-container">
-                <!-- <textarea id="SpecificDescription" type="text" placeholder="Specific Description" rows="4" formControlName="SpecificDescription" class="form-control"></textarea>  -->
                 <quill-editor
                 formControlName="SpecificDescription"
                 id="SpecificDescription"
@@ -687,8 +647,8 @@
           </div>
 
           <div class="propertyMedia reviewcardPropertyView mt-4">
-            <div class="PageHeading mb-3">
-              <h5 class="text-center m-0"><b>MEDIA</b></h5>
+            <div class="mb-3">
+              <h5 class="m-0"><b>MEDIA</b></h5>
             </div>
             <div *ngIf="!propertyImagesClicked && !propertyFloorImagesClicked && !propertyVideosClicked && !propertyDocumentsClicked" class="amenity-row">
               <div class="media-buttons">
@@ -719,7 +679,6 @@
                     <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFileSelect($event)">
                       
                     <p *ngIf="compressedImageSize" class="mt-2 text-info">{{ compressedImageSize }}</p>
-                    <!-- <button class="btn btn-primary mt-2" id="refresh" [disabled]="propertyImagesUploadButtonClick" (click)="uploadPropertyImages()"><i class="fas fa-upload"></i> Upload</button> -->
                 </div>
                 
                 <div class="image-table mt-4">
@@ -752,8 +711,7 @@
                                   <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
                               </td>
 
-                              <td>
-                              
+                              <td>                              
                                 <input 
                                   type="number" 
                                   class="form-control" 
@@ -764,7 +722,6 @@
                               </td>
                               
                               <td>
-                                  <!-- <button *ngIf="!editclicked" class="btn btn-danger" (click)="deleteImage(image)">Delete</button> -->
                                   <button class="btn btn-danger" (click)="deleteImage(image)">Delete</button>
                               </td>
                             </tr>
@@ -775,19 +732,8 @@
                                   <h5>{{image.id}}</h5>
                               </td>
                               <td>
-                                  <!-- <img [src]="image.imageUrl" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrl)"> -->
                                   <img [src]="image.imageUrls" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.imageUrls)">
                               </td>
-                              <!-- <td>
-                              
-                                <input 
-                                  type="number" 
-                                  class="form-control" 
-                                  [(ngModel)]="image.customOrder" 
-                                  placeholder="Set Order" 
-                                  min="1" 
-                                  [ngModelOptions]="{standalone: true}">
-                              </td> -->
                               <td>
                                 <input 
                                   type="number" 
@@ -803,28 +749,10 @@
                                   <button class="btn btn-danger" (click)="deleteImage1(image.propID, image.id)">Delete</button>
                               </td>
                             </tr>
-                          </ng-container>    
-                         
-                        
+                          </ng-container> 
                         </tbody>
                     </table>
-                </div>
-               
-              <!-- <button 
-                  class="btn btn-primary mt-3" 
-                  (click)="submitCustomOrder()" 
-                  [disabled]="!(uploadedImages.length > 0 || editclicked)">
-                  Submit Order
-              </button> -->
-
-
-              <!-- <button 
-              class="btn btn-primary mt-3" 
-              (click)="submitCustomOrder()" 
-              *ngIf="uploadedImages.length > 0 || editclicked">
-              Submit Order
-            </button> -->
-            
+                </div>            
               </div>
             </div>
             <div *ngIf="propertyFloorImagesClicked" class="propertyFloorImagesUpload">
@@ -835,14 +763,12 @@
                     <i class="fas fa-arrow-left"></i> Back
                   </button>
                 </div>
+
                 <div class="form-column upload-container col-md-6">
                     <h5>Property Floor Gallery:</h5>
                     <label for="gallery-upload">Upload Property Floor Images</label>
                     <input type="file" id="gallery-upload" accept="image/*" multiple class="form-control-file" (change)="onFloorFileSelect($event)">
                     <p *ngIf="compressedImageSize" class="mt-2 text-info">{{ compressedImageSize }}</p>
-                    <!-- <button class="btn btn-primary mt-2" [disabled]="propertyfloorImagesUploadButtonClick" (click)="uploadPropertyFloorImages()">
-                        <i class="fas fa-upload"></i> Upload
-                    </button> -->
                 </div>
                 
                 <div class="image-table mt-4">
@@ -873,8 +799,6 @@
                                 <td>
                                     <img [src]="image.path" alt="Uploaded Image" width="100" height="100" (click)="openModal(image.path)">
                                 </td>
-
-
                                 <td>
                                   <input 
                                     type="number" 
@@ -912,29 +836,9 @@
                                 </td>
                             </tr>
                             </ng-container>
-                           
-                       
-                        
-
                         </tbody>
                     </table>
                 </div>
-            
-                <!-- <button 
-                class="btn btn-primary mt-3" 
-                (click)="submitFloorImagesCustomOrder()">
-                Submit Order
-              </button>
-                -->
-
-              <!-- <button 
-                class="btn btn-primary mt-3" 
-                (click)="submitFloorImagesCustomOrder()" 
-                *ngIf="uploadedFloorImages.length > 0 || editclicked">
-                Submit Order
-              </button> -->
-
-               
               </div>
             </div>
             <div *ngIf="propertyVideosClicked" class="propertyVideosUpload">
@@ -949,9 +853,6 @@
                     <h5>Property Video Gallery:</h5>
                     <label for="gallery-upload">Upload Property Videos</label>
                     <input type="file" id="gallery-upload" accept="video/*" multiple class="form-control-file" (change)="onVideoFileSelect($event)">
-                    <!-- <button class="btn btn-primary mt-2"  [disabled]="propertyVideoUploadButtonClick" (click)="uploadPropertyVideos()">
-                        <i class="fas fa-upload"></i> Upload
-                    </button> -->
                 </div>
                 
                 <div class="image-table mt-4">
@@ -997,12 +898,9 @@
                               </td>
                             </tr>
                           </ng-container>
-                            
                         </tbody>
                     </table>
                 </div>
-            
-             
               </div>
             </div>
             <div *ngIf="propertyDocumentsClicked" class="propertyDocumentsUpload">
@@ -1017,9 +915,6 @@
                     <h5>Property Documents:</h5>
                     <label for="gallery-upload">Upload Property Videos</label>
                     <input type="file" id="gallery-upload" accept="application/pdf" multiple class="form-control-file" (change)="onDocumentFileSelect($event)">
-                    <!-- <button class="btn btn-primary mt-2"  [disabled]="propertydocumenetUploadButtonClick"  (click)="uploadPropertyDocuments()">
-                        <i class="fas fa-upload"></i> Upload
-                    </button> -->
                 </div>
                 
                 <div class="image-table mt-4">
@@ -1052,29 +947,25 @@
                                   <h5>{{document.id}}</h5>
                               </td>
                               <td>
-                               
-
-                                    <iframe [src]="document.safeDocumentUrl" width="25%" height="200px"  (click)="openModaldocumnet(document.safeDocumentUrl)"></iframe>
+                                  <iframe [src]="document.safeDocumentUrl" width="25%" height="200px"  (click)="openModaldocumnet(document.safeDocumentUrl)"></iframe>
                               </td>
                               <td>
                                   <button class="btn btn-danger" (click)="deleteDocument(document.propID,document.id)">Delete</button>
                               </td>
                             </tr>
                           </ng-container>
-                            
                         </tbody>
                     </table>
                 </div>
-            
-             
               </div>
             </div>
           </div>
 
           <div class="socialLinks reviewcardPropertyView mt-4">
-            <div class="PageHeading mb-3">
-              <h5 class="text-center m-0"><b>SOCIAL LINKS</b></h5>
+            <div class="mb-3">
+              <h5 class="m-0"><b>SOCIAL LINKS</b></h5>
             </div>
+
             <div class="formrow">
               <div class="form-group">
                 <div class="input-container">
@@ -1082,6 +973,7 @@
                   <label for="WebsiteUrl">Website Url</label>
                 </div>
               </div>
+
               <div class="form-group">
                 <div class="input-container">
                   <input id="Pinteresturl" type="text" placeholder="Pinterest Url" formControlName="Pinteresturl" class="form-control" />
@@ -1097,6 +989,7 @@
                   <label for="Facebookurl">Facebook Url</label>
                 </div>
               </div>
+
               <div class="form-group">
                 <div class="input-container">
                   <input id="Twitterurl" type="text" placeholder="Twitter Url" formControlName="Twitterurl" class="form-control" />
@@ -1105,20 +998,26 @@
               </div>
             </div>
 
-            <div class="formrow">
+            <div class="form-group">
+              <div class="input-container">
+                <input id="GoogleLocationurl" type="text" placeholder="Google Location Url" formControlName="GoogleLocationurl" class="form-control" />
+                <label for="GoogleLocationurl">Google Location Url</label>
+              </div>
+            </div>
+
+            <!-- <div class="formrow">
               <div class="form-group">
                 <div class="input-container">
                   <input id="GoogleLocationurl" type="text" placeholder="Google Location Url" formControlName="GoogleLocationurl" class="form-control" />
                   <label for="GoogleLocationurl">Google Location Url</label>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
 
-        
           <div class="AvailabilityOptions reviewcardPropertyView mt-4">
-            <div class="PageHeading mb-3">
-              <h5 class="text-center m-0"><b>AVAILABILITY OPTIONS</b></h5>
+            <div class="mb-3">
+              <h5 class="m-0"><b>AVAILABILITY OPTIONS</b></h5>
             </div>
             <ul class="list-unstyled AvailabilityOptions-row">
               <li class="availability-option" >
@@ -1135,12 +1034,9 @@
               </li>
             </ul>
           </div>
-          
-          
         </form>
 
         <div class="SubmitAndUpdateButtons">
-          <!-- [disabled]="propertyform.invalid" -->
            <div class="submitButtonDiv" *ngIf="!editclicked && addnewPropertyclicked">
             <button type="submit" class="SubmitButton"  (click)="submitpropertyDet()" [disabled]="propertyform.invalid"><i class="fa fa-paper-plane" aria-hidden="true"></i>Submit</button>
           </div>
@@ -1155,12 +1051,8 @@
             <div>
               <button class="updateButton"  [disabled]="!isUpdateButtonEnabled" (click)="updatePropertyDet()"><i class="fa fa-refresh" aria-hidden="true"></i>Update</button>
             </div>
-          </div>
-
-
-          
+          </div>  
         </div>
-
       </div>
     </div>
 
@@ -1184,6 +1076,8 @@
           </div>
         </div>
       </div>
-
+  </div>
+  <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center w-100">
+    <p> ©2025 GVR Infosystems. All rights reserved.</p>
   </div>
 </div>

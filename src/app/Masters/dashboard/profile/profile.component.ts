@@ -12,6 +12,7 @@ import { ApiServicesService } from '../../../api-services.service';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
+
 export class ProfileComponent implements OnInit {
   isFormChanged = false;
   isModalOpen = false;
@@ -24,10 +25,19 @@ export class ProfileComponent implements OnInit {
   profilePhoto: string[] = [];
   changePasswordClicked:boolean=false;
   profilePhotoUrl: string = 'assets/images/usericon.jpg';
+  IPAddress = '';
 
-  constructor(private apihttp: HttpClient,private apiurls: ApiServicesService,private cdRef: ChangeDetectorRef) {}
+  constructor(public http:HttpClient,private apihttp: HttpClient,private apiurls: ApiServicesService,private cdRef: ChangeDetectorRef) {}
  
   ngOnInit(): void {
+
+    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
+      next: (res) => {
+        this.IPAddress = res.ip;
+      },
+      error: (err) => {
+      }
+    });
     this.profileform.reset();
     const UserID = localStorage.getItem('email') as string;
     this.getProfileDet(UserID);
@@ -46,15 +56,11 @@ export class ProfileComponent implements OnInit {
     mobile: new FormControl('')
   });
 
-
-
   profilePasswordChangeform: FormGroup = new FormGroup({
     oldPassword: new FormControl('', Validators.required),
     Password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     ConfirmPassword: new FormControl('', Validators.required)
   }, { validators: this.passwordMatchValidator.bind(this) });
-  
-
   
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const oldPassword = control.get('oldPassword')?.value;
@@ -87,7 +93,6 @@ export class ProfileComponent implements OnInit {
       this.selectedFile = file; 
     }
   }
-
 
   getProfileDet(UserID: string) {
     const data = {
@@ -132,16 +137,13 @@ export class ProfileComponent implements OnInit {
           this.initialFormData = this.profileform.getRawValue();
           this.isFormChanged = false;
         } else {
-          console.error('No user data found');
         }
       },
       error => {
-        console.error('Error fetching profile details:', error);
       }
     );
   }
   
-
   initialFormData: any;
   checkFormChanged(): boolean {
     if (!this.initialFormData) return false;
@@ -162,12 +164,9 @@ export class ProfileComponent implements OnInit {
       MobileNo: this.profileform.get('mobile')?.value ?? '',
       Email: UserID ?? '',
       Password: '',
-      CreatedBy: '',
-      CreatedIP: '',
-      CreatedDate: null,
       ModifiedBy: UserID ?? '',
-      ModifiedIP: '',
-      ModifiedDate: null,
+      ModifiedIP: this.IPAddress,
+      ModifiedDate: new Date().toISOString(),
       RollId: '1',
       IsActive: '1',
       Flag: '7', 
@@ -203,15 +202,12 @@ export class ProfileComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error updating profile', error);
         this.updateStausMessage = 'Error updating profile.';
         this.ProfileUpdateStatus = false;
         this.isModalOpen = true;
       }
-    });
-    
+    }); 
   }
-  
 
   onProfilePhotoChange(event: any): void {
     const file = event.target.files[0];
@@ -228,12 +224,10 @@ export class ProfileComponent implements OnInit {
   updateProfileImage(formData: FormData): void {
     this.apiurls.post<any>('Tbl_Users_CRUD_Operations', formData).subscribe({
       next: (response) => {
-        console.log('Profile Image updated successfully:', response);
         const emailId = this.profileform.get('email')?.value;
         this.fetchProfileimage(emailId);
       },
       error: (error) => {
-        console.error('Upload failed:', error);
       }
     });
   }
@@ -244,38 +238,19 @@ export class ProfileComponent implements OnInit {
     formData.append('Flag', '3'); 
   
     this.apiurls.post<any>('Tbl_Users_CRUD_Operations', formData).subscribe({
-      next: (response: any) => {
-        console.log('Response:', response);
-  
+      next: (response: any) => {  
         const users = response?.data;
         const user = Array.isArray(users) && users.length > 0 ? users[0] : null;
   
         if (user && user.filePath) {
           this.profilePhotoUrl = this.apiurls.getImageUrl(user.filePath);
         } else {
-          // this.profilePhotoUrl = '';  
         }
         
       },
       error: (error) => console.error('Error fetching profile image:', error),
     });
   }
-  
-
-  // fetchProfileimage(email: string): void {
-  //   const url = `Tbl_Users_CRUD_Operations?email=${email}`;
-  //   this.apiurls.get<any>(url).subscribe({
-  //     next: (response: any) => {
-  //       if (response && response.fileData) {
-  //         const imageUrl = `data:image/jpeg;base64,${response.fileData}`;
-  //         this.profilePhotoUrl = imageUrl;  
-  //       } else {
-  //         console.warn('Profile image not found.');
-  //       }
-  //     },
-  //     error: (error) => console.error('Error fetching profile image:', error),
-  //   });
-  // }
 
   closeModal() {
     this.isModalOpen = false;
@@ -292,8 +267,6 @@ export class ProfileComponent implements OnInit {
     this.changePasswordClicked=true;
   }
 
-
-  
   updatePassword() {
     const OPassword = this.profilePasswordChangeform.get('oldPassword')?.value;
     const NPassword = this.profilePasswordChangeform.get('Password')?.value;
@@ -306,8 +279,6 @@ export class ProfileComponent implements OnInit {
     formData.append('IsActive', '1');
     formData.append('Flag', '9');
   
-
-    
     this.apiurls.post<any>('Tbl_Users_CRUD_Operations', formData).subscribe({
       next: (response) => {
         const msg = response?.Message || response?.message || '';
@@ -344,10 +315,6 @@ export class ProfileComponent implements OnInit {
     });
   }
   
-  
-  
-  
-  
   deactivateAccount(email: string): void{
     const confirmed = window.confirm("Are you sure you want to deactivate your account?");
     if (!confirmed) {
@@ -359,12 +326,9 @@ export class ProfileComponent implements OnInit {
       MobileNo: '',
       Email: email,
       Password: '',
-      CreatedBy: '',
-      CreatedDate: null,
-      CreatedIP: '',
       ModifiedBy: email,   
-      ModifiedDate: null,
-      ModifiedIP: '',
+      ModifiedDate: new Date().toISOString(),
+      ModifiedIP: this.IPAddress,
       RollId: '',
       IsActive: '0',
       Flag: '8',          
@@ -387,11 +351,9 @@ export class ProfileComponent implements OnInit {
             this.isModalOpen = true;
           }
         } else {
-          console.warn('Profile image not found.');
         }
       },
       error: (error) => {
-        console.error('Error updating profile', error);
         this.ProfileUpdateStatus = false;
         this.isModalOpen = true;
       }
@@ -402,7 +364,6 @@ export class ProfileComponent implements OnInit {
     document.getElementById('profilePhoto')?.click();
   }
 
-
   togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
   }
@@ -411,4 +372,17 @@ export class ProfileComponent implements OnInit {
       this.confirmPasswordVisible = !this.confirmPasswordVisible;
   }
 
+  removeImage(): void {
+    const formData = new FormData();
+    formData.append('email', this.profileform.get('email')?.value);
+    formData.append('Flag', '10');
+  
+    this.apiurls.post<any>('Tbl_Users_CRUD_Operations', formData).subscribe({
+      next: (response) => {
+         this.profilePhotoUrl = 'assets/images/usericon.jpg';
+      },
+      error: (error) => {
+      }
+    });
+  }
 }

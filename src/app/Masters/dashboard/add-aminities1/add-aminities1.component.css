@@ -1,542 +1,356 @@
-.mainReview{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.mainReview {
+  position: relative;
+  height: calc(100vh - 35px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 35px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+.w-100 {
+  overflow: hidden;
+}
+
+.footer-bottom {
+  background-color: #e8e8e8b5;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.footer-bottom p{
+  margin: 0px;
 }
 
 .reviewcard,.reviewview{
-    height: auto;
-    width: 100%;
-    padding: 20px;
-    background-color: white;
-    border-radius: 20px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  height: auto;
+  width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .filtersSearch{
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-    margin: 10px 0px;
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  margin: 10px 0px;
 }
 
 .searchreview,.reviewStatus{
-    width: 49%;
-    margin: 0px;
+  width: 49%;
+  margin: 0px;
 }
 
 .reviewStatus{
-  display: flex;
-  justify-content: end;
-  align-items: center;
+display: flex;
+justify-content: end;
+align-items: center;
 }
 
 .reviewStatus button{
-  /* background-color: #2495FD;
-  color: white;
-  border: none; */
-  background-color: #2495FD;
-  color: white;
-  border: none;
-  border-radius: 8px; 
-  padding: 10px 20px;
-  font-size: 15px; 
-  font-weight: bold;    
-  text-transform: uppercase; 
-  cursor: pointer;   
-  transition: all 0.3s ease; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+background-color: #2495FD;
+color: white;
+border: none;
+border-radius: 8px; 
+padding: 10px 20px;
+font-size: 15px; 
+font-weight: bold;    
+text-transform: uppercase; 
+cursor: pointer;   
+transition: all 0.3s ease; 
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 .reviewStatus button:hover{
-  /* background-color: #0056b3; */
-  background-color: #0056b3;
-  transform: translateY(-2px); 
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+background-color: #0056b3;
+transform: translateY(-2px); 
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
 
 .reviewStatus button:focus {
-  outline: none; 
-  box-shadow: 0 0 0 4px rgba(37, 123, 255, 0.5); 
+outline: none; 
+box-shadow: 0 0 0 4px rgba(37, 123, 255, 0.5); 
 }
+
 .reviewstable{
-  height: auto;
-  width: 100%;
-  overflow: auto;
-  max-height: 275px;
+height: auto;
+width: 100%;
+overflow: auto;
+max-height: 275px;
 }
 
 .viewbtn{
-    padding: 0px 10px;
-    border-right: 0.5px solid black;
-    border-radius: 0px;
+  padding: 0px 10px;
+  border-right: 0.5px solid black;
+  border-radius: 0px;
 }
 
 .checkbtn{
-    padding: 0px 10px;
-    border-radius: 0px;
+  padding: 0px 10px;
+  border-radius: 0px;
 }
 
-
 .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table th, .table td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ddd;
-  }
-  
-  .table th {
-    font-weight: bold;
-  }
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  .btn-secondary{
-    background-color: #2495FD;
-    border: none;
-  }
+.table th, .table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
 
-  .btn-secondary:hover{
-    background-color: #2495FD;
-    border: 1px solid #2495FD;
-  }
+.table th {
+  font-weight: bold;
+}
 
-  form{
-    padding: 20px 30px;
-  }
+.btn-secondary{
+  background-color: #2495FD;
+  border: none;
+}
 
-  .formrow{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.btn-secondary:hover{
+  background-color: #2495FD;
+  border: 1px solid #2495FD;
+}
 
-  .formrow .form-group{
-    width:32%;
-    position: relative;
-  }
+form{
+  padding: 20px 30px;
+}
 
-  .updatestatusbuttons{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-  }
+.formrow{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px;
-  }
-  
-  .updatestatusbuttons .decline{
-    margin-right: 20px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-  }
+.formrow .form-group{
+  width:32%;
+  position: relative;
+}
 
-  .updatestatusbuttons .approve{
-    margin-right: 20px;
-    background-color: green;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-  }
+.updatestatusbuttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
 
-  .updatestatusbuttons i{
-    margin-right: 10px;
-  }
+td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
 
-  .PageHeading{
-    width: 100%;
-    /* background-color: #e8e8e8; */
-    background-color: #8cc8ffd1;
+.updatestatusbuttons .decline{
+  margin-right: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.updatestatusbuttons .approve{
+  margin-right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.updatestatusbuttons i{
+  margin-right: 10px;
+}
+
+.PageHeading{
+  width: 100%;
+    background-color: white;
     display: flex;
     align-items: center;
     padding: 10px;
     border-radius: 10px;
-  }
-
-  .PageHeading h5{
-    padding-left: 10px;
-  }
-
-  form{
-    padding: 20px 30px;
-  }
-  
-
-  .input-container {
-    position: relative;
-    /* margin-top: 20px; */
-  }
-  
-  
-  
-  .form-group input,.form-group textarea{
-   
-    border: none;
-    border-bottom: 1px solid gray;
-    font-family: 'Roboto', sans-serif;
-    font-size: 11px;
-    border-radius: 0px;
-    padding: 20px 0px 0px 0px;
-  }
-  
-  
-  input:focus,textarea:focus {
-    border-color: #5c9dfc;
-  }
-  
-  label {
-    position: absolute;
-    top: 50%;
-    /* left: 10px; */
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #999;
-    pointer-events: none;
-    transition: 0.2s ease-in-out;
-    opacity: 0;
-  }
-  
-  input:focus + label,
-  input:not(:placeholder-shown) + label,
-  textarea:focus+label,
-  textarea:not(:placeholder-shown) + label {
-      top: 4px;
-      font-family: 'Roboto', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: black;
-      opacity: 1;
-  }
-  
-  input:placeholder-shown + label,
-  textarea:placeholder-shown + label {
-      opacity: 0;
-  }
-  a{
-    text-decoration: none;
-    color:black
-  }
-  a h5{
-    font-family: fangsong;
-    font-weight: 600;
-    font-size: 18px;
-    margin: 0px;
-  }
-  a p{
-    font-family: 'Roboto', sans-serif;
-    font-size: 10px;
-  }
-
-  .backLabel{
-    width: fit-content;
-  }
-
-  
-  table thead{
-   font-family:'Roboto', sans-serif;
-   font-size: 12px;
-  }
-
-  table thead tr th{
-    text-align: center;
-    background-color: #1E3A5F;
-    color: white;
-  }
-
-  table tbody{
-    font-family:'Roboto', sans-serif;
-    font-size: 10px;
-   }
- 
-   table tbody tr td{
-     text-align: center;
-   }
-
-   .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-  }
-
-  .modal-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .modal.show {
-    display: block;
-  }
-  
-  .modal-dialog {
-    position: relative;
-    margin: 10% auto;
-    max-width: 500px;
-  }
-  
-  .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 5px;
-  }
-  
-  .modal-footer {
-    text-align: center;
-  }
-  
-
-@media (max-width: 768px){
-
-    .mainReview{
-        height: 90vh;
-    }
-    .filtersSearch{
-        display: flex;
-        justify-content:space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        flex-wrap: wrap;
-    }
-    .searchreview,.reviewStatus{
-        width:100%;
-        margin-bottom: 10px;
-    }
-
-    .table thead {
-        display: none;  
-      }
-    
-      .table tbody {
-        display: block;
-      }
-    
-      .table tbody tr {
-        display: block;
-        margin-bottom: 10px;
-      }
-    
-      .table tbody td {
-        width: 100%; 
-        padding: 15px 8px 8px 8px; 
-        box-sizing: border-box;
-        position: relative;
-        display: block;
-        border: 1px solid #ddd;
-      }
-    
-      .table tbody td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        position: absolute;
-        top: 5px;
-        left: 8px;
-        color: #555;
-        margin-right: 10px;
-        text-transform: uppercase;
-        font-size: 12px;  
-        z-index: 1; 
-      }
-    
-      .table tbody td {
-        padding-left: 20px; 
-        padding-top: 25px; 
-      }
-    
-      .table tbody td .btn {
-        padding: 5px;
-      }
-
-      .formrow{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-
-      .formrow .form-group{
-        width:100%;
-      }
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
+.PageHeading h5{
+  padding-left: 10px;
+}
 
-.searchreview {
+form{
+  padding: 20px 30px;
+}
+
+.input-container {
   position: relative;
-  display: flex;
-  align-items: center;
-  width: 50%;
 }
 
-.search-input {
-  width: 75%;
-  padding: 3px 10px 10px 35px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
+.form-group input,.form-group textarea{
+  border: none;
+  border-bottom: 1px solid gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  border-radius: 0px;
+  padding: 20px 0px 0px 0px;
 }
 
-.search-icon {
+
+input:focus,textarea:focus {
+  border-color: #5c9dfc;
+}
+
+label {
   position: absolute;
-  left: 10px; 
   top: 50%;
   transform: translateY(-50%);
-  color: black;
   font-size: 16px;
-  pointer-events: none; 
-}
-
-.NoDataFound{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.NoDataFoundImg{
-  height: 180px;
-  width:250px;
-}
-
-
-
-
-.table-container {
-  max-height: 400px;
-  overflow-y: auto;
-  position: relative;
-}
-
-.table thead {
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 2;
-}
-
-
-
-button[data-tooltip] {
-  position: relative;
-}
-
-button[data-tooltip]:hover::after {
-  content: attr(data-tooltip);  
-  position: absolute;
-  top: -30px;  
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.3s;
-  visibility: hidden; 
+  color: #999;
   pointer-events: none;
-}
-
-button[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-}
-
-
-[data-tooltip]::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 100%; 
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
+  transition: 0.2s ease-in-out;
   opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease-in-out;
 }
 
-[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-  z-index: 20; 
+input:focus + label,
+input:not(:placeholder-shown) + label,
+textarea:focus+label,
+textarea:not(:placeholder-shown) + label {
+    top: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: black;
+    opacity: 1;
 }
-.modal-overlay {
+
+input:placeholder-shown + label,
+textarea:placeholder-shown + label {
+    opacity: 0;
+}
+a{
+  text-decoration: none;
+  color:black
+}
+a h5{
+  font-family: fangsong;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0px;
+}
+a p{
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+}
+
+.backLabel{
+  width: fit-content;
+}
+
+
+table thead{
+ font-family:'Roboto', sans-serif;
+ font-size: 12px;
+}
+
+table thead tr th{
+  text-align: center;
+  background-color: #1E3A5F;
+  color: white;
+}
+
+table tbody{
+  font-family:'Roboto', sans-serif;
+  font-size: 10px;
+ }
+
+ table tbody tr td{
+   text-align: center;
+ }
+
+ .modal {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);  
-  z-index: 1040;  
+  z-index: 1000;
+}
+
+.modal-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-dialog {
+  position: relative;
+  margin: 10% auto;
+  max-width: 500px;
 }
 
 .modal-content {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1050;  
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
 }
 
-@media (max-width: 768px) {
-  .mainReview {
+.modal-footer {
+  text-align: center;
+}
+
+
+@media (max-width: 768px){
+
+  .mainReview{
       height: 90vh;
   }
-
-  .filtersSearch {
+  .filtersSearch{
       display: flex;
-      justify-content: space-between;
+      justify-content:space-between;
       align-items: center;
       margin-bottom: 10px;
       flex-wrap: wrap;
   }
-
-  .searchreview, .reviewStatus {
-      width: 100%;
+  .searchreview,.reviewStatus{
+      width:100%;
       margin-bottom: 10px;
   }
 
   .table thead {
+      display: none;  
+    }
+  
+    .table tbody {
       display: block;
-  }
-
-  .table tbody {
+    }
+  
+    .table tbody tr {
       display: block;
-  }
-
-  .table tbody tr {
-      /* display: block; */
       margin-bottom: 10px;
-  }
-
-  .table tbody td {
-      width: 100%;
-      padding: 15px 8px 8px 8px;
+    }
+  
+    .table tbody td {
+      width: 100%; 
+      padding: 15px 8px 8px 8px; 
       box-sizing: border-box;
       position: relative;
       display: block;
       border: 1px solid #ddd;
-  }
-
-  .table tbody td::before {
+    }
+  
+    .table tbody td::before {
       content: attr(data-label);
       font-weight: bold;
       position: absolute;
@@ -545,23 +359,215 @@ button[data-tooltip]:hover::after {
       color: #555;
       margin-right: 10px;
       text-transform: uppercase;
-      font-size: 12px;
-      z-index: 1;
-  }
+      font-size: 12px;  
+      z-index: 1; 
+    }
+  
+    .table tbody td {
+      padding-left: 20px; 
+      padding-top: 25px; 
+    }
+  
+    .table tbody td .btn {
+      padding: 5px;
+    }
 
-  .table tbody td {
-      padding-left: 20px;
-      padding-top: 25px;
-  }
-
-  .formrow {
+    .formrow{
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-  }
+    }
 
-  .formrow .form-group {
-      width: 100%;
-  }
+    .formrow .form-group{
+      width:100%;
+    }
+}
+
+
+.searchreview {
+position: relative;
+display: flex;
+align-items: center;
+width: 50%;
+}
+
+.search-input {
+width: 75%;
+padding: 3px 10px 10px 35px;
+border: 1px solid #ccc;
+border-radius: 5px;
+outline: none;
+}
+
+.search-icon {
+position: absolute;
+left: 10px; 
+top: 50%;
+transform: translateY(-50%);
+color: black;
+font-size: 16px;
+pointer-events: none; 
+}
+
+.NoDataFound{
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+}
+
+.NoDataFoundImg{
+height: 180px;
+width:250px;
+}
+
+.table-container {
+max-height: 400px;
+overflow-y: auto;
+position: relative;
+}
+
+.table thead {
+position: sticky;
+top: 0;
+background: white;
+z-index: 2;
+}
+
+button[data-tooltip] {
+position: relative;
+}
+
+button[data-tooltip]:hover::after {
+content: attr(data-tooltip);  
+position: absolute;
+top: -30px;  
+left: 50%;
+transform: translateX(-50%);
+background-color: #333;
+color: #fff;
+padding: 5px 10px;
+border-radius: 5px;
+font-size: 12px;
+white-space: nowrap;
+opacity: 0;
+transition: opacity 0.3s;
+visibility: hidden; 
+pointer-events: none;
+}
+
+button[data-tooltip]:hover::after {
+opacity: 1;
+visibility: visible;
+}
+
+
+[data-tooltip]::after {
+content: attr(data-tooltip);
+position: absolute;
+bottom: 100%; 
+left: 50%;
+transform: translateX(-50%);
+background-color: #333;
+color: #fff;
+padding: 5px 10px;
+border-radius: 4px;
+white-space: nowrap;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.2s ease-in-out;
+}
+
+[data-tooltip]:hover::after {
+opacity: 1;
+visibility: visible;
+z-index: 20; 
+}
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0, 0, 0, 0.5);
+backdrop-filter: blur(5px);  
+z-index: 1040;  
+}
+
+.modal-content {
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+z-index: 1050;  
+}
+
+@media (max-width: 768px) {
+.mainReview {
+    height: 90vh;
+}
+
+.filtersSearch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.searchreview, .reviewStatus {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.table thead {
+    display: block;
+}
+
+.table tbody {
+    display: block;
+}
+
+.table tbody tr {
+    /* display: block; */
+    margin-bottom: 10px;
+}
+
+.table tbody td {
+    width: 100%;
+    padding: 15px 8px 8px 8px;
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    border: 1px solid #ddd;
+}
+
+.table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    color: #555;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.table tbody td {
+    padding-left: 20px;
+    padding-top: 25px;
+}
+
+.formrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.formrow .form-group {
+    width: 100%;
+}
+
 }

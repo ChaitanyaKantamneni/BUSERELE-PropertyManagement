@@ -7,8 +7,6 @@ interface navlists{
   navurl:string
 }
 
-
-
 @Component({
   selector: 'app-top-nav-1',
   standalone: true,
@@ -26,15 +24,15 @@ export class TopNav1Component implements OnInit {
     }
   }
   public navitems:navlists[]=[{
-    navname:'Home',
+    navname:'HOME',
     navurl:'/'
   },
   {
-    navname:'About',
+    navname:'ABOUT',
     navurl:'/about-us'
   },
   {
-    navname:'Contact',
+    navname:'CONTACT',
     navurl:'/contact-us'
   }
   ];

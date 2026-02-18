@@ -1,6 +1,32 @@
-.container{
+
+
+.container {
+    position: relative;
+    height: calc(100vh - 35px);
+    display: flex;
     max-width: 100%;
-}
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 35px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
+  
+  .w-100 {
+    overflow: hidden;
+  }
+  
+  .footer-bottom {
+    background-color: #e8e8e8b5;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  .footer-bottom p{
+    margin: 0px;
+  }
 
 .form-control {
     display: block;
@@ -55,7 +81,6 @@
 .propertyaddress{
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
-    /* text-transform: uppercase; */
 }
 
 .propertyDetails {
@@ -86,8 +111,6 @@
 }
 
  .bottom-bar2 {
-    /* background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%); */
-    /* color: white; */
     color: black;
     padding: 0px 10px;
     text-align: center;
@@ -102,7 +125,6 @@
     width: 100%;
     height: 60%;
     overflow: hidden;
-    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
     transition: transform 0.3s ease;
 }
 
@@ -117,21 +139,14 @@
     transform: scale(1.1); 
 }
 
-/* .propertyImage:hover {
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 15px; 
-} */
-
 .propertyImage {
     transition: box-shadow 0.3s ease; 
 }
 
-
 .propertyaddress{
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
-    /* text-transform: uppercase; */
 }
-
 
 .propertyaddress i {
     font-size: 1.2rem; 
@@ -160,22 +175,12 @@
     margin: 0 10px;
 }
 
-
-
 .pricesize{
     font-size: 12px;
-    /* text-align: center; */
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
-
-/* .properties{
-    margin: 30px 0px;
-    width: 75%;
-    overflow: auto;
-} */
 
 .main-content {
     display: flex;
@@ -210,7 +215,6 @@
     flex-direction: column;
     width: 100%;
     height: 350px;
-    /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; */
     border: 0.5px solid #e5dddd;
 }
 
@@ -292,9 +296,7 @@
   }
   
   .bottom-bar2 {
-    /* padding: 5px 10px; */
     padding: 0px 10px;
-    /* background-color: rgba(0, 0, 0, 0.7);  */
     border-radius: 5px;
     width: 100%;
     display: flex;
@@ -329,10 +331,6 @@
     .propertyFulldet {
         flex-direction: column;
     }
-
-    /* .propertyImage {
-        flex: 1;
-    } */
 
     .propertyDetails {
         flex: 2;

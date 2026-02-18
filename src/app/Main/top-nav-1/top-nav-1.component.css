@@ -3,8 +3,10 @@
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .nav-link {
-    font-weight: 700;
+    font-weight: 600;
     color: #484848;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
 }
 .nav-link:hover{
     color: #2495FD;
@@ -31,16 +33,19 @@
 
 
 .btn {
-    background-color: #2495FD;
-    color: white;
-    padding: 7px 25px;
+    /* background-color: #2495FD; */
+    color: black;
+    /* padding: 7px 25px; */
     font-weight: 600;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
     border: none;
     position: relative;
     overflow: hidden;
     z-index: 1;
     transition: all 0.3s ease;
-    border: 2px solid #2495FD; 
+    text-decoration: underline;
+    /* border: 2px solid #2495FD;  */
 }
 
 .btn::before {

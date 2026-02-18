@@ -10,6 +10,7 @@ import { NgClass, NgIf } from '@angular/common';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
+
 export class DashboardComponent implements OnInit {
   constructor(private router: Router) {}
   ngOnInit(): void {
@@ -18,7 +19,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  
   isExpanded = true;
   toggleSidebar() {
     this.isExpanded = !this.isExpanded; 
@@ -28,6 +28,4 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/signin'])
     localStorage.clear();
   }
-    
-  
 }

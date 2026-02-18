@@ -22,15 +22,15 @@ export class TopNavComponent implements OnInit {
   }
 
   public navitems:navlists[]=[{
-    navname:'Home',
+    navname:'HOME',
     navurl:'/'
   },
   {
-    navname:'About',
+    navname:'ABOUT',
     navurl:'/about-us'
   },
   {
-    navname:'Contact',
+    navname:'CONTACT',
     navurl:'/contact-us'
   },
   

@@ -1,7 +1,21 @@
-.container{
+.container {
+    margin-top: 35px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
     max-width: 100%;
 }
+  
+.footer-bottom {
+    background-color: #e8e8e8b5;
+    text-align: center;
+    padding: 10px 0;
+}
+  
+.footer-bottom p{
+    margin: 0px;
+}
 
+  
 .preloader {
     position: fixed;
     top: 50%;
@@ -13,7 +27,6 @@
 .preloader img {
     width: 100px; 
 }
-
 
 .propertyFulldet {
     display: flex;
@@ -29,8 +42,6 @@
     height: 60%;
 }
 
-
-
 .propertyDetails {
     height: 50%;
     padding: 10px;
@@ -41,12 +52,10 @@
     justify-content: space-between;
 }
 
-
 .bottom-bar {
     background-color: rgba(0, 0, 0, 0.6);
     color: white;
 }
-
 
 .bottom-bar1 {
     background: linear-gradient(to right, #2495FD 0%, rgba(36, 149, 253, 0) 75%);
@@ -60,16 +69,10 @@
 
 
 .bottom-bar2 {
-    /* background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%); */
-    /* color: white; */
     color: black;
     padding: 0px 10px;
     text-align: center;
 }
-
-
-
-
 
 .propertyImage {
     position: relative;
@@ -91,13 +94,9 @@
     transform: scale(1.1); 
 }
 
-
 .propertyImage {
     transition: box-shadow 0.3s ease; 
 }
-
-
-
 
 .propertyaddress i {
     font-size: 1.2rem; 
@@ -126,16 +125,12 @@
     margin: 0 10px;
 }
 
-
-
 .pricesize{
     font-size: 12px;
-    /* text-align: center; */
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 
 .propertyTitle{
     font-family: 'Roboto', sans-serif;
@@ -143,13 +138,11 @@
     text-transform: uppercase;
     font-weight: 600;
 }
+
 .propertyaddress{
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
-    /* text-transform: uppercase; */
 }
-
-
 
 .main-content {
     display: flex;
@@ -159,7 +152,6 @@
     overflow: hidden;
 }
 
-/* Properties container */
 .properties-container {
     flex-grow: 1;
     overflow-y: auto;
@@ -185,7 +177,6 @@
     flex-direction: column;
     width: 100%;
     height: 350px;
-    /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; */
     border: 0.5px solid #e5dddd;
 }
 .properties{
@@ -255,11 +246,7 @@
     flex-direction: column;
 }
 
-
-
-
-
-.contact i {
+    .contact i {
     font-size: 8px;
     padding-left: 4px;
   }
@@ -269,20 +256,18 @@
   }
   
   .bottom-bar2 {
-    /* background: linear-gradient(to left, #2495FD 0%, rgba(36, 149, 253, 0) 75%); */
-    /* color: white; */
-    color: black;
-    padding: 0px 10px;
-    text-align: center;
-}
+        color: black;
+        padding: 0px 10px;
+        text-align: center;
+    }
 
 
   
   
   .cost{
-    font-family: 'Roboto', sans-serif;
-    font-size: 15px;
-}
+        font-family: 'Roboto', sans-serif;
+        font-size: 15px;
+    }
   
   .cost .price p {
     margin: 0;
@@ -298,11 +283,6 @@
   }
   
 
-
-
-
-
-
 @media (max-width: 768px) {
 
     .propertyFulldet {
@@ -314,9 +294,6 @@
         justify-content: center;
         align-items: center;
     }
-    /* .propertyImage {
-        flex: 1;
-    } */
 
     .propertyDetails {
         flex: 2;
@@ -364,7 +341,3 @@
 .propertyFooter{
     border-top: 0.5px solid #e5dddd;
 }
-
-
-
-

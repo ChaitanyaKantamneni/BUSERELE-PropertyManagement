@@ -2,15 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { NgClass, NgIf, NgStyle } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { FooterComponent } from '../../Main/footer/footer.component';
 import { ApiServicesService } from '../../api-services.service';
+
+interface navlists{
+  navname:string,
+  navurl:string
+}
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
   providers: [ApiServicesService],
-  imports: [HttpClientModule, NgClass, ReactiveFormsModule, NgIf, RouterLink,NgClass,FooterComponent],
+  imports: [HttpClientModule, NgClass, ReactiveFormsModule, NgIf, RouterLink,NgClass,FooterComponent,NgFor],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
 })
@@ -19,7 +24,6 @@ export class SignUpComponent implements OnInit {
   signupform!: FormGroup; 
   submited: boolean = false;
   registredsuccesfull: string = '';
-  // public clr: any = { red: false, green: false };
   clr = { red: false, green: false }; 
   passwordVisible: boolean = false;
   confirmPasswordVisible: boolean = false; 
@@ -31,7 +35,6 @@ export class SignUpComponent implements OnInit {
        LastName: new FormControl('', Validators.required),
       Mobile: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), 
       Email: new FormControl('', [Validators.required, Validators.email]),
-      // Password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       Password: new FormControl('', [
         Validators.required,
         Validators.pattern('^(?=.*[A-Z])(?=.*\\d).+$') 
@@ -39,6 +42,20 @@ export class SignUpComponent implements OnInit {
       ConfirmPassword: new FormControl('', [Validators.required]),
     }, { validators: this.passwordMatchValidator });
   }
+
+  public navitems:navlists[]=[{
+    navname:'HOME',
+    navurl:'/'
+  },
+  {
+    navname:'ABOUT',
+    navurl:'/about-us'
+  },
+  {
+    navname:'CONTACT',
+    navurl:'/contact-us'
+  }
+  ];
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('Password')?.value;
@@ -53,66 +70,6 @@ export class SignUpComponent implements OnInit {
   toggleConfirmPasswordVisibility() {
     this.confirmPasswordVisible = !this.confirmPasswordVisible; 
   }
-
-  // signup() {
-  //   if (this.signupform.invalid) {
-  //     this.submited = true;
-  //     return; 
-  //   }
-
-  //   const data = {
-  //     name: this.signupform.get('FirstName')?.value,
-  //     email: this.signupform.get('Email')?.value,
-  //     mobileNo: this.signupform.get('Mobile')?.value,
-  //     password: this.signupform.get('Password')?.value,
-  //     rollId: '2',
-  //     LastName: this.signupform.get('LastName')?.value,
-  //     CreatedBy:this.signupform.get('Email')?.value,
-  //     Flag:'1',
-  //     IsActive:'1',
-  //     status:'',
-  //     fileName:'',
-  //     filePath:'',
-  //     createdIP:'',
-  //     createdDate:'',
-  //     modifiedBy:'',
-  //     modifiedIP:'',
-  //     modifiedDate:'',
-      
-  //   };
-
-  //   this.submited = true;
-  
-  //   this.apiurls.post('Tbl_Users_CRUD_Operations', data).subscribe({
-  //     next: (result: any) => {
-  //       if (result.statusCode  === 200) {
-  //         this.registredsuccesfull = 'Registration Successful!';
-  //         this.clr = { red: false, green: true };
-  //         // setTimeout(() => {
-  //         //   this.router.navigate(['/signin']);  
-  //         // }, 1000);
-  //        this.router.navigate(['/signin']);  
-
-  //       } else {
-  //        this.registredsuccesfull = 'Registration failed!';
-  //         this.registredsuccesfull = result.message; 
-  //         this.clr = { red: true, green: false };
-  //       }
-  //     },
-  //     // error: (error) => {
-  //     //   console.error('Error:', error);
-  //     //   this.registredsuccesfull = error.error;
-  //     //   this.clr = { red: true, green: false };
-  //     // }
-  //     error: (error) => {
-  //       console.error('Error:', error);
-  //       const errorMessage = error?.error?.error || 'An unexpected error occurred.';
-  //       this.registredsuccesfull = errorMessage;
-  //       this.clr = { red: true, green: false };
-  //     }
-  //   });
-  // }
-
 
   signup() {
     if (this.signupform.invalid) {
@@ -162,12 +119,10 @@ export class SignUpComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error:', error);
         const errorMessage = error?.error?.message || 'An unexpected error occurred.';
         this.registredsuccesfull = errorMessage;
         this.clr = { red: true, green: false };
       }
     });
   }
-  
 }

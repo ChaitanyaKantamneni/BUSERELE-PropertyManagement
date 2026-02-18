@@ -16,7 +16,6 @@ import { ApiServicesService } from '../../api-services.service';
 })
 export class FooterComponent {
   
-
   constructor(private router: Router,private http: HttpClient,private apiurls: ApiServicesService) {
     this.router.events
       .pipe(
@@ -68,20 +67,19 @@ export class FooterComponent {
     
     this.apiurls.post('Tbl_Users_CRUD_Operations', formData).subscribe({
     next: (response) => {
-      console.log('Subscription successful!', response);
+
       this.subscriptionStatus = 'Subscription successful!';
       this.isUpdateModalOpen = true;
       this.email = '';
     },
       error: (err) => {
-        console.error('Subscription failed!', err);
+
         this.subscriptionStatus = 'Subscription failed. Please try again.';
         this.isUpdateModalOpen = true;
       }
     });
   }
 
-  
   UpdatecloseModal(): void {
     this.isUpdateModalOpen = false;
   }
@@ -89,5 +87,4 @@ export class FooterComponent {
   handleOk(): void {
     this.isUpdateModalOpen = false;
   }
-
 }

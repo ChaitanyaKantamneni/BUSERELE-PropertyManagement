@@ -10,25 +10,7 @@
       <div class="PageHeading">
         <h5 class="text-center m-0"><b>UPLOADED REVIEWS</b></h5>
       </div>
-      <!-- <div class="filtersSearch">
-        <div class="input-container" >
-          <div class="searchreview">
-            <i class="fas fa-search search-icon"></i>
-            <input  style="width: 100%;" type="text" class="form-control search-input"  placeholder="Search reviews..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"/> 
-          </div>
-        </div>
-        
-        <div class="input-container">
-          <div class="reviewStatus" style="width: 100%; position: relative;">
-            <select id="pageSize" class="form-control dropdown-with-icon" (change)="onWhosePropertySelectionChange($event)">
-              <option value="0">Latest</option>
-              <option value="1">Approved</option>
-              <option value="2">Declined</option>
-            </select>
-            <i class="fa fa-caret-down dropdown-icon"></i>
-          </div>
-        </div>
-      </div> -->
+      
       <div class="filtersSearch">
         <div class="input-container">
           <div class="searchreview" style="position: relative;">
@@ -45,7 +27,6 @@
       
         <div class="input-container">
           <div class="reviewStatus" style="width: 100%; position: relative;">
-            <!-- onWhosePropertySelectionChange -->
             <select
               id="pageSize"
               class="form-control dropdown-with-icon" [value]="selectedReviewFilter"
@@ -59,10 +40,7 @@
           </div>
         </div>
       </div>
-      
-  
 
-      
       <div class="reviewstable">
         <table  *ngIf="filteredreviews.length != 0"  class="table table-bordered">
           <thead>
@@ -89,9 +67,6 @@
                   <button class="btn viewbtn" (click)="viewReview(reviews.reviewID)"  data-tooltip="view">
                     <i class="fa fa-eye"></i>
                   </button>
-                  <!-- <button class="btn checkbtn" (click)="editreview(reviews.reviewId)"  data-tooltip="Edit" >
-                    <i class="fa fa-check"></i>
-                  </button> -->
                 </div>
               </td>
               <td class="visually-hidden">{{reviews.reviewId}}</td>
@@ -108,8 +83,6 @@
         
       </div>
       
-     
-   
       <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="currentPage === 1">
@@ -179,11 +152,7 @@
           <label for="contactMessage">Message</label>
           <textarea id="contactMessage" class="form-control" rows="4" [value]="reviewdetails?.usermessage" readonly></textarea>
         </div>
-        <!-- <div class="updatestatusbuttons">
-          <button class="decline" (click)="declineReview(reviewdetails?.ID)"><i class="fa fa-times-circle"></i>Decline</button>
-          <button class="approve" (click)="approveReview(reviewdetails?.ID)"><i class="fa fa-check-circle"></i>Approve</button>
-        </div> -->
- 
+
         <div class="updatestatusbuttons">
           <ng-container *ngIf="selectedReviewFilter === '0'">
             <button class="decline" (click)="declineReview(reviewdetails?.ID)">
@@ -202,8 +171,6 @@
             <i class="fa fa-check-circle"></i> Approve
           </button>
         </div>
-        
-        
         
         <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="UpdatecloseModal()"></div>
         <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isUpdateModalOpen}" [style.display]="isUpdateModalOpen ? 'block' : 'none'">
@@ -229,5 +196,7 @@
       </form>
     </div>
   </div>
+  <div class="footer-bottom d-flex flex-wrap justify-content-center align-items-center">
+    <p> ©2025 GVR Infosystems. All rights reserved.</p>
+  </div>
 </div>
-  

@@ -1,451 +1,519 @@
-.mainReview{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.mainReview {
+  position: relative;
+  height: calc(100vh - 35px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 35px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+.w-100 {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.footer-bottom {
+  background-color: #e8e8e8b5;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.footer-bottom p{
+  margin: 0px;
 }
 
 .reviewcard,.reviewview{
-    height: auto;
-    width: 100%;
-    padding: 20px;
-    background-color: white;
-    border-radius: 20px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  height: auto;
+  width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .profileForm{
-    width:70%;
+  width:70%;
 }
 
 .profilePicture{
-    width: 25%;
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    /* align-items: center;
-    flex-direction: column; */
+  width: 25%;
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-  }
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
 
-  .modal-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .modal.show {
-    display: block;
-  }
-  
-  .modal-dialog {
-    position: relative;
-    margin: 10% auto;
-    max-width: 500px;
-  }
-  
-  .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 5px;
-  }
-  
-  .modal-footer {
-    text-align: center;
-  }
+.modal-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  
-  .input-container {
-    position: relative;
-    margin-top: 20px;
-  }
-  
-  
-  
-  .form-group input,.form-group textarea{
-    border: none;
-    border-bottom: 1px solid gray;
+.modal.show {
+  display: block;
+}
+
+.modal-dialog {
+  position: relative;
+  margin: 10% auto;
+  max-width: 500px;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.modal-footer {
+  text-align: center;
+}
+
+
+.input-container {
+  position: relative;
+  margin-top: 20px;
+}
+
+
+
+.form-group input,.form-group textarea{
+  border: none;
+  border-bottom: 1px solid gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  border-radius: 0px;
+}
+
+
+input:focus,textarea:focus {
+  border-color: #5c9dfc;
+}
+
+label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #999;
+  pointer-events: none;
+  transition: 0.2s ease-in-out;
+  opacity: 0;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label,
+textarea:focus+label,
+textarea:not(:placeholder-shown) + label {
+    top: -6px;
     font-family: 'Roboto', sans-serif;
     font-size: 11px;
-    border-radius: 0px;
-  }
-  
-  
-  input:focus,textarea:focus {
-    border-color: #5c9dfc;
-  }
-  
-  label {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #999;
-    pointer-events: none;
-    transition: 0.2s ease-in-out;
-    opacity: 0;
-  }
-  
-  input:focus + label,
-  input:not(:placeholder-shown) + label,
-  textarea:focus+label,
-  textarea:not(:placeholder-shown) + label {
-      top: -6px;
-      font-family: 'Roboto', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: black;
-      opacity: 1;
-  }
-  
-  input:placeholder-shown + label,
-  textarea:placeholder-shown + label {
-      opacity: 0;
-  }
-  a{
-    text-decoration: none;
-    color:black
-  }
-  a h5{
-    font-family: fangsong;
     font-weight: 600;
-    font-size: 18px;
-    margin: 0px;
-  }
-  a p{
-    font-family: 'Roboto', sans-serif;
-    font-size: 10px;
-  }
+    color: black;
+    opacity: 1;
+}
 
-  .PageHeading{
-    width: 100%;
-    /* background-color: #e8e8e8; */
-    background-color: #8cc8ffd1;
+input:placeholder-shown + label,
+textarea:placeholder-shown + label {
+    opacity: 0;
+}
+a{
+  text-decoration: none;
+  color:black
+}
+a h5{
+  font-family: fangsong;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0px;
+}
+a p{
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+}
+
+.PageHeading{
+  width: 100%;
+    background-color: white;
     display: flex;
     align-items: center;
     padding: 10px;
     border-radius: 10px;
-  }
-
-  .PageHeading h5{
-    padding-left: 10px;
-  }
-
-  form{
-    padding: 20px 30px;
-  }
-
-  .formrow{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .formrow .form-group{
-    width:49%;
-    position: relative;
-  }
-
-  .image-preview{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 160px;
-    width: 100%;
-    border: 0.5px solid #f1f1f1;
-    /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; */
-    /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  }
-
-  .image-preview img{
-    height: 100%;
-    width: 100%;
-  }
-
-  .updatestatusbuttons{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .updatestatusbuttons1{
-    width: 56%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .updatestatusbuttons1 .changepswd{
-    background-color: #787878;
-    color: white;
-  }
-
-  .updatestatusbuttons1 .deactivate{
-    background-color: #ff4747eb;
-    color: white;
-  }
-
-  .updatestatusbuttons2 .btn{
-    color: white;
-    background-color: green;
-    border: none;
-  }
-
-  .text-align-end {
-    text-align: end;
-  }
-
-  .height-80vh {
-    height: 80vh;
-  }
-
-  .height-100 {
-      height: 100%;
-  }
-
-  .photo {
-    position: relative;
-    display: inline-block;
-  }
-
-  .edit-icon {
-    position: absolute;
-    bottom: 0px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 5px;
-    cursor: pointer;
-    display: none;
-    height: 25%;
-    width: 100%;
-    text-align: center;
-  }
-  
-  .photo img:hover + .edit-icon {
-    display: block;
-  }
-  
-  .upload-btn {
-    display: none;
-  }
-  
-  .formrow {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    align-items: flex-start;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-.form-group {
-    width: 48%;
+.PageHeading h5{
+  padding-left: 10px;
 }
 
-.input-container {
-    position: relative;
-    width: 100%;
+form{
+  padding: 20px 30px;
 }
 
-.password-wrapper {
-    position: relative;
-    width: 100%;
+.formrow{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.password-wrapper input {
-    width: 100%;
-    padding-right: 40px;
-}
-
-.password-wrapper i {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
-
-.validation-message {
-    min-height: 20px;  
-    display: block;
-    margin-top: 5px;
-    font-size: 10px;
-}
-
-.email-wrapper {
+.formrow .form-group{
+  width:49%;
   position: relative;
 }
 
-.email-wrapper i {
+.image-preview{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 160px;
+  width: 100%;
+  border: 0.5px solid #f1f1f1;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.image-preview img{
+  height: 100%;
+  width: 100%;
+}
+
+.updatestatusbuttons{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.updatestatusbuttons1{
+  width: 56%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.updatestatusbuttons1 .changepswd{
+  background-color: #787878;
+  color: white;
+}
+
+.updatestatusbuttons1 .deactivate{
+  background-color: #ff4747eb;
+  color: white;
+}
+
+.updatestatusbuttons2 .btn{
+  color: white;
+  background-color: green;
+  border: none;
+}
+
+.text-align-end {
+  text-align: end;
+}
+
+.height-80vh {
+  height: 80vh;
+}
+
+.height-100 {
+    height: 100%;
+}
+
+.photo {
+  position: relative;
+  display: inline-block;
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  display: none;
+  height: 22%;
+  width: 100%;
+  text-align: center;
+}
+
+.image-preview .edit-icon {
+  display: block; 
+  position: absolute;
+  background-color: #3D73BC;
+  color: white;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+.photo img:hover + .edit-icon {
+  display: block;
+}
+
+.upload-btn {
+  display: none;
+}
+
+.formrow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.form-group {
+  width: 48%;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-wrapper i {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #999;
-  font-size: 14px;
-  pointer-events: none;
+  cursor: pointer;
+}
+
+.validation-message {
+  min-height: 20px;  
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+}
+
+.email-wrapper {
+position: relative;
+}
+
+.email-wrapper i {
+position: absolute;
+right: 10px;
+top: 50%;
+transform: translateY(-50%);
+color: #999;
+font-size: 14px;
+pointer-events: none;
 }
 
 .email-wrapper input {
-  padding-right: 35px; 
+padding-right: 35px; 
 }
 
 
 
 
 @media (max-width: 768px) {
-  .mainReview {
-    flex-direction: column;
-    padding: 10px;
-    height: auto;
-  }
+.mainReview {
+  flex-direction: column;
+  padding: 10px;
+  height: auto;
+}
 
-  .reviewcard,
-  .reviewview {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    padding: 15px;
-  }
+.reviewcard,
+.reviewview {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+}
 
-  .profileForm,
-  .profilePicture {
-    width: 100%;
-  }
+.profileForm,
+.profilePicture {
+  width: 100%;
+}
 
-  .formrow {
-    flex-direction: column;
-    gap: 10px;
-  }
+.formrow {
+  flex-direction: column;
+  gap: 10px;
+}
 
-  .formrow .form-group {
-    width: 100%;
-  }
+.formrow .form-group {
+  width: 100%;
+}
 
-  .updatestatusbuttons {
-    flex-direction: column;
-    gap: 10px;
-  }
+.updatestatusbuttons {
+  flex-direction: column;
+  gap: 10px;
+}
 
-  .updatestatusbuttons1 {
-    width: 100%;
-    flex-direction: column;
-    gap: 10px;
-  }
+.updatestatusbuttons1 {
+  width: 100%;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  .updatestatusbuttons2 {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
+.updatestatusbuttons2 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 
-  .PageHeading {
-    flex-direction: column;
-    text-align: center;
-  }
+.PageHeading {
+  flex-direction: column;
+  text-align: center;
+}
 
-  .image-preview {
-    height: auto;
-  }
+.image-preview {
+  height: auto;
+}
 
-  .modal-dialog {
-    margin: 20% auto;
-    width: 90%;
-  }
+.modal-dialog {
+  margin: 20% auto;
+  width: 90%;
+}
+
+.delete-button-container {
+  justify-content: flex-start;
+}
+
+.delete-btn {
+  width: auto;
+  font-size: 13px;
+  padding: 5px 12px;
+}
+
+
 }
 
 @media (max-width: 576px) {
-  .form-control {
-    height: 35px;
-  }
+.form-control {
+  height: 35px;
+}
 
-  .modal-dialog {
-    margin: 30% auto;
-  }
+.modal-dialog {
+  margin: 30% auto;
+}
 
-  .formrow {
-    gap: 8px;
-  }
+.formrow {
+  gap: 8px;
+}
 
-  .reviewcard,
-  .reviewview {
-    padding: 10px;
-  }
+.reviewcard,
+.reviewview {
+  padding: 10px;
+}
 
-  a h5 {
-    font-size: 16px;
-  }
+a h5 {
+  font-size: 16px;
+}
 
-  a p {
-    font-size: 9px;
-  }
+a p {
+  font-size: 9px;
+}
 
-  .validation-message {
-    font-size: 9px;
-  }
+.validation-message {
+  font-size: 9px;
 }
 
 
+.delete-btn {
+  width: 100%;
+  font-size: 12px;
+  padding: 6px 10px;
+}
 
-
-
-
-
-
-
-
-
-
+}
 
 
 .image-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.8);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 9999;
 }
 
 .image-modal-content {
-  position: relative;
-  background: white;
-  padding: 20px;
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 8px;
+position: relative;
+background: white;
+padding: 20px;
+max-width: 90%;
+max-height: 90%;
+border-radius: 8px;
 }
 
 .image-modal-content img {
-  max-width: 100%;
-  max-height: 80vh;
-  display: block;
-  margin: 0 auto;
+max-width: 100%;
+max-height: 80vh;
+display: block;
+margin: 0 auto;
 }
 
 .close-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: #444;
-  color: white;
+position: absolute;
+top: 8px;
+right: 8px;
+background-color: #444;
+color: white;
+border: none;
+padding: 6px 10px;
+cursor: pointer;
+}
+
+.delete-button-container {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.delete-btn {
+  background-color: #dc3545;
   border: none;
-  padding: 6px 10px;
+  color: white;
+  padding: 6px 12px;
+  font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin-left: 0px;
+  margin-top: 5px;
+}
+
+.delete-btn i {
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background-color: #b02a37;
+  transform: scale(1.05);
 }

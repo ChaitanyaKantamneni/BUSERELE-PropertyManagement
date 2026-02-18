@@ -9,8 +9,6 @@ import { ApiServicesService } from '../../../api-services.service';
 interface CustomFile {
   name: string;
   url: string;
-  // data: Blob;
-  // data?: any;
 }
 
 
@@ -49,9 +47,17 @@ export class BlogComponentComponent {
   userID: string = localStorage.getItem('email') || '';
   isUpdateModalOpen:boolean = false;
   propID: string = '';
-  
+  IPAddress = '';
 
   ngOnInit(): void {
+
+    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
+      next: (res) => {
+        this.IPAddress = res.ip;
+      },
+      error: (err) => {
+      }
+    });
     this.fetchBlogDetails();
   }
   
@@ -64,9 +70,6 @@ export class BlogComponentComponent {
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ size: ['small', false, 'large', 'huge'] }],
       [{ color: [] }, { background: [] }],
-      // ['image'],
-      // ['clean'],
-      // , 'code-block'
     ],
   };
 
@@ -86,8 +89,6 @@ export class BlogComponentComponent {
     this.showModal = false;
   }
 
-
-  
   onEditorChange(editor: QuillEditorComponent): void {
     const content = editor.quillEditor.root.innerHTML;
     this.propertytype.get('Blog')?.setValue(content);
@@ -119,22 +120,16 @@ export class BlogComponentComponent {
       if (fileInput?.files?.length) {
         for (let i = 0; i < fileInput.files.length; i++) {
           const file = fileInput.files[i];
-          console.log('Selected file:', file);
           this.files.push(file);
         }
 
         this.imageChanged = true; 
-
-        console.log("Selected files:", this.files);
       }
     }
 
 
   onSubmit(): void {
-    console.log('Form values:', this.propertytype.value);
-    
     if (this.propertytype.invalid) {
-      console.error('Form is invalid');
       return;
     }
 
@@ -143,10 +138,7 @@ export class BlogComponentComponent {
     formData.append('Title', this.propertytype.get('Name')?.value);
     formData.append('CreatedBy', localStorage.getItem('email') || '');
     formData.append('CreatedDate', new Date().toISOString());
-    formData.append('CreatedIP', ''); 
-    formData.append('ModifiedBy', '');
-    formData.append('ModifiedDate', '');
-    formData.append('ModifiedIP', '');
+    formData.append('CreatedIP', this.IPAddress); 
     formData.append('Flag', '1'); 
     formData.append('Status', '');
   
@@ -159,7 +151,6 @@ export class BlogComponentComponent {
       .subscribe({
         next: (response: any) => {
           if (response.statusCode === 200) {
-            console.log('Blog uploaded successfully:', response);
           }
           this.propertyInsStatus = response.message;
           this.isUpdateModalOpen = true;
@@ -171,69 +162,14 @@ export class BlogComponentComponent {
           this.fetchBlogDetails(); 
         },
         error: (err) => {
-          console.error('Blog upload failed', err);
           this.propertyInsStatus = 'Failed to submit blog. Please try again.';
           this.isUpdateModalOpen = true;
         }
       });
   }
   
-  // UpdateBlog(): void {
-  //   console.log('Form values:', this.propertytype.value);
-  
-  //   if (this.propertytype.invalid || !this.propID) {
-  //     console.error('Form is invalid or blog ID is missing');
-  //     return;
-  //   }
-  
-  //   const formData = new FormData();
-  //   formData.append('ID', this.propID.toString());
-  //   formData.append('Description', this.propertytype.value.Blog);
-  //   formData.append('Title', this.propertytype.get('Name')?.value || '');
-  //   formData.append('ModifiedBy', localStorage.getItem('email') || '');
-  //   formData.append('ModifiedDate', new Date().toISOString());
-  //   formData.append('ModifiedIP', '');
-  //   formData.append('Flag', '4');
-  //   formData.append('CreatedBy', '');
-  //   formData.append('CreatedDate', '');
-  //   formData.append('CreatedIP', '');
-  
-  //   formData.append('BlogStatus', this.updatedStatus ?? '0');
-  
-  //   if (this.files.length > 0) {
-  //     this.files.forEach(file => {
-  //       formData.append('files', file, file.name);
-  //     });
-  //   }
-  //   this.apiurls.post<{ message: string; updatedBlog: any }>('Proc_Tbl_AddBlogs', formData)
-  //     .subscribe({
-  //       next: (response: any) => {
-  //         console.log('Blog updated successfully:', response);
-  
-  //         this.propertyInsStatus = response.Message || response.message;
-  //         this.isUpdateModalOpen = true;
-  //         this.propertytype.markAsPristine();
-  //         this.cdRef.detectChanges();
-  //         this.editclicked = false;
-  //         this.propertytype.reset();
-  //         this.files = [];
-  //         this.files1 = [];
-  //         this.imageChanged = false;
-  //         this.fetchBlogDetails();
-  //       },
-  //       error: (err) => {
-  //         console.error('Blog update failed', err);
-  //         this.propertyInsStatus = 'Failed to update blog. Please try again.';
-  //         this.isUpdateModalOpen = true;
-  //       }
-  //     });
-  // }
-  
-  
   UpdateBlog(): void {
-    console.log('Form values:', this.propertytype.value);
     if (this.propertytype.invalid || !this.propID) {
-      console.error('Form is invalid or blog ID is missing');
       return;
     }
   
@@ -243,11 +179,9 @@ export class BlogComponentComponent {
     formData.append('Title', this.propertytype.get('Name')?.value || '');
     formData.append('ModifiedBy', localStorage.getItem('email') || '');
     formData.append('ModifiedDate', new Date().toISOString());
-    formData.append('ModifiedIP', '');
+    formData.append('ModifiedIP', this.IPAddress);
     formData.append('Flag', '4');
-    formData.append('CreatedBy', '');
-    formData.append('CreatedDate', '');
-    formData.append('CreatedIP', '');
+
   
     formData.append('BlogStatus', this.updatedStatus ?? '0');
   
@@ -259,9 +193,7 @@ export class BlogComponentComponent {
   
     this.apiurls.post<{ message: string; updatedBlog: any }>('Proc_Tbl_AddBlogs', formData)
       .subscribe({
-        next: (response: any) => {
-          console.log('Blog updated successfully:', response);
-  
+        next: (response: any) => {  
           if (this.updatedStatus === '1') {
             this.propertyInsStatus = 'Blog approved successfully';
           } else if (this.updatedStatus === '2') {
@@ -280,7 +212,6 @@ export class BlogComponentComponent {
           this.fetchBlogDetails();
         },
         error: (err) => {
-          console.error('Blog update failed', err);
           this.propertyInsStatus = 'Failed to update blog. Please try again.';
           this.isUpdateModalOpen = true;
         }
@@ -308,7 +239,6 @@ export class BlogComponentComponent {
     if (index !== -1) {
       this.files.splice(index, 1);
     }
-    console.log('Updated file list:', this.files);
   }
 
   removeFile1(file1: CustomFile): void {
@@ -318,12 +248,9 @@ export class BlogComponentComponent {
       this.files1.splice(index, 1);
       this.imageChanged = true;
     }
-    console.log('Updated file list:', this.files1);
   }
   
-  viewImage1(file1: CustomFile | File): void {
-    console.log('viewImage1 triggered with:', file1);
-  
+  viewImage1(file1: CustomFile | File): void {  
     if (file1 instanceof File) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -382,16 +309,13 @@ export class BlogComponentComponent {
               url: imageUrl,
             }];
           } else {
-            console.warn('Missing filePath or fileName, cannot push to files1');
           }
           
   
         } else {
-          console.error('Blog not found or invalid response:', response);
         }
       },
       error: (err) => {
-        console.error('Error fetching blog details:', err);
       }
     });
   }
@@ -463,19 +387,14 @@ export class BlogComponentComponent {
                 };
               });
     
-              console.log(this.PropertyIsActiveStatusNotActive);
               this.filteredPropertiesNotNull = false;
             } else if (response.statusCode === 404) {
-              console.log(response);
               this.filteredPropertiesNotNull = true;
-              console.error(response.Message);
             } else {
-              console.error('Unexpected response status:', response.StatusCode);
               this.properties = [];
             }
           },
           error: (err) => {
-            console.error('Error fetching properties:', err);
             this.filteredPropertiesNotNull = true;
             this.properties = [];
           }
@@ -499,6 +418,7 @@ export class BlogComponentComponent {
           default: return 'Unknown';
         }
       }
+
       fetchBlogDetails(): void {
         const formData = new FormData();
         formData.append('Flag', '2');
@@ -506,7 +426,6 @@ export class BlogComponentComponent {
         this.apiurls.post<any>('Proc_Tbl_AddBlogs', formData)
           .subscribe({
             next: (response: any) => {
-              console.log('API response:', response);
               if (response.statusCode === 200 && response.data && response.data.length > 0) {
                 this.properties = response.data.map((property: any) => {
                   let PropertyStatus = 'Pending';
@@ -529,13 +448,10 @@ export class BlogComponentComponent {
                   };
                 });
                 
-                console.log('Mapped properties:', this.properties);
               } else {
-                console.warn('No blog data found or unexpected status code');
               }
             },
             error: (error) => {
-              console.error('Error fetching properties:', error);
             }
           });
       }
@@ -549,7 +465,7 @@ export class BlogComponentComponent {
         this.propertytype.reset();  
         this.files = [];  
         this.files1 = []; 
-    }
+      }
 
    
       UpdatecloseModal() {
@@ -602,21 +518,23 @@ export class BlogComponentComponent {
             pages.push(i);
         }
         return pages;
-    }
-      setPage(page: number): void {
+  }
+
+  setPage(page: number): void {
         if (page >= 1 && page <= this.totalPages) {
             this.currentPage = page;
         }
-    }
+  }
+
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
         this.currentPage++;
     }
   }
+
   previousPage(): void {
     if (this.currentPage > 1) {
         this.currentPage--;
     }
   }
-
 }
